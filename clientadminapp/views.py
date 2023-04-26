@@ -19,9 +19,15 @@ from django.views.decorators.clickjacking import (
 )
 from django.utils.decorators import method_decorator
 import pandas as pd
+from dotenv import load_dotenv
+import os
 from .models import *
 
-environmentURL = "http://127.0.0.1:8000"
+load_dotenv()
+
+environmentURL = os.getenv("environmentURL")
+
+print(environmentURL)
 
 @csrf_exempt
 def is_ajax(request):
@@ -177,23 +183,22 @@ def Home(request):
         # print(datalav["portpolio"])
         context["last_login_times"] = last_login_times
 
-        return redirect("https://rasa.com/")
+        return render(request, "index.html", context)
     else:
-        return redirect("https://rasa.com/")
-
+        return redirect("home")
 
 def otherorg1(request):
     if request.session.get("username"):
         username = request.session['username']
         if request.method == "POST":
             context = {}
-
             org = request.POST["org"]
             user_org = UserOrg.objects.all().filter(username=username)
             for it in user_org:
                 data12 = it.org
                 data13 = json.loads(data12)
             if request.session["username"] == org:
+                print("stopped here")
                 return redirect("/")
             else:
                 userorg = UserInfo.objects.all().filter(username=username)
@@ -249,7 +254,7 @@ def otherorg1(request):
                 context["aiport"] = [*set(po)]
                 context["myorg"] = [*set(ors)]
                 context["products"] = [*set(co)]
-                return render(request, "new/editother.html", context)
+    return render(request, "editother.html")
 
 
 def otherorg(request):
@@ -358,7 +363,7 @@ def otherorg(request):
                 context["products"] = [*set(co)]
                 context["public"] = temp
 
-                return render(request, "new/editother.html", context)
+                return render(request, "editother.html", context)
 
 
 @csrf_exempt
@@ -2586,7 +2591,7 @@ def Home(request):
         return redirect("home")
 
 
-def otherorg1(request):
+def otherorg2(request):
     if request.session.get("username"):
         username = request.session['username']
         if request.method == "POST":
@@ -2653,7 +2658,7 @@ def otherorg1(request):
                 context["aiport"] = [*set(po)]
                 context["myorg"] = [*set(ors)]
                 context["products"] = [*set(co)]
-                return render(request, "new/editother.html", context)
+                return render(request, "editother.html", context)
 
 
 def otherorg(request):
@@ -2762,7 +2767,7 @@ def otherorg(request):
                 context["products"] = [*set(co)]
                 context["public"] = temp
 
-                return render(request, "new/editother.html", context)
+                return render(request, "editother.html", context)
 
 
 @csrf_exempt
