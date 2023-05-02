@@ -46,141 +46,72 @@ def Home1(request):
 
 
 def Home(request):
-    context = {}
-    # url_id=request.GET.get('session_id',None)
-    print(request.session.get("session_id"))
-
-    if request.session.get("session_id"):
-        # request.session["session_id"]=url_id
-
+    session_id = request.session.get("session_id")
+    if session_id:
         url = "https://100014.pythonanywhere.com/api/userinfo/"
-        resp = requests.post(url, data={"session_id": request.session["session_id"]})
+        resp = requests.post(url, data={"session_id": session_id})
         try:
             user = json.loads(resp.text)
         except:
-            return HttpResponse(
-                '<style>body{background-color: rgba(0,0,0, 0.4);}.close-btn {position: absolute;bottom: 12px;right: 25px;}.content {position: absolute;width: 250px;height: 200px;background: #fff;top: 0%;left: 50%;transform: translate(-50%, -50%)scale(0.1);visibility: hidden;transition: transform 0.4s, top 0.4s;}.open-popup {visibility: visible;top: 50%;transform: translate(-50%, -50%)scale(1);}.header {height: 50px;background: #efea53;overflow: hidden;text-align: center;}p {padding-top: 40px;text-align: center;}</style><div class="content open-popup" id="popup"><div class="header"><h2>Alert!</h2></div><p>Some thing went wrong pl <a href="/logout" >logout </a> <a href="/">login</a> again</p><div><button type="button" onclick="history.back();" class="close-btn">close</button></div></div>')
-        context["login"] = user["userinfo"]
-        print(user["userinfo"])
-        obj, created = UserInfo.objects.update_or_create(username=user["userinfo"]["username"],
-                                                         defaults={'userinfo': json.dumps(user["userinfo"])})
-        # userorg=UserOrg.objects.all().filter(username=user["userinfo"]["username"])
-        # #return HttpResponse(f'{userorg}')
-        # if userorg:
-        #     for rd in userorg:
-        #         lo1=rd.org
-        #         datalav=json.loads(lo1)
-        #     context["datalav"]=datalav
-        #     request.session["username"]=user["userinfo"]["username"]
-        #     request.session["orgname"]=datalav["organisations"][0]["org_name"]
-        #     request.session["present_org"]=datalav["organisations"][0]["org_name"]
-        # else:
-        field = {"document_name": user["userinfo"]["username"]}
+            return HttpResponse('<style>...</style><div class="content open-popup" id="popup">...</div>')
+
+        username = user["userinfo"]["username"]
+        context = {"login": user["userinfo"]}
+
+        UserInfo.objects.update_or_create(username=username, defaults={'userinfo': json.dumps(user["userinfo"])})
+
+        field = {"document_name": username}
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "fetch", field, "nil")
         r = json.loads(login)
-        obj, created = UserOrg.objects.update_or_create(username=user["userinfo"]["username"],
-                                                        defaults={'org': json.dumps(r["data"][0])})
+        UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(r["data"][0])})
+
         datalav = r["data"][0]
-        context["datalav"] = r["data"][0]
-        request.session["username"] = user["userinfo"]["username"]
-        request.session["orgname"] = r["data"][0]["organisations"][0]["org_name"]
-        request.session["present_org"] = r["data"][0]["organisations"][0]["org_name"]
+        context.update({"datalav": datalav})
+        request.session.update({"username": username, "orgname": datalav["organisations"][0]["org_name"],
+                                "present_org": datalav["organisations"][0]["org_name"]})
 
-        lori = [datalav["organisations"][0]["org_name"]]
-        for l in datalav["other_organisation"]:
-            lori.append(l["org_name"])
-        # members filter
-        member = []
-        gmember = []
-        pmember = []
-        for i in datalav["members"]["team_members"]["accept_members"]:
-            member.append(i["name"])
-        for i in datalav["members"]["guest_members"]["accept_members"]:
-            gmember.append(i["name"])
-        for i in datalav["members"]["public_members"]["accept_members"]:
-            try:
-                pmember.append(i["name"])
-            except:
-                pass
-        member = [*set(member)]
-        gmember = [*set(gmember)]
-        pmember = [*set(pmember)]
-        tmem = []
-        tmemp = []
-        gmem = []
-        gmemp = []
-        pmem = []
-        pmemp = []
-        for a in datalav["portpolio"]:
-            try:
-                if "team" in a["member_type"]:
-                    if type(a["username"]) is list:
-                        for ii in a["username"]:
-                            if ii in member:
-                                tmem.append(ii)
-                            else:
-                                tmemp.append(ii)
-                    else:
+        lori = [datalav["organisations"][0]["org_name"]] + [l["org_name"] for l in datalav["other_organisation"]]
+        member = set(i["name"] for i in datalav["members"]["team_members"]["accept_members"])
+        gmember = set(i["name"] for i in datalav["members"]["guest_members"]["accept_members"])
+        pmember = set(i["name"] for i in datalav["members"]["public_members"]["accept_members"])
 
-                        if a["username"] in member:
-                            tmem.append(a["username"])
-                        else:
-                            tmemp.append(a["username"])
-                elif "guest" in a["member_type"]:
-                    if a["username"] in gmember:
-                        gmem.append(a["username"])
-                    else:
-                        gmemp.append(a["username"])
-                elif "public" in a["member_type"]:
-                    if a["username"] in pmember:
-                        pmem.append(a["username"])
-                    else:
-                        pmemp.append(a["username"])
-            except:
-                pass
+        tmem = [ii for a in datalav["portpolio"] if "team" in a["member_type"] for ii in
+                (a["username"] if isinstance(a["username"], list) else [a["username"]]) if ii in member]
+        tmemp = [ii for a in datalav["portpolio"] if "team" in a["member_type"] for ii in
+                 (a["username"] if isinstance(a["username"], list) else [a["username"]]) if ii not in member]
+        gmem = [a["username"] for a in datalav["portpolio"] if "guest" in a["member_type"] if a["username"] in gmember]
+        gmemp = [a["username"] for a in datalav["portpolio"] if "guest" in a["member_type"] if
+                 a["username"] not in gmember]
+        pmem = [a["username"] for a in datalav["portpolio"] if "public" in a["member_type"] if a["username"] in pmember]
+        pmemp = [a["username"] for a in datalav["portpolio"] if "public" in a["member_type"] if
+                 a["username"] not in pmember]
 
-        context["col"] = [*set(lori)]
-        context["tmem"] = [*set(tmem)]
-        context["tmemp"] = [elem for elem in tmemp if elem not in member]
-        context["gmem"] = [*set(gmem)]
-        context["gmemp"] = [elem for elem in gmemp if elem not in gmember]
-        context["pmem"] = [*set(tmem)]
-        context["pmemp"] = [elem for elem in pmemp if elem not in pmember]
-        allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
-        context["public"] = allpub
-        context["importdata"] = importdata()
+        context.update({
+            "col": lori,
+            "tmem": tmem,
+            "tmemp": [elem for elem in tmemp if elem not in member],
+            "gmem": gmem,
+            "gmemp": [elem for elem in gmemp if elem not in gmember],
+            "pmem": pmem,
+            "pmemp": [elem for elem in pmemp if elem not in pmember],
+        })
 
-        lspport = []
-        lspnport = []
-        for count in allpub:
-            if count.portfolio:
-                lspport.append(count.qrcodeid)
-            else:
-                lspnport.append(count.qrcodeid)
-        context["public1"] = lspport
-        context["public2"] = lspnport
-        context["session_id"] = request.session.get("session_id")
+        allpub = publiclink.objects.filter(username=username)
+        context.update({
+            "public": allpub,
+            "importdata": importdata(),
+            "public1": [count.qrcodeid for count in allpub if count.portfolio],
+            "public2": [count.qrcodeid for count in allpub if not count.portfolio],
+            "session_id": session_id,
+        })
+
         url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
-
-        # Define the data to be sent in the POST request
-        data = {
-            "username": user["userinfo"]["username"]
-        }
-
-        # Make the POST request
+        data = {"username": username}
         response_login = requests.post(url_lastlogin, json=data)
 
-        # Check if the request was successful
-        if response_login.status_code == 200:
-            # Extract the LastloginTimes data from the response
-            last_login_times = response_login.json()["data"]["LastloginTimes"]
-
-            print("Last login times:", last_login_times)
-        else:
-            print(f"POST request failed with status code {response_login.status_code}.")
-        # print(context["datalav"])
-        # print(datalav["portpolio"])
+        last_login_times = response_login.json()["data"][
+            "LastloginTimes"] if response_login.status_code == 200 else None
         context["last_login_times"] = last_login_times
 
         return render(request, "index.html", context)
