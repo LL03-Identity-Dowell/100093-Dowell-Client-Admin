@@ -4732,12 +4732,13 @@ def CheckHome(request):
 
 
 def add_product(request):
-    return render(request, "new/add_product.html")
+
+    return render(request, "add_product.html")
 
 
 def update_product(request):
-    return render(request, "new/product_update_form.html")
+    return render(request, "product_update_form.html")
 
 
 def update_payment(request):
-    return render(request, "new/payment_update_form.html")
+    return render(request, "payment_update_form.html")
