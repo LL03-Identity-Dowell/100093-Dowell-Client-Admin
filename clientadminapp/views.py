@@ -122,30 +122,25 @@ def otherorg1(request):
     if request.session.get("username"):
         username = request.session['username']
         if request.method == "POST":
-            context = {}
-            org = request.POST["org"]
-            user_org = UserOrg.objects.all().filter(username=username)
+            org = request.POST.get("org")
+            user_org = UserOrg.objects.filter(username=username)
             for it in user_org:
-                data12 = it.org
-                data13 = json.loads(data12)
+                data13 = json.loads(it.org)
             if request.session["username"] == org:
-                print("stopped here")
                 return redirect("/")
             else:
-                userorg = UserInfo.objects.all().filter(username=username)
-                for i in userorg:
-                    data1 = i.userinfo
-                    data = json.loads(data1)
-                # return HttpResponse(f'{data}')
+                user_info = UserInfo.objects.filter(username=username)
+                for i in user_info:
+                    data = json.loads(i.userinfo)
                 request.session["present_org"] = org
-                context["img"] = data13["profile_info"]["profile_img"]
-
-                context["time"] = data["dowell_time"]
-                context["location"] = data["city"]
-                userorg = UserOrg.objects.all().filter(username=username)
-                for i in userorg:
-                    dataorg = i.org
-                    dataorg1 = json.loads(dataorg)
+                context = {
+                    "img": data13["profile_info"]["profile_img"],
+                    "time": data["dowell_time"],
+                    "location": data["city"],
+                }
+                user_org = UserOrg.objects.filter(username=username)
+                for i in user_org:
+                    dataorg1 = json.loads(i.org)
                 context["datalav"] = dataorg1
                 context["first"] = dataorg1["profile_info"]["first_name"]
                 context["last"] = dataorg1["profile_info"]["last_name"]
@@ -161,31 +156,19 @@ def otherorg1(request):
                     if i["org_name"] == org:
                         try:
                             co.append(i["product"])
-
                             if i["portfolio_name"] and "enable" in i["status"]:
                                 othero.append(i)
                             else:
                                 po.append(i["portfolio_name"])
                         except:
                             pass
-                # userorg1=UserOrg.objects.all().filter(username=org)
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in datapro["portpolio"]:
-                #     if username in ii["username"]:
-                #         co.append(ii["product"])
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in dataorg1["other_organisation"]:
-                #     if org in ii["org_name"]:
-                #         ro=ii["portfolio"]
                 context["othero"] = othero
                 context["aiport"] = [*set(po)]
                 context["myorg"] = [*set(ors)]
                 context["products"] = [*set(co)]
-    return render(request, "editother.html")
+                return render(request, "editother.html")
+        else:
+            return render(request, "editother.html")
 
 
 def otherorg(request):
