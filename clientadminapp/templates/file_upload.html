@@ -1,0 +1,306 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				background-color: #f2f2f2;
+				font-family: sans-serif;
+			}
+			.wellcome-screen-wrapper {
+				display: grid;
+				place-items: center;
+				width: 100%;
+				height: 100%;
+			}
+			.wellcome-screen-inner {
+				background-color: white;
+				width: 500px;
+				box-shadow: 1px 1px 1px rgb(206, 206, 206);
+				padding: 20px;
+				box-sizing: content-box;
+				border-radius: 8px;
+			}
+			.wellcome-screen-inner h2 {
+				text-align: center;
+			}
+			.input-field {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-top: 20px;
+			}
+			.input-field label {
+				font-size: 16px;
+				font-family: sans-serif;
+			}
+			.input-field input {
+				width: 50%;
+				font-size: 17px;
+				font-family: sans-serif;
+				padding: 7px 20px;
+				border: 1px solid rgb(173, 173, 173);
+				border-radius: 8px;
+			}
+			.input-field input:focus {
+				outline: none;
+			}
+
+			.input-field-all input {
+				width: unset;
+				margin-left: 30px;
+			}
+			.add-field-btn {
+				display: flex;
+				justify-content: end;
+			}
+			.add-field-btn span,
+			.submit-btn-wrapper button {
+				background-color: #bb2d3b;
+				padding: 10px 20px;
+				color: white;
+				font-size: 17px;
+				border-radius: 5px;
+				border: unset;
+				cursor: pointer;
+				margin-top: 20px;
+			}
+			.submit-btn-wrapper {
+				display: flex;
+				justify-content: center;
+			}
+			.submit-btn-wrapper button {
+				background-color: #157347;
+			}
+			.response-wrapper span {
+				color: #157347;
+			}
+			.download-file {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.download-file button {
+				background-color: #157347;
+				padding: 10px 20px;
+				color: white;
+				font-size: 17px;
+				border-radius: 5px;
+				border: unset;
+				cursor: pointer;
+			}
+			#uploaderror {
+				color: #bb2d3b;
+			}
+			@media (min-width: 315px) and (max-width: 610px) {
+				.wellcome-screen-inner {
+					width: 280px;
+					padding: 10px;
+				}
+				.input-field {
+					flex-direction: column;
+
+					align-items: unset;
+				}
+				.input-field-all {
+					display: flex;
+				}
+				.input-field-all input {
+					width: 20%;
+				}
+				.input-field > input {
+					width: 100%;
+				}
+
+				.input-field > input
+				 {
+					margin: 5px 0;
+				}
+				.download-file {
+					align-items: start;
+					flex-direction: column;
+				}
+				.response-wrapper span {
+					display: inline-block;
+					margin: 5px 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wellcome-screen-wrapper">
+			<div class="wellcome-screen-inner">
+				<h2>Excel or CSV Details</h2>
+				<form action="" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+					<div class="fileuploadinput">
+						<div class="input-field">
+							<label for=""> Excel / CSv File</label>
+							<input
+								type="file"
+								name="uploadfile"
+								id="fileInput"
+								accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+								required
+							/>
+						</div>
+						<small id="fileError" style="display: none; color: #bb2d3b"></small>
+					</div>
+					<div class="input-field">
+						<label for=""> Name of Sheet</label>
+						<input type="text" name="sheetname" required />
+					</div>
+
+					<div id="add-field-name">
+						<div class="input-field">
+							<label for=""> Field Name </label>
+							<input type="text" name="fieldname" />
+
+						</div>
+						<span style="color:red">If you want to upload all fields of sheet give text "all" or give specific field name one by one</span>
+					</div>
+
+					<div class="add-field-btn">
+						<span id="add-more-field">Add</span>
+					</div>
+					<div class="input-field">
+						<label for=""> Number of rows you want to Delete</label>
+						<input type="number" name="rowsToDelete" />
+					</div>
+
+					<div class="submit-btn-wrapper">
+						<button id="preview" type="submit">Save to Database</button>
+                        &nbsp;&nbsp;
+                        <!--<button id="submitDataButton" type="">Submit</button>-->
+
+					</div>
+				</form>
+
+
+				<div id="response-wrapper" class="response-wrapper" style="color:green !important;font-size:18px">
+						<span >{{datalink}} </span>
+					<div class="download-file">
+
+						<!--<button>Click here to Download file</button>-->
+					</div>
+				<!--	<span> Your Link: 126754545</span> -->
+				</div>
+<br>
+<br>
+
+ <div id="table-div" class="table-responsive">
+    {{ table_html | safe }}
+  </div>
+
+
+			</div>
+		</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			var fieldCounter = 0;
+			document
+				.getElementById("add-more-field")
+				.addEventListener("click", function () {
+					fieldCounter++;
+
+					// Get a reference to the element you want to append the new element to
+					var parentElement = document.getElementById("add-field-name");
+
+					var newDiv = document.createElement("div");
+					newDiv.classList.add("input-field");
+
+					var newLabel = document.createElement("label");
+					newLabel.textContent = `Field Name ${fieldCounter}`;
+					var newInput = document.createElement("input");
+					newInput.setAttribute("type", "text");
+					newInput.setAttribute("name", `fieldname${fieldCounter}`);
+
+					newDiv.appendChild(newLabel);
+					newDiv.appendChild(newInput);
+
+					parentElement.appendChild(newDiv);
+				});
+
+			const fileInput = document.getElementById("fileInput");
+			const fileError = document.getElementById("fileError");
+
+			fileInput.addEventListener("change", (event) => {
+				const file = event.target.files[0];
+
+				if (!file) {
+					return;
+				}
+
+				const fileType = file.type;
+
+				if (
+					fileType !== "application/vnd.ms-excel" &&
+					fileType !== "text/csv" &&
+					fileType !==
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+				) {
+					fileError.textContent = "Please upload an Excel or CSV file.";
+					fileError.style.display = "inline";
+					fileInput.value = "";
+				} else {
+					fileError.style.display = "none";
+				}
+			});
+		</script>
+
+        <script>
+
+        $(document).ready(function() {
+    $('form').submit(function(event) {
+        event.preventDefault();
+        var formdata = new FormData($(this)[0]);
+        $.ajax({
+            url: '{% url "fileupload" %}',
+            type: 'POST',
+            data:formdata,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $('#table-div').html(response.table_html);
+                $('#response-wrapper').html(response.datalink);
+
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.error);
+            }
+        });
+    });
+});
+
+         $('#submitDataButton').click(function (event) {
+                     event.preventDefault();
+
+            var fieldname = $('input[name="fieldname"]').val();
+            var sheetname = $('input[name="sheetname"]').val();
+
+            $.ajax({
+                url: "{% url 'fileupload' %}",
+                type: "POST",
+                data: {
+                    'submitData': true,
+                    'fieldname': fieldname,
+                    'sheetname': sheetname,
+
+                },                success: function (response) {
+                    console.log(response.url);
+                    // do something with the returned URL
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+        </script>
+	</body>
+</html>
