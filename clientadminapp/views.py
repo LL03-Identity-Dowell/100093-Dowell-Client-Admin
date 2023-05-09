@@ -22,6 +22,9 @@ import pandas as pd
 from dotenv import load_dotenv
 import os
 from .models import *
+import chardet
+import csv
+
 
 load_dotenv()
 
@@ -2311,11 +2314,83 @@ def CheckHome(request):
 
 
 def add_product(request):
+    username = request.session["username"]
+    if request.method == "POST":
+        logo = request.FILES.get("productLogo", None)
+        product_name = request.POST.get('productName')
+        product_status = request.POST.get('productStatus')
+        product_link = request.POST.get('productLink')
+        try:
+            logo_name = default_storage.save(f'productlogos/{logo.name}', logo)
+            logourl = default_storage.url(logo_name)
+            fetch_field = {}
+            fetch = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                     "fetch", fetch_field, "nil")
+            fetch = json.loads(fetch)
+            data = fetch["data"][0]["products"]
+            members = []
+            products = {
+                # 'username' : username,
+                'product_name': product_name,
+                'product_logo': logourl,
+                'product_status': product_status,
+                'product_link': product_link,
+                'members': members,
+                'payment_status': 'unpaid',
+            }
+            # products = [
+            #     {
+            #         "product_name": "Workflow AI",
+            #         "product_logo": "/media/productlogos/Sample_jJosa0v.png",
+            #         "product_status": "enable",
+            #         "product_link": f"https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={request.session['session_id']}&id=100093",
+            #         "members": members,
+            #         "payment_status": "unpaid"
+            #     },
+            #     {
+            #         "product_name": "Living Lab Chat",
+            #         "product_logo": "/media/productlogos/Livinglab-chat-1.png",
+            #         "product_status": "enable",
+            #         "product_link": f"https://100096.pythonanywhere.com/living-lab-support/?session_id={request.session['session_id']}&id=100093",
+            #         "members": members,
+            #         "payment_status": "unpaid"
+            #     }
+            #     ]
+            data.append(products)
+            # data = products
+            field = {"_id": "6453edc48ce736847236e6ca"}
+            update = {"products": data}
+            add = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                   "update", field, update)
+        except:
+            pass
+
     return render(request, "new/add_product.html")
 
 
 def update_product(request):
-    return render(request, "new/product_update_form.html")
+    url="http://100093.pythonanywhere.com/api/getproducts/"
+    resp=requests.post(url,data={"username":"uxliveadmin"})
+    data = resp.json()['products']
+    product_name = request.POST.get("product")
+    selected_members = request.POST.getlist('members')
+    fetch_field = {}
+    fetch = dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","fetch",fetch_field,"nil")
+    a = json.loads(fetch)
+    # return Response({"message": a})
+    if product_name and selected_members:
+        for product in a["data"][0]["products"]:
+            if product["product_name"] == product_name:
+                product.update({
+                    "members":selected_members
+                })
+        field = {"_id":"6453edc48ce736847236e6ca"}
+        update = {"products" : a["data"][0]["products"]}
+        dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field,update)
+
+    # Pass the data to the template as a context variable
+    context = {'products': data}
+    return render(request,"new/product_update_form.html",context)
 
 
 def update_payment(request):
@@ -2505,7 +2580,7 @@ def Home(request):
         return redirect("home")
 
 
-def otherorg2(request):
+def otherorg1(request):
     if request.session.get("username"):
         username = request.session['username']
         if request.method == "POST":
@@ -4715,12 +4790,81 @@ def CheckHome(request):
 
 
 def add_product(request):
+    username=request.session["username"]
+    if request.method == "POST":
+        logo=request.FILES.get("productLogo",None)
+        product_name = request.POST.get('productName')
+        product_status = request.POST.get('productStatus')
+        product_link = request.POST.get('productLink')
+        try:
+            logo_name = default_storage.save(f'productlogos/{logo.name}', logo)
+            logourl=default_storage.url(logo_name)
+            fetch_field = {}
+            fetch = dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","fetch",fetch_field,"nil")
+            fetch = json.loads(fetch)
+            data = fetch["data"][0]["products"]
+            members = []
+            products = {
+                # 'username' : username,
+                'product_name': product_name,
+                'product_logo': logourl,
+                'product_status': product_status,
+                'product_link': product_link,
+                'members':members,
+                'payment_status':'unpaid',
+                }
+            # products = [
+            #     {
+            #         "product_name": "Workflow AI",
+            #         "product_logo": "/media/productlogos/Sample_jJosa0v.png",
+            #         "product_status": "enable",
+            #         "product_link": f"https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={request.session['session_id']}&id=100093",
+            #         "members": members,
+            #         "payment_status": "unpaid"
+            #     },
+            #     {
+            #         "product_name": "Living Lab Chat",
+            #         "product_logo": "/media/productlogos/Livinglab-chat-1.png",
+            #         "product_status": "enable",
+            #         "product_link": f"https://100096.pythonanywhere.com/living-lab-support/?session_id={request.session['session_id']}&id=100093",
+            #         "members": members,
+            #         "payment_status": "unpaid"
+            #     }
+            #     ]
+            data.append(products)
+            # data = products
+            field = {"_id":"6453edc48ce736847236e6ca"}
+            update = {"products" : data}
+            add = dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field,update)
+        except:
+            pass
 
-    return render(request, "add_product.html")
+    return render(request,"new/add_product.html")
 
 
 def update_product(request):
-    return render(request, "product_update_form.html")
+    url="http://100093.pythonanywhere.com/api/getproducts/"
+    resp=requests.post(url,data={"username":"uxliveadmin"})
+    data = resp.json()['products']
+    product_name = request.POST.get("product")
+    selected_members = request.POST.getlist('members')
+    fetch_field = {}
+    fetch = dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","fetch",fetch_field,"nil")
+    a = json.loads(fetch)
+    # return Response({"message": a})
+    if product_name and selected_members:
+        for product in a["data"][0]["products"]:
+            if product["product_name"] == product_name:
+                product.update({
+                    "members":selected_members
+                })
+        field = {"_id":"6453edc48ce736847236e6ca"}
+        update = {"products" : a["data"][0]["products"]}
+        dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field,update)
+
+    # Pass the data to the template as a context variable
+    context = {'products': data}
+    return render(request,"new/product_update_form.html",context)
 
 
 def update_payment(request):
