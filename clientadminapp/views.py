@@ -124,163 +124,147 @@ def Home(request):
 def otherorg1(request):
     if request.session.get("username"):
         username = request.session['username']
-        if request.method == "POST":
-            org = request.POST.get("org")
-            user_org = UserOrg.objects.filter(username=username)
-            for it in user_org:
-                data13 = json.loads(it.org)
-            if request.session["username"] == org:
-                return redirect("/")
-            else:
-                user_info = UserInfo.objects.filter(username=username)
-                for i in user_info:
-                    data = json.loads(i.userinfo)
-                request.session["present_org"] = org
-                context = {
-                    "img": data13["profile_info"]["profile_img"],
-                    "time": data["dowell_time"],
-                    "location": data["city"],
-                }
-                user_org = UserOrg.objects.filter(username=username)
-                for i in user_org:
-                    dataorg1 = json.loads(i.org)
-                context["datalav"] = dataorg1
-                context["first"] = dataorg1["profile_info"]["first_name"]
-                context["last"] = dataorg1["profile_info"]["last_name"]
-                ors = []
-                for lsr in dataorg1["organisations"]:
-                    ors.append(lsr["org_name"])
-                for lst in dataorg1["other_organisation"]:
-                    ors.append(lst["org_name"])
-                co = []
-                po = []
-                othero = []
-                for i in dataorg1["other_organisation"]:
-                    if i["org_name"] == org:
-                        try:
-                            co.append(i["product"])
-                            if i["portfolio_name"] and "enable" in i["status"]:
-                                othero.append(i)
-                            else:
-                                po.append(i["portfolio_name"])
-                        except:
-                            pass
-                context["othero"] = othero
-                context["aiport"] = [*set(po)]
-                context["myorg"] = [*set(ors)]
-                context["products"] = [*set(co)]
-                return render(request, "editother.html")
+        # if request.method == "POST": ###This Line is commented as method is GET not POST
+        org = request.POST.get("org")
+        user_org = UserOrg.objects.filter(username=username)
+        for it in user_org:
+            data13 = json.loads(it.org)
+        if request.session["username"] == org:
+            return redirect("/")
         else:
-            return render(request, "editother.html")
+            user_info = UserInfo.objects.filter(username=username)
+            for i in user_info:
+                data = json.loads(i.userinfo)
+            request.session["present_org"] = org
+            context = {
+                "img": data13["profile_info"]["profile_img"],
+                "time": data["dowell_time"],
+                "location": data["city"],
+            }
+            user_org = UserOrg.objects.filter(username=username)
+            for i in user_org:
+                dataorg1 = json.loads(i.org)
+            context["datalav"] = dataorg1
+            context["first"] = dataorg1["profile_info"]["first_name"]
+            context["last"] = dataorg1["profile_info"]["last_name"]
+            ors = []
+            for lsr in dataorg1["organisations"]:
+                ors.append(lsr["org_name"])
+            for lst in dataorg1["other_organisation"]:
+                ors.append(lst["org_name"])
+            co = []
+            po = []
+            othero = []
+            for i in dataorg1["other_organisation"]:
+                if i["org_name"] == org:
+                    try:
+                        co.append(i["product"])
+                        if i["portfolio_name"] and "enable" in i["status"]:
+                            othero.append(i)
+                        else:
+                            po.append(i["portfolio_name"])
+                    except:
+                        pass
+            context["othero"] = othero
+            context["aiport"] = [*set(po)]
+            context["myorg"] = [*set(ors)]
+            context["products"] = [*set(co)]
+            return render(request, "editother.html", context)
+    else:
+        return render(request, "editother.html")
+
 
 
 def otherorg(request):
     if request.session.get("username"):
         username = request.session['username']
-        if request.method == "POST":
-            context = {}
-            lsimg = []
-            org = request.POST["org"]
+        # if request.method == "POST": ###This Line is commented as method is GET not POST
+        context = {}
+        lsimg = []
+        org = request.POST.get("org")
+        user_org = UserOrg.objects.all().filter(username=username)
+        for it in user_org:
+            data12 = it.org
+            data13 = json.loads(data12)
+        if request.session["username"] == org:
+            request.session["present_org"] = org
+            return redirect("/")
+        else:
+            userorg = UserInfo.objects.all().filter(username=username)
+            for i in userorg:
+                data1 = i.userinfo
+                data = json.loads(data1)
+            # return HttpResponse(f'{data}')
+            request.session["present_org"] = org
 
-            user_org = UserOrg.objects.all().filter(username=username)
-            for it in user_org:
-                data12 = it.org
-                data13 = json.loads(data12)
-            if request.session["username"] == org:
-                request.session["present_org"] = org
-                return redirect("/")
-            else:
-                userorg = UserInfo.objects.all().filter(username=username)
-                for i in userorg:
-                    data1 = i.userinfo
-                    data = json.loads(data1)
-                # return HttpResponse(f'{data}')
-                request.session["present_org"] = org
+            # return HttpResponse(request.session["present_org"])
+            context["img"] = data13["profile_info"]["profile_img"]
 
-                # return HttpResponse(request.session["present_org"])
-                context["img"] = data13["profile_info"]["profile_img"]
+            context["time"] = data["dowell_time"]
+            context["location"] = data["city"]
+            userorg = UserOrg.objects.all().filter(username=username)
+            for i in userorg:
+                dataorg = i.org
+                dataorg1 = json.loads(dataorg)
+            context["datalav"] = dataorg1
+            ors = []
+            context["first"] = dataorg1["profile_info"]["first_name"]
+            context["last"] = dataorg1["profile_info"]["last_name"]
+            for lsr in dataorg1["organisations"]:
+                ors.append(lsr["org_name"])
+            for lst in dataorg1["other_organisation"]:
+                ors.append(lst["org_name"])
+            co = []
+            po = []
+            othero = []
+            for i in dataorg1["other_organisation"]:
+                if i["org_name"] == org:
+                    try:
+                        co.append(i["product"])
+                        if i["portfolio_name"] and "enable" in i["status"]:
+                            othero.append(i)
+                        else:
+                            po.append(i["portfolio_name"])
+                    except:
+                        pass
 
-                context["time"] = data["dowell_time"]
-                context["location"] = data["city"]
-                userorg = UserOrg.objects.all().filter(username=username)
-                for i in userorg:
-                    dataorg = i.org
-                    dataorg1 = json.loads(dataorg)
-                context["datalav"] = dataorg1
-                ors = []
-                context["first"] = dataorg1["profile_info"]["first_name"]
-                context["last"] = dataorg1["profile_info"]["last_name"]
-                for lsr in dataorg1["organisations"]:
-                    ors.append(lsr["org_name"])
-                for lst in dataorg1["other_organisation"]:
-                    ors.append(lst["org_name"])
-                co = []
-                po = []
-                othero = []
-                for i in dataorg1["other_organisation"]:
-                    if i["org_name"] == org:
-                        try:
-                            co.append(i["product"])
-                            if i["portfolio_name"] and "enable" in i["status"]:
-                                othero.append(i)
-                            else:
-                                po.append(i["portfolio_name"])
-                        except:
-                            pass
+            publiclinks = UserOrg.objects.all().filter(username=org)
+            print(publiclinks)
 
-                publiclinks = UserOrg.objects.all().filter(username=org)
-                print(publiclinks)
-
-                temp = []
-                for ii in publiclinks:
-                    publicorg = ii.org
-                    # print(publicorg)
-                    publicorg1 = json.loads(publicorg)
-
+            temp = []
+            for ii in publiclinks:
+                publicorg = ii.org
+                # print(publicorg)
+                publicorg1 = json.loads(publicorg)
                 for jj in publicorg1["portpolio"]:
                     if jj["member_type"] == "public":
                         temp.append(jj)
-                url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
+            url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
 
-                # Define the data to be sent in the POST request
-                data = {
-                    "username": org
-                }
+            # Define the data to be sent in the POST request
+            data = {
+                "username": org
+            }
 
-                # Make the POST request
-                response_login = requests.post(url_lastlogin, json=data)
+            # Make the POST request
+            response_login = requests.post(url_lastlogin, json=data)
 
-                # Check if the request was successful
-                if response_login.status_code == 200:
-                    # Extract the LastloginTimes data from the response
-                    last_login_times = response_login.json()["data"]["LastloginTimes"]
+            # Check if the request was successful
+            if response_login.status_code == 200:
+                # Extract the LastloginTimes data from the response
+                last_login_times = response_login.json()["data"]["LastloginTimes"]
 
-                    print("Last login times:", last_login_times)
-                else:
-                    print(f"POST request failed with status code {response_login.status_code}.")
-                # print(context["datalav"])
-                # print(datalav["portpolio"])
-                context["last_login_times"] = last_login_times
-                # userorg1=UserOrg.objects.all().filter(username=org)
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in datapro["portpolio"]:
-                #     if username in ii["username"]:
-                #         co.append(ii["product"])
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in dataorg1["other_organisation"]:
-                #     if org in ii["org_name"]:
-                #         ro=ii["portfolio"]
-                context["othero"] = othero
-                context["aiport"] = [*set(po)]
-                context["myorg"] = [*set(ors)]
-                context["products"] = [*set(co)]
-                context["public"] = temp
+                print("Last login times:", last_login_times)
+            else:
+                print(f"POST request failed with status code {response_login.status_code}.")
+            context["last_login_times"] = last_login_times
+            context["othero"] = othero
+            context["aiport"] = [*set(po)]
+            context["myorg"] = [*set(ors)]
+            context["products"] = [*set(co)]
+            context["public"] = temp
 
-                return render(request, "editother.html", context)
+            return render(request, "editother.html", context)
 
 
 @csrf_exempt
@@ -1279,7 +1263,7 @@ def Settings(request):
         data12 = it.org
         datalav = json.loads(data12)
     context["datalav"] = datalav
-    return render(request, "new/setting.html", context)
+    return render(request, "settings.html", context)
 
 
 def InviteLink(request):
@@ -2580,183 +2564,183 @@ def Home(request):
         return redirect("home")
 
 
-def otherorg1(request):
-    if request.session.get("username"):
-        username = request.session['username']
-        if request.method == "POST":
-            context = {}
+# def otherorg1(request):
+#     if request.session.get("username"):
+#         username = request.session['username']
+#         if request.method == "POST":
+#             context = {}
+#
+#             org = request.POST["org"]
+#             user_org = UserOrg.objects.all().filter(username=username)
+#             for it in user_org:
+#                 data12 = it.org
+#                 data13 = json.loads(data12)
+#             if request.session["username"] == org:
+#                 return redirect("/")
+#             else:
+#                 userorg = UserInfo.objects.all().filter(username=username)
+#                 for i in userorg:
+#                     data1 = i.userinfo
+#                     data = json.loads(data1)
+#                 # return HttpResponse(f'{data}')
+#                 request.session["present_org"] = org
+#                 context["img"] = data13["profile_info"]["profile_img"]
+#
+#                 context["time"] = data["dowell_time"]
+#                 context["location"] = data["city"]
+#                 userorg = UserOrg.objects.all().filter(username=username)
+#                 for i in userorg:
+#                     dataorg = i.org
+#                     dataorg1 = json.loads(dataorg)
+#                 context["datalav"] = dataorg1
+#                 context["first"] = dataorg1["profile_info"]["first_name"]
+#                 context["last"] = dataorg1["profile_info"]["last_name"]
+#                 ors = []
+#                 for lsr in dataorg1["organisations"]:
+#                     ors.append(lsr["org_name"])
+#                 for lst in dataorg1["other_organisation"]:
+#                     ors.append(lst["org_name"])
+#                 co = []
+#                 po = []
+#                 othero = []
+#                 for i in dataorg1["other_organisation"]:
+#                     if i["org_name"] == org:
+#                         try:
+#                             co.append(i["product"])
+#
+#                             if i["portfolio_name"] and "enable" in i["status"]:
+#                                 othero.append(i)
+#                             else:
+#                                 po.append(i["portfolio_name"])
+#                         except:
+#                             pass
+#                 # userorg1=UserOrg.objects.all().filter(username=org)
+#                 # for i in userorg1:
+#                 #     datap=i.org
+#                 #     datapro=json.loads(datap)
+#                 # for ii in datapro["portpolio"]:
+#                 #     if username in ii["username"]:
+#                 #         co.append(ii["product"])
+#                 # for i in userorg1:
+#                 #     datap=i.org
+#                 #     datapro=json.loads(datap)
+#                 # for ii in dataorg1["other_organisation"]:
+#                 #     if org in ii["org_name"]:
+#                 #         ro=ii["portfolio"]
+#                 context["othero"] = othero
+#                 context["aiport"] = [*set(po)]
+#                 context["myorg"] = [*set(ors)]
+#                 context["products"] = [*set(co)]
+#                 return render(request, "editother.html", context)
 
-            org = request.POST["org"]
-            user_org = UserOrg.objects.all().filter(username=username)
-            for it in user_org:
-                data12 = it.org
-                data13 = json.loads(data12)
-            if request.session["username"] == org:
-                return redirect("/")
-            else:
-                userorg = UserInfo.objects.all().filter(username=username)
-                for i in userorg:
-                    data1 = i.userinfo
-                    data = json.loads(data1)
-                # return HttpResponse(f'{data}')
-                request.session["present_org"] = org
-                context["img"] = data13["profile_info"]["profile_img"]
 
-                context["time"] = data["dowell_time"]
-                context["location"] = data["city"]
-                userorg = UserOrg.objects.all().filter(username=username)
-                for i in userorg:
-                    dataorg = i.org
-                    dataorg1 = json.loads(dataorg)
-                context["datalav"] = dataorg1
-                context["first"] = dataorg1["profile_info"]["first_name"]
-                context["last"] = dataorg1["profile_info"]["last_name"]
-                ors = []
-                for lsr in dataorg1["organisations"]:
-                    ors.append(lsr["org_name"])
-                for lst in dataorg1["other_organisation"]:
-                    ors.append(lst["org_name"])
-                co = []
-                po = []
-                othero = []
-                for i in dataorg1["other_organisation"]:
-                    if i["org_name"] == org:
-                        try:
-                            co.append(i["product"])
-
-                            if i["portfolio_name"] and "enable" in i["status"]:
-                                othero.append(i)
-                            else:
-                                po.append(i["portfolio_name"])
-                        except:
-                            pass
-                # userorg1=UserOrg.objects.all().filter(username=org)
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in datapro["portpolio"]:
-                #     if username in ii["username"]:
-                #         co.append(ii["product"])
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in dataorg1["other_organisation"]:
-                #     if org in ii["org_name"]:
-                #         ro=ii["portfolio"]
-                context["othero"] = othero
-                context["aiport"] = [*set(po)]
-                context["myorg"] = [*set(ors)]
-                context["products"] = [*set(co)]
-                return render(request, "editother.html", context)
-
-
-def otherorg(request):
-    if request.session.get("username"):
-        username = request.session['username']
-        if request.method == "POST":
-            context = {}
-            lsimg = []
-            org = request.POST["org"]
-
-            user_org = UserOrg.objects.all().filter(username=username)
-            for it in user_org:
-                data12 = it.org
-                data13 = json.loads(data12)
-            if request.session["username"] == org:
-                request.session["present_org"] = org
-                return redirect("/")
-            else:
-                userorg = UserInfo.objects.all().filter(username=username)
-                for i in userorg:
-                    data1 = i.userinfo
-                    data = json.loads(data1)
-                # return HttpResponse(f'{data}')
-                request.session["present_org"] = org
-
-                # return HttpResponse(request.session["present_org"])
-                context["img"] = data13["profile_info"]["profile_img"]
-
-                context["time"] = data["dowell_time"]
-                context["location"] = data["city"]
-                userorg = UserOrg.objects.all().filter(username=username)
-                for i in userorg:
-                    dataorg = i.org
-                    dataorg1 = json.loads(dataorg)
-                context["datalav"] = dataorg1
-                ors = []
-                context["first"] = dataorg1["profile_info"]["first_name"]
-                context["last"] = dataorg1["profile_info"]["last_name"]
-                for lsr in dataorg1["organisations"]:
-                    ors.append(lsr["org_name"])
-                for lst in dataorg1["other_organisation"]:
-                    ors.append(lst["org_name"])
-                co = []
-                po = []
-                othero = []
-                for i in dataorg1["other_organisation"]:
-                    if i["org_name"] == org:
-                        try:
-                            co.append(i["product"])
-                            if i["portfolio_name"] and "enable" in i["status"]:
-                                othero.append(i)
-                            else:
-                                po.append(i["portfolio_name"])
-                        except:
-                            pass
-
-                publiclinks = UserOrg.objects.all().filter(username=org)
-                print(publiclinks)
-
-                temp = []
-                for ii in publiclinks:
-                    publicorg = ii.org
-                    # print(publicorg)
-                    publicorg1 = json.loads(publicorg)
-
-                for jj in publicorg1["portpolio"]:
-                    if jj["member_type"] == "public":
-                        temp.append(jj)
-                url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
-
-                # Define the data to be sent in the POST request
-                data = {
-                    "username": org
-                }
-
-                # Make the POST request
-                response_login = requests.post(url_lastlogin, json=data)
-
-                # Check if the request was successful
-                if response_login.status_code == 200:
-                    # Extract the LastloginTimes data from the response
-                    last_login_times = response_login.json()["data"]["LastloginTimes"]
-
-                    print("Last login times:", last_login_times)
-                else:
-                    print(f"POST request failed with status code {response_login.status_code}.")
-                # print(context["datalav"])
-                # print(datalav["portpolio"])
-                context["last_login_times"] = last_login_times
-                # userorg1=UserOrg.objects.all().filter(username=org)
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in datapro["portpolio"]:
-                #     if username in ii["username"]:
-                #         co.append(ii["product"])
-                # for i in userorg1:
-                #     datap=i.org
-                #     datapro=json.loads(datap)
-                # for ii in dataorg1["other_organisation"]:
-                #     if org in ii["org_name"]:
-                #         ro=ii["portfolio"]
-                context["othero"] = othero
-                context["aiport"] = [*set(po)]
-                context["myorg"] = [*set(ors)]
-                context["products"] = [*set(co)]
-                context["public"] = temp
-
-                return render(request, "editother.html", context)
+# def otherorg(request):
+#     if request.session.get("username"):
+#         username = request.session['username']
+#         if request.method == "POST":
+#             context = {}
+#             lsimg = []
+#             org = request.POST["org"]
+#
+#             user_org = UserOrg.objects.all().filter(username=username)
+#             for it in user_org:
+#                 data12 = it.org
+#                 data13 = json.loads(data12)
+#             if request.session["username"] == org:
+#                 request.session["present_org"] = org
+#                 return redirect("/")
+#             else:
+#                 userorg = UserInfo.objects.all().filter(username=username)
+#                 for i in userorg:
+#                     data1 = i.userinfo
+#                     data = json.loads(data1)
+#                 # return HttpResponse(f'{data}')
+#                 request.session["present_org"] = org
+#
+#                 # return HttpResponse(request.session["present_org"])
+#                 context["img"] = data13["profile_info"]["profile_img"]
+#
+#                 context["time"] = data["dowell_time"]
+#                 context["location"] = data["city"]
+#                 userorg = UserOrg.objects.all().filter(username=username)
+#                 for i in userorg:
+#                     dataorg = i.org
+#                     dataorg1 = json.loads(dataorg)
+#                 context["datalav"] = dataorg1
+#                 ors = []
+#                 context["first"] = dataorg1["profile_info"]["first_name"]
+#                 context["last"] = dataorg1["profile_info"]["last_name"]
+#                 for lsr in dataorg1["organisations"]:
+#                     ors.append(lsr["org_name"])
+#                 for lst in dataorg1["other_organisation"]:
+#                     ors.append(lst["org_name"])
+#                 co = []
+#                 po = []
+#                 othero = []
+#                 for i in dataorg1["other_organisation"]:
+#                     if i["org_name"] == org:
+#                         try:
+#                             co.append(i["product"])
+#                             if i["portfolio_name"] and "enable" in i["status"]:
+#                                 othero.append(i)
+#                             else:
+#                                 po.append(i["portfolio_name"])
+#                         except:
+#                             pass
+#
+#                 publiclinks = UserOrg.objects.all().filter(username=org)
+#                 print(publiclinks)
+#
+#                 temp = []
+#                 for ii in publiclinks:
+#                     publicorg = ii.org
+#                     # print(publicorg)
+#                     publicorg1 = json.loads(publicorg)
+#
+#                 for jj in publicorg1["portpolio"]:
+#                     if jj["member_type"] == "public":
+#                         temp.append(jj)
+#                 url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
+#
+#                 # Define the data to be sent in the POST request
+#                 data = {
+#                     "username": org
+#                 }
+#
+#                 # Make the POST request
+#                 response_login = requests.post(url_lastlogin, json=data)
+#
+#                 # Check if the request was successful
+#                 if response_login.status_code == 200:
+#                     # Extract the LastloginTimes data from the response
+#                     last_login_times = response_login.json()["data"]["LastloginTimes"]
+#
+#                     print("Last login times:", last_login_times)
+#                 else:
+#                     print(f"POST request failed with status code {response_login.status_code}.")
+#                 # print(context["datalav"])
+#                 # print(datalav["portpolio"])
+#                 context["last_login_times"] = last_login_times
+#                 # userorg1=UserOrg.objects.all().filter(username=org)
+#                 # for i in userorg1:
+#                 #     datap=i.org
+#                 #     datapro=json.loads(datap)
+#                 # for ii in datapro["portpolio"]:
+#                 #     if username in ii["username"]:
+#                 #         co.append(ii["product"])
+#                 # for i in userorg1:
+#                 #     datap=i.org
+#                 #     datapro=json.loads(datap)
+#                 # for ii in dataorg1["other_organisation"]:
+#                 #     if org in ii["org_name"]:
+#                 #         ro=ii["portfolio"]
+#                 context["othero"] = othero
+#                 context["aiport"] = [*set(po)]
+#                 context["myorg"] = [*set(ors)]
+#                 context["products"] = [*set(co)]
+#                 context["public"] = temp
+#
+#                 return render(request, "editother.html", context)
 
 
 @csrf_exempt
@@ -3755,7 +3739,7 @@ def Settings(request):
         data12 = it.org
         datalav = json.loads(data12)
     context["datalav"] = datalav
-    return render(request, "new/setting.html", context)
+    return render(request, "settings.html", context)
 
 
 def InviteLink(request):
