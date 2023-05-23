@@ -1,4 +1,7 @@
 {% load static %}
+
+{% load my_filters %}
+
 <!doctype html>
 <html lang="en-US">
 <head>
@@ -21,8 +24,11 @@
 <link rel='dns-prefetch' href='//c0.wp.com' />
 <link href='https://fonts.gstatic.com' crossorigin rel='preconnect' />
 <link rel="alternate" type="application/rss+xml" title=" &raquo; Feed" href="https://uxlivinglab.com/en/feed/" />
-<link rel="stylesheet" href="{%static 'clientadmin/css/style.css' %}" />
-
+<link rel="stylesheet" href="{% static 'clientadmin/css/style.css' %}" />
+<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"
+		/>
 <link rel="alternate" type="application/rss+xml" title=" &raquo; Comments Feed" href="https://uxlivinglab.com/en/comments/feed/" />
 <style type="text/css">.brave_popup{display:none}</style><script data-no-optimize="1"> var brave_popup_data = {}; var bravepop_emailValidation=false; var brave_popup_videos = {};  var brave_popup_formData = {};var brave_popup_adminUser = false; var brave_popup_pageInfo = {"type":"single","pageID":5880,"singleType":"page"};  var bravepop_emailSuggestions={};</script><script type="text/javascript">
 window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/uxlivinglab.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.2"}};
@@ -30,7 +36,7 @@ window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14
 !function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){p.clearRect(0,0,i.width,i.height),p.fillText(e,0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(t,0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s("\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!s("\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!s("\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!s("\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="{%static 'clientadmin/js/script.js' %}">\</script>
+<script src="{% static 'clientadmin/js/script.js' %}"></script>
 <style type="text/css">
 img.wp-smiley,
 img.emoji {
@@ -102,7 +108,7 @@ img.emoji {
             margin-left: 0;
         }
 </style>
-<script src="{%static 'clientadmin/js/form.js' %}">\</script>
+<script src="{% static 'clientadmin/js/form.js' %}"></script>
 <link rel='stylesheet' id='only screen and (max-width: 768px)-css-fe9e439bc198a00b67e1772a2e25acff' href='https://uxlivinglab.com/wp-content/plugins/woocommerce/assets/css/woocommerce-smallscreen.css?m=1613517092' type='text/css' media='only screen and (max-width: 768px)' />
 <link rel='stylesheet' id='print-css-9e062d4f0dc5cd01acf278562f2a045a' href='https://uxlivinglab.com/wp-content/themes/varia/print.css?m=1604609007' type='text/css' media='print' />
 <style id='global-styles-inline-css'>
@@ -397,14 +403,224 @@ margin-bottom: 0;
 }
 
 </style>
+
+<style>
+			#fileupload-popup {
+				position: fixed;
+				z-index: 999;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background-color: rgba(0, 0, 0, 0.4);
+                display: none;
+			}
+			.wellcome-screen-wrapper {
+				top: 40px;
+				position: relative;
+				display: grid;
+				place-items: center;
+				width: 80%;
+				margin: 0 auto;
+				background-color: white;
+			}
+			.wellcome-screen-inner {
+				width: 500px;
+				background-color: #f5f5f5;
+				margin-top: 80px;
+				margin-bottom: 30px;
+				font-family: "Roboto", Sans-serif;
+				padding: 20px;
+				box-sizing: content-box;
+				border-radius: 8px;
+			}
+			.wellcome-screen-inner h2 {
+				text-align: center;
+                font-size: 25px;
+			}
+			.input-field {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-top: 20px;
+			}
+			.input-field label {
+				font-size: 18px;
+				font-weight: 700;
+                color: #7A7A7A;
+			}
+            #add-field-name p{
+              line-height: normal;
+                color: red;
+                font-size: 16px;
+            }
+			.input-field input {
+				width: 50%;
+				padding: 7px 20px;
+				border: 1px solid rgb(173, 173, 173);
+				border-radius: 8px;
+				font-size: 16px;
+				font-weight: 400;
+			}
+			.input-field input:focus {
+				outline: none;
+			}
+
+			.input-field-all input {
+				width: unset;
+				margin-left: 30px;
+			}
+			.add-field-btn {
+				display: flex;
+				justify-content: end;
+			}
+			.add-field-btn span {
+				margin-left: 10px;
+			}
+			.add-field-btn span,
+			.submit-btn-wrapper button,
+			.copylink-wrapper button {
+				background-color: #7a7a7a;
+				padding: 10px 20px;
+				color: white;
+				font-size: 17px;
+				border-radius: 5px;
+				border: unset;
+                font-weight: 400;
+				cursor: pointer;
+				margin-top: 20px;
+			}
+			.submit-btn-wrapper {
+				display: flex;
+				justify-content: center;
+			}
+
+			.submit-btn-wrapper button:hover,
+			.add-field-btn span:hover,
+			.copylink-wrapper button:hover {
+				background-color: #61ce70;
+			}
+			.response-wrapper span {
+				color: #157347;
+			}
+			.download-file {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.download-file button {
+				background-color: #157347;
+				padding: 10px 20px;
+				color: white;
+				font-size: 17px;
+				border-radius: 5px;
+				border: unset;
+				cursor: pointer;
+			}
+			.copylink-wrapper {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-top: 7px;
+			}
+			.copylink-wrapper button {
+				margin: 0;
+			}
+			#datalink-span{
+			    display:none;
+			}
+			.copylink-wrapper span {
+				color: #61ce70;
+                font-size: 16px;
+			}
+			.copylink-wrapper i {
+				margin-left: 5px;
+				font-size: 14px;
+			}
+			#uploaderror {
+				color: #bb2d3b;
+			}
+			#fileupload-close-btn {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				background-color: black;
+				border-radius: 5px;
+				color: white;
+				padding: 8px 20px;
+				font-size: 20px;
+				cursor: pointer;
+			}
+			@media (min-width: 315px) and (max-width: 500px) {
+				.wellcome-screen-inner {
+					width: 280px;
+					padding: 10px;
+				}
+                .wellcome-screen-wrapper {
+
+				width: 95%;
+
+			}
+				.input-field {
+					flex-direction: column;
+
+					align-items: unset;
+				}
+				.input-field-all {
+					display: flex;
+				}
+				.input-field-all input {
+					width: 20%;
+				}
+				.input-field > input {
+					width: 100%;
+				}
+
+				.input-field > input {
+					margin: 5px 0;
+				}
+
+                .input-field label {
+				font-size: 16px;
+
+			}
+
+				.download-file {
+					align-items: start;
+					flex-direction: column;
+				}
+				.response-wrapper span {
+					display: inline-block;
+					margin: 5px 0;
+				}
+				.copylink-wrapper {
+					flex-direction: column;
+					justify-content: start;
+					align-items: start;
+				}
+			}
+            @media (min-width: 501px) and (max-width: 700px) {
+.wellcome-screen-inner {
+					width: 400px;
+
+				}
+                .wellcome-screen-wrapper {
+
+				width: 95%;
+
+			}
+            }
+		</style>
 </head>
 
 <body class="page-template-default page page-id-5880 wp-custom-logo wp-embed-responsive theme-varia woocommerce-no-js singular image-filters-enabled hide-footer-credit elementor-default elementor-kit-20 elementor-page elementor-page-5880">
+                <div id="modal-container"></div>
 
 <!--<div id="loading" ><center><img src="{%static 'clientadmin/img/load1.gif' %}" width="100%";height="100%"></center></div>-->
 <div id="image-container">
 <p class="image-holder">
-<img src="{%static 'clientadmin/img/load1.gif' %}" />
+<img src="{% static 'clientadmin/img/load1.gif' %}" />
 </p>
 </div>
 
@@ -852,6 +1068,31 @@ margin-bottom: 0;
 					{% endfor %}
                         </li></ol></div>
                 </div>
+{% if username == "mayowa25" or username == "Nagarajuvuliki" %}
+
+    <div id="elementor-tab-title-11744" class="elementor-tab-title" data-tab="5" role="tab" aria-controls="elementor-tab-content-11744" aria-expanded="false">
+                                                <span class="elementor-toggle-icon elementor-toggle-icon-left" aria-hidden="true">
+                                                            <span class="elementor-toggle-icon-closed"><i class="fas fa-caret-right"></i></span>
+                                <span class="elementor-toggle-icon-opened"><i class="elementor-toggle-icon-opened fas fa-caret-up"></i></span>
+                                                    </span>
+                                                <a href="#" class="elementor-toggle-title">Product</a>
+                    </div>
+
+                    <div id="elementor-tab-content-11744" class="elementor-tab-content elementor-clearfix" data-tab="5" role="tabpanel" aria-labelledby="elementor-tab-title-11744"><ol>
+                        <li><h6>
+                    <a href="{% url 'add_product' %}" class="elementor-toggle-title" style="color:var( --e-global-color-text )">Add Product</a>
+</h6></li>
+          <li><h6>
+                    <a href="{% url 'update_product' %}" class="elementor-toggle-title" style="color:var( --e-global-color-text )">Update Product</a>
+</h6></li>
+          <li><h6>
+                    <a href="{% url 'update_payment' %}" class="elementor-toggle-title" style="color:var( --e-global-color-text )">Update Payment</a>
+</h6></li>
+<!--<li><h6>Personal Details</h6></li><li><h6>Photo</h6></li><li> </li><li> </li></ol></div>-->
+                </div>
+
+{% endif %}
+
                                 </div>
                 </div>
                 </div>
@@ -1040,7 +1281,11 @@ margin-bottom: 0;
 
                         <!--<li>Workflow AI</li><li>Wifi QR Code</li><li>Digital Q</li>-->
                         		{% for prod in datalav.products %}
+                        		{% if prod.product_name %}
+					<li>{{prod.product_name}}</li>
+					{% else %}
 					<li>{{prod}}</li>
+					{% endif %}
 					{% endfor %}
 
                         </ol></div>
@@ -1457,6 +1702,7 @@ margin-bottom: 0;
                             <div class="elementor-widget-wrap">
                         <div class="elementor-element elementor-element-db7fc23 elementor-widget elementor-widget-text-editor" data-id="db7fc23" data-element_type="widget" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
+
                                 <div class="elementor-text-editor elementor-clearfix">
                 <p><b><i>Products of <span style="color: #ff0000;">{{request.session.present_org}}</span>, Owner <span style="color: #ff0000;">{{request.session.present_org}}</span></i></b><br /><br /></p><p><b><i>Select product &amp; Portfolio to connect </i></b></p>                    </div>
                         </div>
@@ -1470,9 +1716,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Workflow AI</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Workflow AI" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Workflow" in i.product and "owner" in i.username%} {% if "enable" in i.status %}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text"  name="product" value="Workflow AI" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Workflow" in i.product and "owner" in i.username%} {% if "enable" in i.status %}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}} </option>{%endif%}{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1483,9 +1729,10 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Wifi QR Code</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Wifi QR Code" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Wifi" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Wifi QR Code" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Wifi" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{% empty %} <option disabled selected>Waiting for portfolio from owner</option>{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+
                                             </div>
                 </div>
             </div>
@@ -1496,9 +1743,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">User Experience Live</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="UX Live" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "UX Live" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="UX Live" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "UX Live" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1525,9 +1772,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Socialmedia Automation</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Social Media Automation" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Social" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Social Media Automation" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Social" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1538,9 +1785,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Scales</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Scales" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Scales" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Scales" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Scales" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1551,9 +1798,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Logo Scan</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Logo Scan" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Logo" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Logo Scan" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Logo" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1580,9 +1827,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Chat</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Chat" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Chat" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Chat" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Chat" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1593,9 +1840,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Legal Zard</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Legalzard" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Legal" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Legalzard" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Legal" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1606,9 +1853,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Maps</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Maps" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Maps" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Maps" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Maps" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1635,9 +1882,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Digital Queue</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Digital Q" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Digital" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Digital Q" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Digital" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1648,9 +1895,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Customer Experience</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Experience" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Customer" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Experience" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Customer" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1661,9 +1908,9 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Admin</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Client Admin" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Client" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Client Admin" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Client" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 <b><br>
-<button type="submit">Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1698,10 +1945,10 @@ margin-bottom: 0;
 <!--</select></p>-->
 <p style="text-align: left;">
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Team Management" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Team Management" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Team Management" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Team Management" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1718,10 +1965,10 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Living Lab Monitoring" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Monitoring" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Living Lab Monitoring" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Monitoring" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1738,10 +1985,10 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Live Dashboard" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Dashboard" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Live Dashboard" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Dashboard" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1773,10 +2020,10 @@ margin-bottom: 0;
 <!--<option>Portfolio 02, Role Name, Member Type</option>-->
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Sales Agent" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Agent" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Sales Agent" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Agent" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1793,10 +2040,10 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-<form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Permutation Calculator" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Permutation" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+<form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Permutation Calculator" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Permutation" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1813,10 +2060,10 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Support" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Support" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Support" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Support" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1845,7 +2092,7 @@ margin-bottom: 0;
                         <h2 class="img-accordion-title">Secure Repositories</h2>
                         <p><p> </p>
                         <!--<p style="text-align: left;"><select id="mySelect"><option>Portfolio 01, Role Name, Member Type</option><option>Portfolio 02, Role Name, Member Type</option><option>Portfolio 3, Role Name, Member Type</option></select></p><p><b><br />-->
-                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Repositories" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Repositories" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Repositories" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Repositories" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
                         <b><br>
                         <button>Connect</button></b></p></form></p>
@@ -1861,7 +2108,7 @@ margin-bottom: 0;
                         <h2 class="img-accordion-title">Secure Data</h2>                            <p><p> </p>
 
                         <!--<p style="text-align: left;"><select id="mySelect"><option>Portfolio 01, Role Name, Member Type</option><option>Portfolio 02, Role Name, Member Type</option><option>Portfolio 3, Role Name, Member Type</option></select></p>-->
-                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Data" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Secure" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Data" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Secure" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
                         <p><b><br /><button>Connect</button></b></form></p>
                                             </div>
@@ -1879,10 +2126,10 @@ margin-bottom: 0;
 <!--<option>Portfolio 02, Role Name, Member Type</option>-->
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Samanta" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Samanta" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}">{{i.portfolio_name}},{{i.role}},{{i.member_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Samanta" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Samanta" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
 
 <b><br>
-<button>Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1946,21 +2193,54 @@ var value1 = ee.value;
 // }
 // {%endfor%}
 
+// {% for i in datalav.portpolio %}
+// if (value1=="{{i.portfolio_name}}"){
+//     res = "{{i|safe}}";
+//     res = res.slice(1,-1);
+
+//     const stringArray = res.split(",");
+
+//     let outputString = "";
+//         stringArray.forEach(substring => {
+//           outputString += substring.trim() + "\n";
+//     });
+//     ro.value=outputString;
+//     //ro.value=JSON.stringify("{{i|safe}}");
+// }
+// {%endfor%}
+
+
+
 {% for i in datalav.portpolio %}
 if (value1=="{{i.portfolio_name}}"){
-    res = "{{i|safe}}";
-    res = res.slice(1,-1);
+    let res = "{{i|safe}}";
+
+    // Replace single quotes with double quotes
+    res = res.replace(/'/g, '"');
+
+    // Convert string back to object
+    let resObj = JSON.parse(res);
+
+    // Replace username only if it's 'owner'
+    if (resObj.username[0] == 'owner') {
+        resObj.username[0] = "{{ username }}";
+    }
+
+    // Convert object back to string
+    res = JSON.stringify(resObj);
 
     const stringArray = res.split(",");
 
     let outputString = "";
-        stringArray.forEach(substring => {
-          outputString += substring.trim() + "\n";
+    stringArray.forEach(substring => {
+        outputString += substring.trim() + "\n";
     });
     ro.value=outputString;
-    //ro.value=JSON.stringify("{{i|safe}}");
 }
-{%endfor%}
+{% endfor %}
+
+
+
 
 
 }
@@ -1976,13 +2256,15 @@ if (value1=="{{i.portfolio_name}}"){
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="product" id="productlist" class="elementor-field-textual elementor-size-sm" required="required" onchange="lav();" aria-required="true">
                                     <option >....Select Product....</option>
-                               {% for i in datalav.products %}
-                      {% if datalav.document_name == "uxliveadmin" and i == "Monitoring" %}
-                        <option value="{{i}}">{{i}}</option>
-                      {% elif user != "uxliveadmin" and i != "Monitoring" %}
-                        <option value="{{i}}">{{i}}</option>
-                      {% endif %}
-                    {% endfor %}
+           {% for i in datalav.products %}
+    {% if i.product_name %}
+        <option value="{{i.product_name}}" {% if datalav.document_name == "uxliveadmin" and i.product_name == "Monitoring" or user != "uxliveadmin" and i.product_name != "Monitoring" %}selected{% endif %}>{{i.product_name}}</option>
+    {% else %}
+        <option value="{{i}}" {% if datalav.document_name == "uxliveadmin" and i == "Monitoring" or user != "uxliveadmin" and i != "Monitoring" %}selected{% endif %}>{{i}}</option>
+    {% endif %}
+{% endfor %}
+
+
                             </select>
         </div>
                         </div>
@@ -2080,7 +2362,11 @@ if (value1=="{{i.portfolio_name}}"){
             <select name="form_fields[product]" id="form-field-product" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
                                     <option>....select....</option>
                                     {%for p in datalav.products %}
+                                    {% if p.product_name %}
+                                    <option value="{{p.product_name}}">{{p.product_name}}</option>
+                                    {% else %}
                                     <option value="{{p}}">{{p}}</option>
+                                    {% endif %}
                                     {%endfor%}
                             </select>
         </div>
@@ -2117,7 +2403,7 @@ if (value1=="{{i.portfolio_name}}"){
                                     <option>....select....</option>
                                     {%for r in datalav.roles %}
                                     {% if r.status != "disable" %}
-                                    <option value="{{r.role_name}}">{{r.role_name}}</option>
+                                    <option value="{{r.role_name}}">{{r.role_name}} - {{r.role_code}}</option>
                                     {%endif%}
                                     {%endfor%}
                             </select>
@@ -2172,12 +2458,18 @@ var value = e.value;
 if (value.includes("team"))
 {
     {{ datalav.members.team_members.accept_members|safe }}.forEach(item => {
-            opt = document.createElement('option');
+        opt = document.createElement('option');
+        if (item.name == "owner") {
+            opt.value = "{{ username }}";
+            opt.innerHTML = "{{ username }}";
+        } else {
             opt.value = item.name;
             opt.innerHTML = item.name;
-            select.appendChild(opt);
+        }
+        select.appendChild(opt);
     })
 }
+
 else if (value=="user")
 {
     {{ datalav.members.guest_members.accept_members|safe }}.forEach(item => {
@@ -2204,7 +2496,8 @@ else if (value=="owner")
 
             opt = document.createElement('option');
             opt.value = "owner";
-            opt.innerHTML = "owner";
+            // opt.innerHTML = "owner";
+            opt.innerHTML = "{{ username }}";
             select.appendChild(opt);
 }
 else{
@@ -2309,7 +2602,11 @@ select.appendChild(opt);
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[productsearch][]" id="form-field-productsearch" class="elementor-field-textual elementor-size-sm" size="5" onchange="filterp(this.value,'form-field-enabledportfolios','product');">
                                     {% for i in datalav.products %}
+                                    {% if i.product_name %}
+                                    <option value="{{i.product_name}}">{{i.product_name}}</option>
+                                    {% else %}
                                     <option value="{{i}}">{{i}}</option>
+                                    {% endif %}
                                     {%endfor%}
                             </select>
         </div>
@@ -2345,7 +2642,7 @@ select.appendChild(opt);
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[rolessearch][]" id="form-field-rolessearch" class="elementor-field-textual elementor-size-sm" size="5" onchange="filterp(this.value,'form-field-enabledportfolios','role');">
                                     {% for i in datalav.roles %}
-                                    <option value="{{i.role_name}}">{{i.role_name}}</option>
+                                    <option value="{{i.role_name}}">{{i.role_name}} - {{i.role_code}}</option>
                                     {%endfor%}
                             </select>
         </div>
@@ -3013,11 +3310,14 @@ if (value1=="{{i.name}}"){
                                 Invited Team Members                            </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[invitedmemberlist][]" id="form-field-invitedmemberlist" class="elementor-field-textual elementor-size-sm" multiple="" size="5" onchange="lav_i_guest();">
-                                    {% for team in datalav.members.team_members.pending_members %}
-                                    {% if team.status == "unused" %}
-                                    <option value="{{team.name}}">{{team.name}}</option>
-                                    {%endif%}
-                                    {%endfor%}
+                                    <!--{% for team in datalav.members.team_members.pending_members %}-->
+                                    <!--{% if team.status == "unused" %}-->
+                                    <!--<option value="{{team.name}}">{{team.name}}</option>-->
+                                    <!--{%endif%}-->
+                                    <!--{%endfor%}-->
+                                    {% for name in invited_members %}
+                                        <option>{{ name }}</option>
+                                    {% endfor %}
                             </select>
         </div>
                         </div>
@@ -3070,7 +3370,7 @@ if (value1=="{{i.name}}"){
                 <p class="elementor-heading-title elementor-size-mediuml">If you don't have any link, <a href="#" id="open-modal">click here</a> to upload.</p></div>
                         </div>
                 </div>
-                <div id="modal-container"></div>
+                <!--<div id="modal-container"></div>-->
                 <div class="elementor-element elementor-element-c67a819 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="c67a819" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
                 <div class="elementor-widget-container">
                     <form id="importusers" method="POST" name="Form1">
@@ -3395,11 +3695,14 @@ rt.textContent = "Copied";
                                 Invited Users                           </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[inviteduserlist][]" id="form-field-inviteduserlist" class="elementor-field-textual elementor-size-sm" multiple="" size="5" onchange="getmembers(this.value,'form-field-inviteduserdetails1')">
-                                    {% for guest in datalav.members.guest_members.pending_members %}
-                                    {% if guest.name and guest.status == "unused" %}
-                                    <option value="{{guest.name}}">{{guest.name}}</option>
-                                    {%endif%}
-                                    {%endfor%}
+                                    <!--{% for guest in datalav.members.guest_members.pending_members %}-->
+                                    <!--{% if guest.name and guest.status == "unused" %}-->
+                                    <!--<option value="{{guest.name}}">{{guest.name}}</option>-->
+                                    <!--{%endif%}-->
+                                    <!--{%endfor%}-->
+                                    {% for name in invited_users %}
+                                        <option>{{ name }}</option>
+                                    {% endfor %}
                                     <option value=""></option>
                             </select>
         </div>
@@ -3449,7 +3752,10 @@ rt.textContent = "Copied";
                 <div class="elementor-element elementor-element-190cd5c elementor-widget elementor-widget-text-editor" data-id="190cd5c" data-element_type="widget" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
                                 <div class="elementor-text-editor elementor-clearfix">
-                <p><b><i>Common Invitation to join as USER to my organisation</i></b></p>                   </div>
+                <p><b><i>Common Invitation to join as USER to my organisation</i></b></p>
+
+                                <p class="elementor-heading-title elementor-size-mediuml">If you don't have any link, <a href="#" id="open-modal-2">click here</a> to upload.</p>
+</div>
                         </div>
                 </div>
                 <div class="elementor-element elementor-element-b1fce4d elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="b1fce4d" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
@@ -3510,7 +3816,7 @@ rt.textContent = "Copied";
                 <div class="elementor-widget-container">
                                 <div class="elementor-image">
                                     <figure class="wp-caption">
-                                        <img decoding="async" src="https://i0.wp.com/uxlivinglab.com/wp-content/plugins/elementor/assets/images/placeholder.png?w=750&#038;ssl=1" title alt data-recalc-dims="1" data-lazy-src="https://i0.wp.com/uxlivinglab.com/wp-content/plugins/elementor/assets/images/placeholder.png?w=750&amp;is-pending-load=1#038;ssl=1" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class=" jetpack-lazy-image"><noscript><img data-lazy-fallback="1" decoding="async" src="https://i0.wp.com/uxlivinglab.com/wp-content/plugins/elementor/assets/images/placeholder.png?w=750&#038;ssl=1" title="" alt="" data-recalc-dims="1"  /></noscript>                                          <figcaption class="widget-image-caption wp-caption-text">QR Code for link</figcaption>
+                                        <img id="usercommoninvitationqr" decoding="async" src="https://i0.wp.com/uxlivinglab.com/wp-content/plugins/elementor/assets/images/placeholder.png?w=750&#038;ssl=1" title alt data-recalc-dims="1" data-lazy-src="https://i0.wp.com/uxlivinglab.com/wp-content/plugins/elementor/assets/images/placeholder.png?w=750&amp;is-pending-load=1#038;ssl=1" srcset="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class=" jetpack-lazy-image"><noscript><img data-lazy-fallback="1" decoding="async" src="https://i0.wp.com/uxlivinglab.com/wp-content/plugins/elementor/assets/images/placeholder.png?w=750&#038;ssl=1" title="" alt="" data-recalc-dims="1"  /></noscript>                                          <figcaption class="widget-image-caption wp-caption-text">QR Code for link</figcaption>
                                         </figure>
                                 </div>
                         </div>
@@ -3518,7 +3824,7 @@ rt.textContent = "Copied";
                 <div class="elementor-element elementor-element-50cf30c elementor-align-center elementor-widget elementor-widget-button" data-id="50cf30c" data-element_type="widget" data-widget_type="button.default">
                 <div class="elementor-widget-container">
                     <div class="elementor-button-wrapper">
-            <a href="#" class="elementor-button-link elementor-button elementor-size-sm" role="button" id="downloadinvitecommonqruser">
+            <a href="#" class="elementor-button-link elementor-button elementor-size-sm" role="button" id="downloadinvitecommonqruser" download="">
                         <span class="elementor-button-content-wrapper">
                         <span class="elementor-button-text">Download common invitation link QR code</span>
         </span>
@@ -3718,14 +4024,13 @@ rt.textContent = "Copied";
             <div class="elementor-form-fields-wrapper elementor-labels-above">
                                 <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-itemlevel1 elementor-col-100 elementor-field-required elementor-mark-required">
                                                 <label for="form-field-itemlevel1" class="elementor-field-label">
-                                Select Item in Level 1                          </label>
+                                Select Item in Level 1 - {{datalav.organisations.0.level1.level_name}}                          </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[itemlevel1]" id="form-field-itemlevel1" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
+                                    <option>...select...</option>
                                     {%for i in datalav.organisations.0.level1.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3734,14 +4039,13 @@ rt.textContent = "Copied";
                         </div>
                                 <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-itemlevel2 elementor-col-100">
                                                 <label for="form-field-itemlevel2" class="elementor-field-label">
-                                Select Item in Level 2                          </label>
+                                Select Item in Level 2 - {{datalav.organisations.0.level2.level_name}}                          </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[itemlevel2]" id="form-field-itemlevel2" class="elementor-field-textual elementor-size-sm">
+                                    <option>...select...</option>
                                     {%for i in datalav.organisations.0.level2.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3750,14 +4054,13 @@ rt.textContent = "Copied";
                         </div>
                                 <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-itemlevel3 elementor-col-100">
                                                 <label for="form-field-itemlevel3" class="elementor-field-label">
-                                Select Item in Level 3                          </label>
+                                Select Item in Level 3 - {{datalav.organisations.0.level3.level_name}}                          </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[itemlevel3]" id="form-field-itemlevel3" class="elementor-field-textual elementor-size-sm">
+                                    <option>...select...</option>
                                 {%for i in datalav.organisations.0.level3.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3766,14 +4069,13 @@ rt.textContent = "Copied";
                         </div>
                                 <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-itemlevel4 elementor-col-100">
                                                 <label for="form-field-itemlevel4" class="elementor-field-label">
-                                Select Item in Level 4                          </label>
+                                Select Item in Level 4 - {{datalav.organisations.0.level4.level_name}}                          </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[itemlevel4]" id="form-field-itemlevel4" class="elementor-field-textual elementor-size-sm">
+                                    <option>...select...</option>
                                     {%for i in datalav.organisations.0.level4.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3782,14 +4084,13 @@ rt.textContent = "Copied";
                         </div>
                                 <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-itemlevel5 elementor-col-100">
                                                 <label for="form-field-itemlevel5" class="elementor-field-label">
-                                Select Item in Level 5                          </label>
+                                Select Item in Level 5 - {{datalav.organisations.0.level5.level_name}}                          </label>
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[itemlevel5]" id="form-field-itemlevel5" class="elementor-field-textual elementor-size-sm">
+                                    <option>...select...</option>
                                 {%for i in datalav.organisations.0.level5.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3877,10 +4178,8 @@ rt.textContent = "Copied";
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[rolelevel1search][]" id="form-field-rolelevel1search" class="elementor-field-textual elementor-size-sm" multiple="">
                                     {%for i in datalav.organisations.0.level1.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3893,10 +4192,8 @@ rt.textContent = "Copied";
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[rolelevel2search][]" id="form-field-rolelevel2search" class="elementor-field-textual elementor-size-sm" multiple="" size="5">
                                 {%for i in datalav.organisations.0.level2.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3909,10 +4206,8 @@ rt.textContent = "Copied";
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[rolelevel3search][]" id="form-field-rolelevel3search" class="elementor-field-textual elementor-size-sm" multiple="">
                                     {%for i in datalav.organisations.0.level3.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3925,10 +4220,8 @@ rt.textContent = "Copied";
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[rolelevel4search][]" id="form-field-rolelevel4search" class="elementor-field-textual elementor-size-sm" multiple="">
                                     {%for i in datalav.organisations.0.level4.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -3941,10 +4234,8 @@ rt.textContent = "Copied";
                                 <div class="elementor-field elementor-select-wrapper ">
             <select name="form_fields[rolelevel5search][]" id="form-field-rolelevel5search" class="elementor-field-textual elementor-size-sm" multiple="">
                                     {%for i in datalav.organisations.0.level5.items %}
-                                    {% if i.item_name %}
+                                    {% if i.status == "enable" %}
                                     <option value="{{i.item_name}}">{{i.item_name}}</option>
-                                    {%else%}
-                                    <option value="{{i}}">{{i}}</option>
                                     {%endif%}
 
                                     {%endfor%}
@@ -4060,7 +4351,7 @@ rt.textContent = "Copied";
                         <div class="elementor-element elementor-element-77efce4 elementor-widget elementor-widget-text-editor" data-id="77efce4" data-element_type="widget" id="level1nametag" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
                                 <div class="elementor-text-editor elementor-clearfix">
-                <p><b><i>Level 1 &#8211; &lt;{{datalav.organisations.0.level1.level_name}}&gt;,</i></b></p><p><b><i>{{datalav.organisations.0.level1.items|length}} &#8211; &lt;{{datalav.organisations.0.level1.items|length}}&gt;</i></b></p>                 </div>
+                <p><b><i>Level 1 &#8211; &lt;{{datalav.organisations.0.level1.level_name}}&gt;,</i></b></p><p><b><i>{{enabled_items_count.level1}} &#8211; &lt;total enabled items in level 1&gt;</i></b></p>                 </div>
                         </div>
                 </div>
                 <div class="elementor-element elementor-element-6c6a127 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="6c6a127" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
@@ -4282,8 +4573,9 @@ rt.textContent = "Copied";
                         <div class="elementor-element elementor-element-2a11bdd elementor-widget elementor-widget-text-editor" data-id="2a11bdd" data-element_type="widget" id="level2nametag" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
                                 <div class="elementor-text-editor elementor-clearfix">
-                <p><b><i>Level 2 &#8211; &lt;{{datalav.organisations.0.level2.level_name}}&gt;</i></b></p><p><b><i>{{datalav.organisations.0.level2.items|length}} &#8211; &lt;total enabled items in level 2&gt;</i></b></p>                   </div>
+                <p><b><i>Level 2 &#8211; &lt;{{datalav.organisations.0.level2.level_name}}&gt;</i></b></p><p><b><i> {{enabled_items_count.level2}} &#8211; &lt;total enabled items in level 2&gt;</i></b></p>                   </div>
                         </div>
+                        <!-- {{datalav.organisations.0.level2.items|length}} -->
                 </div>
                 <div class="elementor-element elementor-element-322eb5f elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="322eb5f" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
                 <div class="elementor-widget-container">
@@ -4501,7 +4793,7 @@ rt.textContent = "Copied";
                         <div class="elementor-element elementor-element-9aaf20c elementor-widget elementor-widget-text-editor" data-id="9aaf20c" data-element_type="widget" id="level3nametag" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
                                 <div class="elementor-text-editor elementor-clearfix">
-                <p><b><i>Level 3 &#8211; &lt;{{datalav.organisations.0.level3.level_name}}&gt;</i></b></p><p><b><i>{{datalav.organisations.0.level3.items|length}} &#8211; &lt;total enabled items in level 3&gt;</i></b></p>                   </div>
+                <p><b><i>Level 3 &#8211; &lt;{{datalav.organisations.0.level3.level_name}}&gt;</i></b></p><p><b><i>{{enabled_items_count.level3}} &#8211; &lt;total enabled items in level 3&gt;</i></b></p>                   </div>
                         </div>
                 </div>
                 <div class="elementor-element elementor-element-536ee6c elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="536ee6c" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
@@ -4721,7 +5013,7 @@ rt.textContent = "Copied";
                         <div class="elementor-element elementor-element-fb84031 elementor-widget elementor-widget-text-editor" data-id="fb84031" data-element_type="widget" id="level4nametag" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
                                 <div class="elementor-text-editor elementor-clearfix">
-                <p><b><i>Level 4 &#8211; &lt;{{datalav.organisations.0.level4.level_name}}&gt;</i></b></p><p><b><i>{{datalav.organisations.0.level4.items|length}} &#8211; &lt;total enabled items in level 4&gt;</i></b></p>                   </div>
+                <p><b><i>Level 4 &#8211; &lt;{{datalav.organisations.0.level4.level_name}}&gt;</i></b></p><p><b><i>{{enabled_items_count.level4}} &#8211; &lt;total enabled items in level 4&gt;</i></b></p>                   </div>
                         </div>
                 </div>
                 <div class="elementor-element elementor-element-4915b20 elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="4915b20" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
@@ -4941,7 +5233,7 @@ rt.textContent = "Copied";
                         <div class="elementor-element elementor-element-77e144f elementor-widget elementor-widget-text-editor" data-id="77e144f" data-element_type="widget" id="level5nametag" data-widget_type="text-editor.default">
                 <div class="elementor-widget-container">
                                 <div class="elementor-text-editor elementor-clearfix">
-                <p><b><i>Level 5 &#8211; &lt;{{datalav.organisations.0.level5.level_name}}&gt;</i></b></p><p><b><i>{{datalav.organisations.0.level5.items|length}} &#8211; &lt;total enabled items in level 5&gt;</i></b></p>                   </div>
+                <p><b><i>Level 5 &#8211; &lt;{{datalav.organisations.0.level5.level_name}}&gt;</i></b></p><p><b><i>{{enabled_items_count.level5}} &#8211; &lt;total enabled items in level 5&gt;</i></b></p>                   </div>
                         </div>
                 </div>
                 <div class="elementor-element elementor-element-aa3761f elementor-button-align-stretch elementor-widget elementor-widget-form" data-id="aa3761f" data-element_type="widget" data-settings="{&quot;step_next_label&quot;:&quot;Next&quot;,&quot;step_previous_label&quot;:&quot;Previous&quot;,&quot;button_width&quot;:&quot;100&quot;,&quot;step_type&quot;:&quot;number_text&quot;,&quot;step_icon_shape&quot;:&quot;circle&quot;}" data-widget_type="form.default">
@@ -6730,6 +7022,96 @@ function toggleDivs(s){
         </div>
     </div>
 </div>
+
+		<div id="fileupload-popup">
+			<div class="wellcome-screen-wrapper">
+				<div class="wellcome-screen-inner">
+					<h2>Excel or CSV Details</h2>
+													<p><a href="https://www.pythonanywhere.com/user/100093/files/home/100093/clientadmin/media/sample.csv"> Download Sample file</a> </p>
+
+					<form id="fileupload-form" action="" method="POST" enctype="multipart/form-data">
+					       {% csrf_token %}
+						<input
+							type="hidden"
+							name="csrfmiddlewaretoken"
+							value="svulFbZXgn1JMyy8QaHtq3j1sSHXGAdNF3dsvBK5KZe45BsnPLhPHve8k9PPpW2U"
+						/>
+						<div class="fileuploadinput">
+							<div class="input-field">
+								<label for=""> Excel / CSV File</label>
+								<input
+									type="file"
+									name="uploadfile"
+									id="fileInput"
+									accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+									required
+								/>
+							</div>
+							<small
+								id="fileError"
+								style="display: none; color: #bb2d3b"
+							></small>
+						</div>
+						<div class="input-field">
+							<label for=""> Name of Sheet</label>
+							<input type="text" name="sheetname" required />
+						</div>
+
+						<div id="add-field-name">
+							<div class="input-field">
+								<label for=""> Field Name </label>
+								<input type="text" name="fieldname" />
+							</div>
+							<p
+								>If you want to upload all fields of sheet give text "all" or give specific field name one by one</p
+							>
+						</div>
+
+						<div class="add-field-btn">
+							<span id="add-more-field">Add</span>
+                            <span id="remove-field">Remove</span>
+
+						</div>
+						<div class="input-field">
+							<label for=""> Number of rows you want to Delete</label>
+							<input type="number" name="rowsToDelete" />
+						</div>
+
+						<div class="submit-btn-wrapper">
+							<button id="preview" type="">Save to Database</button>
+							&nbsp;&nbsp;
+							<!--<button id="submitDataButton" type="">Submit</button>-->
+						</div>
+					</form>
+					<div class="copylink-wrapper">
+						<span id="datalink-span"
+							>Copy this link:
+							<span id="popup-copylink"></span></span
+						>
+						<button id="popup-copylink-btn">
+							Copy <i class="bi bi-clipboard" id="copy-icon"></i>
+						</button>
+					</div>
+					<div
+						id="response-wrapper"
+						class="response-wrapper"
+						style="color: green !important; font-size: 18px"
+					>
+						<span> </span>
+						<div class="download-file">
+							<!--<button>Click here to Download file</button>-->
+						</div>
+						<!--	<span> Your Link: 126754545</span> -->
+					</div>
+					<br />
+					<br />
+
+					<div id="table-div" class="table-responsive"></div>
+				</div>
+				<button id="fileupload-close-btn">Close</button>
+			</div>
+		</div>
+
 <script type="text/template" id="tmpl-variation-template">
     <div class="woocommerce-variation-description">data.variation.variation_description</div>
     <div class="woocommerce-variation-price">data.variation.price_html</div>
@@ -7065,7 +7447,7 @@ var windowOpen;
             });
         </script>
 
-<script src="{%static 'clientadmin/js/form.js' %}"></script>
+<script src="{% static 'clientadmin/js/form.js' %}"></script>
 <script>function filterp(val,nameid,key){
     let select = document.getElementById(nameid);
     let distag=document.getElementById("form-field-disabledportfolios");
@@ -7337,7 +7719,7 @@ function getguestmembers(mem,mem1){
     const memberList =  {{ datalav.portpolio|safe }}
     const memberList1 =  {{ datalav.members.team_members.pending_members|safe }}
 </script>
-<script src="{%static 'clientadmin/js/searchmember.js' %}">\</script>
+<script src="{% static 'clientadmin/js/searchmember.js' %}"></script>
 
   <script>
       // pagination
@@ -7430,68 +7812,63 @@ form.addEventListener("submit", function(event) {
 <script>
 
     // Get the modal container
-var modalContainer = document.getElementById("modal-container");
+// var modalContainer = document.getElementById("modal-container");
 
-// Get the link that triggers the modal
-var openModal = document.getElementById("open-modal");
+// // Get the link that triggers the modal
+// var openModal = document.getElementById("open-modal");
+// var openModalLinks = document.querySelectorAll("#open-modal, #open-modal-2");
 
-openModal.addEventListener("click", function(event) {
-  event.preventDefault();
+// // openModal.addEventListener("click", function(event) {
+// openModalLinks.forEach(function(link) {
+//   link.addEventListener("click", function(event) {
+//   event.preventDefault();
 
-  // Create the iframe
+//   // Create the iframe
+//   var iframe = document.createElement("iframe");
+//   iframe.setAttribute("src", "https://100093.pythonanywhere.com/fileupload");
+//   iframe.setAttribute("width", "100%");
+//   iframe.setAttribute("height", "100%");
 
-  var iframe = document.createElement("iframe");
-  iframe.setAttribute("src", "https://100093.pythonanywhere.com/fileupload");
-  iframe.setAttribute("width", "100%");
-  iframe.setAttribute("height", "100%");
+//   // Create the modal content and add the iframe to it
+//   var modalContent = document.createElement("div");
+//   modalContent.setAttribute("id", "modal-content");
+//   modalContent.setAttribute("style", "position:relative;height:100%;");
+//   modalContent.appendChild(iframe);
 
-  // Create the modal content and add the iframe to it
-  var modalContent = document.createElement("div");
-  modalContent.setAttribute("id", "modal-content");
-  modalContent.setAttribute("style", "position:relative;height:100%;");
-  modalContent.appendChild(iframe);
+//   // Create the close button and add it to the modal content
+//   var closeButton = document.createElement("button");
+//   closeButton.setAttribute("id", "close-button");
+//   closeButton.innerText = "Close";
+//   closeButton.style.position = "absolute";
+//   closeButton.style.top = "10px";
+//   closeButton.style.right = "10px";
+//   closeButton.addEventListener("click", function(event) {
+//     event.preventDefault();
+//     modalContainer.style.display = "none";
+//     modalContainer.innerHTML = "";
+//   });
+//   modalContent.appendChild(closeButton);
 
-  // Create the close button and add it to the modal content
-  var closeButton = document.createElement("button");
-  closeButton.setAttribute("id", "close-button");
-  closeButton.innerText = "Close";
-  closeButton.style.position = "absolute";
-  closeButton.style.top = "10px";
-  closeButton.style.right = "10px";
-  closeButton.addEventListener("click", function(event) {
-    event.preventDefault();
-    modalContainer.style.display = "none";
-    modalContainer.innerHTML = "";
-  });
-  modalContent.appendChild(closeButton);
-
-  // Add the modal content to the modal container and show it
-  modalContainer.appendChild(modalContent);
-  modalContainer.style.display = "block";
-});
+//   // Add the modal content to the modal container and show it
+//   modalContainer.appendChild(modalContent);
+//   modalContainer.style.display = "block";
+// });
+// });
 
 // Add a click event listener to the modal container to close it
-modalContainer.addEventListener("click", function(event) {
-  if (event.target == modalContainer) {
-    modalContainer.style.display = "none";
-    modalContainer.innerHTML = "";
-  }
-});
+// modalContainer.addEventListener("click", function(event) {
+//   if (event.target == modalContainer) {
+//     modalContainer.style.display = "none";
+//     modalContainer.innerHTML = "";
+//   }
+// });
 
 </script>
 
 <script>
-    var openModal = document.getElementById("open-modal");
+    // var openModal = document.getElementById("open-modal");
+    // var openModalLinks = document.querySelectorAll("#open-modal, #open-modal-2");
 
-// Add a click event listener to the link
-openModal.addEventListener("click", function(event) {
-  event.preventDefault();
-
-  // Get the URL of the page to open
-  var url = "https://100093.pythonanywhere.com/fileupload";
-
-  // Open the URL in a new tab
-});
          $('#importinvitecommonmember').click(function (event) {
                      event.preventDefault();
 
@@ -7506,6 +7883,30 @@ openModal.addEventListener("click", function(event) {
                     'linkdata': linkdata,
                 },                success: function (response) {
                     $('#form-field-teammembercommoninvitationlink').val(response.userlink);
+                    console.log(response.datalink);
+
+                    // do something with the returned URL
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+         $('#importinvitecommonuser').click(function (event) {
+                     event.preventDefault();
+
+            var linkdata = $('#form-field-userimportlist').val();
+            console.log(linkdata)
+
+            $.ajax({
+                url: "{% url 'importmembers' %}",
+                type: "POST",
+                data: {
+                    'submitlinkUserData': true,
+                    'linkdata': linkdata,
+                },                success: function (response) {
+                    $('#form-field-usercommoninvitationlink').val(response.userlink);
                     console.log(response.datalink);
 
                     // do something with the returned URL
@@ -7545,6 +7946,236 @@ openModal.addEventListener("click", function(event) {
             });
         });
 
+                $('#saveinvitecommonuser').click(function (event) {
+                     event.preventDefault();
+
+            var invitelink = $('#form-field-usercommoninvitationlink').val();
+            var datalink = $('#form-field-userimportlist').val();
+            console.log(invitelink,datalink)
+            $.ajax({
+                url: "{% url 'importmembers' %}",
+                type: "POST",
+                data: {
+                    'savelinkUserData': true,
+                    'invitelink': invitelink,
+                    'datalink': datalink,
+                },                success: function (response) {
+                            $('#usercommoninvitationqr').attr('src', response.img);
+                            $('#reponse-usercommoninvitationlink').append(response.userlink);
+                            $('#downloadinvitecommonqruser').attr('href', response.img);
+                            $('#downloadinvitecommonqruser').attr('download', response.response.filename);
+
+                    // console.log(response.datalink);
+
+                    // do something with the returned URL
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
 </script>
+
+		<script>
+			var fieldCounter = 0;
+			document
+				.getElementById("add-more-field")
+				.addEventListener("click", function () {
+					fieldCounter++;
+
+					// Get a reference to the element you want to append the new element to
+					var parentElement = document.getElementById("add-field-name");
+
+					var newDiv = document.createElement("div");
+					newDiv.classList.add("input-field");
+
+					var newLabel = document.createElement("label");
+					newLabel.textContent = `Field Name ${fieldCounter}`;
+					var newInput = document.createElement("input");
+					newInput.setAttribute("type", "text");
+					newInput.setAttribute("name", `fieldname${fieldCounter}`);
+
+					newDiv.appendChild(newLabel);
+					newDiv.appendChild(newInput);
+
+					parentElement.appendChild(newDiv);
+				});
+			 document
+				.getElementById("remove-field")
+				.addEventListener("click", function () {
+
+					if(fieldCounter >0){
+						fieldCounter--
+
+						var parentdiv = document.getElementById("add-field-name");
+						parentdiv.removeChild(parentdiv.lastElementChild)
+					}
+				});
+
+
+			const fileInput = document.getElementById("fileInput");
+			const fileError = document.getElementById("fileError");
+
+			fileInput.addEventListener("change", (event) => {
+				const file = event.target.files[0];
+
+				if (!file) {
+					return;
+				}
+
+				const fileType = file.type;
+
+				if (
+					fileType !== "application/vnd.ms-excel" &&
+					fileType !== "text/csv" &&
+					fileType !==
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+				) {
+					fileError.textContent = "Please upload an Excel or CSV file.";
+					fileError.style.display = "inline";
+					fileInput.value = "";
+				} else {
+					fileError.style.display = "none";
+				}
+			});
+
+            // var openmodal=document.getElementById("open-modal")
+var openModalLinks = document.querySelectorAll("#open-modal, #open-modal-2");
+			var fileUploadCloseBtn = document.getElementById("fileupload-close-btn");
+			var fileUploadPopup = document.getElementById("fileupload-popup");
+            // openmodal.addEventListener("click", function(event){
+            openModalLinks.forEach(function(link) {
+  link.addEventListener("click", function(event) {
+                 event.preventDefault();
+    fileUploadPopup.style.display = "block";
+            });
+            });
+			fileUploadCloseBtn.addEventListener("click", function () {
+				fileUploadPopup.style.display = "none";
+			});
+
+			var popupCopyLinkBtn = document.getElementById("popup-copylink-btn");
+			var popupcopylink = document.getElementById("popup-copylink");
+            var copyicon = document.getElementById("copy-icon")
+
+			popupCopyLinkBtn.addEventListener("click", function () {
+
+				navigator.clipboard.writeText(popupcopylink.innerText);
+				copyicon.classList.remove("bi-clipboard");
+				copyicon.classList.add("bi-check2");
+				setTimeout(function () {
+					copyicon.classList.remove("bi-check2");
+					copyicon.classList.add("bi-clipboard");
+
+				}, 2000);
+			});
+		</script>
+
+		<script>
+
+			$("#preview").click(function (event) {
+				event.preventDefault();
+                var formdata = new FormData($('#fileupload-form')[0]);
+                    $.ajax({
+						url: "/fileupload",
+						type: "POST",
+						data: formdata,
+						processData: false,
+						contentType: false,
+						success: function (response) {
+							$("#table-div").html(response.table_html);
+				// 			$("#response-wrapper").html(response.datalink);
+			                var datalinkSpan = document.getElementById("datalink-span");
+							const spanElement = document.getElementById('popup-copylink');
+                                spanElement.textContent = response.datalink;
+                                datalinkSpan.style.display = "block";
+						},
+						error: function (xhr, status, error) {
+							var err = eval("(" + xhr.responseText + ")");
+							alert(err.error);
+						},
+					});
+				});
+
+			$("#submitDataButton").click(function (event) {
+				event.preventDefault();
+
+				var fieldname = $('input[name="fieldname"]').val();
+				var sheetname = $('input[name="sheetname"]').val();
+
+				$.ajax({
+					url: "/fileupload",
+					type: "POST",
+					data: {
+						submitData: true,
+						fieldname: fieldname,
+						sheetname: sheetname,
+					},
+					success: function (response) {
+						console.log(response.url);
+						// do something with the returned URL
+					},
+					error: function (xhr, status, error) {
+						console.error(xhr.responseText);
+					},
+				});
+			});
+		</script>
+
+		<script>
+
+checkstatus()
+
+function checkstatus() {
+  var lav = document.getElementById("useronline-status-icons");
+
+
+  // AJAX GET request
+  $.ajax({
+    url: 'https://100014.pythonanywhere.com/en/live_status',
+    type: 'GET',
+    success: function(data) {
+      lav.style.color="green"
+    //   lav.innerHTML = JSON.stringify(data);
+    },
+    error: function(error) {
+    //   console.error(error);
+     lav.style.color="red"
+    }
+  });
+
+  // AJAX POST request
+  $.ajax({
+    url: 'https://100014.pythonanywhere.com/en/live_status',
+    type: 'POST',
+    data: JSON.stringify({ session_id:"{{session_id}}",product: "Living Lab Admin"}),
+    contentType: 'application/json',
+    success: function(data) {
+      console.log(data);
+    },
+    error: function(error) {
+      console.error(error);
+    }
+  });
+}
+
+setInterval(checkstatus, 60000);
+
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('.mySelect').each(function() {
+            if ($(this).children('option').length == 0) {
+                $(this).append('<option disabled selected>Waiting for portfolio from owner</option>');
+                $(this).closest('form').find('.portfolio-connect').prop('disabled', true);
+            }
+        });
+    });
+</script>
+
+
+
 </body>
 </html>
