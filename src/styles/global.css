@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Prompt:wght@300;400;500&family=Raleway:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  color: #141317;
+}
+
+.hoverBtn {
+  transition: all 0.4s ease 0s !important;
+}
+.hoverBtn:hover {
+  transform: scale(1.05);
+  overflow: hidden !important;
+}
+
+@layer components {
+  .visuallyHidden {
+    @apply w-px h-px absolute overflow-hidden whitespace-nowrap;
+    clip-path: inset(50%);
+    clip: rect(0 0 0 0);
+  }
+  .inputs {
+    @apply px-0 py-2 w-full border-solid border-b border-[#828282] outline-0 mx-0 h-12 text-[#4F4F4F] focus:border-solid focus:border-b text-sm focus:border-[#01cab9];
+  }
+  .overlay {
+    @apply fixed top-0 left-0 right-0 bottom-0 bg-[#000] opacity-70 z-50;
+  }
+}
+
+.card-shadow {
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.5);
+}
+
+.transform-icon {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.about-us-bg {
+  background-image: url(https://i0.wp.com/uxlivinglab.com/wp-content/uploads/2023/02/lycs-architecture-U2BI3GMnSSE-unsplash-1.webp?fit=1920%2C1281&ssl=1);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 50px 5px 50px 5px;
+}
+
+.border-radius {
+  border-radius: 50px 5px 50px 5px;
+}
+
