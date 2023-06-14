@@ -1,7 +1,6 @@
 {% load static %}
 
 {% load my_filters %}
-
 <!doctype html>
 <html lang="en-US">
 <head>
@@ -23,15 +22,10 @@
 <link rel='dns-prefetch' href='//i0.wp.com' />
 <link rel='dns-prefetch' href='//c0.wp.com' />
 <link href='https://fonts.gstatic.com' crossorigin rel='preconnect' />
-<link rel="alternate" type="application/rss+xml" title=" &raquo; Feed" href="https://uxlivinglab.com/en/feed/" />
-<link rel="stylesheet" href="{% static 'clientadmin/css/style.css' %}" />
-<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css"
-		/>
-<link rel="alternate" type="application/rss+xml" title=" &raquo; Comments Feed" href="https://uxlivinglab.com/en/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="DoWell UX Living Lab &raquo; Feed" href="https://uxlivinglab.com/en/feed/" />
+<link rel="alternate" type="application/rss+xml" title="DoWell UX Living Lab &raquo; Comments Feed" href="https://uxlivinglab.com/en/comments/feed/" />
 <style type="text/css">.brave_popup{display:none}</style><script data-no-optimize="1"> var brave_popup_data = {}; var bravepop_emailValidation=false; var brave_popup_videos = {};  var brave_popup_formData = {};var brave_popup_adminUser = false; var brave_popup_pageInfo = {"type":"single","pageID":5880,"singleType":"page"};  var bravepop_emailSuggestions={};</script><script type="text/javascript">
-window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/uxlivinglab.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.2"}};
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/uxlivinglab.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.2.2"}};
 /*! This file is auto-generated */
 !function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){p.clearRect(0,0,i.width,i.height),p.fillText(e,0,0);e=i.toDataURL();return p.clearRect(0,0,i.width,i.height),p.fillText(t,0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s("\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!s("\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!s("\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!s("\ud83e\udef1\ud83c\udffb\u200d\ud83e\udef2\ud83c\udfff","\ud83e\udef1\ud83c\udffb\u200b\ud83e\udef2\ud83c\udfff")}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
 </script>
@@ -611,7 +605,63 @@ margin-bottom: 0;
 
 			}
             }
+
+            .memberinvitationchecklabel {
+				margin-bottom: 20px;
+			}
+			.memberinvitationchecklabel label {
+				font-size: 17px;
+				font-weight: 400;
+				color: #548625;
+			}
+			.memberinvitationchecklabel label span {
+				color: black;
+				cursor: pointer;
+			}
+			#memberinvitationlinkpopup-wrapper {
+				position: fixed;
+				z-index: 999;
+				left: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				overflow: auto;
+				background-color: rgba(0, 0, 0, 0.4);
+				place-items: center;
+				display: none;
+			}
+			.memberinvitationlinkpopup-inner {
+				position: relative;
+				width: 42%;
+				height: 400px;
+				background-color: white;
+				margin: 0 auto;
+				border-radius: 10px;
+
+
+			}
+			#memberinvitationlinkpopup-closebtn {
+				position: absolute;
+				top: 10px;
+				right: 30px;
+				cursor: pointer;
+				font-size: 25px;
+			}
+            .memberinvitationlinkpopup-inner iframe{
+                width: 100%;
+                height: 100%;
+            }
+             @media (min-width: 310px) and (max-width:860px){
+                	.memberinvitationlinkpopup-inner{
+                        width: 90%;
+                    }
+             }
+
+
 		</style>
+
+
+
 </head>
 
 <body class="page-template-default page page-id-5880 wp-custom-logo wp-embed-responsive theme-varia woocommerce-no-js singular image-filters-enabled hide-footer-credit elementor-default elementor-kit-20 elementor-page elementor-page-5880">
@@ -1068,7 +1118,7 @@ margin-bottom: 0;
 					{% endfor %}
                         </li></ol></div>
                 </div>
-{% if username == "mayowa25" or username == "Nagarajuvuliki" %}
+{% if username == "Jazz3650" or username == "Nagarajuvuliki" %}
 
     <div id="elementor-tab-title-11744" class="elementor-tab-title" data-tab="5" role="tab" aria-controls="elementor-tab-content-11744" aria-expanded="false">
                                                 <span class="elementor-toggle-icon elementor-toggle-icon-left" aria-hidden="true">
@@ -1092,6 +1142,46 @@ margin-bottom: 0;
                 </div>
 
 {% endif %}
+
+
+      <div class="elementor-toggle-item">
+    <div id="elementor-tab-title-1174" class="elementor-tab-title" data-tab="4" role="tab" aria-controls="elementor-tab-content-1174" aria-expanded="false">
+        <span class="elementor-toggle-icon elementor-toggle-icon-left" aria-hidden="true">
+            <span class="elementor-toggle-icon-closed"><i class="fas fa-caret-right"></i></span>
+            <span class="elementor-toggle-icon-opened"><i class="elementor-toggle-icon-opened fas fa-caret-up"></i></span>
+        </span>
+        <a href="" class="elementor-toggle-title">
+            Portfolio Notifications
+            <span class="notification-counter">
+                {% for notification in notifications %}
+                    {% if notification.status == "enable" %}
+                        {% if forloop.first %}
+                            ({{ notifications|length }})
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </span>
+        </a>
+    </div>
+<div id="elementor-tab-content-1174" class="elementor-tab-content elementor-clearfix" data-tab="4" role="tabpanel" aria-labelledby="elementor-tab-title-1174">
+    <ol>
+        {% for notification in notifications %}
+        {% if notification.status == "enable" %}
+            <li>
+                {{notification.username}} Asked for creating a portfolio under {{notification.product}}.
+                <form method="POST" action="{% url 'dismiss_notification' notification.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Dismiss</button>
+                </form>
+            </li>
+        {% endif %}
+        {% endfor %}
+    </ol>
+</div>
+</div>
+
+
+
 
                                 </div>
                 </div>
@@ -1155,6 +1245,7 @@ margin-bottom: 0;
 
                     <div id="elementor-tab-content-2103" class="elementor-tab-content elementor-clearfix" data-tab="3" role="tabpanel" aria-labelledby="elementor-tab-title-2103"><ol><li>Public 1</li><li>Public 2</li><li>Public 3</li><li>Public 4</li></ol></div>
                 </div>
+
                             <div class="elementor-toggle-item">
                     <div id="elementor-tab-title-2104" class="elementor-tab-title" data-tab="4" role="tab" aria-controls="elementor-tab-content-2104" aria-expanded="false">
                                                 <span class="elementor-toggle-icon elementor-toggle-icon-left" aria-hidden="true">
@@ -1716,9 +1807,15 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Workflow AI</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text"  name="product" value="Workflow AI" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Workflow" in i.product and "owner" in i.username%} {% if "enable" in i.status %}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}} </option>{%endif%}{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text"  name="product" value="Workflow AI" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Workflow" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1729,9 +1826,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Wifi QR Code</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Wifi QR Code" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Wifi" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{% empty %} <option disabled selected>Waiting for portfolio from owner</option>{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Wifi QR Code" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Wifi" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
 
                                             </div>
                 </div>
@@ -1743,9 +1849,17 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">User Experience Live</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="UX Live" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "UX Live" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="UX Live" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+{% if "Live" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1772,9 +1886,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Socialmedia Automation</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Social Media Automation" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Social" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Social Media Automation" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Social" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1785,9 +1908,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Scales</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Scales" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Scales" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Scales" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Scales" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1798,9 +1930,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Logo Scan</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Logo Scan" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Logo" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Logo Scan" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Logo" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1827,9 +1968,19 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Chat</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Chat" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Chat" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Chat" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Chat" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1840,9 +1991,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Legal Zard</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Legalzard" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Legal" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Legalzard" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Legal" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1853,9 +2013,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Maps</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Maps" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Maps" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Maps" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Maps" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1882,9 +2051,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Digital Queue</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Digital Q" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Digital" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Digital Q" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Digital" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1895,9 +2073,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Customer Experience</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Experience" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Customer" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Experience" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Customer" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1908,9 +2095,18 @@ margin-bottom: 0;
                 <div class="overlay-inner">
                     <div class="overlay-inner ">
                         <h2 class="img-accordion-title">Living Lab Admin</h2>                            <p>&nbsp;
-<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Client Admin" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Client" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<p style="text-align: left;font-size:0.8rem"><form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Client Admin" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Client" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1945,10 +2141,19 @@ margin-bottom: 0;
 <!--</select></p>-->
 <p style="text-align: left;">
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Team Management" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Team Management" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Team Management" hidden><select id="mySelect" class="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Team" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+    {%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1965,10 +2170,19 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Living Lab Monitoring" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Monitoring" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Living Lab Monitoring" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Monitoring" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+    {%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -1985,10 +2199,19 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Live Dashboard" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Dashboard" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Live Dashboard" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Dashboard" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+    {%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -2020,10 +2243,19 @@ margin-bottom: 0;
 <!--<option>Portfolio 02, Role Name, Member Type</option>-->
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Sales Agent" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Agent" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Sales Agent" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Agent" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+    {%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -2040,10 +2272,19 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-<form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Permutation Calculator" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Permutation" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+<form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Permutation Calculator" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Permutation" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+{%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -2060,10 +2301,19 @@ margin-bottom: 0;
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
 
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Support" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Support" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Customer Support" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Support" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+    {%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -2092,10 +2342,19 @@ margin-bottom: 0;
                         <h2 class="img-accordion-title">Secure Repositories</h2>
                         <p><p> </p>
                         <!--<p style="text-align: left;"><select id="mySelect"><option>Portfolio 01, Role Name, Member Type</option><option>Portfolio 02, Role Name, Member Type</option><option>Portfolio 3, Role Name, Member Type</option></select></p><p><b><br />-->
-                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Repositories" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Repositories" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Repositories" hidden><select id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Repositories" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+                                                    {%endfor%}</select></p>
 
                         <b><br>
-                        <button>Connect</button></b></p></form></p>
+                        <button class="portfolio-connect" type="submit">Connect</button></b></p></form></p>
                                             </div>
                 </div>
             </div>
@@ -2108,9 +2367,18 @@ margin-bottom: 0;
                         <h2 class="img-accordion-title">Secure Data</h2>                            <p><p> </p>
 
                         <!--<p style="text-align: left;"><select id="mySelect"><option>Portfolio 01, Role Name, Member Type</option><option>Portfolio 02, Role Name, Member Type</option><option>Portfolio 3, Role Name, Member Type</option></select></p>-->
-                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Data" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Secure" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+                                                    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Secure Data" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
 
-                        <p><b><br /><button>Connect</button></b></form></p>
+{% if "Secure" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+                                                    {%endfor%}</select></p>
+
+                        <p><b><br /><button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -2126,10 +2394,19 @@ margin-bottom: 0;
 <!--<option>Portfolio 02, Role Name, Member Type</option>-->
 <!--<option>Portfolio 3, Role Name, Member Type</option>-->
 <!--</select></p>-->
-    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Samanta" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %} {% if "Samanta" in i.product and "owner" in i.username%}<option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}}">{{i.portfolio_name}},{{i.data_type}}</option>{%endif%}{%endfor%}</select></p>
+    <form method="POST" action="portfolio">{% csrf_token %}<input type="text" name="product" value="Samanta" hidden><select class="mySelect" id="mySelect" name="portfl" required>{% for i in datalav.portpolio %}
+
+{% if "Samanta" in i.product %}
+    {% if "owner" in i.username or username in i.username %}
+        {% if "enable" in i.status %}
+            <option value="{{i.portfolio_name}}" title="{{i.portfolio_name}},{{i.role}},{{i.member_type}},{{i.data_type}},{{i.portfolio_code}},{{i.product}},{{i.operations_right}},{{i.security_layer}},{{i.portfolio_name}},{{i.portfolio_code}},{{i.portfolio_specification}},{{i.portfolio_uni_code}},{{i.portfolio_details}},{{i.status}}">{{i.portfolio_name}},{{i.data_type}} </option>
+        {% endif %}
+    {% endif %}
+{% endif %}
+    {%endfor%}</select></p>
 
 <b><br>
-<button class="portfolio-connect" type="submit">Request to Connect</button></b></form></p>
+<button class="portfolio-connect" type="submit">Connect</button></b></form></p>
                                             </div>
                 </div>
             </div>
@@ -2171,7 +2448,7 @@ opt.innerHTML = "..select..";
 select.appendChild(opt);
 {{ datalav.portpolio|safe }}.forEach(item => {
 
-        if (value==item.product && item.username=="owner"){
+        if (value==item.product && (item.username=="owner" || item.username=="{{username}}")){
             opt = document.createElement('option');
             opt.value = item.portfolio_name;
             opt.innerHTML = item.portfolio_name;
@@ -2282,7 +2559,7 @@ if (value1=="{{i.portfolio_name}}"){
                                 Details of selected Portflio                            </label>
                         <textarea class="elementor-field-textual elementor-field  elementor-size-sm" name="form_fields[field_179acf3]" id="form-field-field_179acf3" rows="4" placeholder="&lt;portfolio name, code, spec, universal code, details&gt; &lt;member name, code, spec, universal code, details&gt; &lt;member type&gt; &lt;data type&gt; &lt;operational rights&gt;  &lt;role Name, code, spec, universal code, details&gt; &lt;(level 1 name,Item name), (level 2 name,Item name), (level 3 name,Item name), (level 4 name,Item name), (level 5 name,Item name)&gt; &lt;layer #&gt;"></textarea>              </div>
                                 <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
-                    <button type="submit" class="elementor-button elementor-size-md">
+                    <button type="submit" name="connect_portfolio" class="elementor-button elementor-size-md">
                         <span >
                                                             <span class=" elementor-button-icon">
                                                                                                         </span>
@@ -2495,7 +2772,7 @@ else if (value=="owner")
 {
 
             opt = document.createElement('option');
-            opt.value = "owner";
+            opt.value = "{{ username }}";
             // opt.innerHTML = "owner";
             opt.innerHTML = "{{ username }}";
             select.appendChild(opt);
@@ -3021,7 +3298,21 @@ else{
                                 <div class="elementor-field-type-textarea elementor-field-group elementor-column elementor-field-group-member_det elementor-col-100">
                                                 <label for="form-field-member_det" class="elementor-field-label">
                                 Team Member Details                         </label>
-                        <textarea class="elementor-field-textual elementor-field  elementor-size-sm" name="form_fields[member_det]" id="form-field-member_det" rows="4" placeholder="Member details"></textarea>                </div>
+                        <textarea class="elementor-field-textual elementor-field  elementor-size-sm" name="form_fields[member_det]" id="form-field-member_det" rows="4" placeholder="Member details"></textarea>
+                        </div>
+                        <div class="memberinvitationchecklabel">
+                                                <label for="memberinvitationcheckinput" >
+                                Do you accept our  <span id="memberinvitationpopuptext"> policies?</span>                         </label>
+
+                                                        <input type="checkbox" name="memberinvitationcheckinput" id="memberinvitationcheckinput" value="checked" required="required" {% if policy_status == "checked" %}checked{% endif %}>
+                                            </div>
+
+                        <div class="elementor-field-type-textarea elementor-field-group elementor-column elementor-field-group-member_det elementor-col-100">
+
+                        <!--<input type="checkbox" id="accept_policies" name="accept_policies"><label for="accept_policies" class="elementor-field-label"> Accept Policies?</label>-->
+
+                        </div>
+
                                 <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
                     <button type="submit" class="elementor-button elementor-size-md" id="memberinvitationlink">
                         <span >
@@ -7111,6 +7402,12 @@ function toggleDivs(s){
 				<button id="fileupload-close-btn">Close</button>
 			</div>
 		</div>
+<div id="memberinvitationlinkpopup-wrapper">
+			<div class="memberinvitationlinkpopup-inner">
+				<iframe  src="https://100087.pythonanywhere.com/privacyconsents/FB1010000000001665306290565391/?session_id={{session_id}}" frameborder="0"></iframe>
+				<i class="bi bi-x-lg" id="memberinvitationlinkpopup-closebtn"></i>
+			</div>
+		</div>
 
 <script type="text/template" id="tmpl-variation-template">
     <div class="woocommerce-variation-description">data.variation.variation_description</div>
@@ -8165,17 +8462,64 @@ setInterval(checkstatus, 60000);
 </script>
 
 <script>
-    $(document).ready(function(){
-        $('.mySelect').each(function() {
-            if ($(this).children('option').length == 0) {
-                $(this).append('<option disabled selected>Waiting for portfolio from owner</option>');
-                $(this).closest('form').find('.portfolio-connect').prop('disabled', true);
-            }
-        });
+$(document).ready(function(){
+    $('.mySelect').each(function() {
+        if ($(this).children('option').length == 0) {
+            // Find the associated button and change its properties
+            var associatedButton = $(this).closest('form').find('.portfolio-connect');
+            associatedButton.html('Request For Connect');
+            associatedButton.prop('name', 'request_portfolio');
+
+            // Add the new option
+            $(this).append('<option disabled selected>Waiting for portfolio from owner</option>');
+        }
+        else {
+                        var associatedButton = $(this).closest('form').find('.portfolio-connect');
+                        associatedButton.prop('name', 'connect_portfolio');
+
+        }
     });
+});
+
 </script>
 
+<script>
+			var memberinvitationlinkpopupwrapper = document.getElementById(
+				"memberinvitationlinkpopup-wrapper"
+			);
 
+			document
+				.getElementById("memberinvitationpopuptext")
+				.addEventListener("click", function () {
+					memberinvitationlinkpopupwrapper.style.display = "grid";
+				});
 
+			document
+				.getElementById("memberinvitationlinkpopup-closebtn")
+				.addEventListener("click", function () {
+					memberinvitationlinkpopupwrapper.style.display = "none";
+				});
+		</script>
+
+<script>
+
+    $(document).ready(function() {
+    $('#memberinvitationcheckinput').change(function() {
+        if(this.checked) {
+            $.ajax({
+                url: 'https://100087.pythonanywhere.com/api/legalpolicies/' + '{{session_id}}' + '/iagreestatus/',
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.log('Error: ', error);
+                }
+            });
+        }
+    });
+});
+
+</script>
 </body>
 </html>

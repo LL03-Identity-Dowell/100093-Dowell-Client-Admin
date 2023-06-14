@@ -35,5 +35,6 @@ urlpatterns = [
     path("update_product", update_product, name="update_product"),
     path("update_payment", update_payment, name="update_payment"),
     path("importmembers", importusers, name="importmembers"),
+    path('dismiss_notification/<int:notification_id>/', dismiss_notification, name='dismiss_notification'),
 
 ]

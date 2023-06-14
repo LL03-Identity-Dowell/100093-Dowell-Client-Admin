@@ -50,12 +50,12 @@ img.emoji {
 			color:#ffffff !important;
 			background-color: #103948 !important;
 		}
-		
+
 				.pisol_buy_now_button.pisol_single_buy_now{
 					width:100px !important;
 					max-width:100% !important;
 				}
-			
+
 </style>
 <style id='woocommerce-layout-inline-css'>
 
@@ -136,7 +136,7 @@ For example, you can use the following code for loading the jQuery library from 
 or the following one for loading the Bootstrap library from MaxCDN:
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
--- End of the comment --> 
+-- End of the comment -->
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 		<script
@@ -386,20 +386,20 @@ or the following one for loading the Bootstrap library from MaxCDN:
 margin-bottom: 0;
     }
   .top-navigation-ulliving .top-image-ulliving{
-    width:150px; 
+    width:150px;
     height:150px;
   }
   .top-navigation-ulliving .top-image-ulliving img{
     width: 100%;
-    
+
 
   }
-  
 
-  @media (min-width: 310px) and (max-width:620px) { 
+
+  @media (min-width: 310px) and (max-width:620px) {
   .top-navigation-ulliving{
    flex-direction:column ;
-   } 
+   }
     .top-navigation-ulliving select{
         margin-top: 30px;
     }
@@ -2808,117 +2808,79 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="2fa09403"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+	<form class="elementor-form" method="post" name="New Form" onsubmit="return handleFormSubmit1()">
+		{% csrf_token %}
+		<!-- Your form fields -->
+		<div class="elementor-form-fields-wrapper elementor-labels-above">
+			<!-- Select Product field -->
+			<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-productselected elementor-col-100 elementor-field-required">
+				<!-- Your label and select element -->
+				<label for="form-field-productselected" class="elementor-field-label">Select Product</label>
+				<div class="elementor-field elementor-select-wrapper">
+					<select name="product" id="productlist" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
+						<option>....Select Product....</option>
+						{% for i in datalav.products %} {% if datalav.document_name == "uxliveadmin" and i == "Monitoring" %}
+						<option value="{{i}}">{{i}}</option>
+						{% elif user != "uxliveadmin" and i != "Monitoring" %}
+						<option value="{{i}}">{{i}}</option>
+						{% endif %}
+						{% endfor %}
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
-
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-productselected elementor-col-100 elementor-field-required"
-																											>
-																												<label
-																													for="form-field-productselected"
-																													class="elementor-field-label"
-																												>
-																													Select Product
-																												</label>
-																												                       <div class="elementor-field elementor-select-wrapper ">
-            <select name="product" id="productlist" class="elementor-field-textual elementor-size-sm" required="required" onchange="lav();" aria-required="true">
-                                    <option >....Select Product....</option>
-                               {% for i in datalav.products %}
-                      {% if datalav.document_name == "uxliveadmin" and i == "Monitoring" %}
-                        <option value="{{i}}">{{i}}</option>
-                      {% elif user != "uxliveadmin" and i != "Monitoring" %}
-                        <option value="{{i}}">{{i}}</option>
-                      {% endif %}
-                    {% endfor %}
-                            </select>
-        </div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-enablediable elementor-col-100 elementor-field-required"
-																											>
-																												<label
-																													for="form-field-enablediable"
-																													class="elementor-field-label"
-																												>
-																													Enable /Disabe
-																													selected product
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[enablediable]"
-																														id="form-field-enablediable"
-																														class="elementor-field-textual elementor-size-sm"
-																														required="required"
-																														aria-required="true"
-																													>
-																														<option
-																															value="Enable "
-																														>
-																															Enable
-																														</option>
-																														<option
-																															value="Disable"
-																														>
-																															Disable
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="enabledisablebtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Click here to
-																															Enable /
-																															Disable</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
+					</select>
+				</div>
+			</div>
+			<!-- Enable / Disable field -->
+			<div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-enablediable elementor-col-100 elementor-field-required">
+				<!-- Your label and select element -->
+				<label for="form-field-enablediable" class="elementor-field-label">Enable / Disable selected product</label>
+				<div class="elementor-field elementor-select-wrapper">
+					<select name="form_fields[enablediable]" id="form-field-enablediable" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
+						<option value="Enable">Enable</option>
+						<option value="Disable">Disable</option>
+					</select>
+				</div>
+			</div>
+			<!-- Submit button -->
+			<div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+				<button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="enabledisablebtn">
+					<span>
+						<span class="elementor-button-icon"></span>
+						<span class="elementor-button-text">Click here to Enable / Disable</span>
+					</span>
+				</button>
+			</div>
+		</div>
+	</form>
 																								</div>
 																							</div>
+																							<div id="successMessage" style="display: none;">
+
+</div>
+																		<script>
+	function handleFormSubmit1() {
+		var product = document.getElementById("productlist").value;
+		var status = document.getElementById("form-field-enablediable").value;
+
+
+		console.log('Status:', status);
+		console.log('Selected Product:', product);
+
+		// Prevent the form from being submitted automatically
+		event.preventDefault();
+
+		// Display the success message
+		var successMessage = document.getElementById("successMessage");
+		successMessage.textContent = product + " successfully " + status + "d";
+		successMessage.style.display = "block";
+
+		// Manually submit the form
+		var form = document.forms["New Form"];
+		form.submit();
+
+		// Return true to allow the form submission to proceed
+		return true;
+	}
+</script>
 																							<div
 																								class="elementor-element elementor-element-788eb7c elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="788eb7c"
@@ -2975,185 +2937,102 @@ margin-bottom: 0;
 																							>
 																								<div
 																									class="elementor-widget-container"
-																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="8878dd0"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+>
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+<form class="elementor-form" method="post" name="Time Form" onsubmit="return handleFormSubmit3()">
+	{% csrf_token %}
+    <!-- Your form fields -->
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <!-- Maximum time limit for Team Member -->
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitmember elementor-col-100">
+            <label for="form-field-timelimitmember" class="elementor-field-label">
+                Maximum time limit for invitation for Team Member
+            </label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select
+                    name="form_fields[timelimitmember]"
+                    id="form-field-timelimitmember"
+                    class="elementor-field-textual elementor-size-sm"
+                >
+                    <!-- Options for time limit -->
+    <option value="1 hour" {% if settings.maxtime_member == "1 hour" %}selected{% endif %}>1 hour</option>
+    <option value="3 hours" {% if settings.maxtime_member == "3 hours" %}selected{% endif %}>3 hours</option>
+    <option value="6 hours" {% if settings.maxtime_member == "6 hours" %}selected{% endif %}>6 hours</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+        </div>
+        <!-- Maximum time limit for Users -->
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitusers elementor-col-100">
+            <label for="form-field-timelimitusers" class="elementor-field-label">
+                Maximum time limit for invitation for Users
+            </label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select
+                    name="form_fields[timelimitusers]"
+                    id="form-field-timelimitusers"
+                    class="elementor-field-textual elementor-size-sm"
+                >
+                    <!-- Options for time limit -->
+    <option value="1 hour" {% if settings.maxtime_user == "1 hour" %}selected{% endif %}>1 hour</option>
+    <option value="3 hours" {% if settings.maxtime_user == "3 hours" %}selected{% endif %}>3 hours</option>
+    <option value="6 hours" {% if settings.maxtime_user == "6 hours" %}selected{% endif %}>6 hours</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+        </div>
+        <!-- Submit button -->
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button
+                type="submit"
+                class="elementor-button elementor-size-md btnthemecolor"
+                id="timelimitbtn"
+            >
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Set Limit</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitmember elementor-col-100"
-																											>
-																												<label
-																													for="form-field-timelimitmember"
-																													class="elementor-field-label"
-																												>
-																													Maximum time limit for
-																													invitation for Team
-																													Member
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[timelimitmember]"
-																														id="form-field-timelimitmember"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="1 hour"
-																														>
-																															1 hour
-																														</option>
-																														<option
-																															value="3 hours"
-																														>
-																															3 hours
-																														</option>
-																														<option
-																															value="6 hours"
-																														>
-																															6 hours
-																														</option>
-																														<option
-																															value="12 hours"
-																														>
-																															12 hours
-																														</option>
-																														<option
-																															value="24 hours"
-																														>
-																															24 hours
-																														</option>
-																														<option
-																															value="3 days"
-																														>
-																															3 days
-																														</option>
-																														<option
-																															value="7 days"
-																														>
-																															7 days
-																														</option>
-																														<option
-																															value="No Time limit"
-																														>
-																															No Time limit
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitusers elementor-col-100"
-																											>
-																												<label
-																													for="form-field-timelimitusers"
-																													class="elementor-field-label"
-																												>
-																													Maximium time limit
-																													for invitation for
-																													Users
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[timelimitusers]"
-																														id="form-field-timelimitusers"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="1 hour"
-																														>
-																															1 hour
-																														</option>
-																														<option
-																															value="3 hours"
-																														>
-																															3 hours
-																														</option>
-																														<option
-																															value="6 hours"
-																														>
-																															6 hours
-																														</option>
-																														<option
-																															value="12 hours"
-																														>
-																															12 hours
-																														</option>
-																														<option
-																															value="24 hours"
-																														>
-																															24 hours
-																														</option>
-																														<option
-																															value="3 days"
-																														>
-																															3 days
-																														</option>
-																														<option
-																															value="7 days"
-																														>
-																															7 days
-																														</option>
-																														<option
-																															value="No Time limit"
-																														>
-																															No Time limit
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="timelimitbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Set LImit</span
-																														>
-																													</span>
-																												</button>
-																											</div>
 																										</div>
-																									</form>
-																								</div>
 																							</div>
+
+
+<div id="successMessage3" style="display: none;"></div>
+
+<script>
+    function handleFormSubmit3() {
+        var timelimitMember = document.getElementById("form-field-timelimitmember").value;
+        var timelimitUsers = document.getElementById("form-field-timelimitusers").value;
+
+        console.log('Time limit for Team Member:', timelimitMember);
+        console.log('Time limit for Users:', timelimitUsers);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage3");
+        successMessage.textContent = "Time limits set successfully";
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Time Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
+
+
+
+
+
+
 																							<div
 																								class="elementor-element elementor-element-0188d00 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="0188d00"
@@ -3212,8 +3091,10 @@ margin-bottom: 0;
 																									<form
 																										class="elementor-form"
 																										method="post"
-																										name="New Form"
+																										name="Section Form"
+																										onsubmit="return handleFormSubmit11()"
 																									>
+																																	{% csrf_token %}
 																										<input
 																											type="hidden"
 																											name="post_id"
@@ -3257,71 +3138,20 @@ margin-bottom: 0;
 																														class="elementor-field-textual elementor-size-sm"
 																														multiple=""
 																													>
-																														<option
-																															value="All Sections"
-																														>
-																															All Sections
-																														</option>
-																														<option
-																															value="Section 01"
-																														>
-																															Section 01
-																														</option>
-																														<option
-																															value="Section 02"
-																														>
-																															Section 02
-																														</option>
-																														<option
-																															value="Section 03"
-																														>
-																															Section 03
-																														</option>
-																														<option
-																															value="Section 04"
-																														>
-																															Section 04
-																														</option>
-																														<option
-																															value="Section 05"
-																														>
-																															Section 05
-																														</option>
-																														<option
-																															value="Section 06"
-																														>
-																															Section 06
-																														</option>
-																														<option
-																															value="Section 07"
-																														>
-																															Section 07
-																														</option>
-																														<option
-																															value="Section 08"
-																														>
-																															Section 08
-																														</option>
-																														<option
-																															value="Section 09"
-																														>
-																															Section 09
-																														</option>
-																														<option
-																															value="Section 10"
-																														>
-																															Section 10
-																														</option>
-																														<option
-																															value="Section 11"
-																														>
-																															Section 11
-																														</option>
-																														<option
-																															value="Section 12"
-																														>
-																															Section 12
-																														</option>
+																										<option value="All Sections" {% if 'All Sections' in settings.mandatory_sections %}selected{% endif %}>All Sections</option>
+<option value="Section 01" {% if 'Section 01' in settings.mandatory_sections %}selected{% endif %}>Section 01</option>
+<option value="Section 02" {% if 'Section 02' in settings.mandatory_sections %}selected{% endif %}>Section 02</option>
+<option value="Section 03" {% if 'Section 03' in settings.mandatory_sections %}selected{% endif %}>Section 03</option>
+<option value="Section 04" {% if 'Section 04' in settings.mandatory_sections %}selected{% endif %}>Section 04</option>
+<option value="Section 05" {% if 'Section 05' in settings.mandatory_sections %}selected{% endif %}>Section 05</option>
+<option value="Section 06" {% if 'Section 06' in settings.mandatory_sections %}selected{% endif %}>Section 06</option>
+<option value="Section 07" {% if 'Section 07' in settings.mandatory_sections %}selected{% endif %}>Section 07</option>
+<option value="Section 08" {% if 'Section 08' in settings.mandatory_sections %}selected{% endif %}>Section 08</option>
+<option value="Section 09" {% if 'Section 09' in settings.mandatory_sections %}selected{% endif %}>Section 09</option>
+<option value="Section 10" {% if 'Section 10' in settings.mandatory_sections %}selected{% endif %}>Section 10</option>
+<option value="Section 11" {% if 'Section 11' in settings.mandatory_sections %}selected{% endif %}>Section 11</option>
+<option value="Section 12" {% if 'Section 12' in settings.mandatory_sections %}selected{% endif %}>Section 12</option>
+
 																													</select>
 																												</div>
 																											</div>
@@ -3350,6 +3180,30 @@ margin-bottom: 0;
 																									</form>
 																								</div>
 																							</div>
+																							<div id="successMessage11" style="display: none;"></div>
+<script>
+    function handleFormSubmit11() {
+        var fieldselection = document.getElementById("form-field-sections").value;
+
+        console.log('Field Selection:', fieldselection);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage11");
+        successMessage.textContent = fieldsection + "set as mandatoty section";
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
+
 																							<div
 																								class="elementor-element elementor-element-b09dba7 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="b09dba7"
@@ -3406,269 +3260,105 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="37761df"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+											<form class="elementor-form" method="post" name="Attempts Form" onsubmit="return handleFormSubmit7()">
+												{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020" />
+    <input type="hidden" name="form_id" value="37761df" />
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind" />
+    <input type="hidden" name="queried_id" value="8020" />
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitdisconnect elementor-col-100">
+            <label for="form-field-timelimitdisconnect" class="elementor-field-label">Disconnect if idle for</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[timelimitdisconnect]" id="form-field-timelimitdisconnect" class="elementor-field-textual elementor-size-sm">
+    <option value="5 minutes" {% if settings.disconn_idle == '5 minutes' %}selected{% endif %}>5 minutes</option>
+    <option value="15 minutes" {% if settings.disconn_idle == '15 minutes' %}selected{% endif %}>15 minutes</option>
+    <option value="30 minutes" {% if settings.disconn_idle == '30 minutes' %}selected{% endif %}>30 minutes</option>
+    <option value="1 hour" {% if settings.disconn_idle == '1 hour' %}selected{% endif %}>1 hour</option>
+    <option value="3 hours" {% if settings.disconn_idle == '3 hours' %}selected{% endif %}>3 hours</option>
+    <option value="6 hours" {% if settings.disconn_idle == '6 hours' %}selected{% endif %}>6 hours</option>
+    <option value="12 hours" {% if settings.disconn_idle == '12 hours' %}selected{% endif %}>12 hours</option>
+    <option value="24 hours" {% if settings.disconn_idle == '24 hours' %}selected{% endif %}>24 hours</option>
+    <option value="3 days" {% if settings.disconn_idle == '3 days' %}selected{% endif %}>3 days</option>
+    <option value="Do not disconnect automatically" {% if settings.disconn_idle == 'Do not disconnect automatically' %}selected{% endif %}>Do not disconnect automatically</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitconnect elementor-col-100">
+            <label for="form-field-timelimitconnect" class="elementor-field-label">If Disconnected, permit to Connect</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[timelimitconnect]" id="form-field-timelimitconnect" class="elementor-field-textual elementor-size-sm">
+    <option value="Immediately" {% if settings.permit_to_connect == 'Immediately' %}selected{% endif %}>Immediately</option>
+    <option value="After 5 minutes" {% if settings.permit_to_connect == 'After 5 minutes' %}selected{% endif %}>After 5 minutes</option>
+    <option value="After 15 minutes" {% if settings.permit_to_connect == 'After 15 minutes' %}selected{% endif %}>After 15 minutes</option>
+    <option value="After 30 minutes" {% if settings.permit_to_connect == 'After 30 minutes' %}selected{% endif %}>After 30 minutes</option>
+    <option value="After 1 hour" {% if settings.permit_to_connect == 'After 1 hour' %}selected{% endif %}>After 1 hour</option>
+    <option value="After 3 hours" {% if settings.permit_to_connect == 'After 3 hours' %}selected{% endif %}>After 3 hours</option>
+    <option value="After 6 hours" {% if settings.permit_to_connect == 'After 6 hours' %}selected{% endif %}>After 6 hours</option>
+    <option value="After 12 hours" {% if settings.permit_to_connect == 'After 12 hours' %}selected{% endif %}>After 12 hours</option>
+    <option value="After 24 hours" {% if settings.permit_to_connect == 'After 24 hours' %}selected{% endif %}>After 24 hours</option>
+    <option value="After 3 days" {% if settings.permit_to_connect == 'After 3 days' %}selected{% endif %}>After 3 days</option>
+    <option value="After 7 days" {% if settings.permit_to_connect == 'After 7 days' %}selected{% endif %}>After 7 days</option>
+    <option value="Do not permit again" {% if settings.permit_to_connect == 'Do not permit again' %}selected{% endif %}>Do not permit again</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-permittedattempts elementor-col-100">
+            <label for="form-field-permittedattempts" class="elementor-field-label">Number of connection attempts permitted</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[permittedattempts]" id="form-field-permittedattempts" class="elementor-field-textual elementor-size-sm">
+    <option value="1 per day" {% if settings.no_of_conn == '1 per day' %}selected{% endif %}>1 per day</option>
+    <option value="5 per day" {% if settings.no_of_conn == '5 per day' %}selected{% endif %}>5 per day</option>
+    <option value="10 per day" {% if settings.no_of_conn == '10 per day' %}selected{% endif %}>10 per day</option>
+    <option value="25 per day" {% if settings.no_of_conn == '25 per day' %}selected{% endif %}>25 per day</option>
+    <option value="50 per day" {% if settings.no_of_conn == '50 per day' %}selected{% endif %}>50 per day</option>
+    <option value="100 per day" {% if settings.no_of_conn == '100 per day' %}selected{% endif %}>100 per day</option>
+    <option value="No Limit" {% if settings.no_of_conn == 'No Limit' %}selected{% endif %}>No Limit</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="timelimitbtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Set Limit</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitdisconnect elementor-col-100"
-																											>
-																												<label
-																													for="form-field-timelimitdisconnect"
-																													class="elementor-field-label"
-																												>
-																													Disconnect if idle for
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[timelimitdisconnect]"
-																														id="form-field-timelimitdisconnect"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="5 minutes"
-																														>
-																															5 minutes
-																														</option>
-																														<option
-																															value="15 minutes"
-																														>
-																															15 minutes
-																														</option>
-																														<option
-																															value="30 minutes"
-																														>
-																															30 minutes
-																														</option>
-																														<option
-																															value="1 hour"
-																														>
-																															1 hour
-																														</option>
-																														<option
-																															value="3 hours"
-																														>
-																															3 hours
-																														</option>
-																														<option
-																															value="6 hours"
-																														>
-																															6 hours
-																														</option>
-																														<option
-																															value="12 hours"
-																														>
-																															12 hours
-																														</option>
-																														<option
-																															value="24 hours"
-																														>
-																															24 hours
-																														</option>
-																														<option
-																															value="3 days"
-																														>
-																															3 days
-																														</option>
-																														<option
-																															value="Do not disconnect automatically"
-																														>
-																															Do not disconnect
-																															automatically
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-timelimitconnect elementor-col-100"
-																											>
-																												<label
-																													for="form-field-timelimitconnect"
-																													class="elementor-field-label"
-																												>
-																													If Disconnected,
-																													permit to Connect
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[timelimitconnect]"
-																														id="form-field-timelimitconnect"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="Immediately"
-																														>
-																															Immediately
-																														</option>
-																														<option
-																															value="After 5 minutes"
-																														>
-																															After 5 minutes
-																														</option>
-																														<option
-																															value="After 15 minutes"
-																														>
-																															After 15 minutes
-																														</option>
-																														<option
-																															value="After 30 minutes"
-																														>
-																															After 30 minutes
-																														</option>
-																														<option
-																															value="After 1 hour"
-																														>
-																															After 1 hour
-																														</option>
-																														<option
-																															value="After 3 hours"
-																														>
-																															After 3 hours
-																														</option>
-																														<option
-																															value="After 6 hours"
-																														>
-																															After 6 hours
-																														</option>
-																														<option
-																															value="After 12 hours"
-																														>
-																															After 12 hours
-																														</option>
-																														<option
-																															value="After 24 hours"
-																														>
-																															After 24 hours
-																														</option>
-																														<option
-																															value="After 3 days"
-																														>
-																															After 3 days
-																														</option>
-																														<option
-																															value="After 7 days"
-																														>
-																															After 7 days
-																														</option>
-																														<option
-																															value="Do not permit again"
-																														>
-																															Do not permit
-																															again
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-permittedattempts elementor-col-100"
-																											>
-																												<label
-																													for="form-field-permittedattempts"
-																													class="elementor-field-label"
-																												>
-																													Number of connection
-																													attempts permitted
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[permittedattempts]"
-																														id="form-field-permittedattempts"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="1 per day"
-																														>
-																															1 per day
-																														</option>
-																														<option
-																															value="5 per day"
-																														>
-																															5 per day
-																														</option>
-																														<option
-																															value="10 per day"
-																														>
-																															10 per day
-																														</option>
-																														<option
-																															value="25 per day"
-																														>
-																															25 per day
-																														</option>
-																														<option
-																															value="50 per day"
-																														>
-																															50 per day
-																														</option>
-																														<option
-																															value="100 per day"
-																														>
-																															100 per day
-																														</option>
-																														<option
-																															value="No Limit"
-																														>
-																															No Limit
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="timelimitbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Set LImit</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
 																								</div>
 																							</div>
+<div id="successMessage7" style="display: none;"></div>
+
+<script>
+    function handleFormSubmit7() {
+        var timelimitdisconnect = document.getElementById("form-field-timelimitdisconnect").value;
+        var timelimitconnect = document.getElementById("form-field-timelimitconnect").value;
+        var permittedattempts = document.getElementById("form-field-permittedattempts").value;
+
+        console.log('Time Limit Disconnect:', timelimitdisconnect);
+        console.log('Time Limit Connect:', timelimitconnect);
+        console.log('Permitted Attempts:', permittedattempts);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage7");
+        successMessage.textContent = "Connection Parameters Updated Successfully";
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Attempts Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
 																							<div
 																								class="elementor-element elementor-element-3c188af elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="3c188af"
@@ -3723,122 +3413,70 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="fe5ff50"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+<form class="" method="post" name="Notification Form"  onsubmit="return handleFormSubmit9()">
+	{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020">
+    <input type="hidden" name="form_id" value="fe5ff50">
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind">
+    <input type="hidden" name="queried_id" value="8020">
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-notifyoptions elementor-col-100">
+            <label for="form-field-notifyoptions" class="elementor-field-label">Notifications from</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[notifyoptions]" id="form-field-notifyoptions" class="elementor-field-textual elementor-size-sm">
+                    <option value="Chat">Chat</option>
+                    <option value="UX Living Lab">UX Living Lab</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-notifyoptions1 elementor-col-100 elementor-field-type-select-multiple">
+            <label for="form-field-notifyoptions1" class="elementor-field-label">Methods</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[notifyoptions1][]" id="form-field-notifyoptions1" class="elementor-field-textual elementor-size-sm" multiple>
+                    <option value="Email Messages">Email Messages</option>
+                    <option value="SMS/Text Messages">SMS/Text Messages</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="notifysetbtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Forward Notifications</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-notifyoptions elementor-col-100"
-																											>
-																												<label
-																													for="form-field-notifyoptions"
-																													class="elementor-field-label"
-																												>
-																													Notifications from
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[notifyoptions]"
-																														id="form-field-notifyoptions"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="Chat"
-																														>
-																															Chat
-																														</option>
-																														<option
-																															value="UX Living Lab"
-																														>
-																															UX Living Lab
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-notifyoptions1 elementor-col-100 elementor-field-type-select-multiple"
-																											>
-																												<label
-																													for="form-field-notifyoptions1"
-																													class="elementor-field-label"
-																												>
-																													Methods
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[notifyoptions1][]"
-																														id="form-field-notifyoptions1"
-																														class="elementor-field-textual elementor-size-sm"
-																														multiple=""
-																													>
-																														<option
-																															value="Email Messages"
-																														>
-																															Email Messages
-																														</option>
-																														<option
-																															value="SMS/Text Messages"
-																														>
-																															SMS/Text Messages
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="notifysetbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Forward
-																															Notifications
-																														</span>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
 																								</div>
 																							</div>
+																							<div id="successMessage9" style="display: none;"></div>
+<script>
+    function handleFormSubmit9() {
+        var notifyoptions = document.getElementById("form-field-notifyoptions.value;
+        var notifyoptions1 = document.getElementById("form-field-notifyoptions1").value;
+
+        console.log('Notify Options:', notifyoptions);
+        console.log('Notify Optioons 1:', notifyoptions1);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage9");
+        successMessage.textContent = "Internet Settings Updated Successfully";
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Notification Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
 																						</div>
 																					</div>
 																				</div>
@@ -3884,85 +3522,68 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="d9e5c14"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
-
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
-
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-selectorgdefault elementor-col-100"
-																											>
-																												<label
-																													for="form-field-selectorgdefault"
-																													class="elementor-field-label"
-																												>
-																													Workspace Name
-																												</label>
-																												                        <div class="elementor-field elementor-select-wrapper ">
-<select name="product" id="productlist" class="elementor-field-textual elementor-size-sm" required="required" onchange="lav();" aria-required="true">
-  <option>....Select Workspace Name....</option>
-  {% for org in datalav.organisations %}
-    <option value="{{ org.org_name }}">{{ org.org_name }}</option>
-  {% endfor %}
-  {% for org in datalav.other_organisation %}
-    <option value="{{ org.org_name }}">{{ org.org_name }}</option>
-  {% endfor %}
-</select>
 
 
-        </div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="defaultorgbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Set as default
-																															Workspace for
-																															me</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
+	<form class="elementor-form" method="post" name="Workspace Form" onsubmit="return handleFormSubmit2()">
+  {% csrf_token %}
+<!--  <input type="hidden" name="post_id" value="8020" />-->
+<!--  <input type="hidden" name="form_id" value="d9e5c14" />-->
+<!--  <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people&#039;s mind" />-->
+<!--  <input type="hidden" name="queried_id" value="8020" />-->
+
+  <div class="elementor-form-fields-wrapper elementor-labels-above">
+    <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-selectorgdefault elementor-col-100">
+      <label for="form-field-selectorgdefault" class="elementor-field-label">Workspace Name</label>
+      <div class="elementor-field elementor-select-wrapper">
+        <select name="workspace" id="workspacename" class="elementor-field-textual elementor-size-sm" required="required" aria-required="true">
+          <option>....Select Workspace Name....</option>
+          {% for org in datalav.organisations %}
+          <option value="{{ org.org_name }}">{{ org.org_name }}</option>
+          {% endfor %}
+          {% for org in datalav.other_organisation %}
+          <option value="{{ org.org_name }}">{{ org.org_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+      <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="defaultorgbtn">
+        <span>
+          <span class="elementor-button-icon"></span>
+          <span class="elementor-button-text">Set as default Workspace for me</span>
+        </span>
+      </button>
+    </div>
+  </div>
+	</form>
 																								</div>
 																							</div>
+																							<div id="successMessage2" style="display: none;">
+
+</div>
+																		<script>
+	function handleFormSubmit2() {
+		var workspacename = document.getElementById("workspacename").value;
+
+		console.log('Selected Workspace:', workspacename);
+
+		// Prevent the form from being submitted automatically
+		event.preventDefault();
+
+		// Display the success message
+		var successMessage = document.getElementById("successMessage2");
+		successMessage.textContent = workspacename + " set as default workspace";
+		successMessage.style.display = "block";
+
+		// Manually submit the form
+		var form = document.forms["Workspace Form"];
+		form.submit();
+
+		// Return true to allow the form submission to proceed
+		return true;
+	}
+</script>
+
 																							<div
 																								class="elementor-element elementor-element-9d812db elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="9d812db"
@@ -4015,101 +3636,63 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="fa786cc"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+						<form class="elementor-form" method="post" name="Language Form" onsubmit="return handleFormSubmit4()">
+							{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020" />
+    <input type="hidden" name="form_id" value="fa786cc" />
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind" />
+    <input type="hidden" name="queried_id" value="8020" />
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-selectlanguagedefault elementor-col-100">
+            <label for="form-field-selectlanguagedefault" class="elementor-field-label">Languages</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[selectlanguagedefault]" id="form-field-selectlanguagedefault" class="elementor-field-textual elementor-size-sm">
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-selectlanguagedefault elementor-col-100"
-																											>
-																												<label
-																													for="form-field-selectlanguagedefault"
-																													class="elementor-field-label"
-																												>
-																													Languages
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[selectlanguagedefault]"
-																														id="form-field-selectlanguagedefault"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="English"
-																														>
-																															English
-																														</option>
-																														<option
-																															value="Traditional Chinese"
-																														>
-																															Traditional
-																															Chinese
-																														</option>
-																														<option
-																															value="Simplified Chinese"
-																														>
-																															Simplified Chinese
-																														</option>
-																														<option
-																															value=""
-																														></option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="defaultorgbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Set as default
-																															Language for
-																															me</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
+					    <option value="English" {% if settings.default_language == "English" %}selected{% endif %}>English </option>
+					    <option value="Traditional Chinese" {% if settings.default_language == "Traditional Chinese" %}selected{% endif %}>Traditional Chinese </option>
+					    <option value="Simplified Chinese" {% if settings.default_language == "Simplified Chinese" %}selected{% endif %}>Simplified Chinese </option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="defaultorgbtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Set as default Language for me</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
 																								</div>
 																							</div>
+											<div id="successMessage4" style="display: none;">  </div>
+<script>
+	function handleFormSubmit4() {
+		var languagename = document.getElementById("form-field-selectlanguagedefault").value;
+
+		console.log('Selected Language:', languagename);
+
+		// Prevent the form from being submitted automatically
+		event.preventDefault();
+
+		// Display the success message
+		var successMessage = document.getElementById("successMessage4");
+		successMessage.textContent = languagename + " Set as default language";
+		successMessage.style.display = "block";
+
+		// Manually submit the form
+		var form = document.forms["Language Form"];
+		form.submit();
+
+		// Return true to allow the form submission to proceed
+		return true;
+	}
+</script>
 																							<div
 																								class="elementor-element elementor-element-3be407d elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="3be407d"
@@ -4161,210 +3744,90 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="b759c48"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+	<form class="elementor-form" method="post" name="Internet Form"  onsubmit="return handleFormSubmit5()">
+		{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020" />
+    <input type="hidden" name="form_id" value="b759c48" />
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind" />
+    <input type="hidden" name="queried_id" value="8020" />
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-minimumspeed elementor-col-100">
+            <label for="form-field-minimumspeed" class="elementor-field-label">Minimum Speed needed</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[minimumspeed]" id="form-field-minimumspeed" class="elementor-field-textual elementor-size-sm">
+                    <option value="No minimum speed">No minimum speed</option>
+                    <option value="05 MBPS">05 MBPS</option>
+                    <option value="10 MBPS">10 MBPS</option>
+                    <option value="25 MBPS">25 MBPS</option>
+                    <option value="50 MBPS">50 MBPS</option>
+                    <option value="75 MBPS">75 MBPS</option>
+                    <option value="100 MBPS">100 MBPS</option>
+                    <option value="150 MBPS">150 MBPS</option>
+                    <option value="200 MBPS">200 MBPS</option>
+                    <option value="300 MBPS">300 MBPS</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-speedtestperday elementor-col-100">
+            <label for="form-field-speedtestperday" class="elementor-field-label">Number of Speed tests per day</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[speedtestperday]" id="form-field-speedtestperday" class="elementor-field-textual elementor-size-sm">
+                    <option value="No Speed Test">No Speed Test</option>
+                    <option value="1 test per day">1 test per day</option>
+                    <option value="2 test per day">2 test per day</option>
+                    <option value="3 test per day">3 test per day</option>
+                    <option value="4 test per day">4 test per day</option>
+                    <option value="5 test per day">5 test per day</option>
+                    <option value="6 test per day">6 test per day</option>
+                    <option value="7 test per day">7 test per day</option>
+                    <option value="8 test per day">8 test per day</option>
+                    <option value="9 test per day">9 test per day</option>
+                    <option value="10 test per day">10 test per day</option>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="defaultorgbtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Set as default Internet Settings</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-minimumspeed elementor-col-100"
-																											>
-																												<label
-																													for="form-field-minimumspeed"
-																													class="elementor-field-label"
-																												>
-																													Minimum Speed needed
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[minimumspeed]"
-																														id="form-field-minimumspeed"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="No minimum speed"
-																														>
-																															No minimum speed
-																														</option>
-																														<option
-																															value="05 MBPS"
-																														>
-																															05 MBPS
-																														</option>
-																														<option
-																															value="10 MBPS"
-																														>
-																															10 MBPS
-																														</option>
-																														<option
-																															value="25 MBPS"
-																														>
-																															25 MBPS
-																														</option>
-																														<option
-																															value="50 MBPS"
-																														>
-																															50 MBPS
-																														</option>
-																														<option
-																															value="75 MBPS"
-																														>
-																															75 MBPS
-																														</option>
-																														<option
-																															value="100 MBPS"
-																														>
-																															100 MBPS
-																														</option>
-																														<option
-																															value="150 MBPS"
-																														>
-																															150 MBPS
-																														</option>
-																														<option
-																															value="200 MBPS"
-																														>
-																															200 MBPS
-																														</option>
-																														<option
-																															value="300 MBPS"
-																														>
-																															300 MBPS
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-speedtestperday elementor-col-100"
-																											>
-																												<label
-																													for="form-field-speedtestperday"
-																													class="elementor-field-label"
-																												>
-																													Number of Speed tests
-																													per day
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[speedtestperday]"
-																														id="form-field-speedtestperday"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="No Speed Test"
-																														>
-																															No Speed Test
-																														</option>
-																														<option
-																															value="1 test per day"
-																														>
-																															1 test per day
-																														</option>
-																														<option
-																															value="2 test per day"
-																														>
-																															2 test per day
-																														</option>
-																														<option
-																															value="3 test per day"
-																														>
-																															3 test per day
-																														</option>
-																														<option
-																															value="4 test per day"
-																														>
-																															4 test per day
-																														</option>
-																														<option
-																															value="5 test per day"
-																														>
-																															5 test per day
-																														</option>
-																														<option
-																															value="6 test per day"
-																														>
-																															6 test per day
-																														</option>
-																														<option
-																															value="7 test per day"
-																														>
-																															7 test per day
-																														</option>
-																														<option
-																															value="8 test per day"
-																														>
-																															8 test per day
-																														</option>
-																														<option
-																															value="9 test per day"
-																														>
-																															9 test per day
-																														</option>
-																														<option
-																															value="10 test per day"
-																														>
-																															10 test per day
-																														</option>
-																														<option
-																															value=""
-																														></option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="defaultorgbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Set as default
-																															Language</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
 																								</div>
 																							</div>
+
+
+<div id="successMessage5" style="display: none;"></div>
+<script>
+    function handleFormSubmit5() {
+        var minimumspeed = document.getElementById("form-field-minimumspeed").value;
+        var speedtestperday = document.getElementById("form-field-speedtestperday").value;
+
+        console.log('Minimum Speed:', minimumspeed);
+        console.log('Speed Test Per Day:', speedtestperday);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage5");
+        successMessage.textContent = "Internet Settings Updated Successfully";
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Internet Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
 																							<div
 																								class="elementor-element elementor-element-df8fd61 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="df8fd61"
@@ -4418,136 +3881,78 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="2d3a9f4"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+	<form class="" method="post" name="Product Form"  onsubmit="return handleFormSubmit7()">
+		{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020" />
+    <input type="hidden" name="form_id" value="2d3a9f4" />
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind" />
+    <input type="hidden" name="queried_id" value="8020" />
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-allproducts elementor-col-100">
+            <label for="form-field-allproducts" class="elementor-field-label">Products</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[allproducts]" id="form-field-allproducts" class="elementor-field-textual elementor-size-sm">
+{% for i in datalav.products %}
+    {% if datalav.document_name == "uxliveadmin" and i == "Monitoring" %}
+        <option value="{{i}}" {% if i == settings.processes_to_portfolio.0.product_plan.0.product_name %}selected{% endif %}>{{i}}</option>
+    {% elif user != "uxliveadmin" and i != "Monitoring" %}
+        <option value="{{i}}" {% if i == settings.processes_to_portfolio.0.product_plan.0.product_name %}selected{% endif %}>{{i}}</option>
+    {% endif %}
+{% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-productplans elementor-col-100">
+            <label for="form-field-productplans" class="elementor-field-label">Plans</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[productplans]" id="form-field-productplans" class="elementor-field-textual elementor-size-sm">
+                    <option value="Free">Free</option>
+                    <option value="Templates -">Templates -</option>
+                    <option value="Managements - 5 uer">Managements - 5 uer</option>
+                    <option value="Documents - 100">Documents - 100</option>
+                    <option value=""></option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="changeplanbtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Change Plan of selected Product</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-allproducts elementor-col-100"
-																											>
-																												<label
-																													for="form-field-allproducts"
-																													class="elementor-field-label"
-																												>
-																													Products
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[allproducts]"
-																														id="form-field-allproducts"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="Workflow AI"
-																														>
-																															Workflow AI
-																														</option>
-																														<option
-																															value="Digital Q"
-																														>
-																															Digital Q
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-productplans elementor-col-100"
-																											>
-																												<label
-																													for="form-field-productplans"
-																													class="elementor-field-label"
-																												>
-																													Plans
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[productplans]"
-																														id="form-field-productplans"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="Free"
-																														>
-																															Free
-																														</option>
-																														<option
-																															value="Templates - "
-																														>
-																															Templates -
-																														</option>
-																														<option
-																															value="Managements - 5 uer"
-																														>
-																															Managements - 5
-																															uer
-																														</option>
-																														<option
-																															value="Documents - 100"
-																														>
-																															Documents - 100
-																														</option>
-																														<option
-																															value=""
-																														></option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="changeplanbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Change Plan of
-																															selected
-																															Product</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
 																								</div>
 																							</div>
+<div id="successMessage6" style="display: none;"></div>
+<script>
+    function handleFormSubmit6() {
+        var product = document.getElementById("form-field-allproducts").value;
+        var productplan = document.getElementById("form-field-productplans").value;
+
+        console.log('Product:', product);
+        console.log('Product Plan:', productplan);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage6");
+        successMessage.textContent = products + " Plan Updated Successfuly";
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Product Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
 																							<div
 																								class="elementor-element elementor-element-2c0e916 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="2c0e916"
@@ -4602,211 +4007,94 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="1f01066"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+																										<form class="elementor-form" method="post" name="Process Form"  onsubmit="return handleFormSubmit8()">
+																{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020">
+    <input type="hidden" name="form_id" value="1f01066">
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind">
+    <input type="hidden" name="queried_id" value="8020">
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-adminprocess elementor-col-100">
+            <label for="form-field-adminprocess" class="elementor-field-label">Process</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[adminprocess]" id="form-field-adminprocess" class="elementor-field-textual elementor-size-sm">
+    <option value="Portfolio Management" {% if settings.processes_to_portfolio.0.process == "Portfolio Management" %}selected{% endif %}>Portfolio Management</option>
+    <option value="Team Member Management" {% if settings.processes_to_portfolio.0.process == "Team Member Management" %}selected{% endif %}>Team Member Management</option>
+    <option value="User Management" {% if settings.processes_to_portfolio.0.process == "User Management" %}selected{% endif %}>User Management</option>
+    <option value="Public Management" {% if settings.processes_to_portfolio.0.process == "Public Management" %}selected{% endif %}>Public Management</option>
+    <option value="Role Management" {% if settings.processes_to_portfolio.0.process == "Role Management" %}selected{% endif %}>Role Management</option>
+    <option value="Level Management" {% if settings.processes_to_portfolio.0.process == "Level Management" %}selected{% endif %}>Level Management</option>
+    <option value="Layer Management" {% if settings.processes_to_portfolio.0.process == "Layer Management" %}selected{% endif %}>Layer Management</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-operationalrights elementor-col-100">
+            <label for="form-field-operationalrights" class="elementor-field-label">Rights</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[operationalrights]" id="form-field-operationalrights" class="elementor-field-textual elementor-size-sm">
+    <option value="View" {% if settings.processes_to_portfolio.0.rights == "View" %}selected{% endif %}>View</option>
+    <option value="Add/Edit" {% if settings.processes_to_portfolio.0.rights == "Add/Edit" %}selected{% endif %}>Add/Edit</option>
+    <option value="Delete/Remove" {% if settings.processes_to_portfolio.0.rights == "Delete/Remove" %}selected{% endif %}>Delete/Remove</option>
+    <option value="Admin" {% if settings.processes_to_portfolio.0.rights == "Admin" %}selected{% endif %}>Admin</option>
+	</select>
+            </div>
+        </div>
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-portflioset elementor-col-100 elementor-field-type-select-multiple">
+            <label for="form-field-portflioset" class="elementor-field-label">Portfolios</label>
+            <div class="elementor-field elementor-select-wrapper">
+ <select name="form_fields[portflioset][]" id="form-field-portflioset" class="elementor-field-textual elementor-size-sm" multiple>
+    <option value="Portfolio 01" {% if "Portfolio 01" in settings.processes_to_portfolio.0.portfolios %}selected{% endif %}>Portfolio 01</option>
+    <option value="Portfolio 02" {% if "Portfolio 02" in settings.processes_to_portfolio.0.portfolios %}selected{% endif %}>Portfolio 02</option>
+    <option value="Portfolio 03" {% if "Portfolio 03" in settings.processes_to_portfolio.0.portfolios %}selected{% endif %}>Portfolio 03</option>
+    <option value="Portfolio 04" {% if "Portfolio 04" in settings.processes_to_portfolio.0.portfolios %}selected{% endif %}>Portfolio 04</option>
+    <option value="Portfolio 05" {% if "Portfolio 05" in settings.processes_to_portfolio.0.portfolios %}selected{% endif %}>Portfolio 05</option>
+    <option value="Portfolio 06" {% if "Portfolio 06" in settings.processes_to_portfolio.0.portfolios %}selected{% endif %}>Portfolio 06</option>
+</select>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-adminprocess elementor-col-100"
-																											>
-																												<label
-																													for="form-field-adminprocess"
-																													class="elementor-field-label"
-																												>
-																													Process
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[adminprocess]"
-																														id="form-field-adminprocess"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="Portfolio Management"
-																														>
-																															Portfolio
-																															Management
-																														</option>
-																														<option
-																															value="Team Member Management"
-																														>
-																															Team Member
-																															Management
-																														</option>
-																														<option
-																															value="User Management"
-																														>
-																															User Management
-																														</option>
-																														<option
-																															value="Public Management"
-																														>
-																															Public Management
-																														</option>
-																														<option
-																															value="Role Management"
-																														>
-																															Role Management
-																														</option>
-																														<option
-																															value="Level Management"
-																														>
-																															Level Management
-																														</option>
-																														<option
-																															value="Layer Management"
-																														>
-																															Layer Management
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-operationalrights elementor-col-100"
-																											>
-																												<label
-																													for="form-field-operationalrights"
-																													class="elementor-field-label"
-																												>
-																													Rights
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[operationalrights]"
-																														id="form-field-operationalrights"
-																														class="elementor-field-textual elementor-size-sm"
-																													>
-																														<option
-																															value="View"
-																														>
-																															View
-																														</option>
-																														<option
-																															value="Add/Edit"
-																														>
-																															Add/Edit
-																														</option>
-																														<option
-																															value="Delete/Remove"
-																														>
-																															Delete/Remove
-																														</option>
-																														<option
-																															value="Admin"
-																														>
-																															Admin
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-portflioset elementor-col-100 elementor-field-type-select-multiple"
-																											>
-																												<label
-																													for="form-field-portflioset"
-																													class="elementor-field-label"
-																												>
-																													Portflios
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[portflioset][]"
-																														id="form-field-portflioset"
-																														class="elementor-field-textual elementor-size-sm"
-																														multiple=""
-																													>
-																														<option
-																															value="Portfolio 01"
-																														>
-																															Portfolio 01
-																														</option>
-																														<option
-																															value="Portfolio 02"
-																														>
-																															Portfolio 02
-																														</option>
-																														<option
-																															value="Portfolio 03"
-																														>
-																															Portfolio 03
-																														</option>
-																														<option
-																															value="Portfolio 04"
-																														>
-																															Portfolio 04
-																														</option>
-																														<option
-																															value="Portfolio 05"
-																														>
-																															Portfolio 05
-																														</option>
-																														<option
-																															value="Portfolio 06"
-																														>
-																															Portfolio 06
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="portfoliomanagebtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Assign Process
-																															management to
-																															selected
-																															Portfolios</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
+            </div>
+        </div>
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="portfoliomanagebtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Assign Process management to selected Portfolios</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
+
 																								</div>
 																							</div>
+																							<div id="successMessage8" style="display: none;"></div>
+
+				<script>
+    function handleFormSubmit8() {
+        var adminprocess = document.getElementById("form-field-adminprocess").value;
+        var operationalrights = document.getElementById("form-field-operationalrights").value;
+        var portfolioset = document.getElementById("form-field-portflioset").value;
+
+        console.log('Admin Process:', adminprocess);
+        console.log('Operational Rights:', operationalrights);
+        console.log('Portfolio Set:', portfolioset);
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage8");
+        successMessage.textContent = "Process Management Successfully Assigned To " + portfolioset;
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Process Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
 																							<div
 																								class="elementor-element elementor-element-dc87694 elementor-widget-divider--view-line elementor-widget elementor-widget-divider"
 																								data-id="dc87694"
@@ -4860,100 +4148,66 @@ margin-bottom: 0;
 																								<div
 																									class="elementor-widget-container"
 																								>
-																									<form
-																										class="elementor-form"
-																										method="post"
-																										name="New Form"
-																									>
-																										<input
-																											type="hidden"
-																											name="post_id"
-																											value="8020"
-																										/>
-																										<input
-																											type="hidden"
-																											name="form_id"
-																											value="aeedb91"
-																										/>
-																										<input
-																											type="hidden"
-																											name="referer_title"
-																											value="uxlivinglab - innovating from people&#039;s mind"
-																										/>
+												<form class="" method="post" name="Colour Form" onsubmit="return handleFormSubmit10()">
+													{% csrf_token %}
+    <input type="hidden" name="post_id" value="8020">
+    <input type="hidden" name="form_id" value="aeedb91">
+    <input type="hidden" name="referer_title" value="uxlivinglab - innovating from people's mind">
+    <input type="hidden" name="queried_id" value="8020">
 
-																										<input
-																											type="hidden"
-																											name="queried_id"
-																											value="8020"
-																										/>
+    <div class="elementor-form-fields-wrapper elementor-labels-above">
+        <div class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-colourpatterns elementor-col-100">
+            <label for="form-field-colourpatterns" class="elementor-field-label">Colour Scheme</label>
+            <div class="elementor-field elementor-select-wrapper">
+                <select name="form_fields[colourpatterns]" id="form-field-colourpatterns" class="elementor-field-textual elementor-size-sm" onchange="colourpatterns();">
+   <option value="Default" {% if settings.color_scheme == "Default" %}selected{% endif %}>Default</option>
+    <option value="Green" {% if settings.color_scheme == "Green" %}selected{% endif %}>Green</option>
+    <option value="Red" {% if settings.color_scheme == "Red" %}selected{% endif %}>Red</option>
+    <option value="Blue" {% if settings.color_scheme == "Blue" %}selected{% endif %}>Blue</option>
+                </select>
+            </div>
+        </div>
+        <div class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons">
+            <button type="submit" class="elementor-button elementor-size-md btnthemecolor" id="changeplanbtn">
+                <span>
+                    <span class="elementor-button-icon"></span>
+                    <span class="elementor-button-text">Set Colour Scheme</span>
+                </span>
+            </button>
+        </div>
+    </div>
+</form>
 
-																										<div
-																											class="elementor-form-fields-wrapper elementor-labels-above"
-																										>
-																											<div
-																												class="elementor-field-type-select elementor-field-group elementor-column elementor-field-group-colourpatterns elementor-col-100"
-																											>
-																												<label
-																													for="form-field-colourpatterns"
-																													class="elementor-field-label"
-																												>
-																													Colour Scheme
-																												</label>
-																												<div
-																													class="elementor-field elementor-select-wrapper"
-																												>
-																													<select
-																														name="form_fields[colourpatterns]"
-																														id="form-field-colourpatterns"
-																														class="elementor-field-textual elementor-size-sm"
-																														onchange="colourpatterns();"
-																													>
-																														<option
-																															value="Default"
-																														>
-																															Default
-																														</option>
-																														<option
-																															value="Green"
-																														>
-																															Green
-																														</option>
-																														<option value="Red">
-																															Red
-																														</option>
-																														<option
-																															value="Blue"
-																														>
-																															Blue
-																														</option>
-																													</select>
-																												</div>
-																											</div>
-																											<div
-																												class="elementor-field-group elementor-column elementor-field-type-submit elementor-col-100 e-form__buttons"
-																											>
-																												<button
-																													type="submit"
-																													class="elementor-button elementor-size-md btnthemecolor"
-																													id="changeplanbtn"
-																												>
-																													<span>
-																														<span
-																															class="elementor-button-icon"
-																														>
-																														</span>
-																														<span
-																															class="elementor-button-text"
-																															>Set Colour
-																															Scheme</span
-																														>
-																													</span>
-																												</button>
-																											</div>
-																										</div>
-																									</form>
 																								</div>
 																							</div>
+																							<div id="successMessage10" style="display: none;"></div>
+
+																							<script>
+    function handleFormSubmit10() {
+        var colourpatterns = document.getElementById("form-field-colourpatterns").value;
+
+        console.log('Colour Patterns:', colourpatterns;
+
+        // Prevent the form from being submitted automatically
+        event.preventDefault();
+
+        // Display the success message
+        var successMessage = document.getElementById("successMessage10");
+        successMessage.textContent = "Colour Set to "+ colourpatterns;
+        successMessage.style.display = "block";
+
+        // Manually submit the form
+        var form = document.forms["Colour Form"];
+        form.submit();
+
+        // Return true to allow the form submission to proceed
+        return true;
+    }
+</script>
+
+
+
+
 																						</div>
 																					</div>
 																				</div>

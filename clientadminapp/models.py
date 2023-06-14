@@ -262,3 +262,18 @@ class GeoLocation(models.Model):
 
     class Meta:
         db_table = "GeoLocation"
+
+class Notification(models.Model):
+    username=models.CharField(max_length=255)
+    owner = models.CharField(max_length=255)
+    portfolio = models.CharField(max_length=255)
+    notification = models.CharField(max_length=255)
+    date = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=255)
+    product = models.CharField(max_length=255)
+    class Meta:
+        db_table="Notifications"
+
+class PolicyStatus(models.Model):
+    username=models.CharField(max_length=255)
+    policies_status = models.CharField(max_length=255)
