@@ -228,7 +228,7 @@ const MembersTab = () => {
               </form>
 
               <hr className="border-2 border-[#FF0000] mb-8" />
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4">
                 Common Invitation to join as TEAM MEMBER to my organisation
               </p>
 
@@ -238,12 +238,10 @@ const MembersTab = () => {
                     Link to Data
                   </label>
                   <textarea
-                  rows={4}
-                  placeholder="Paste link to database to connect"
-
-                  className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-                />
-              
+                    rows={4}
+                    placeholder="Paste link to database to connect"
+                    className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+                  />
                 </div>
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Import Team Members
@@ -255,12 +253,10 @@ const MembersTab = () => {
                     Common invitation link
                   </label>
                   <textarea
-                  rows={4}
-                  placeholder="Paste invitation link"
-
-                  className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-                />
-               
+                    rows={4}
+                    placeholder="Paste invitation link"
+                    className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+                  />
                 </div>
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Save common invitation link & create QR code
@@ -269,7 +265,7 @@ const MembersTab = () => {
               <form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
                 <div className="mb-4">
                   <img src={images.placeholder} alt="" />
-                  <p>QR code for link</p>
+                  <p className="text-center">QR code for link</p>
                 </div>
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Download common invitation link QR code
@@ -373,7 +369,7 @@ const MembersTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
                 Search Users in my organisation
               </p>
               <form className="px-[30px] mb-8">
@@ -434,8 +430,8 @@ const MembersTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <form className="border-b border-[[#FF0000] ]">
-                <div className="mb-4">
+              <form className="px-4">
+                <div className="mb-4 mt-8">
                   <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                     Invited Users
                   </label>
@@ -473,48 +469,50 @@ const MembersTab = () => {
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Cancel Selected User Invitation
                 </button>
-                <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+                <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto my-20">
                   Duplicate selected User invitation to create new
                 </button>
               </form>
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+              <hr className="border-2 border-[#FF0000] mb-8" />
+
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4">
                 Common Invitation to join as USER to my organisation
               </p>
 
-              <form>
+              <form className="px-4">
                 <div className="mb-4">
                   <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                     Link to Data
                   </label>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={4}
                     placeholder="Paste link to database to connect"
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+                    className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
                   />
                 </div>
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Import Users
                 </button>
               </form>
-              <form>
+              <form className="px-4 my-8">
                 <div className="mb-4">
                   <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                     Common invitation link
                   </label>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={4}
                     placeholder="Paste invitation link"
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+                    className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
                   />
                 </div>
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Save common invitation link & create QR code
                 </button>
               </form>
-              <form>
+              <form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
                 <div className="mb-4">
                   <img src={images.placeholder} alt="" />
-                  <p>QR code for link</p>
+                  <p className="text-center">QR code for link</p>
                 </div>
                 <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
                   Download common invitation link QR code
@@ -526,7 +524,7 @@ const MembersTab = () => {
         <TabPanel>
           <div className="lg:flex w-full  h-full mt-8">
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
                 Invite PUBLIC to my organisation
               </p>
               <form className="px-[30px] mb-8">
@@ -560,7 +558,7 @@ const MembersTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
                 Public in my organisation
               </p>
               <form className="px-[30px] mb-8">
@@ -616,4 +614,3 @@ const MembersTab = () => {
 };
 
 export default MembersTab;
-

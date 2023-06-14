@@ -58,7 +58,7 @@ const LevelsTab = () => {
             </div>
 
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Create Level 1 Items
               </p>
               <form className="px-[30px] mb-8">
@@ -139,7 +139,7 @@ const LevelsTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Items created in Level 1
               </p>
               <form className="px-[30px] mb-8">
@@ -222,7 +222,7 @@ const LevelsTab = () => {
             </div>
 
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Create Level 2 Items
               </p>
               <form className="px-[30px] mb-8">
@@ -303,7 +303,7 @@ const LevelsTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Items created in Level 2
               </p>
               <form className="px-[30px] mb-8">
@@ -386,7 +386,7 @@ const LevelsTab = () => {
             </div>
 
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Create Level 3 Items
               </p>
               <form className="px-[30px] mb-8">
@@ -467,8 +467,8 @@ const LevelsTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
-                Items created in Level 1
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
+                Items created in Level 3
               </p>
               <form className="px-[30px] mb-8">
                 <div className="mb-4">
@@ -550,7 +550,7 @@ const LevelsTab = () => {
             </div>
 
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Create Level 4 Items
               </p>
               <form className="px-[30px] mb-8">
@@ -631,8 +631,8 @@ const LevelsTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
-                Items created in Level 1
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
+                Items created in Level 4
               </p>
               <form className="px-[30px] mb-8">
                 <div className="mb-4">
@@ -714,7 +714,7 @@ const LevelsTab = () => {
             </div>
 
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Create Level 5 Items
               </p>
               <form className="px-[30px] mb-8">
@@ -795,8 +795,8 @@ const LevelsTab = () => {
               </form>
             </div>
             <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
-                Items created in Level 1
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
+                Items created in Level 5
               </p>
               <form className="px-[30px] mb-8">
                 <div className="mb-4">

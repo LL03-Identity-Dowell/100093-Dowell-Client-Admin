@@ -178,7 +178,7 @@ const AdminTabs = () => {
               <main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
                 {productsData.map((product) => {
                   return (
-                    <div
+                    <div key={product.title}
                       className="relative w-full h-full "
                       onMouseOver={() => handleMouseOver(product.title)}
                       onMouseOut={() => handleMouseOut(product.title)}
@@ -909,7 +909,7 @@ const AdminTabs = () => {
               </form>
               <hr />
 
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 Operating Systems
               </p>
@@ -986,7 +986,7 @@ const AdminTabs = () => {
 
               <hr />
 
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 Browsers
               </p>
@@ -1087,7 +1087,7 @@ const AdminTabs = () => {
                 </button>
               </form>
               <hr />
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 Internet Connection Type
               </p>
@@ -1151,7 +1151,7 @@ const AdminTabs = () => {
               </form>
               <hr />
 
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 Login Type
               </p>
@@ -1241,7 +1241,7 @@ const AdminTabs = () => {
               </form>
               <hr />
 
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 Change Password
               </p>
@@ -1330,7 +1330,7 @@ const AdminTabs = () => {
                 </button>
               </form>
               <hr />
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 Password Strength
               </p>
@@ -1406,7 +1406,7 @@ const AdminTabs = () => {
                 </button>
               </form>
               <hr />
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12">
+            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 {" "}
                 ID Verification Status
               </p>
@@ -1661,7 +1661,7 @@ const AdminTabs = () => {
               <h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
                 Set Layers – 1 (High), 2, 3, 4, 5, 6 (Low)
               </h2>
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Geographic Location{" "}
               </p>
               <form className="px-6 w-full">
@@ -1672,10 +1672,10 @@ const AdminTabs = () => {
                       <input type="checkbox" /> <label>India - Layer</label>
                       {["1", "2", "3", "4", "5", "6"].map((id) => {
                         return (
-                          <>
-                            <input type="radio" key={id} className="px-4" />
+                          <div key={id}>
+                            <input type="radio"  className="px-4" />
                             <label className="whitespace-normal">{id}</label>
-                          </>
+                          </div>
                         );
                       })}
                     </div>
@@ -1697,12 +1697,12 @@ const AdminTabs = () => {
                               <label>{city} - Layer</label>
                               {["1", "2", "3", "4", "5", "6"].map((id) => {
                                 return (
-                                  <>
-                                    <input type="radio" key={id} />
+                                  <div key={id}>
+                                    <input type="radio"  />
                                     <label className="whitespace-normal">
                                       {id}
                                     </label>
-                                  </>
+                                  </div>
                                 );
                               })}
                             </li>
@@ -1721,10 +1721,10 @@ const AdminTabs = () => {
                       </label>
                       {["1", "2", "3", "4", "5", "6"].map((id) => {
                         return (
-                          <>
-                            <input type="radio" key={id} className="px-4" />
+                          <div key={id}>
+                            <input type="radio"  className="px-4" />
                             <label className="whitespace-normal">{id}</label>
-                          </>
+                          </div>
                         );
                       })}
                     </div>
@@ -1742,12 +1742,12 @@ const AdminTabs = () => {
                                 <label>{city} - Layer</label>
                                 {["1", "2", "3", "4", "5", "6"].map((id) => {
                                   return (
-                                    <>
-                                      <input type="radio" key={id} />
+                                    <div key={id}>
+                                      <input type="radio"  />
                                       <label className="whitespace-normal">
                                         {id}
                                       </label>
-                                    </>
+                                    </div>
                                   );
                                 })}
                               </li>
@@ -1763,10 +1763,10 @@ const AdminTabs = () => {
                       <input type="checkbox" /> <label>UK - Layer</label>
                       {["1", "2", "3", "4", "5", "6"].map((id) => {
                         return (
-                          <>
-                            <input type="radio" key={id} className="px-4" />
+                          <div key={id}>
+                            <input type="radio"  className="px-4" />
                             <label className="">{id}</label>
-                          </>
+                          </div>
                         );
                       })}
                     </div>
@@ -1786,12 +1786,12 @@ const AdminTabs = () => {
                                 </label>
                                 {["1", "2", "3", "4", "5", "6"].map((id) => {
                                   return (
-                                    <>
-                                      <input type="radio" key={id} />
+                                    <div key={id}>
+                                      <input type="radio"  />
                                       <label className="whitespace-normal">
                                         {id}
                                       </label>
-                                    </>
+                                    </div>
                                   );
                                 })}
                               </li>
@@ -1810,10 +1810,10 @@ const AdminTabs = () => {
                       </label>
                       {["1", "2", "3", "4", "5", "6"].map((id) => {
                         return (
-                          <>
-                            <input type="radio" key={id} className="px-4" />
+                          <div key={id}>
+                            <input type="radio"  className="px-4" />
                             <label className="">{id}</label>
-                          </>
+                          </div>
                         );
                       })}
                     </div>
@@ -1824,7 +1824,7 @@ const AdminTabs = () => {
                 </button>
               </form>
               <hr />
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
                 Language
               </p>
               <form className="px-6 w-full">
@@ -1845,12 +1845,12 @@ const AdminTabs = () => {
                           <label>{city} - Layer</label>
                           {["1", "2", "3", "4", "5", "6"].map((id) => {
                             return (
-                              <>
-                                <input type="radio" key={id} />
+                              <div key={id}>
+                                <input type="radio"  />
                                 <label className="whitespace-normal">
                                   {id}
                                 </label>
-                              </>
+                              </div>
                             );
                           })}
                         </li>

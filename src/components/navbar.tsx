@@ -163,19 +163,7 @@ export default function Navbar() {
                     </a>
                   </div>
                 </div>
-              {/* <li className="px-4 py-2 flex items-center text-sm leading-snug hover:text-[#A2D95E]">
-                <NavLink
-                  to="/about-us"
-                  style={({ isActive }) => ({
-                    color: isActive ? "#A2D95E" : "",
-                  })}
-                >
-                  Login
-                </NavLink>
-              </li> */}
-             
-              
-
+          
               
             </ul>
           </div>
