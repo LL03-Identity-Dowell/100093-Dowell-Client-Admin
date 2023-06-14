@@ -7,6 +7,9 @@ from clientadminapp.models import publiclink
 import requests
 import json
 from rest_framework import status
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.status import HTTP_200_OK
 
 @api_view(["GET"])
 def ProductsView(request):
