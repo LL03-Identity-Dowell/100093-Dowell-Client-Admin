@@ -14,6 +14,4 @@ urlpatterns = [
     path('update-products-platform/',product_control_platform_admin,name="update-products-platform"),
     path('get-portfolio/', filter_portfolio, name='get-portfolio'),
     path('settings/', settings, name='settings'),
-
-
 ]
