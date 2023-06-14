@@ -4,7 +4,7 @@ import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { AiFillCaretRight } from "react-icons/ai";
-import { useState } from 'react';
+import { useState } from "react";
 import AdminTabs from "../components/tabs";
 
 const ClientAdmin = () => {
@@ -74,29 +74,37 @@ const ClientAdmin = () => {
           </section>
 
           <section className="mt-4 flex lg:flex-row flex-col-reverse gap-4">
-            <div className="border border-black shadow-card lg:w-1/4 px-2 py-2">
+            <div className="border border-black card-shadow lg:w-1/4 px-2 py-2">
               <div className="border border-[#61CE70] pb-2 hover:bg-[#cef9d2]">
                 <h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2">
                   My Profile
                 </h2>
                 <div className="card-shadow mx-4">
                   <div className="bg-[#7a7a7a] px-4  mb-[.1rem] mt-4">
-                    <span className="flex items-center h-12 gap-4 cursor-pointer" onClick={toggleSubmenu}>
+                    <span
+                      className="flex items-center h-12 gap-4 cursor-pointer"
+                      onClick={toggleSubmenu}
+                    >
                       <AiFillCaretRight className="text-white" />
                       <p className="text-white font-semibold">Organisations</p>
                     </span>
 
-                    <div className={`text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold ${isSubmenuHidden ? 'hidden' : ''}`} id="submenu">
-        <h1 className="cursor-pointer p-2 hover:bg-[#cef9d2] rounded-md mt-1">
-          Social
-        </h1>
-        <h1 className="cursor-pointer p-2 hover:bg-[#cef9d2] rounded-md mt-1">
-          Personal
-        </h1>
-        <h1 className="cursor-pointer p-2 hover:bg-[#cef9d2] rounded-md mt-1">
-          Friends
-        </h1>
-      </div>
+                    <div
+                      className={`text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold ${
+                        isSubmenuHidden ? "hidden" : ""
+                      }`}
+                      id="submenu"
+                    >
+                      <h1 className="cursor-pointer p-2 hover:bg-[#cef9d2] rounded-md mt-1">
+                        Social
+                      </h1>
+                      <h1 className="cursor-pointer p-2 hover:bg-[#cef9d2] rounded-md mt-1">
+                        Personal
+                      </h1>
+                      <h1 className="cursor-pointer p-2 hover:bg-[#cef9d2] rounded-md mt-1">
+                        Friends
+                      </h1>
+                    </div>
                   </div>
                   <div className="bg-[#7a7a7a] px-4  mb-[.1rem]">
                     <span className="flex items-center h-12 gap-4">
@@ -230,28 +238,10 @@ const ClientAdmin = () => {
               </div>
             </div>
 
-            {/* <div className="grid lg:grid-cols-3 grid-cols-1 gap-4 lg:w-3/4 lg:h-12"> */}
-              {/* <div className="w-full card-shadow h-12 flex items-center px-6 justify-between border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70]">
-                <p>Products</p>
-              </div>
-              <div className="w-full card-shadow h-12 flex items-center px-6 justify-between border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70]">
-                <p>Portfolio</p>
-              </div>
-              <div className="w-full card-shadow h-12 flex items-center px-6 justify-between border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70]">
-                <p>Members</p>
-              </div>
-              <div className="w-full card-shadow h-12 flex items-center px-6 justify-between border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70]">
-                <p>Roles</p>
-              </div>
-              <div className="w-full card-shadow h-12 flex items-center px-6 justify-between border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70]">
-                <p>Levels</p>
-              </div>
-              <div className="w-full card-shadow h-12 flex items-center px-6 justify-between border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70]">
-                <p>Layers</p>
-              </div> */}
-              <div className="lg:w-3/4">
-              <AdminTabs /></div>
-            {/* </div> */}
+           
+            <div className="lg:w-3/4">
+              <AdminTabs />
+            </div>
           </section>
         </main>
       </Layout>
