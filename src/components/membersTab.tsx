@@ -228,8 +228,9 @@ const MembersTab = () => {
               </form>
 
               <hr className="border-2 border-[#FF0000] mb-8" />
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
                 Common Invitation to join as TEAM MEMBER to my organisation
+                <span>If you don't have any link, <a href='https://100093.pythonanywhere.com/#' className="text-black font-normal">click here</a> to upload.</span>
               </p>
 
               <form className="px-4">
@@ -475,8 +476,9 @@ const MembersTab = () => {
               </form>
               <hr className="border-2 border-[#FF0000] mb-8" />
 
-              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4">
+              <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
                 Common Invitation to join as USER to my organisation
+                <span>If you don't have any link, <a href='https://100093.pythonanywhere.com/#' className="text-black font-normal">click here</a> to upload.</span>
               </p>
 
               <form className="px-4">
