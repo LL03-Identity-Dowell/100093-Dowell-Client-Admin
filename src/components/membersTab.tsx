@@ -8,6 +8,7 @@ import Modal from "react-modal";
 const MembersTab = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [uploadLinkModal, setUploadLinkModal] = useState(false);
   const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
 
   const openPrivacyModal = () => {
@@ -16,6 +17,14 @@ const MembersTab = () => {
 
   const closePrivacyModal = () => {
     setIsPrivacyModalOpen(false);
+  };
+
+  const openUploadLinkModal = () => {
+    setUploadLinkModal(true);
+  };
+
+  const closeUploadLinkModal = () => {
+    setUploadLinkModal(false);
   };
 
   return (
@@ -256,12 +265,13 @@ const MembersTab = () => {
                 Common Invitation to join as TEAM MEMBER to my organisation
                 <span>
                   If you don't have any link,{" "}
-                  <a
-                    href="https://100093.pythonanywhere.com/#"
-                    className="text-black font-normal"
+                  <button
+                    type="button"
+                    onClick={openUploadLinkModal}
+                    className="text-black font-normal hover:opacity-70"
                   >
                     click here
-                  </a>{" "}
+                  </button>{" "}
                   to upload.
                 </span>
               </p>
@@ -513,12 +523,13 @@ const MembersTab = () => {
                 Common Invitation to join as USER to my organisation
                 <span>
                   If you don't have any link,{" "}
-                  <a
-                    href="https://100093.pythonanywhere.com/#"
-                    className="text-black font-normal"
+                  <button
+                    type="button"
+                    onClick={openUploadLinkModal}
+                    className="text-black font-normal hover:opacity-70"
                   >
                     click here
-                  </a>{" "}
+                  </button>{" "}
                   to upload.
                 </span>
               </p>
@@ -668,10 +679,12 @@ const MembersTab = () => {
         }}
         className="absolute lg:mt-36 left-0 right-0 md:w-3/5 mx-auto md:h-auto h-screen lg:max-h-[80%] pb-4 overflow-y-auto overflow-auto bg-[#FFFDFD] z-50 lg:rounded-[10px] outline-none border-0 md:flex flex-col justify-between shadow-[5px_5px_30px_0px_#00000040]"
         isOpen={isPrivacyModalOpen}
-        shouldCloseOnOverlayclick={true}
         onRequestClose={closePrivacyModal}
         ariaHideApp={false}
       >
+        <div className="flex justify-end px-6 pt-6">
+          <button className="bg-black text-white text-sm px-2 py-1 rounded-sm" onClick={closePrivacyModal}>X</button>
+        </div>
         <div className="px-16 mt-16 text-sm">
           <img src={images.dowell_logo} alt="" className="w-[180px]" />
           <h2 className="underline text-center text-xl my-8 font-bold">
@@ -825,6 +838,98 @@ const MembersTab = () => {
           </footer>
           <br />
         </div>
+      </Modal>
+
+      <Modal
+        style={{
+          overlay: {
+            position: "fixed",
+            top: "0%",
+            left: "0%",
+            right: "0%",
+            bottom: "0%",
+            backgroundColor: "rgba(119, 119, 119, 0.589)",
+            zIndex: 50,
+          },
+        }}
+        className="absolute lg:mt-36 left-0 right-0 md:w-4/5 mx-auto md:h-auto h-screen lg:max-h-[80%] pb-4 overflow-y-auto overflow-auto bg-[#FFFDFD] z-50 lg:rounded-[10px] outline-none border-0 md:flex flex-col justify-between shadow-[5px_5px_30px_0px_#00000040]"
+        isOpen={uploadLinkModal}
+        onRequestClose={closeUploadLinkModal}
+        ariaHideApp={false}
+      >
+        <div className="flex justify-end px-6 pt-6">
+          <button className="bg-black text-white text-sm px-2 py-1 rounded-sm" onClick={closeUploadLinkModal}>X</button>
+        </div>
+        <form className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md">
+          <h2 className="text-2xl font-semibold text-center pt-4 text-black">
+            Excel or CSV Details
+          </h2>
+          <a
+            href="https://www.pythonanywhere.com/user/100093/files/home/100093/clientadmin/media/sample.csv"
+            className="underline text-xl text-black font-roboto"
+          >
+            Download Sample file
+          </a>
+          <div className="flex items-center justify-between py-4">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Excel / CSV File
+            </label>
+            <input
+              type="file" accept=".csv"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+            />
+          </div>
+          <div className="flex items-center justify-between pb-4">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Name of Sheet
+            </label>
+            <input
+              type="text"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Field Name
+            </label>
+            <input
+              type="text"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+            />
+          </div>
+          <p className="text-[#ff0000] font-roboto leading-normal">
+            If you want to upload all fields of sheet give text "all" or give
+            specific field name one by one
+          </p>
+          <div className="flex items-center gap-x-4 justify-end">
+            <button className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]">
+              Add
+            </button>
+            <button className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]">
+              Remove
+            </button>
+          </div>
+
+          <div className="lg:flex items-center justify-between py-8">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Number of rows you want to Delete
+            </label>
+            <input
+              type="number"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+            />
+          </div>
+          <div className="text-center">
+            <button className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]">
+              Save to Database
+            </button>
+          </div>
+          <div>
+            <button className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]">
+              Copy
+            </button>
+          </div>
+        </form>
       </Modal>
     </div>
   );
