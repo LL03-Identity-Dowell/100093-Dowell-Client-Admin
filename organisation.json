@@ -13,8 +13,8 @@
     "permit_to_connect":"",
     "no_of_conn":"",
     "processes_to_portfolio":[{"process":"","rights":"","portfolios":[]}],
-    "uxlivinglab_method":"",
-    "chat_method":"",
+    "uxlivinglab_method":[],
+    "chat_method":[],
     "color_scheme":""
     }
     
