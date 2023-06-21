@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import sessionView,OrgView,OrgsView,ProductsView,PublicLinkUpdate,updateOrg,portfolioview,getProduct,GetDocumentProducts,update_products_client_admin,product_control_platform_admin,MemberControl,filter_portfolio,settings
+from .views import sessionView,OrgView,OrgsView,ProductsView,PublicLinkUpdate,updateOrg,portfolioview,getProduct,GetDocumentProducts,update_products_client_admin,product_control_platform_admin,MemberControl,filter_portfolio,settings,home
 urlpatterns = [
     path('userinfo/', sessionView,name="userinfo"),
     path('members/', OrgView,name="members"),
@@ -14,4 +14,6 @@ urlpatterns = [
     path('update-products-platform/',product_control_platform_admin,name="update-products-platform"),
     path('get-portfolio/', filter_portfolio, name='get-portfolio'),
     path('settings/', settings, name='settings'),
+    path('home/', home, name='home'),
+
 ]

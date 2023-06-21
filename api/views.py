@@ -3,13 +3,13 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from clientadminapp.models import UserData,UserOrg
 from clientadminapp.dowellconnection import dowellconnection,loginrequired
-from clientadminapp.models import publiclink
+from clientadminapp.models import *
 import requests
 import json
 from rest_framework import status
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK,HTTP_401_UNAUTHORIZED
 
 @api_view(["GET"])
 def ProductsView(request):
@@ -681,3 +681,53 @@ def settings(request):
         dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE", "update", field_l, update)
 
         return Response(update, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def home(request):
+    # username = request.query_params.get('username')
+    session_id = request.data.get("session_id")
+    if session_id:
+        url = "https://100014.pythonanywhere.com/api/userinfo/"
+        resp = requests.post(url, data={"session_id": session_id})
+        print(resp.text)
+        try:
+            user = json.loads(resp.text)
+        except:
+            return HttpResponse('<style>...</style><div class="content open-popup" id="popup">...</div>')
+
+        username = user["userinfo"]["username"]
+        context = {"login": user["userinfo"]}
+
+        UserInfo.objects.update_or_create(username=username, defaults={'userinfo': json.dumps(user["userinfo"])})
+
+        field = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field, "nil")
+        r = json.loads(login)
+        UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(r["data"][0])})
+
+        datalav = r["data"][0]
+        context.update({"datalav": datalav})
+        request.session.update({"username": username, "orgname": datalav["organisations"][0]["org_name"],
+                                "present_org": datalav["organisations"][0]["org_name"]})
+
+        lori = [datalav["organisations"][0]["org_name"]] + [l["org_name"] for l in datalav["other_organisation"]]
+        member = set(i["name"] for i in datalav["members"]["team_members"]["accept_members"])
+        gmember = set(i["name"] for i in datalav["members"]["guest_members"]["accept_members"])
+        pmember = set(i["name"] for i in datalav["members"]["public_members"]["accept_members"])
+
+        tmem = [ii for a in datalav["portpolio"] if "team" in a["member_type"] for ii in
+                (a["username"] if isinstance(a["username"], list) else [a["username"]]) if ii in member]
+        tmemp = [ii for a in datalav["portpolio"] if "team" in a["member_type"] for ii in
+                 (a["username"] if isinstance(a["username"], list) else [a["username"]]) if ii not in member]
+        gmem = [a["username"] for a in datalav["portpolio"] if "guest" in a["member_type"] if a["username"] in gmember]
+        gmemp = [a["username"] for a in datalav["portpolio"] if "guest" in a["member_type"] if
+                 a["username"] not in gmember]
+        pmem = [a["username"] for a in datalav["portpolio"] if isinstance(a, dict) and isinstance(a["username"], str) and "public" in a["member_type"] and a["username"] in pmember]                
+        pmemp = [a["username"] for a in datalav["portpolio"] if isinstance(a, dict) and isinstance(a["username"], str) and "public" in a["member_type"] and a["username"] not in pmember]
+
+
+        return Response(context, status=HTTP_200_OK)
+    else:
+        return Response(status=HTTP_401_UNAUTHORIZED)
