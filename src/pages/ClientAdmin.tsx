@@ -17,7 +17,7 @@ const ClientAdmin = () => {
     <>
       <Layout>
         <main className="container mx-auto mb-20 lg:px-0 px-4">
-          <section className="border-y border-[#ff0000] mt-20">
+          <section className="border-y border-[#ff0000]">
             <h2 className="text-[#7A7A7A] font-semibold mt-8">
               Hi [First Name] [Last Name], [Designation]
             </h2>

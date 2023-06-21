@@ -683,9 +683,14 @@ const MembersTab = () => {
         ariaHideApp={false}
       >
         <div className="flex justify-end px-6 pt-6">
-          <button className="bg-black text-white text-sm px-2 py-1 rounded-sm" onClick={closePrivacyModal}>X</button>
+          <button
+            className="bg-black text-white text-sm px-2 py-1 rounded-sm"
+            onClick={closePrivacyModal}
+          >
+            X
+          </button>
         </div>
-        <div className="px-16 mt-16 text-sm">
+        <div className="px-16 mt-16 text-sm pb-24">
           <img src={images.dowell_logo} alt="" className="w-[180px]" />
           <h2 className="underline text-center text-xl my-8 font-bold">
             Privacy Consent Form
@@ -858,7 +863,12 @@ const MembersTab = () => {
         ariaHideApp={false}
       >
         <div className="flex justify-end px-6 pt-6">
-          <button className="bg-black text-white text-sm px-2 py-1 rounded-sm" onClick={closeUploadLinkModal}>X</button>
+          <button
+            className="bg-black text-white text-sm px-2 py-1 rounded-sm"
+            onClick={closeUploadLinkModal}
+          >
+            X
+          </button>
         </div>
         <form className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md">
           <h2 className="text-2xl font-semibold text-center pt-4 text-black">
@@ -875,7 +885,8 @@ const MembersTab = () => {
               Excel / CSV File
             </label>
             <input
-              type="file" accept=".csv"
+              type="file"
+              accept=".csv"
               className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
             />
           </div>

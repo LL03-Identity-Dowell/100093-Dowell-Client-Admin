@@ -1,5 +1,6 @@
 import logo from "../assets/dowell_logo.png";
 import dowell_logo from "../assets/dowell-logo.png";
+import admin_logo from "../assets/Living-Lab-Admin-1.png";
 import empty_image from "../assets/empty_image.png";
 import org_logo from "../assets/org_logo.png";
 import workflow_ai from "../assets/workflow_ai.webp";
@@ -28,6 +29,7 @@ import placeholder from '../assets/placeholder.webp'
 const images = {
   logo,
   dowell_logo,
+  admin_logo,
   empty_image,
   org_logo,
   workflow_ai,
