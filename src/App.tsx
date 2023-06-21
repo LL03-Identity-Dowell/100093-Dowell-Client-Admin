@@ -5,27 +5,26 @@ import "./styles/global.css";
 import ClientAdmin from "./pages/ClientAdmin";
 import AboutUs from "./pages/AboutUs";
 import Faq from "./pages/Faq";
+import Setting from "./pages/settingpage/Setting";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <ScrollToTop />
+		<>
+			<BrowserRouter>
+				<ScrollToTop />
 
-        <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<ClientAdmin />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/faq" element={<Faq />} />
+				<Routes>
+					{/* <Route path="/" element={<Home />} /> */}
+					<Route path="/" element={<ClientAdmin />} />
+					<Route path="/about-us" element={<AboutUs />} />
+					<Route path="/faq" element={<Faq />} />
+					<Route path="/setting" element={<Setting />} />
 
-
-
-          {/* <Route path="/element" element={<Example />} /> */}
-
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
+					{/* <Routes path="/element" element={<Example />} /> */}
+				</Routes>
+			</BrowserRouter>
+		</>
+	);
 }
 
 export default App;
