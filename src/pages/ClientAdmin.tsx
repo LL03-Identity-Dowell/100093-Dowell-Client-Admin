@@ -4,14 +4,43 @@ import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { AiFillCaretRight } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import AdminTabs from "../components/tabs";
+import axios from "axios";
 
 const ClientAdmin = () => {
   const [isSubmenuHidden, setSubmenuHidden] = useState(true);
+  const [username, setUsername] = useState(null);
+
   const toggleSubmenu = () => {
     setSubmenuHidden(!isSubmenuHidden);
   };
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem('session_id');
+    if (sessionId) {
+        const url = "https://100014.pythonanywhere.com/api/userinfo/";
+        axios.post(url, { session_id: sessionId })
+            .then(response => {
+                try {
+                  // console.log(response, 'response');
+                  
+                    const user = JSON.parse(response.data);
+                    setUsername(user.userinfo.username);
+                } catch (e) {
+                    console.log("Failed to parse response");
+                    // handle the failure case, for instance, you can render the error message
+                }
+            })
+            .catch(error => {
+                console.log("Request failed", error);
+                // handle the failure case
+            });
+    }
+}, []);
+
+// console.log(username, 'username');
+
 
   return (
     <>
