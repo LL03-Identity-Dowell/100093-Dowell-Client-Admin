@@ -1343,6 +1343,7 @@ def Settings(request):
         operational_rights = request.POST.get('form_fields[operationalrights]')
         admin_process = request.POST.get('form_fields[adminprocess]')
         portfolio_list = request.POST.getlist('form_fields[portflioset][]')
+        mandatory_sections = request.POST.getlist('form_fields[sections][]') 
         admin_id = request.session.get("document_id")
         username = request.session["username"]
         field_c = {"document_name": username}
@@ -1385,10 +1386,16 @@ def Settings(request):
             update["no_of_conn"] = permitted_attempts
         if admin_process and operational_rights and portfolio_list:  # assuming all fields are required for a valid processes_to_portfolio
             update["processes_to_portfolio"] = [{"process": admin_process, "rights": operational_rights, "portfolios": portfolio_list}]
-        if methods:
-            update["chat_method"] = methods
+        # if methods:
+        #     update["chat_method"] = methods
         if colour_patterns:
             update["color_scheme"] = colour_patterns
+        if mandatory_sections:
+            update["mandatory_sections"] = mandatory_sections
+        if notifications == "Chat":
+            update["chat_method"] = methods
+        if notifications == "UX Living Lab":
+            update["uxlivinglab_method"] = methods        
         # update={
         #     # "admin_id": admin_id,
         #     # "username": username,

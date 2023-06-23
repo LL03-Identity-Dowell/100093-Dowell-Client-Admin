@@ -673,12 +673,16 @@ def settings(request):
             update["no_of_conn"] = request.data.get('permitted_attempts')
         if request.data.get('admin_process') and request.data.get('operational_rights') and request.data.get('portfolio_list'):
             update["processes_to_portfolio"] = [{"process": request.data.get('admin_process'), "rights": request.data.get('operational_rights'), "portfolios": request.data.get('portfolio_list')}]
-        if request.data.get('methods'):
-            update["chat_method"] = request.data.get('methods')
+        # if request.data.get('methods'):
+        #     update["chat_method"] = request.data.get('methods')
         if request.data.get('colour_patterns'):
             update["color_scheme"] = request.data.get('colour_patterns')
         if request.data.get('mandatory_sections'):
             update["mandatory_sections"] = request.data.get('mandatory_sections')
+        if request.data.get('notifications') == "Chat":
+            update["chat_method"] = request.data.get('methods')
+        if request.data.get('notifications') == "UX Living Lab":
+            update["chat_method"] = request.data.get('methods')       
         dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE", "update", field_l, update)
 
         return Response(update, status=HTTP_200_OK)
