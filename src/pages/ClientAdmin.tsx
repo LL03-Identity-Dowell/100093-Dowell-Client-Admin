@@ -6,6 +6,7 @@ import { FaPowerOff } from "react-icons/fa";
 import { AiFillCaretRight } from "react-icons/ai";
 import { useState } from "react";
 import AdminTabs from "../components/tabs";
+import { Link, NavLink } from "react-router-dom";
 
 const ClientAdmin = () => {
   const [isSubmenuHidden, setSubmenuHidden] = useState(true);
@@ -38,12 +39,12 @@ const ClientAdmin = () => {
               <div className="mb-8">
                 <span>
                   <div className="bg-[#7a7a7a] flex lg:flex-row flex-col items-center lg:gap-8 gap-4 p-[10px] border border-black justify-center">
-                    <button className="bg-[#54595F] lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm">
+                    <NavLink to="/setting" className="bg-[#54595F] lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm">
                       <IoSettings className="text-white" />
                       <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
                         Settings
                       </p>
-                    </button>
+                    </NavLink>
                     <button className="bg-[#54595F] lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm">
                       <IoMdRefresh className="text-white transform-icon" />
                       <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
