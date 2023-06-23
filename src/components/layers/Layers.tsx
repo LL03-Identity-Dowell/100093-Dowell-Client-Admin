@@ -1,4 +1,3 @@
-import React from 'react'
 
 const Layers = () => {
   return (
@@ -858,10 +857,9 @@ const Layers = () => {
                         "Others not listed above",
                       ].map((city) => {
                         return (
-                          <>
+                          <div key={city}>
                             <li
                               className="flex flex-wrap items-center gap-x-3"
-                              key={city}
                             >
                               <input type="checkbox" />{" "}
                               <label>{city} - Layer</label>
@@ -876,7 +874,7 @@ const Layers = () => {
                                 );
                               })}
                             </li>
-                          </>
+                          </div>
                         );
                       })}
                     </ol>
@@ -903,10 +901,9 @@ const Layers = () => {
                       {["Brisbane", "Sydney", "Others not listed above"].map(
                         (city) => {
                           return (
-                            <>
+                            <div key={city}>
                               <li
                                 className="flex flex-wrap items-center gap-x-3"
-                                key={city}
                               >
                                 <input type="checkbox" />{" "}
                                 <label>{city} - Layer</label>
@@ -921,7 +918,7 @@ const Layers = () => {
                                   );
                                 })}
                               </li>
-                            </>
+                            </div>
                           );
                         }
                       )}
@@ -945,10 +942,10 @@ const Layers = () => {
                       {["London", "Leeds", "Others not listed above"].map(
                         (city) => {
                           return (
-                            <>
+                            <div key={city}>
                               <li
                                 className="flex flex-wrap items-center gap-x-3"
-                                key={city}
+                                
                               >
                                 <input type="checkbox" />{" "}
                                 <label className="whitespace-normal">
@@ -965,7 +962,7 @@ const Layers = () => {
                                   );
                                 })}
                               </li>
-                            </>
+                            </div>
                           );
                         }
                       )}
@@ -1006,10 +1003,9 @@ const Layers = () => {
                     "Others not listed above",
                   ].map((city) => {
                     return (
-                      <>
+                      <div key={city}>
                         <li
                           className="flex flex-wrap items-center gap-x-3 py-2"
-                          key={city}
                         >
                           <input type="checkbox" />{" "}
                           <label>{city} - Layer</label>
@@ -1024,7 +1020,7 @@ const Layers = () => {
                             );
                           })}
                         </li>
-                      </>
+                      </div>
                     );
                   })}
                 </ol>
