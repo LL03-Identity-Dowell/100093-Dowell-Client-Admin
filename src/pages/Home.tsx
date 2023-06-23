@@ -1,24 +1,29 @@
-
 import Layout from "../components/layout";
 import images from "../components/images";
-import ReactPlayer from 'react-player/youtube'
-import GridCard from "../hooks/GridCar";
-
+import ReactPlayer from "react-player/youtube";
+import GridCard from "../components/GridCar";
 
 const Home: React.FC = () => {
- 
-
   return (
     <>
       <Layout>
         <section className="flex justify-center my-12">
-        
-              <ReactPlayer url='https://youtu.be/AQMcn4tTqII' width={1000} height={600} playing={true} controls={true} muted={true} />
-
+          <ReactPlayer
+            url="https://youtu.be/AQMcn4tTqII"
+            width={1000}
+            height={600}
+            playing={true}
+            controls={true}
+            muted={true}
+          />
         </section>
         <section className="container mx-auto mb-20 px-4">
-          <p className="text-[#f60505] text-2xl font-semibold text-center mb-8">Experience UX Living Lab</p>
-          <p className="text-[#909597] font-roboto font-semibold text-lg text-center mb-8">Innovating Business from People's Minds...</p>
+          <p className="text-[#f60505] text-2xl font-semibold text-center mb-8">
+            Experience UX Living Lab
+          </p>
+          <p className="text-[#909597] font-roboto font-semibold text-lg text-center mb-8">
+            Innovating Business from People's Minds...
+          </p>
 
           <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
             <GridCard

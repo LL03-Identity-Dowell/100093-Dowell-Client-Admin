@@ -54,3 +54,9 @@ body {
   border-radius: 50px 5px 50px 5px;
 }
 
+.client_tabs {
+  /* border-bottom: 3px solid #01cab9; */
+  background-color: #61CE70;
+  color: white;
+}
+

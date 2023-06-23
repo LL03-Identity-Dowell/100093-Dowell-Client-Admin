@@ -4,21 +4,49 @@ import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { AiFillCaretRight } from "react-icons/ai";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminTabs from "../components/tabs";
 import { Link, NavLink } from "react-router-dom";
 
 const ClientAdmin = () => {
   const [isSubmenuHidden, setSubmenuHidden] = useState(true);
+  const [username, setUsername] = useState(null);
+
   const toggleSubmenu = () => {
     setSubmenuHidden(!isSubmenuHidden);
   };
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("session_id");
+    if (sessionId) {
+      const url = "https://100014.pythonanywhere.com/api/userinfo/";
+      axios
+        .post(url, { session_id: sessionId })
+        .then((response) => {
+          try {
+            // console.log(response, 'response');
+
+            const user = JSON.parse(response.data);
+            setUsername(user.userinfo.username);
+          } catch (e) {
+            console.log("Failed to parse response");
+            // handle the failure case, for instance, you can render the error message
+          }
+        })
+        .catch((error) => {
+          console.log("Request failed", error);
+          // handle the failure case
+        });
+    }
+  }, []);
+
+  // console.log(username, 'username');
 
   return (
     <>
       <Layout>
         <main className="container mx-auto mb-20 lg:px-0 px-4">
-          <section className="border-y border-[#ff0000] mt-20">
+          <section className="border-y border-[#ff0000]">
             <h2 className="text-[#7A7A7A] font-semibold mt-8">
               Hi [First Name] [Last Name], [Designation]
             </h2>
@@ -41,7 +69,10 @@ const ClientAdmin = () => {
                   <div className="bg-[#7a7a7a] flex lg:flex-row flex-col items-center lg:gap-8 gap-4 p-[10px] border border-black justify-center">
                     <NavLink to="/setting" className="bg-[#54595F] lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm">
                       <IoSettings className="text-white" />
-                      <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+                      <a
+                        href="/setting"
+                        className="text-[13px] text-white text-center py-[10px] px-[20px]"
+                      >
                         Settings
                       </p>
                     </NavLink>
@@ -239,7 +270,7 @@ const ClientAdmin = () => {
               </div>
             </div>
 
-           
+
             <div className="lg:w-3/4">
               <AdminTabs />
             </div>

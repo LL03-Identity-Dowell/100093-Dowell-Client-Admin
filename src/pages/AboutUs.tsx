@@ -1,6 +1,6 @@
 import Layout from "../components/layout";
 import images from "../components/images";
-import GridCard from "../hooks/GridCar";
+import GridCard from "../components/GridCar";
 import { FaChevronCircleRight } from "react-icons/fa";
 
 const AboutUs = () => {
@@ -9,8 +9,12 @@ const AboutUs = () => {
       <main className="container mx-auto mt-12 px-6">
         <section className="w-full lg:flex gap-20 lg:px-8">
           <div className="lg:w-1/2">
-            <h2 className="lg:text-[40px] text-2xl py-4 text-white font-semibold bg-[#A2D95E] px-6">WHY CHOOSE US</h2>
-            <h6 className="text-[##1F133A] text-[22px] font-semibold mt-8">DOWELL IS MAKING A BONE NOW!!</h6>
+            <h2 className="lg:text-[40px] text-2xl py-4 text-white font-semibold bg-[#A2D95E] px-6">
+              WHY CHOOSE US
+            </h2>
+            <h6 className="text-[##1F133A] text-[22px] font-semibold mt-8">
+              DOWELL IS MAKING A BONE NOW!!
+            </h6>
             <p className="text-[#7A7A7A] text-lg leading-6 mt-4">
               UX Living Lab belongs to DoWell Research; a global User Experience
               research team. We started our journey in 1995 as a startup and
@@ -29,7 +33,9 @@ const AboutUs = () => {
         </section>
 
         <section className="mb-12">
-          <h2 className="font-semibold lg:text-[40px] text-center my-8">OUR PRODUCTS</h2>
+          <h2 className="font-semibold lg:text-[40px] text-center my-8">
+            OUR PRODUCTS
+          </h2>
           <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
             <GridCard
               image={images.workflow_ai}
@@ -116,39 +122,44 @@ const AboutUs = () => {
               Let Us talk
             </button>
           </span>
-
         </div>
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 mb-8">
-            <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
-              <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
-              <p className="text-lg">
-                Digitalisation of education management workflows
-              </p>
-            </span>
-            <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
-              <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
-              <p className="text-lg">
-                Digital queue management for restaurants & cafes
-              </p>
-            </span>
-            <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
-              <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
-              <p className="text-lg">User experience research & analysis</p>
-            </span>
-            <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
-              <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
-              <p className="text-lg">Open source license Management</p>
-            </span>
-          </div>
+          <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
+            <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
+            <p className="text-lg">
+              Digitalisation of education management workflows
+            </p>
+          </span>
+          <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
+            <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
+            <p className="text-lg">
+              Digital queue management for restaurants & cafes
+            </p>
+          </span>
+          <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
+            <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
+            <p className="text-lg">User experience research & analysis</p>
+          </span>
+          <span className="flex gap-8 border border-[#A2D95E] border-radius pl-6 py-2">
+            <FaChevronCircleRight className="text-[#A2D95E] text-2xl" />
+            <p className="text-lg">Open source license Management</p>
+          </span>
+        </div>
       </main>
 
       <section className="bg-[#f4f9e5]">
         <div className="container mx-auto flex items-center justify-center">
           <div className="w-1/2">
-            <h2 className="font-semibold lg:text-[40px] text-center my-8">Interested in joining our team?</h2>
-            <p className="mb-8 text-[#99CC03] text-lg font-semibold">Grow With Dowell Ux living lab</p>
+            <h2 className="font-semibold lg:text-[40px] text-center my-8">
+              Interested in joining our team?
+            </h2>
+            <p className="mb-8 text-[#99CC03] text-lg font-semibold">
+              Grow With Dowell Ux living lab
+            </p>
 
-            <button className="bg-[#A2D95E] font-semibold rounded-md flex justify-center h-12 px-6 py-3 hover:border hover:border-black">Join Us</button>
+            <button className="bg-[#A2D95E] font-semibold rounded-md flex justify-center h-12 px-6 py-3 hover:border hover:border-black">
+              Join Us
+            </button>
           </div>
 
           <div className="w-2/5 px-6 my-8 grid grid-cols-1 gap-4">
