@@ -1,10 +1,11 @@
 
 import { useSelector } from 'react-redux';
+import { RootState } from "../../../store/Store";
 
 const Settingform9 = () => {
 
 	const product = useSelector(
-		(state) => state.setting?.data?.product_plan[0]
+		(state: RootState) => state.setting?.data?.product_plan[0]
 	);
 	console.log(product)
 
@@ -36,13 +37,13 @@ const productlistfilter = productlist.filter(
 
     return (
 			<div className="form-item">
-				<div className="form-header">Product Usage plans</div>
-				<form action="" className="setting-form-content">
-					<div className="mb-3">
-						<label htmlFor="" className="form-label">
+				<div className="bg-[#CEF9D2] p-3 text-[18px] font-semibold text-[#7A7A7A] border-[1px] border-[#61CE70] border-solid">Product Usage plans</div>
+				<form action="" className="p-3 border-[1px] border-[#61CE70] border-solid">
+					<div className="w-full mb-3">
+						<label htmlFor="" className="text-[18px] font-semibold text-[#7A7A7A]">
 							Products
 						</label>
-						<select className="form-select" aria-label="Default select example">
+						<select className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md" aria-label="Default select example">
 							<option selected value={product?.product_name}>
 								{product?.product_name}
 							</option>
@@ -54,11 +55,11 @@ const productlistfilter = productlist.filter(
 						</select>
 					</div>
 
-					<div className="mb-3">
-						<label htmlFor="" className="form-label">
+					<div className="w-full mb-3">
+						<label htmlFor="" className="text-[18px] font-semibold text-[#7A7A7A]">
 							Plans
 						</label>
-						<select className="form-select" aria-label="Default select example">
+						<select className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md" aria-label="Default select example">
 							<option selected value={product?.plans}>
 								{product?.plans}
 							</option>
@@ -69,8 +70,8 @@ const productlistfilter = productlist.filter(
 							))}
 						</select>
 					</div>
-					<div className="my-2">
-						<button className="btn w-100 form-btn">
+					<div className="w-full mb-1">
+						<button className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
 							Change Plan of selected Product
 						</button>
 					</div>
