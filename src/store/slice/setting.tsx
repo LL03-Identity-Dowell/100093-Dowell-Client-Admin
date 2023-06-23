@@ -38,7 +38,7 @@ const settingSlice = createSlice({
 		},
 	},
 	reducers: {
-		getsetting(state, action) {
+		getsetting(_state, action) {
 			console.log("get data");
 			return action.payload;
 		},

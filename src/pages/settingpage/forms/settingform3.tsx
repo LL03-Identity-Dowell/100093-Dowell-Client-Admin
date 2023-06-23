@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const Settingform3 = () => {
     return (

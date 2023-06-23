@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import { RootState } from "../../../store/Store";
+// import { useSelector } from 'react-redux';
+// import { RootState } from "../../../store/Store";
 
 const Settingform10 = () => {
     return (

@@ -25,7 +25,7 @@ const ClientAdmin = () => {
 		setSubmenuHidden(!isSubmenuHidden);
 	};
 
-	const [username, setusername] = useState("Jazz3650");
+	
 	const usedispatch = useDispatch();
 	useEffect(() => {
 		// Function to call the API
@@ -48,7 +48,7 @@ const ClientAdmin = () => {
 
 		// Call the API when the component mounts
 		fetchData();
-	}, [username]); // The empty dependency array ensures that the effect runs only once
+	}, ); // The empty dependency array ensures that the effect runs only once
 
 	return (
 		<>
