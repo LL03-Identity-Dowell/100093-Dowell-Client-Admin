@@ -7,27 +7,42 @@ import { AiFillCaretRight } from "react-icons/ai";
 import { useState, useEffect } from "react";
 import AdminTabs from "../components/tabs";
 import axios from "axios";
+import React from "react";
+
+type UserInfo = {
+  first_name: string;
+  last_name: string;
+  dowell_time: string;
+  user_country: string;
+
+  User_type: string;
+  org_img: string;
+  profile_img: string;
+};
 
 const ClientAdmin = () => {
   const [isSubmenuHidden, setSubmenuHidden] = useState(true);
-  const [username, setUsername] = useState(null);
+  // const [username, setUsername] = useState(null);
+  const [userinfo, setUserinfo] = useState<UserInfo | null>(null);
 
   const toggleSubmenu = () => {
     setSubmenuHidden(!isSubmenuHidden);
   };
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("session_id");
+    // const sessionId = localStorage.getItem('session_id');
+    const sessionId = 'x4qyyvyqunur0hexq8jnxdq5o8oap4yc';
     if (sessionId) {
       const url = "https://100014.pythonanywhere.com/api/userinfo/";
       axios
         .post(url, { session_id: sessionId })
         .then((response) => {
           try {
-            // console.log(response, 'response');
+console.log(response);
 
-            const user = JSON.parse(response.data);
-            setUsername(user.userinfo.username);
+            // const user = JSON.parse(response.data);
+            // setUsername(user.userinfo.username);
+            setUserinfo(response.data.userinfo);
           } catch (e) {
             console.log("Failed to parse response");
             // handle the failure case, for instance, you can render the error message
@@ -46,22 +61,40 @@ const ClientAdmin = () => {
     <>
       <Layout>
         <main className="container mx-auto mb-20 lg:px-0 px-4">
-          <section className="border-y border-[#ff0000]">
-            <h2 className="text-[#7A7A7A] font-semibold mt-8">
-              Hi [First Name] [Last Name], [Designation]
+          <section className="border-y border-[#ff0000] lg:pl-12">
+            <h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
+              Hi {userinfo?.first_name ? userinfo.first_name : '[First Name]'} {userinfo?.last_name ? userinfo.last_name : '[Lat Name]'}, you are login as{" "}
+              {userinfo?.User_type ? userinfo.User_type : '[Designation]'}
             </h2>
-            <p className="text-[#FF0000] font-semibold pt-8">
-              Session starts at [time], [duration], [Location]
+            <p className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]">
+              Session starts at {userinfo?.dowell_time ? userinfo?.dowell_time + ',' : '[time] [duration],'}
+              {userinfo?.user_country}
             </p>
 
             <div className="lg:flex justify-between">
               <span className="flex items-center lg:justify-between justify-around my-8 lg:w-[30%]">
-                <div className="card-shadow">
-                  <img src={images.empty_image} alt="'" />
-                </div>
-                <div className="card-shadow">
-                  <img src={images.org_logo} alt="'" />
-                </div>
+                {userinfo?.profile_img ? (
+                  <img
+                    src={userinfo.profile_img}
+                    alt="profile image"
+                    className="card-shadow w-[150px] h-[150px]"
+                  />
+                ) : (
+                  <div className="card-shadow">
+                    <img src={images.empty_image} alt="'" />
+                  </div>
+                )}
+                {userinfo?.org_img ? (
+                  <img
+                    src={userinfo.org_img}
+                    alt="organization logo"
+                    className="card-shadow w-[150px] h-[150px]"
+                  />
+                ) : (
+                  <div className="card-shadow">
+                    <img src={images.org_logo} alt="'" />
+                  </div>
+                )}
               </span>
 
               <div className="mb-8">

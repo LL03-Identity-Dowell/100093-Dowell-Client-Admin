@@ -15,7 +15,7 @@ const LevelsTab = () => {
     <div>
       <Tabs
         className=""
-        selectedTabClassName="levels_tabs"
+        selectedTabClassName="bg-[#61CE70]"
         selectedIndex={tabIndex}
         onSelect={(index) => setTabIndex(index)}
       >
@@ -23,13 +23,13 @@ const LevelsTab = () => {
           {["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"].map(
             (level) => {
               return (
-                <Tab key={level}>
-                  <span className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] active:bg-[#61CE70]">
+                <Tab key={level}
+                   className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] active:bg-[#61CE70]">
                     <FaLevelDownAlt className="text-[#4CAF50] " />
                     <p className="font-roboto text-white font-medium">
                       {level}
                     </p>
-                  </span>
+                  
                 </Tab>
               );
             }
