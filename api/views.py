@@ -725,6 +725,6 @@ def settings(request):
             update["uxlivinglab_method"] = method
         if request.data.get('colour_patterns'):
             update["color_scheme"] = request.data.get('colour_patterns')
-        status = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
+        dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
                                   "update", field_l, update)
         return Response(update, status=HTTP_200_OK)
