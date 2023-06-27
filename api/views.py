@@ -1,87 +1,101 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render, HttpResponse, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from clientadminapp.models import UserData,UserOrg
-from clientadminapp.dowellconnection import dowellconnection,loginrequired
+from clientadminapp.models import UserData, UserOrg
+from clientadminapp.dowellconnection import dowellconnection, loginrequired
 from clientadminapp.models import publiclink
 import requests
 import json
 from rest_framework import status
+from rest_framework.status import HTTP_200_OK
+
 
 @api_view(["GET"])
 def ProductsView(request):
-    p=["Workflow AI", "Digital Q", "Wifi QR Code", "Chat","UX Live","Social Media Automation","Scales","Logo Scan","Legalzard","Maps","Customer Experience","Living Lab Admin","Team Management","Monitoring","Live Stream Dashboard","Sales Agent","Permutation Calculator","Customer Support Centre","Secure Repositories","Secure Data"]
-    ls=[]
+    p = ["Workflow AI", "Digital Q", "Wifi QR Code", "Chat", "UX Live", "Social Media Automation", "Scales",
+         "Logo Scan", "Legalzard", "Maps", "Customer Experience", "Living Lab Admin", "Team Management", "Monitoring",
+         "Live Stream Dashboard", "Sales Agent", "Permutation Calculator", "Customer Support Centre",
+         "Secure Repositories", "Secure Data"]
+    ls = []
     for i in p:
-        ls.append({"product_name":i,"logo":"","status":"enable"})
-    return Response({"data":ls})
+        ls.append({"product_name": i, "logo": "", "status": "enable"})
+    return Response({"data": ls})
+
+
 @api_view(["POST"])
 def sessionView(request):
-    mdata=request.data
-    s=mdata["session_id"]
-    ro1=UserData.objects.all().filter(sessionid=s)
-    #return HttpResponse(f"hi{ro1}")
+    mdata = request.data
+    s = mdata["session_id"]
+    ro1 = UserData.objects.all().filter(sessionid=s)
+    # return HttpResponse(f"hi{ro1}")
     for i in ro1:
-        r=i.alldata
-        rj=json.loads(r)
+        r = i.alldata
+        rj = json.loads(r)
     try:
         if rj:
             return Response(rj)
     except:
-        return Response({"msg":"your data not found in database try again with session_id"})
+        return Response({"msg": "your data not found in database try again with session_id"})
+
+
 @api_view(["POST"])
 def OrgsView(request):
-    mdata=request.data
-    org=mdata["org"]
-    sec=mdata["scode"]
-    #return Response({"msg":"ok"})
-    if sec=="DoWell$0987":
+    mdata = request.data
+    org = mdata["org"]
+    sec = mdata["scode"]
+    # return Response({"msg":"ok"})
+    if sec == "DoWell$0987":
 
-        ro1=UserOrg.objects.all().filter(username=org)
+        ro1 = UserOrg.objects.all().filter(username=org)
         if ro1:
             for i in ro1:
-                r=i.org
-                rj=json.loads(r)
+                r = i.org
+                rj = json.loads(r)
             return Response(rj)
         else:
-            return Response({"message":"this org details not found"})
+            return Response({"message": "this org details not found"})
+
+
 @api_view(["POST"])
 def OrgView(request):
-    mdata=request.data
-    un=mdata["org_id"]
-    ro1=UserOrg.objects.all()
+    mdata = request.data
+    un = mdata["org_id"]
+    ro1 = UserOrg.objects.all()
     for i in ro1:
-        rl=i.org
-        rol=json.loads(rl)
+        rl = i.org
+        rol = json.loads(rl)
         for ii in rol:
             try:
-                if ii["_id"]==un:
-                    rj=rol
+                if ii["_id"] == un:
+                    rj = rol
             except:
                 pass
-    members=rj["members"]
-    portl=rj["portpolio"]
-    return Response({"members":members,"portfolio":portl})
+    members = rj["members"]
+    portl = rj["portpolio"]
+    return Response({"members": members, "portfolio": portl})
+
+
 @api_view(["POST"])
 def PublicLinkUpdate(request):
-    mdata=request.data
-    qrid=mdata["qrid"]
-    org=mdata["org_name"]
-    product=mdata["product"]
-    ro1=publiclink.objects.filter(qrcodeid=qrid,org=org)#.update(productstatus="used",product=product)
+    mdata = request.data
+    qrid = mdata["qrid"]
+    org = mdata["org_name"]
+    product = mdata["product"]
+    ro1 = publiclink.objects.filter(qrcodeid=qrid, org=org)  # .update(productstatus="used",product=product)
     if ro1:
         for i in ro1:
-            if i.productstatus=="used":
-                return Response({"message":"this link already used"})
+            if i.productstatus == "used":
+                return Response({"message": "this link already used"})
             else:
                 obj = publiclink.objects.get(qrcodeid=qrid)
-                obj.productstatus= "used"
-                obj.product=product
+                obj.productstatus = "used"
+                obj.product = product
                 obj.save()
-                return Response({"message":"update successfully"})
+                return Response({"message": "update successfully"})
     else:
-        #return Response({"message":"something wrong"})
-        return Response({"message":"pl check qrid"})
+        # return Response({"message":"something wrong"})
+        return Response({"message": "pl check qrid"})
+
 
 @api_view(["POST"])
 def updateOrg(request):
@@ -90,16 +104,17 @@ def updateOrg(request):
         username = odata["username"]
         org_name = odata["orgname"]
         org_address = odata["orgaddress"]
-        org_zip =  odata["orgzipcode"]
+        org_zip = odata["orgzipcode"]
         org_city = odata["orgcity"]
         org_country = odata["orgcountry"]
         org_latitude = odata["orglatitude"]
         org_longitude = odata["orglongitude"]
     except:
-        return Response({"msg":"error in request body"})
+        return Response({"msg": "error in request body"})
 
-    field= {"document_name":username}
-    l1=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","fetch",field,"nil")
+    field = {"document_name": username}
+    l1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "fetch",
+                          field, "nil")
     l1 = json.loads(l1)
     org = []
     organisation = l1["data"][0]["organisations"][0]
@@ -111,11 +126,13 @@ def updateOrg(request):
     organisation["org_latitude"] = org_latitude
     organisation["org_longitude"] = org_longitude
     org.append(organisation)
-    field1={"document_name":username}
-    update_field = {"organisations":org}
-    l1=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","update",field1,update_field)
+    field1 = {"document_name": username}
+    update_field = {"organisations": org}
+    l1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update",
+                          field1, update_field)
     l1 = json.loads(l1)
-    return Response({"msg":"updated successfully."})
+    return Response({"msg": "updated successfully."})
+
 
 # @api_view(["POST"])
 # def getProduct(request):
@@ -137,7 +154,8 @@ def getProduct(request):
             # All required keys are present in the request body
             product_name = request.data["product"]
             fetch_field = {}
-            fetch = dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","fetch",fetch_field,"nil")
+            fetch = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                     "fetch", fetch_field, "nil")
             a = json.loads(fetch)
             # return Response({"message": a})
             for product in a["data"][0]["products"]:
@@ -148,26 +166,26 @@ def getProduct(request):
                         "users": request.data["users"],
                         "public": request.data["public"]
                     })
-                    field = {"_id":"6453edc48ce736847236e6ca"}
-                    update = {"products" : a["data"][0]["products"]}
-                    dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field,update)
+                    field = {"_id": "6453edc48ce736847236e6ca"}
+                    update = {"products": a["data"][0]["products"]}
+                    dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                     "update", field, update)
                     return Response({"message": "product updated successfully"})
-            return Response({"message": "product not found"})
-
+            # return Response({"message": "product not found"})
 
             return Response({"message": "Successfully Updated"})
         else:
             # Only username is present in the request body
             field = {}
-            l1 = product = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE", "fetch", field, "nil")
+            l1 = product = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                            "fetch", field, "nil")
             l2 = json.loads(l1)
-            #return Response({"Msg":"ok"})
+            # return Response({"Msg":"ok"})
             products = l2["data"]
             return Response({"products": products})
     else:
         # No keys are present in the request body
         return Response({"message": "Access Denied"})
-
 
 
 @api_view(["POST"])
@@ -178,20 +196,21 @@ def GetDocumentProducts(request):
         org = odata["username"]
         print("first")
         username = odata["username"]
-        field1={"document_name":org}
-        login1=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","fetch",field1,"update")
-        r=json.loads(login1)
+        field1 = {"document_name": org}
+        login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                  "fetch", field1, "update")
+        r = json.loads(login1)
         response = r["data"][0]["products"]
 
         # for p in r["data"][0]["products"]:
         #     if port in p["portfolio_name"]:
         #         r1.append(p)
-        return Response({"products":response})
+        return Response({"products": response})
 
     else:
-        return Response({"message":"Please provide username in body"})
+        return Response({"message": "Please provide username in body"})
 
-    return Response({"products":response})
+    return Response({"products": response})
 
 
 @api_view(["POST"])
@@ -199,102 +218,114 @@ def portfolioview(request):
     odata = request.data
     session = odata["session_id"]
     orl = odata["org_name"]
-    portf= odata["portfolio"]
-    user =  odata["username"]
-    product=odata["product"]
-    url="https://100014.pythonanywhere.com/api/userinfo/"
-    resp=requests.post(url,data={"session_id":session})
+    portf = odata["portfolio"]
+    user = odata["username"]
+    product = odata["product"]
+    url = "https://100014.pythonanywhere.com/api/userinfo/"
+    resp = requests.post(url, data={"session_id": session})
     try:
-        userinfo=json.loads(resp.text)
+        userinfo = json.loads(resp.text)
     except:
-        return Response({"msg":"updated successfully."})
-    mydict={}
-    mydict["userinfo"]=userinfo["userinfo"]
+        return Response({"msg": "updated successfully."})
+    mydict = {}
+    mydict["userinfo"] = userinfo["userinfo"]
     # ro=UserInfo.objects.all().filter(username=user)
     # ro1=UserOrg.objects.all().filter(username=user)
-    if orl==user:
-        lrst=[]
-        field={"document_name":user}
-        login=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","fetch",field,"nil")
-        resp=json.loads(login)
-        lrf=resp["data"][0]
+    if orl == user:
+        lrst = []
+        field = {"document_name": user}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field, "nil")
+        resp = json.loads(login)
+        lrf = resp["data"][0]
         for lis in lrf["portpolio"]:
-            if lis["portfolio_name"]==portf:
-                mydict["portfolio_info"]=[lis]
-            if lis["product"]==product:
+            if lis["portfolio_name"] == portf:
+                mydict["portfolio_info"] = [lis]
+            if lis["product"] == product:
                 lrst.append(lis)
-        mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
-        mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
-        mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
-        mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
-        obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+        mydict["portfolio_info"][0]["org_id"] = lrf["_id"]
+        mydict["portfolio_info"][0]["owner_name"] = lrf["document_name"]
+        mydict["portfolio_info"][0]["org_name"] = lrf["document_name"]
+        mydict["selected_product"] = {"product_id": 1, "product_name": product, "platformpermissionproduct": [
+            {"type": "member", "operational_rights": ["view", "add", "edit", "delete"], "role": "admin"}],
+                                      "platformpermissiondata": ["real", "learning", "testing", "archived"],
+                                      "orgid": lrf["_id"], "orglogo": "", "ownerid": "", "userportfolio": lrst,
+                                      "payment_status": "unpaid"}
+        obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
+                                                         defaults={'alldata': json.dumps(mydict)})
         return Response(mydict)
 
-    field={"document_name":orl}
-    login=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","fetch",field,"nil")
-    resp=json.loads(login)
-    ss=resp["data"][0]
-    rr=ss["other_organisation"]
-    rr1=ss["organisations"]
-    #return HttpResponse(f'{rr}<br><br>{rr1}')
+    field = {"document_name": orl}
+    login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "fetch",
+                             field, "nil")
+    resp = json.loads(login)
+    ss = resp["data"][0]
+    rr = ss["other_organisation"]
+    rr1 = ss["organisations"]
+    # return HttpResponse(f'{rr}<br><br>{rr1}')
     for iii in rr:
-        if iii["org_name"]==orl:
+        if iii["org_name"] == orl:
             try:
-                if iii["portfolio_name"]==portf:
-                    mydict["portfolio_info"]=[iii]
+                if iii["portfolio_name"] == portf:
+                    mydict["portfolio_info"] = [iii]
 
                 else:
                     pass
             except:
                 pass
     try:
-        selected_role=mydict["portfolio_info"]["role"]
+        selected_role = mydict["portfolio_info"]["role"]
     except:
         pass
-    level1={}
-    level2={}
-    level3={}
-    level4={}
-    level5={}
+    level1 = {}
+    level2 = {}
+    level3 = {}
+    level4 = {}
+    level5 = {}
     try:
         for items in lrf["roles"]:
-            if selected_role==items["role_name"]:
+            if selected_role == items["role_name"]:
                 if items["level1_item"]:
-                    level1["level1name"]=lrf["organisations"][0]["level1"]["level_name"]
-                    level1["level1items"]=lrf["organisations"][0]["level1"]["items"]
+                    level1["level1name"] = lrf["organisations"][0]["level1"]["level_name"]
+                    level1["level1items"] = lrf["organisations"][0]["level1"]["items"]
                 if items["level2_item"]:
-                    level2["level1name"]=lrf["organisations"][0]["level2"]["level_name"]
-                    level2["level1items"]=lrf["organisations"][0]["level2"]["items"]
+                    level2["level1name"] = lrf["organisations"][0]["level2"]["level_name"]
+                    level2["level1items"] = lrf["organisations"][0]["level2"]["items"]
                 if items["level3_item"]:
-                    level2["level3name"]=lrf["organisations"][0]["level3"]["level_name"]
-                    level2["level3items"]=lrf["organisations"][0]["level3"]["items"]
+                    level2["level3name"] = lrf["organisations"][0]["level3"]["level_name"]
+                    level2["level3items"] = lrf["organisations"][0]["level3"]["items"]
                 if items["level4_item"]:
-                    level2["level4name"]=lrf["organisations"][0]["level4"]["level_name"]
-                    level2["level4items"]=lrf["organisations"][0]["level4"]["items"]
+                    level2["level4name"] = lrf["organisations"][0]["level4"]["level_name"]
+                    level2["level4items"] = lrf["organisations"][0]["level4"]["items"]
                 if items["level5_item"]:
-                    level2["level5name"]=lrf["organisations"][0]["level5"]["level_name"]
-                    level2["level5items"]=lrf["organisations"][0]["level5"]["items"]
+                    level2["level5name"] = lrf["organisations"][0]["level5"]["level_name"]
+                    level2["level5items"] = lrf["organisations"][0]["level5"]["items"]
     except:
         pass
     if "portfolio_info" not in mydict:
-        #return HttpResponse(f'{rr1}')
-        mydict["portfolio_info"]=[ss["portpolio"][0]]
-    productport=[]
+        # return HttpResponse(f'{rr1}')
+        mydict["portfolio_info"] = [ss["portpolio"][0]]
+    productport = []
     for product2 in lrf["portpolio"]:
-        if product==product2["product"]:
+        if product == product2["product"]:
             productport.append(product2)
 
-    mydict["organisations"]=[{"orgname":lrf["document_name"],"orgowner":lrf["document_name"]}]
-    mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":productport,"payment_status":"unpaid"}
-    mydict["selected_portfoliolevel"]=level1
-    mydict["selected_portfolioleve2"]=level2
-    mydict["selected_portfolioleve3"]=level3
-    mydict["selected_portfolioleve4"]=level4
-    mydict["selected_portfolioleve5"]=level5
-    mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
-    mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
-    mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
-    obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+    mydict["organisations"] = [{"orgname": lrf["document_name"], "orgowner": lrf["document_name"]}]
+    mydict["selected_product"] = {"product_id": 1, "product_name": product, "platformpermissionproduct": [
+        {"type": "member", "operational_rights": ["view", "add", "edit", "delete"], "role": "admin"}],
+                                  "platformpermissiondata": ["real", "learning", "testing", "archived"],
+                                  "orgid": lrf["_id"], "orglogo": "", "ownerid": "", "userportfolio": productport,
+                                  "payment_status": "unpaid"}
+    mydict["selected_portfoliolevel"] = level1
+    mydict["selected_portfolioleve2"] = level2
+    mydict["selected_portfolioleve3"] = level3
+    mydict["selected_portfolioleve4"] = level4
+    mydict["selected_portfolioleve5"] = level5
+    mydict["portfolio_info"][0]["org_id"] = lrf["_id"]
+    mydict["portfolio_info"][0]["owner_name"] = lrf["document_name"]
+    mydict["portfolio_info"][0]["org_name"] = lrf["document_name"]
+    obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
+                                                     defaults={'alldata': json.dumps(mydict)})
     return Response(mydict)
 
 
@@ -405,9 +436,9 @@ def update_products_client_admin(request):
                 else:
                     member_list = None
 
-
                 # Find the index of the product you're updating
-                external_product_index = next((index for (index, d) in enumerate(external_api_data['products']) if d['product_name'] == product_name), None)
+                external_product_index = next((index for (index, d) in enumerate(external_api_data['products']) if
+                                               d['product_name'] == product_name), None)
 
                 if member_list is not None:
                     for member in member_list:
@@ -429,14 +460,13 @@ def update_products_client_admin(request):
                             member_data = {
                                 'username': member_username,
                                 'owner': member_username,
-                                'first_name':member_username,
+                                'first_name': member_username,
                                 'status': product_status,
                                 'invite_users': invite_users,
                                 'invite_team_members': invite_team_members,
                                 'invite_public': invite_public,
                             }
                             member_list.append(member_data)
-
 
         # Remove any strings present in the list "products"
         a['products'] = [product for product in a['products'] if isinstance(product, dict)]
@@ -446,14 +476,13 @@ def update_products_client_admin(request):
         field = {"document_name": member}
         update = {"products": updated_members[0]["products"]}
         # dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update", field, update)
-        field1 = {"_id":"6453edc48ce736847236e6ca"}
+        field1 = {"_id": "6453edc48ce736847236e6ca"}
 
-        update1 = {"products" : external_api_data["products"]}
+        update1 = {"products": external_api_data["products"]}
         # dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field1,update1)
 
     # Return the updated dictionaries for each member
-    return Response({"message":"Successfully Updated"})
-
+    return Response({"message": "Successfully Updated"})
 
 
 @api_view(['POST'])
@@ -469,13 +498,13 @@ def product_control_platform_admin(request):
     if not product_name or owners is None or team_members is None or users is None or public is None:
         return Response({'message': 'Missing required parameters'}, status=status.HTTP_400_BAD_REQUEST)
 
-
-    field = {"product_name":product_name}
+    field = {"product_name": product_name}
     update = {"product_status": owners,
-      "team_members_status": team_members,
-      "users_status": users,
-      "public_status": public}
-    dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field,update)
+              "team_members_status": team_members,
+              "users_status": users,
+              "public_status": public}
+    dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE", "update", field,
+                     update)
 
     # dowellconnection("login","bangalore","login","prod_mem","prod_mem","100014001","ABCDE","update",field,update)
     return Response({'message': f'Product {product_name} updated successfully'}, status=status.HTTP_200_OK)
@@ -483,6 +512,8 @@ def product_control_platform_admin(request):
     # else:
     #     # If the other API returned an error, return an error
     #     return Response({'message': 'Error retrieving products'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @api_view(['POST'])
 def MemberControl(request):
     # Extracting the request data
@@ -496,7 +527,8 @@ def MemberControl(request):
 
     # Fetching the product data
     field = {"product_name": product_name}
-    product_data = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE", "fetch", field, "nil")
+    product_data = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                    "fetch", field, "nil")
     product = json.loads(product_data)
 
     # Determining the list of members to update
@@ -522,8 +554,9 @@ def MemberControl(request):
     # Updating the product data
     field = {"product_name": product_name}
     update = {member_list_name: my_members}
-    dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE", "update", field, update)
-    updated_members=[]
+    dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE", "update", field,
+                     update)
+    updated_members = []
     for member in members:
         field = {"document_name": member}
         login = dowellconnection(
@@ -571,7 +604,8 @@ def MemberControl(request):
         field = {"document_name": member}
         update = {"products": updated_members[0]["products"]}
         # return Response(update)
-        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update", field, update)
+        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update",
+                         field, update)
     return Response({"message": "Successfully Updated"})
 
 
@@ -584,15 +618,16 @@ def filter_portfolio(request):
     if not username or not product:
         return Response({"detail": "Fields 'username' and 'product' are required."}, status=400)
 
-    field={"document_name":username}
-    login=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","fetch",field,"nil")
-    r=json.loads(login)
+    field = {"document_name": username}
+    login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "fetch",
+                             field, "nil")
+    r = json.loads(login)
 
     # Check if the response has data
     if "data" not in r or not r["data"]:
         return Response({"detail": "No data found for the user."}, status=404)
 
-    portfolio=r["data"][0]["portpolio"]
+    portfolio = r["data"][0]["portpolio"]
     org_name = r["data"][0]["organisations"][0]["org_name"]
 
     filtered_portfolio = [
@@ -611,26 +646,27 @@ def filter_portfolio(request):
     return Response(filtered_portfolio + filtered_other_organisations)
 
 
-
 @api_view(['POST'])
 def settings(request):
     if request.method == 'POST':
         if len(request.data) == 1 and 'username' in request.data:
             username = request.data.get('username')
             field_c = {"document_name": username}
-            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "fetch", field_c, "nil")
+            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                     "fetch", field_c, "nil")
             resp = json.loads(login)
             product_list = resp["data"][0]["products"]
             admin_id = resp["data"][0]["_id"]
             field = {"admin_id": admin_id}
-            forg = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
-                                        "find", field, "nil")
+            forg = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001",
+                                    "ABCDE",
+                                    "find", field, "nil")
             settings_res = json.loads(forg)
             return Response(settings_res, status=HTTP_200_OK)
         username = request.data.get("username")
         field_c = {"document_name": username}
-
-        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "fetch", field_c, "nil")
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
         resp = json.loads(login)
         product_list = resp["data"][0]["products"]
         admin_id = resp["data"][0]["_id"]
@@ -645,8 +681,8 @@ def settings(request):
                     item['product_status'] = request.data.get('status')
                     break
         update_products = {"products": product_list}
-        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update", field, update_products)
-
+        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update",
+                         field, update_products)
         field_l = {"admin_id": admin_id}
         update = {}  # start with an empty dictionary
 
@@ -660,21 +696,35 @@ def settings(request):
             update["default_language"] = request.data.get('selected_language')
         if request.data.get('minimum_speed'):
             update["internet_min_speed"] = request.data.get('minimum_speed')
+        if request.data.get('mandatory_sections'):
+            update["mandatory_sections"] = request.data.get('mandatory_sections')
         if request.data.get('updated_product') and request.data.get('plans'):
-            update["product_plan"] = [{"product_name": request.data.get('updated_product'), "plans": request.data.get('plans')}]
+            product_plan = {
+                "product_name": request.data.get('updated_product'),
+                "plans": request.data.get('plans')}
+            update["product_plan"] = [product_plan]
         if request.data.get('time_limit_disconnect'):
             update["disconn_idle"] = request.data.get('time_limit_disconnect')
         if request.data.get('time_limit_connect'):
             update["permit_to_connect"] = request.data.get('time_limit_connect')
         if request.data.get('permitted_attempts'):
             update["no_of_conn"] = request.data.get('permitted_attempts')
-        if request.data.get('admin_process') and request.data.get('operational_rights') and request.data.get('portfolio_list'):
-            update["processes_to_portfolio"] = [{"process": request.data.get('admin_process'), "rights": request.data.get('operational_rights'), "portfolios": request.data.get('portfolio_list')}]
-        if request.data.get('methods'):
-            update["chat_method"] = request.data.get('methods')
+        if request.data.get('admin_process') and request.data.get('operational_rights') and request.data.get(
+                'portfolio_list'):
+            process_portfolio = {
+                "process": request.data.get('admin_process'),
+                "rights": request.data.get('operational_rights'),
+                "portfolios": request.data.get('portfolio_list')
+            }
+            update["processes_to_portfolio"] = [process_portfolio]
+        if request.data.get('notifications') == "Chat":
+            method = request.data.get('methods')
+            update["chat_method"] = method
+        if request.data.get('notifications') == "UX Living Lab":
+            method = request.data.get('methods')
+            update["uxlivinglab_method"] = method
         if request.data.get('colour_patterns'):
             update["color_scheme"] = request.data.get('colour_patterns')
-
-        dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE", "update", field_l, update)
-
+        status = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
+                                  "update", field_l, update)
         return Response(update, status=HTTP_200_OK)
