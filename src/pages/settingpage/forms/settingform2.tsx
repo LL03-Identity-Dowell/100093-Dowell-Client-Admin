@@ -16,7 +16,7 @@ const Settingform2 = () => {
 	);
 
 
-	console.log(maxtime_member);
+	
 
 	const maxtime_user = useSelector(
 		(state: RootState) => state.setting?.data?.maxtime_user

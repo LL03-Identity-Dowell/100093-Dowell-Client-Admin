@@ -7,7 +7,7 @@ const Settingform9 = () => {
 	const product = useSelector(
 		(state: RootState) => state.setting?.data?.product_plan[0]
 	);
-	console.log(product)
+	
 
 const productlist = [
 	{

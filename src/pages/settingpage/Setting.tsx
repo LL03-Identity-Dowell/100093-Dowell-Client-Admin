@@ -6,12 +6,12 @@ import { FaPowerOff } from "react-icons/fa";
 import { AiFillCaretRight } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import Settingform1 from "./forms/Settingform1";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getsetting } from "../../store/slice/setting";
 import Settingform2 from "./forms/settingform2";
-import Settingform3 from './forms/settingform3';
-import Settingform4 from './forms/settingform4';
+import Settingform3 from "./forms/settingform3";
+import Settingform4 from "./forms/settingform4";
 import Settingform5 from "./forms/settingform5";
 import Settingform6 from "./forms/settingform6";
 import Settingform7 from "./forms/settingform7";
@@ -20,16 +20,22 @@ import Settingform9 from "./forms/settingform9";
 import Settingform10 from "./forms/settingform10";
 import Settingform11 from "./forms/settingform11";
 import { NavLink } from "react-router-dom";
+import { getloaderstate } from "../../store/slice/loaderstate";
+import { RootState } from "../../store/Store";
+import Loader from "../loader";
 const ClientAdmin = () => {
+	const show_loader = useSelector((state: RootState) => state.loaderslice);
+	console.log(show_loader);
 	const [isSubmenuHidden, setSubmenuHidden] = useState(true);
 	const toggleSubmenu = () => {
 		setSubmenuHidden(!isSubmenuHidden);
 	};
 
-	
 	const usedispatch = useDispatch();
 	useEffect(() => {
 		// Function to call the API
+
+		
 		const fetchData = async () => {
 			try {
 				const data = {
@@ -40,8 +46,11 @@ const ClientAdmin = () => {
 					"http://100093.pythonanywhere.com/api/settings/",
 					data
 				);
-
+				
+				
 				usedispatch(getsetting(response.data));
+				console.log(response.data);
+				usedispatch(getloaderstate(false));
 			} catch (error) {
 				console.error(error);
 			}
@@ -49,11 +58,12 @@ const ClientAdmin = () => {
 
 		// Call the API when the component mounts
 		fetchData();
-	}, ); // The empty dependency array ensures that the effect runs only once
+	}); // The empty dependency array ensures that the effect runs only once
 
 	return (
 		<>
-			<Layout>
+			{
+				show_loader == false ? <Layout>
 				<main className="container mx-auto mb-20 lg:px-0 px-4">
 					<section className="border-y border-[#ff0000] mt-20">
 						<h2 className="text-[#7A7A7A] font-semibold mt-8">
@@ -308,7 +318,9 @@ const ClientAdmin = () => {
 						</div>
 					</section>
 				</main>
-			</Layout>
+			</Layout>:<Loader></Loader>
+					
+			}
 		</>
 	);
 };

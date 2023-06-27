@@ -8,23 +8,23 @@ import Faq from "./pages/Faq";
 import Setting from "./pages/settingpage/Setting";
 
 function App() {
-  return (
-    <>
-      <BrowserRouter>
-        <ScrollToTop />
+	return (
+		<>
+			<BrowserRouter>
+				<ScrollToTop />
 
-        <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<ClientAdmin />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/setting" element={<Setting />} />
-
-          {/* <Routes path="/element" element={<Example />} /> */}
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
+				<Routes>
+					{/* <Route path="/" element={<Home />} /> */}
+					<Route path="/" element={<ClientAdmin />} />
+					<Route path="/about-us" element={<AboutUs />} />
+					<Route path="/faq" element={<Faq />} />
+					<Route path="/setting" element={<Setting></Setting>} />
+					{/* <Route path="/loader" element={} /> */}
+					{/* <Routes path="/element" element={<Example />} /> */}
+				</Routes>
+			</BrowserRouter>
+		</>
+	);
 }
 
 export default App;
