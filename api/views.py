@@ -727,4 +727,28 @@ def settings(request):
             update["color_scheme"] = request.data.get('colour_patterns')
         dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
                                   "update", field_l, update)
+
         return Response(update, status=HTTP_200_OK)
+
+@api_view(['POST'])
+def workspace_name(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data']
+
+        # Organization name
+        workspace_name = data[0]['organisations'][0]['org_name']
+
+        # Other organization names
+        other_workspace_names = [org['org_name'] for org in data[0]['other_organisation']]
+
+        return Response({
+            "workspace_name": workspace_name,
+            "other_workspace_names": other_workspace_names
+        }, status=HTTP_200_OK)
+
