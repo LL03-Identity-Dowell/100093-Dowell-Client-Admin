@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import images from "../images";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
+import axios from 'axios';
+import { getproducts } from '../../store/slice/products';
+import productSlice from '../../store/slice/products';
 
 const Products = () => {
+  const productData = useSelector((state: RootState) => state.products);
+
   const [isHovering, setIsHovering] = useState(false);
   const [hovertitle, setHovertitle] = useState("");
 
@@ -14,6 +21,37 @@ const Products = () => {
     setIsHovering(false);
     setHovertitle(title);
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const username = "uxliveadmin";
+      if (username) {
+        const url = "https://100014.pythonanywhere.com/api/userinfo/";
+        axios
+          .post(url, { username: username })
+          .then((response) => {
+            try {
+              console.log(response);
+
+              dispatch(getproducts(response.data));
+            } catch (e) {
+              console.log("Failed to parse response");
+              // handle the failure case, for instance, you can render the error message
+            }
+          })
+          .catch((error) => {
+            console.log("Request failed", error);
+            // handle the failure case
+          });
+      }
+    };
+    fetchData();
+  }, []);
+
+  console.log(productData);
+  
 
   const productsData = [
     {
