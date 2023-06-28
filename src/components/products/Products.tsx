@@ -28,7 +28,7 @@ const Products = () => {
     const fetchData = async () => {
       const username = "uxliveadmin";
       if (username) {
-        const url = "https://100014.pythonanywhere.com/api/userinfo/";
+        const url = "http://100093.pythonanywhere.com/api/getproducts/";
         axios
           .post(url, { username: username })
           .then((response) => {
