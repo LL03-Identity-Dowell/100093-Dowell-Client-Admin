@@ -23,17 +23,15 @@ const Header = () => {
           .post(url, { session_id: sessionId })
           .then((response) => {
             try {
-              console.log(response);
+              // console.log(response);
 
               dispatch(getuserinfo(response.data));
             } catch (e) {
               console.log("Failed to parse response");
-              // handle the failure case, for instance, you can render the error message
             }
           })
           .catch((error) => {
             console.log("Request failed", error);
-            // handle the failure case
           });
       }
     };

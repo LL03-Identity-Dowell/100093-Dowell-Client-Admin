@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
-import images from "../images";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
-import axios from 'axios';
-import { getproducts } from '../../store/slice/products';
-import productSlice from '../../store/slice/products';
+import axios from "axios";
+import { getproducts } from "../../store/slice/products";
+
 
 const Products = () => {
   const productData = useSelector((state: RootState) => state.products);
@@ -33,17 +32,13 @@ const Products = () => {
           .post(url, { username: username })
           .then((response) => {
             try {
-              console.log(response);
-
               dispatch(getproducts(response.data));
             } catch (e) {
               console.log("Failed to parse response");
-              // handle the failure case, for instance, you can render the error message
             }
           })
           .catch((error) => {
             console.log("Request failed", error);
-            // handle the failure case
           });
       }
     };
@@ -51,93 +46,6 @@ const Products = () => {
   }, []);
 
   console.log(productData);
-  
-
-  const productsData = [
-    {
-      title: "Workflow AI",
-      image: images.workflow_ai,
-    },
-    {
-      title: "Wifi QR Code",
-      image: images.wifiqr,
-    },
-    {
-      title: "UX Live",
-      image: images.ux,
-    },
-    {
-      title: "Socialmedia Automation",
-      image: images.socialMedia,
-    },
-    {
-      title: "Dowell Scales",
-      image: images.livingLabScales,
-    },
-    {
-      title: "Logo Scan",
-      image: images.logoScan,
-    },
-    {
-      title: "Living Lab Chat",
-      image: images.chat,
-    },
-    {
-      title: "Legal Zard",
-      image: images.legalzard,
-    },
-    {
-      title: "Dowell Maps",
-      image: images.maps,
-    },
-    {
-      title: "Digital Queue",
-      image: images.digitalQ,
-    },
-    {
-      title: "Customer Experience",
-      image: images.customerExperience,
-    },
-    {
-      title: "Client Admin",
-      image:
-        "https://uxlivinglab.com/wp-content/uploads/2022/12/Living-Lab-Admin-1.png",
-    },
-    {
-      title: "Permutation Calculator",
-      image: images.permutationcalc,
-    },
-
-    {
-      title: "Live Dashboard",
-      image: images.liveStream,
-    },
-    {
-      title: "Sales Agent",
-      image:
-        "https://uxlivinglab.com/wp-content/uploads/2023/01/Sales-agent-app.png",
-    },
-    {
-      title: "Customer Support",
-      image:
-        "https://uxlivinglab.com/wp-content/uploads/2023/01/customer-support-centre.png",
-    },
-    {
-      title: "Secure Repositories",
-      image:
-        "https://uxlivinglab.com/wp-content/uploads/2023/01/Living-Lab-Admin-2.png",
-    },
-    {
-      title: "Secure Data",
-      image:
-        "https://uxlivinglab.com/wp-content/uploads/2023/01/secure-data.png",
-    },
-    {
-      title: "Living Lab Monitor",
-      image:
-        "https://uxlivinglab.com/wp-content/uploads/2022/12/Living-Lab-Admin-2.png",
-    },
-  ];
 
   return (
     <>
@@ -152,24 +60,36 @@ const Products = () => {
 
         <section className="relative">
           <main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
-            {productsData.map((product) => {
+            {productData.products.length > 1 && (
+              <>
+            {productData?.products.map((product) => {
               return (
                 <div
-                  key={product.title}
+                  key={product._id}
                   className="relative w-full h-full "
-                  onMouseOver={() => handleMouseOver(product.title)}
-                  onMouseOut={() => handleMouseOut(product.title)}
+                  onMouseOver={() => handleMouseOver(product.product_name)}
+                  onMouseOut={() => handleMouseOut(product?.product_name)}
                 >
                   <div className="">
-                    <img src={product.image} alt="" className="w-full h-full" />
+                    <img
+                      src={`${
+                        product.product_logo?.includes(
+                          "https://100093.pythonanywhere.com"
+                        )
+                          ? product.product_logo
+                          : `https://100093.pythonanywhere.com${product.product_logo}`
+                      } `}
+                      alt=""
+                      className="w-full h-full"
+                    />
                   </div>
-                  {isHovering && product.title === hovertitle && (
+                  {isHovering && product.product_name === hovertitle && (
                     <div className="absolute top-0 w-full h-full">
                       <div className="relative w-full h-full">
                         <div className="bg-[#a2a2a2] opacity-50 w-full h-full p-50 rounded-sm"></div>
                         <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-between py-16 items-center">
                           <h2 className="text-white text-[1.78rem] font-semibold">
-                            {product.title}
+                            {product.product_name}
                           </h2>
                           <div>
                             <select className="outline-none h-8">
@@ -184,7 +104,12 @@ const Products = () => {
                               </option>
                             </select>
                           </div>
-                          <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
+                          <button
+                            className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]"
+                            onClick={() =>
+                              window.location.assign(product.product_link)
+                            }
+                          >
                             Connect
                           </button>
                         </div>
@@ -194,6 +119,8 @@ const Products = () => {
                 </div>
               );
             })}
+           </> )
+            }
           </main>
         </section>
 

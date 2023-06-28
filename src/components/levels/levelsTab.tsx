@@ -9,7 +9,7 @@ import Level5 from "./Level5";
 import Level2 from "./Level2";
 
 const LevelsTab = () => {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(-1);
 
   return (
     <div>
