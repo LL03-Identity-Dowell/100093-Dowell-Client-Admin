@@ -7,7 +7,7 @@ import productSlice from './slice/products';
 const store = configureStore({
 	reducer: {
 		setting: settingSlice,
-		loaderslice:loaderslice,
+		loaderslice: loaderslice,
 		userinfo: userinfoSlice,
 		products: productSlice,
 	},

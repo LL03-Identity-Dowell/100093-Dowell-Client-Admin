@@ -23,15 +23,18 @@ import { NavLink } from "react-router-dom";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import { RootState } from "../../store/Store";
 import Loader from "../loader";
+import { getproducts } from "../../store/slice/products";
 const ClientAdmin = () => {
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
-	console.log(show_loader);
+	
 	const [isSubmenuHidden, setSubmenuHidden] = useState(true);
 	const toggleSubmenu = () => {
 		setSubmenuHidden(!isSubmenuHidden);
 	};
 
+	
 	const usedispatch = useDispatch();
+	
 	useEffect(() => {
 		// Function to call the API
 
@@ -46,26 +49,44 @@ const ClientAdmin = () => {
 					"http://100093.pythonanywhere.com/api/settings/",
 					data
 				);
-				
-				
+
 				usedispatch(getsetting(response.data));
-				console.log(response.data);
+
+				
+			} catch (error) {
+				console.error(error);
+			}
+			// fetch product
+			try {
+				const data = {
+					username: "uxliveadmin",
+				};
+
+				const response = await axios.post(
+					"http://100093.pythonanywhere.com/api/getproducts/",
+					data
+				);
+
+				usedispatch(getproducts(response.data));
+
 				usedispatch(getloaderstate(false));
 			} catch (error) {
 				console.error(error);
 			}
+
+			// fetch product
 		};
 
 		// Call the API when the component mounts
 		fetchData();
-	}); // The empty dependency array ensures that the effect runs only once
+	},[]); // The empty dependency array ensures that the effect runs only once
 
 	return (
 		<>
 			{
 				show_loader == false ? <Layout>
 				<main className="container mx-auto mb-20 lg:px-0 px-4">
-					<section className="border-y border-[#ff0000] mt-20">
+					<section className="border-y border-[#ff0000]">
 						<h2 className="text-[#7A7A7A] font-semibold mt-8">
 							Hi [First Name] [Last Name], [Designation]
 						</h2>
