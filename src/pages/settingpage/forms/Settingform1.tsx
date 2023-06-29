@@ -7,27 +7,7 @@ const Settingform1 = () => {
 	const allproducts = useSelector((state: RootState) => state.products.products);
 	console.log(allproducts);
 
-	const prod = [
-		"Workflow AI",
-		"Living Lab Chat",
-		"Digital Queue",
-		"Wifi QR Code",
-		"User Experience Live",
-		"Social Media Automation",
-		"Secure Data",
-		"Secure Repositories",
-		"Dowell Customer Support Centre",
-		"Permutation Calculator",
-		"Sales Agent",
-		"Live Stream Dashboard",
-		"Living Lab Monitoring",
-		"Living Lab Admin",
-		"Customer Experience",
-		"Living Lab Maps",
-		"Legalzard",
-		"Logo Scan",
-		"Living Lab Scales",
-	];
+	
 
 
 
