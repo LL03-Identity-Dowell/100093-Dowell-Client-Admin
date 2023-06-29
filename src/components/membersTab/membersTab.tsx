@@ -8,7 +8,7 @@ import User from "./User";
 import Public from "./Public";
 
 const MembersTab = () => {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(-1);
 
   return (
     <div>

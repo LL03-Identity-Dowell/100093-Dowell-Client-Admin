@@ -17,7 +17,7 @@ import Roles from "./roles/Roles";
 import Layers from "./layers/Layers";
 
 const AdminTabs = () => {
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(-1);
 
   const tabTitle = [
     {
