@@ -23,7 +23,6 @@ const Header = () => {
           .post(url, { session_id: sessionId })
           .then((response) => {
             try {
-              // console.log(response);
 
               dispatch(getuserinfo(response.data));
             } catch (e) {
@@ -37,6 +36,9 @@ const Header = () => {
     };
     fetchData();
   }, []);
+
+                console.log(userData);
+
 
   return (
     <>
