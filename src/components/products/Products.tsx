@@ -9,10 +9,10 @@ import Loader from "../../pages/loader";
 const Products = () => {
   const productData = useSelector((state: RootState) => state.products);
   const show_loader = useSelector((state: RootState) => state.loaderslice);
+  const userData = useSelector((state: RootState) => state.userinfo);
 
   const [isHovering, setIsHovering] = useState(false);
   const [hovertitle, setHovertitle] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleMouseOver = (title: string) => {
     setIsHovering(true);
@@ -52,15 +52,22 @@ const Products = () => {
     fetchData();
   }, []);
 
-  console.log(productData);
+  console.log(productData, "productData");
 
   return (
     <>
       {show_loader ? (
         <div className="mt-8">
           <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
-            Products of <span className="text-[#FF0000]"> [Organisation]</span>,
-            Owner <span className="text-[#FF0000]">[Owner Name]</span>
+            Products of{" "}
+            <span className="text-[#FF0000]">
+              {" "}
+              {userData.own_organisations.map((name) => name.org_name)[0]}
+            </span>
+            , Owner{" "}
+            <span className="text-[#FF0000]">
+              {userData.userinfo.first_name} {userData.userinfo.last_name}
+            </span>
           </p>
           <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
             Select product & Portfolio to connect
@@ -140,7 +147,7 @@ const Products = () => {
                 Select Product
               </label>
               <select
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+                className="outline-none w-full h-12 p-1 text-[17px] font-medium px-4 rounded-md border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
                 <option> Product 01 </option>
@@ -155,7 +162,7 @@ const Products = () => {
                 Select Portfolio
               </label>
               <select
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+                className="outline-none w-full h-12 p-1 text-[17px] font-medium px-4 rounded-md border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
                 <option> Portfolio name 01, Role Name, Member Type </option>
@@ -171,7 +178,7 @@ const Products = () => {
               </label>
               <textarea
                 rows={4}
-                className="outline-none border border-[#7a7a7a] resize-none p-4 rounded-sm text-[#7a7a7a]"
+                className="outline-none border border-[#7a7a7a] resize-none p-4 rounded-md text-[#7a7a7a]"
               />
             </div>
             <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">

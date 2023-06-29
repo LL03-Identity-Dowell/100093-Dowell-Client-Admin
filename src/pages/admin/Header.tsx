@@ -23,7 +23,6 @@ const Header = () => {
           .post(url, { session_id: sessionId })
           .then((response) => {
             try {
-
               dispatch(getuserinfo(response.data));
             } catch (e) {
               console.log("Failed to parse response");
@@ -37,36 +36,23 @@ const Header = () => {
     fetchData();
   }, []);
 
-                console.log(userData);
-
+  console.log(userData, "userData");
 
   return (
     <>
       <section className="border-y border-[#ff0000] lg:pl-12">
         <h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
-          Hi{" "}
-          {userData.userinfo?.first_name
-            ? userData.userinfo.first_name
-            : "[First Name]"}{" "}
-          {userData.userinfo?.last_name
-            ? userData.userinfo.last_name
-            : "[Last Name]"}
-          , you are login as{" "}
-          {userData.userinfo?.User_type
-            ? userData.userinfo.User_type
-            : "[Designation]"}
+          Hi {userData.userinfo.first_name} {userData.userinfo.last_name}, you
+          are login as {userData.userinfo.User_type}
         </h2>
         <p className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]">
-          Session starts at{" "}
-          {userData.userinfo?.dowell_time
-            ? userData.userinfo?.dowell_time + ","
-            : "[time] [duration],"}
-          {userData.userinfo?.user_country}
+          Session starts at {userData.userinfo.dowell_time},
+          {userData.userinfo.user_country}
         </p>
 
         <div className="lg:flex justify-between">
           <span className="flex items-center lg:justify-between justify-around my-8 lg:w-[30%]">
-            {userData.userinfo?.profile_img ? (
+            {userData.userinfo.profile_img ? (
               <img
                 src={userData.userinfo.profile_img}
                 alt="profile image"
@@ -77,7 +63,7 @@ const Header = () => {
                 <img src={images.empty_image} alt="'" />
               </div>
             )}
-            {userData.userinfo?.org_img ? (
+            {userData.userinfo.org_img ? (
               <img
                 src={userData.userinfo.org_img}
                 alt="organization logo"
