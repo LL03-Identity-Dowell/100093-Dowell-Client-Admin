@@ -7,7 +7,7 @@ from clientadminapp.models import publiclink
 import requests
 import json
 from rest_framework import status
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 
 
 @api_view(["GET"])
@@ -726,9 +726,10 @@ def settings(request):
         if request.data.get('colour_patterns'):
             update["color_scheme"] = request.data.get('colour_patterns')
         dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
-                                  "update", field_l, update)
+                         "update", field_l, update)
 
         return Response(update, status=HTTP_200_OK)
+
 
 @api_view(['POST'])
 def workspace_name(request):
@@ -752,3 +753,59 @@ def workspace_name(request):
             "other_workspace_names": other_workspace_names
         }, status=HTTP_200_OK)
 
+
+@api_view(['POST'])
+def item_name(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        level = request.data.get('level')
+        item_status = request.data.get('status')
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+
+        resp = json.loads(login)
+
+        item_names = [item["item_name"] for item in resp["data"][0]["organisations"][0][level]["items"] if
+                      item["status"] == item_status]
+
+        return Response({
+            "item_names": item_names
+        }, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_item(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        level = request.data.get("level")
+        item_name = request.data.get("item_name")
+        item_code = request.data.get("item_code")
+        item_spec = request.data.get("item_spec")
+        item_unicode = request.data.get("item_unicode")
+        item_details = request.data.get("item_details")
+        item_barcode = ""
+        item_image1 = ""
+        item_image2 = ""
+        field = {"document_name": username}
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            o = i.org
+            odata = json.loads(o)
+        org = odata["organisations"]
+        for i_name in org[0][level]["items"]:
+            if item_name in i_name['item_name'] or item_code in i_name['item_code']:
+                return Response("data must be unique", status=HTTP_400_BAD_REQUEST)
+        org[0][level]["items"].append(
+            {"item_name": item_name, "item_code": item_code, "item_details": item_details,
+             "item_universal_code": item_unicode,
+             "item_specification": item_spec, "item_barcode": item_barcode, "item_image1": item_image1,
+             "item_image2": item_image2,
+             "status": "enable"})
+        update = {"organisations": org}
+        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        odata["organisations"] = org
+        UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        return Response("success", status=HTTP_200_OK)
