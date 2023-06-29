@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdate, updateOrg, portfolioview, getProduct, \
     GetDocumentProducts, update_products_client_admin, product_control_platform_admin, MemberControl, filter_portfolio, \
-    settings, workspace_name
+    settings, workspace_name, item_name, create_item
 
 urlpatterns = [
     path('userinfo/', sessionView,name="userinfo"),
@@ -18,6 +18,8 @@ urlpatterns = [
     path('get-portfolio/', filter_portfolio, name='get-portfolio'),
     path('settings/', settings, name='settings'),
     path('workspace_name/', workspace_name, name='workspace_name'),
+    path('item_name/', item_name, name='item_name'),
+    path('create_item/', create_item, name='create_item'),
 
 
 ]
