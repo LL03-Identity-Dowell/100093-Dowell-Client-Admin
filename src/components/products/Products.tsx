@@ -58,20 +58,22 @@ const Products = () => {
     <>
       {show_loader ? (
         <div className="mt-8">
-          <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
-            Products of{" "}
-            <span className="text-[#FF0000]">
-              {" "}
-              {userData.own_organisations.map((name) => name.org_name)[0]}
-            </span>
-            , Owner{" "}
-            <span className="text-[#FF0000]">
-              {userData.userinfo.first_name} {userData.userinfo.last_name}
-            </span>
-          </p>
-          <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
-            Select product & Portfolio to connect
-          </p>
+          <div className="pl-8">
+            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
+              Products of{" "}
+              <span className="text-[#FF0000]">
+                {" "}
+                {userData.own_organisations.map((name) => name.org_name)[0]}
+              </span>
+              , Owner{" "}
+              <span className="text-[#FF0000]">
+                {userData.userinfo.first_name} {userData.userinfo.last_name}
+              </span>
+            </p>
+            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
+              Select product & Portfolio to connect
+            </p>
+          </div>
 
           <section className="relative">
             <main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
@@ -150,11 +152,12 @@ const Products = () => {
                 className="outline-none w-full h-12 p-1 text-[17px] font-medium px-4 rounded-md border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
-                <option> Product 01 </option>
-                <option> Product 02 </option>
-                <option> Product 03 </option>
-                <option> Product 04 </option>
-                <option> Product 05 </option>
+                {productData.products.map((product) => (
+                  <option key={product._id} value={product.product_name}>
+                    {" "}
+                    {product.product_name}{" "}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -174,7 +177,7 @@ const Products = () => {
             </div>
             <div className="mb-4 flex flex-col">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
-                Details of selected Portflio
+                Details of selected Portfolio
               </label>
               <textarea
                 rows={4}
