@@ -1,5 +1,9 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
+import { useState } from "react";
+import { getsetting } from "../../../store/slice/setting";
+import axios from "axios";
+import { getloaderstate } from "../../../store/slice/loaderstate";
 
 
 const Settingform2 = () => {
@@ -8,6 +12,11 @@ const Settingform2 = () => {
 		(state: RootState) => state.setting?.data?.maxtime_member
 	);
 
+
+	const currentSetting = useSelector((state: RootState) => state.setting?.data);
+
+	const [selectedmaxtime_member, setselectedmaxtime_member] =
+		useState(maxtime_member);
 	
 	const maxtime_member_list = ["70", "120", "180"];
 
@@ -22,14 +31,73 @@ const Settingform2 = () => {
 		(state: RootState) => state.setting?.data?.maxtime_user
 	);
 
+	const [selectedmaxtime_user, setselectedmaxtime_user] =
+		useState(maxtime_user);
 	const maxtime_user_list = ["70", "120", "180"];
 
 	const usertime_filterlist = maxtime_user_list.filter(
 		(item) => item !== maxtime_user
 	);
-    return (
-		<div className="form-item">
+
+
+
+const dispatch = useDispatch();
+
+const handleSubmit = (
+	event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+) => {
+	event.preventDefault();
+
+	const postData = async () => {
+		try {
+			dispatch(getloaderstate(true));
+			const data = {
+				username: "Jazz3650",
+				timelimit_member: selectedmaxtime_member,
+				timelimit_users: selectedmaxtime_user,
+			};
+
+			const _response = await axios.post(
+				"http://100093.pythonanywhere.com/api/settings/",
+				data
+			);
+
+			dispatch(
+				getsetting({
+					isSuccess: true,
+					data: {
+						...currentSetting,
+						maxtime_member: selectedmaxtime_member,
+						maxtime_user: selectedmaxtime_user,
+					},
+				})
+			);
+
+			dispatch(getloaderstate(false));
 			
+		} catch (error) {
+			console.error(error);
+		}
+
+		// fetch product
+	};
+
+	// Call the API when the component mounts
+	postData();
+
+	// Make your API call here using the selectedLanguage value
+	// For example:
+};
+
+	
+
+
+
+
+
+
+    return (
+			<div className="form-item">
 				<div className="bg-[#CEF9D2] p-3 text-[18px] font-semibold text-[#7A7A7A] border-[1px] border-[#61CE70] border-solid">
 					Set time limit for invitation to join; the invitation link will be
 					automatically disabled after this limit
@@ -48,8 +116,8 @@ const Settingform2 = () => {
 						<select
 							className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
 							aria-label="Default select example"
+							onChange={(e) => setselectedmaxtime_member(e.target.value)}
 						>
-							
 							<option selected value={maxtime_member}>
 								{maxtime_member} Hours
 							</option>
@@ -67,9 +135,10 @@ const Settingform2 = () => {
 						>
 							Maximum time limit for invitation for Users
 						</label>
-						<select className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md">
-							
-
+						<select
+							className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+							onChange={(e) => setselectedmaxtime_user(e.target.value)}
+						>
 							<option selected value={maxtime_user}>
 								{maxtime_user} Hours
 							</option>
@@ -81,7 +150,10 @@ const Settingform2 = () => {
 						</select>
 					</div>
 					<div className="w-full mb-1">
-						<button className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
+						<button
+							className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md"
+							onClick={handleSubmit}
+						>
 							Set Limit
 						</button>
 					</div>
