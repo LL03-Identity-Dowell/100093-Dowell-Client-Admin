@@ -24,7 +24,7 @@ const LevelsTab = () => {
             (level) => {
               return (
                 <Tab key={level}
-                   className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] active:bg-[#61CE70]">
+                   className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] active:bg-[#61CE70] outline-none">
                     <FaLevelDownAlt className="text-[#4CAF50] " />
                     <p className="font-roboto text-white font-medium">
                       {level}

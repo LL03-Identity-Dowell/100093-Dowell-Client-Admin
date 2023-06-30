@@ -19,7 +19,7 @@ const ClientAdmin = () => {
         <main className="container mx-auto mb-20 lg:px-0 px-4">
          <Header />
 
-          <section className="mt-4 flex lg:flex-row flex-col-reverse gap-4">
+          <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8">
             <Sidebar />
 
             <div className="lg:w-3/4">
