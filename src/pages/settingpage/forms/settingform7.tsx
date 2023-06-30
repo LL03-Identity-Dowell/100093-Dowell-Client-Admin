@@ -38,7 +38,7 @@ dispatch(getloaderstate(true));
 			selected_language: selectedLanguage
 		};
 
-		const _response = await axios.post(
+		await axios.post(
 			"http://100093.pythonanywhere.com/api/settings/",
 			data
 		);

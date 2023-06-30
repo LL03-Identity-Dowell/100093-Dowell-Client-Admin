@@ -57,7 +57,7 @@ const handleSubmit = (
 				timelimit_users: selectedmaxtime_user,
 			};
 
-			const _response = await axios.post(
+			await axios.post(
 				"http://100093.pythonanywhere.com/api/settings/",
 				data
 			);
