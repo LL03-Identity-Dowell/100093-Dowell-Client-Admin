@@ -805,7 +805,23 @@ def create_item(request):
              "status": "enable"})
         update = {"organisations": org}
         dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                                 "update", field, update)
+                         "update", field, update)
         odata["organisations"] = org
         UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
         return Response("success", status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_data(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data']
+
+        return Response(
+            data
+            , status=HTTP_200_OK)
