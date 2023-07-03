@@ -1,9 +1,6 @@
-import images from "../../components/images";
+
 import Layout from "../../components/layout";
-import { IoSettings } from "react-icons/io5";
-import { IoMdRefresh } from "react-icons/io";
-import { FaPowerOff } from "react-icons/fa";
-import { AiFillCaretRight } from "react-icons/ai";
+
 import { useEffect, useState } from "react";
 import Settingform1 from "./forms/Settingform1";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +16,7 @@ import Settingform8 from "./forms/settingform8";
 import Settingform9 from "./forms/settingform9";
 import Settingform10 from "./forms/settingform10";
 import Settingform11 from "./forms/settingform11";
-import { NavLink } from "react-router-dom";
+
 import { getloaderstate } from "../../store/slice/loaderstate";
 import { RootState } from "../../store/Store";
 import Loader from "../whiteloader";
@@ -28,17 +25,19 @@ import Sidebar from "../admin/Sidebar";
 import Header from "../admin/Header";
 const ClientAdmin = () => {
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
+	
+	// const [isSubmenuHidden, setSubmenuHidden] = useState(true);
+	// const toggleSubmenu = () => {
+	// 	setSubmenuHidden(!isSubmenuHidden);
+	// };
 
-	const [isSubmenuHidden, setSubmenuHidden] = useState(true);
-	const toggleSubmenu = () => {
-		setSubmenuHidden(!isSubmenuHidden);
-	};
-
+	
 	const usedispatch = useDispatch();
-
+	
 	useEffect(() => {
 		// Function to call the API
 
+		
 		const fetchData = async () => {
 			try {
 				const data = {
@@ -51,7 +50,8 @@ const ClientAdmin = () => {
 				);
 
 				usedispatch(getsetting(response.data));
-				console.log(response.data);
+console.log(response.data)
+				
 			} catch (error) {
 				console.error(error);
 			}
@@ -78,7 +78,7 @@ const ClientAdmin = () => {
 
 		// Call the API when the component mounts
 		fetchData();
-	}, []); // The empty dependency array ensures that the effect runs only once
+	},[]); // The empty dependency array ensures that the effect runs only once
 
 	return (
 		<>
@@ -89,42 +89,40 @@ const ClientAdmin = () => {
 					<section className="mt-4 flex lg:flex-row flex-col-reverse gap-4">
 						<Sidebar></Sidebar>
 
-						{show_loader == false ? (
-							<div className="lg:w-3/4">
-								<div className="py-[40px] px-[30px] w-full lg:flex gap-8">
-									<div className="lg:w-1/2">
-										<Settingform1></Settingform1>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+						{
+							show_loader==false?<div className="lg:w-3/4">
+							<div className="py-[40px] px-[30px] w-full lg:flex gap-8">
+								<div className="lg:w-1/2">
+									<Settingform1></Settingform1>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform2></Settingform2>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform2></Settingform2>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform3></Settingform3>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform3></Settingform3>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform4></Settingform4>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform4></Settingform4>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform5></Settingform5>
-									</div>
-									<div className="lg:w-1/2">
-										<Settingform6></Settingform6>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform7></Settingform7>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform8></Settingform8>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform9></Settingform9>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform10></Settingform10>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform11></Settingform11>
-									</div>
+									<Settingform5></Settingform5>
+								</div>
+								<div className="lg:w-1/2">
+									<Settingform6></Settingform6>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform7></Settingform7>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform8></Settingform8>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform9></Settingform9>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform10></Settingform10>
+									<div className="w-100 bg-[red] h-[2px] my-8"></div>
+									<Settingform11></Settingform11>
 								</div>
 							</div>
-						) : (
-							<Loader></Loader>
-						)}
+						</div>:<Loader></Loader>
+						}
 					</section>
 				</main>
 			</Layout>
