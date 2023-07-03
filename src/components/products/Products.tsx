@@ -29,7 +29,6 @@ const Products = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch(getloaderstate(false));
       const username = "uxliveadmin";
       if (username) {
         const url = "http://100093.pythonanywhere.com/api/getproducts/";
@@ -38,15 +37,13 @@ const Products = () => {
           .then((response) => {
             try {
               dispatch(getproducts(response.data));
+              dispatch(getloaderstate(false));
             } catch (e) {
               console.log("Failed to parse response");
-            } finally {
-              dispatch(getloaderstate(true));
             }
           })
           .catch((error) => {
             console.log("Request failed", error);
-            dispatch(getloaderstate(true));
           });
       }
     };
@@ -57,14 +54,14 @@ const Products = () => {
 
   return (
     <>
-      {show_loader ? (
+      {!show_loader ? (
         <div className="mt-8">
           <div className="pl-8">
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
               Products of{" "}
               <span className="text-[#FF0000]">
-                {" "}[Organization]
-                {userData.userinfo.username}              </span>
+                {userData.userinfo.username}{" "}
+              </span>
               , Owner{" "}
               <span className="text-[#FF0000]">
                 {userData.userinfo.first_name} {userData.userinfo.last_name}
@@ -143,7 +140,7 @@ const Products = () => {
             </main>
           </section>
 
-          <ProductForm  />
+          <ProductForm />
         </div>
       ) : (
         <div className="mt-4">
