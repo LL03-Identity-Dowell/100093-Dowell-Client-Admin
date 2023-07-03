@@ -1,7 +1,7 @@
 
 import Layout from "../../components/layout";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Settingform1 from "./forms/Settingform1";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
