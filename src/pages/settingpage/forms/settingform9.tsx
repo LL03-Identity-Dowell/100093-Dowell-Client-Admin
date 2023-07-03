@@ -1,6 +1,7 @@
 
 import { useSelector } from 'react-redux';
 import { RootState } from "../../../store/Store";
+import { useState } from 'react';
 
 const Settingform9 = () => {
 
@@ -33,7 +34,15 @@ const productlistfilter = productlist.filter(
 
 	const planfilter = plans.filter((item) => item !== product?.plans);
 
+	const [_selectedproduct_name, _setselectedproduct_name] = useState(
+		product?.product_name
+	);
+	const [_selectedplans, _setselectedplans] = useState(product?.plans);
 	
+
+
+	
+
 
     return (
 			<div className="form-item">

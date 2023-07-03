@@ -8,6 +8,7 @@ const Settingform8 = () => {
 		(state: RootState) => state.setting?.data?.internet_min_speed
 	);
 
+	
 const internetspeedlist = ["10 Mbps", "20 Mbps", "40 Mbps"];
 
 const internetspeedfilter = internetspeedlist.filter(
