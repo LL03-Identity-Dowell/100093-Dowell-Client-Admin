@@ -53,7 +53,7 @@ const Products = () => {
     fetchData();
   }, []);
 
-  console.log(productData, "productData");
+  // console.log(productData, "productData");
 
   return (
     <>
@@ -63,9 +63,8 @@ const Products = () => {
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
               Products of{" "}
               <span className="text-[#FF0000]">
-                {" "}
-                {userData.own_organisations.map((name) => name.org_name)[0]}
-              </span>
+                {" "}[Organization]
+                {userData.userinfo.username}              </span>
               , Owner{" "}
               <span className="text-[#FF0000]">
                 {userData.userinfo.first_name} {userData.userinfo.last_name}
