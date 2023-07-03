@@ -74,13 +74,15 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #000;
+  width: 100%;
+  background: #ffffff;
 }
 
 .loader {
   position: relative;
   width: 20rem;
   height: 20rem;
+  margin: 0 auto;
 }
 .loader::before {
   z-index: 1;
@@ -91,7 +93,7 @@ body {
   transform: translate(-50%, -50%);
   width: 8.6956521739rem;
   height: 8.6956521739rem;
-  background: #000;
+  background: #ffffff;
   border-radius: 50%;
 }
 .loader .box {
@@ -177,11 +179,11 @@ body {
   line-height: 40px;
   text-align: center;
   font-size: 2em;
-  color: #fff;
+  color: #000000;
 }
 
 .loader-text {
-  color: #fff;
+  color: #000000;
   transform: translateY(-2rem);
   letter-spacing: 6px;
   opacity: 0.2;
