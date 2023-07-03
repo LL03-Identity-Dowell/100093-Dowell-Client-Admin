@@ -29,23 +29,22 @@ const Products = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const username = "uxliveadmin";
-      if (username) {
-        const url = "http://100093.pythonanywhere.com/api/getproducts/";
-        axios
-          .post(url, { username: username })
-          .then((response) => {
-            try {
-              dispatch(getproducts(response.data));
-              dispatch(getloaderstate(false));
-            } catch (e) {
-              console.log("Failed to parse response");
-            }
-          })
-          .catch((error) => {
-            console.log("Request failed", error);
-          });
-      }
+      try {
+
+      const data = {
+        username: "uxliveadmin",
+      };     
+      const response = await axios.post(
+        "http://100093.pythonanywhere.com/api/getproducts/",
+        data
+      );
+
+      dispatch(getproducts(response.data));
+
+      dispatch(getloaderstate(false));
+    } catch (error) {
+      console.error(error);
+    }
     };
     fetchData();
   }, []);
