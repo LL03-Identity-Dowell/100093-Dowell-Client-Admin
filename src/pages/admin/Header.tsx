@@ -20,7 +20,7 @@ console.log(currentPath);
     const fetchData = async () => {
       const sessionId = "x4qyyvyqunur0hexq8jnxdq5o8oap4yc";
       if (sessionId) {
-        const url = "https://100014.pythonanywhere.com/api/userinfo/";
+        const url = "https://100014.pythonanywhere.com/api/logininfo/";
         axios
           .post(url, { session_id: sessionId })
           .then((response) => {
@@ -38,7 +38,7 @@ console.log(currentPath);
     fetchData();
   }, []);
 
-  console.log(userData, "userData");
+  // console.log(userData, "userData");
 
   return (
 		<>
