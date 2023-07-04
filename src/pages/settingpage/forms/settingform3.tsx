@@ -1,6 +1,11 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/Store";
 
 
 const Settingform3 = () => {
+	const mandatory_sections = useSelector(
+		(state: RootState) => state.setting?.data?.mandatory_sections
+	);
     return (
 			<div className="form-item">
 				<div className="bg-[#CEF9D2] p-3 text-[18px] font-semibold text-[#7A7A7A] border-[1px] border-[#61CE70] border-solid">
@@ -22,8 +27,11 @@ const Settingform3 = () => {
 							aria-label="Default select example"
 							multiple
 						>
-							<option>All Section</option>
-							<option value="section1">Section 1</option>
+							{mandatory_sections.map((item, index) => (
+								<option key={index} value={item}>
+									{item} 
+								</option>
+							))}
 						</select>
 					</div>
 
