@@ -825,3 +825,106 @@ def get_data(request):
         return Response(
             data
             , status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_portfolio(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        member_type = request.data.get('member_type')
+        member = request.data.get('member')
+        product = request.data.get('product')
+        data_type = request.data.get('data_type')
+        op_rights = request.data.get('op_rights')
+        role = request.data.get('role')
+        portfolio_name = request.data.get('portfolio_name')
+        portfolio_code = request.data.get('portfolio_code')
+        portfolio_spec = request.data.get('portfolio_spec')
+        portfolio_u_code = request.data.get('portfolio_u_code')
+        portfolio_det = request.data.get('portfolio_det')
+        required_fields = [username, member_type, member, product, data_type, op_rights, role, portfolio_name,
+                           portfolio_code]
+        for field in required_fields:
+            if field is None:
+                return Response("Please ensure data for all required fields are present", status=HTTP_400_BAD_REQUEST)
+        member = eval(member)
+        response_data = {"username": member, "member_type": member_type, "product": product,
+                         "data_type": data_type, "operations_right": op_rights, "role": role,
+                         "security_layer": "None", "portfolio_name": portfolio_name,
+                         "portfolio_code": portfolio_code, "portfolio_specification": portfolio_spec,
+                         "portfolio_uni_code": portfolio_u_code, "portfolio_details": portfolio_det,
+                         "status": "enable"}
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            o = i.org
+            odata = json.loads(o)
+        ortname = odata["document_name"]
+        orgid = odata["_id"]
+        portls = odata["portpolio"]
+        for portcheck in portls:
+            if portcheck["portfolio_code"] == portfolio_code:
+                return Response("Portfolio Code Must Be Unique", status=HTTP_400_BAD_REQUEST)
+        odata["portpolio"].append(response_data)
+        if "owner" or "team_member" in member_type:
+            typemem = "team_members"
+        elif "user" in member_type:
+            typemem = "guest_members"
+        if member_type == "public":
+            for ir in member:
+                orl = publiclink.objects.all().filter(username=username, qrcodeid=ir)
+                try:
+                    r = orl[0].link
+                except:
+                    r = "no link"
+                odata["members"]["public_members"]["pending_members"].append(
+                    {"name": member, "portfolio_name": portfolio_name, "product": product, "status": "unused",
+                     "link": r})
+                memberpublic = odata["members"]
+                obj, created = UserOrg.objects.update_or_create(username=username,
+                                                                defaults={'org': json.dumps(odata)})
+                orl.update(portfolio=portfolio_name)
+                field = {"document_name": username}
+                update = {"portpolio": odata["portpolio"], "members": memberpublic}
+                login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                         "ABCDE", "update", field, update)
+            return Response(f"{portfolio_name} successfully created", status=HTTP_200_OK)
+        for imem in odata["members"][typemem]["accept_members"]:
+            if imem["name"] in member:
+                imem["portfolio_name"] = "created"
+
+        field = {"document_name": username}
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        update = {"portpolio": odata["portpolio"], "members": odata["members"]}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+
+        for li in member:
+            field1 = {"document_name": li}
+            login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                      "ABCDE", "fetch", field1, "update")
+            r = json.loads(login1)
+            try:
+                lo = r["data"][0]["other_organisation"]
+
+                lo.append({"org_id": orgid, "org_name": ortname, "username": li, "member_type": member_type,
+                           "product": product, "data_type": data_type, "operations_right": op_rights,
+                           "role": role, "security_layer": "None", "portfolio_name": portfolio_name,
+                           "portfolio_code": portfolio_code, "portfolio_specification": portfolio_spec,
+                           "portfolio_uni_code": portfolio_u_code, "portfolio_details": portfolio_det,
+                           "status": "enable"})
+
+                field2 = {"document_name": li}
+                update = {"other_organisation": lo}
+                login2 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                          "ABCDE", "update", field2, update)
+            except:
+                pass
+        return Response(f"{portfolio_name} successfully created", status=HTTP_200_OK)
+
+
+
+
+
+
+
+
