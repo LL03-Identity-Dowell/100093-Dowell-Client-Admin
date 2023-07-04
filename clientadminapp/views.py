@@ -1307,7 +1307,6 @@ def Settings(request):
     forg = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001", "ABCDE",
                             "find", field, "nil")
     settings_res = json.loads(forg)
-    print(settings_res)
     context["settings"] = settings_res["data"]
     if settings_res["data"] is None:
         with open('organisation.json') as json_file:
@@ -1343,7 +1342,7 @@ def Settings(request):
         operational_rights = request.POST.get('form_fields[operationalrights]')
         admin_process = request.POST.get('form_fields[adminprocess]')
         portfolio_list = request.POST.getlist('form_fields[portflioset][]')
-        mandatory_sections = request.POST.getlist('form_fields[sections][]') 
+        mandatory_sections = request.POST.getlist('form_fields[sections][]')
         admin_id = request.session.get("document_id")
         username = request.session["username"]
         field_c = {"document_name": username}
@@ -1395,7 +1394,8 @@ def Settings(request):
         if notifications == "Chat":
             update["chat_method"] = methods
         if notifications == "UX Living Lab":
-            update["uxlivinglab_method"] = methods        
+            update["uxlivinglab_method"] = methods
+        print(update)
         # update={
         #     # "admin_id": admin_id,
         #     # "username": username,
@@ -1412,7 +1412,8 @@ def Settings(request):
         #     "chat_method": methods,
         #     "color_scheme": colour_patterns
         # }
-        dowellconnection("login","bangalore","login","login_settings","login_settings","1202001","ABCDE","update",field_l,update)
+        status = dowellconnection("login","bangalore","login","login_settings","login_settings","1202001","ABCDE","update",field_l,update)
+        print(status)
 
     return render(request, "settings.html", context)
 
