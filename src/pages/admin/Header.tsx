@@ -13,7 +13,7 @@ const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
 const currentPath = window.location.pathname;
 
-console.log(currentPath);
+// console.log(currentPath);
   const dispatch = useDispatch();
 
   useEffect(() => {
