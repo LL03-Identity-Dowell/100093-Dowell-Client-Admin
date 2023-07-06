@@ -59,7 +59,7 @@ const AdminTabs = () => {
           username: "mayowa25",
         };
         const response = await axios.post(
-          "https://100079.pythonanywhere.com/api/get_data/",
+          "https://100093.pythonanywhere.com/api/get_data/",
           data
         );
         console.log(response.data, "admin data");

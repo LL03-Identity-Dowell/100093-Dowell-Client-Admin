@@ -1,4 +1,12 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
+
 const Level1 = () => {
+  const levels = useSelector((state: RootState) => state.adminData);
+
+
+  console.log(levels);
+  
   return (
     <>
       <div className="lg:flex w-full  h-full mt-8">
