@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdate, updateOrg, portfolioview, getProduct, \
     GetDocumentProducts, update_products_client_admin, product_control_platform_admin, MemberControl, filter_portfolio, \
-    settings, workspace_name, item_name, create_item, get_data, create_portfolio
+    settings, workspace_name, item_name, create_item, get_data, create_portfolio, create_role
 
 urlpatterns = [
     path('userinfo/', sessionView,name="userinfo"),
@@ -22,5 +22,6 @@ urlpatterns = [
     path('create_item/', create_item, name='create_item'),
     path('get_data/', get_data, name='get_data'),
     path('create_portfolio/', create_portfolio, name='create_portfolio'),
+    path('create_role/', create_role, name='role'),
 
 ]
