@@ -827,6 +827,8 @@ def get_data(request):
             , status=HTTP_200_OK)
 
 
+
+
 @api_view(['POST'])
 def create_portfolio(request):
     if request.method == 'POST':
@@ -922,9 +924,44 @@ def create_portfolio(request):
         return Response(f"{portfolio_name} successfully created", status=HTTP_200_OK)
 
 
-
-
-
-
-
-
+@api_view(['POST'])
+def create_role(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        level1 = request.data.get('level1_item')
+        level2 = request.data.get('level2_item')
+        level3 = request.data.get('level3_item')
+        level4 = request.data.get('level4_item')
+        level5 = request.data.get('level5_item')
+        security = request.data.get('security_layer')
+        role_name = request.data.get('role_name')
+        role_code = request.data.get('role_code')
+        role_spec = request.data.get('role_spec')
+        roleucode = request.data.get('role_u_code')
+        role_det = request.data.get('role_det')
+        required_fields = [username, security, role_name, role_code]
+        for field in required_fields:
+            if field is None:
+                return Response("Please ensure data for all required fields are present", status=HTTP_400_BAD_REQUEST)
+        response_data = {"level1_item": level1, "level2_item": level2, "level3_item": level3,
+                                 "level4_item": level4, "level5_item": level5, "security_layer": security,
+                                 "role_name": role_name, "role_code": role_code, "role_details": role_det,
+                                 "role_uni_code": roleucode, "role_specification": role_spec, "status": "enable"}
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            o = i.org
+            odata = json.loads(o)
+        roles = odata["roles"]
+        print(roles)
+        for checkroles in roles:
+            if checkroles["role_name"] == role_name or checkroles["role_code"] == role_code:
+                return Response("Role name and code Must Be Unique", status=HTTP_400_BAD_REQUEST)
+        odata["roles"].append(response_data)
+        rle = odata["roles"]
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        field = {"document_name": username}
+        update = {"roles": rle}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        print(login)
+        return Response(f"{role_name} successfully created", status=HTTP_200_OK)
