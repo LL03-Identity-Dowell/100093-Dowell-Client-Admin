@@ -32,7 +32,9 @@ const Products = () => {
       try {
 
       const data = {
-        username: "uxliveadmin",
+        // username: "uxliveadmin",
+				username: userData?.userinfo?.username,
+
       };     
       const response = await axios.post(
         "http://100093.pythonanywhere.com/api/getproducts/",
@@ -49,7 +51,7 @@ const Products = () => {
     fetchData();
   }, []);
 
-	console.log(productData, "productData");
+	console.log(userData, "productData");
 
 	return (
 		<>
@@ -73,7 +75,7 @@ const Products = () => {
 
 					<section className="relative">
 						<main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
-							{productData.products.length > 1 && (
+							{productData?.products.length > 1 && (
 								<>
 									{productData?.products.map((product) => {
 										return (
