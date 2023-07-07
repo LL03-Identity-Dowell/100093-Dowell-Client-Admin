@@ -33,7 +33,7 @@ const Products = () => {
 
       const data = {
         // username: "uxliveadmin",
-				username: userData?.userinfo?.username,
+				username: userData.userinfo.username,
 
       };     
       const response = await axios.post(

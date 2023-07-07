@@ -28,9 +28,9 @@ const LevelsTab = () => {
       >
         <TabList className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-x-2 gap-y-4 mt-4">
           {["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"].map(
-            (level) => {
+            (level, index) => {
               return (
-                <Tab key={level}
+                <Tab key={index}
                    className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] active:bg-[#61CE70] outline-none">
                     <FaLevelDownAlt className="text-[#4CAF50] " />
                     <p className="font-roboto text-white font-medium">

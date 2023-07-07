@@ -188,13 +188,11 @@ const Level1 = () => {
                   id="enable_item"
                   className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 >
-                  {level1Items.map((item, index) => (
-                    <>
-                      {item.status === "enable" && (
-                        <option key={index}> {item.item_name} </option>
-                      )}
-                    </>
-                  ))}
+                  {level1Items.map((item, index) =>
+                    item.status === "enable" ? (
+                      <option key={index}>{item.item_name}</option>
+                    ) : null
+                  )}
                 </select>
               </div>
               <div className="mb-4">
@@ -207,13 +205,11 @@ const Level1 = () => {
                   id="disable_item"
                   className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 >
-                  {level1Items.map((item, index) => (
-                    <>
-                      {item.status === "disable" && (
-                        <option key={index}> {item.item_name} </option>
-                      )}
-                    </>
-                  ))}
+                  {level1Items.map((item, index) =>
+                    item.status === "disable" ? (
+                      <option key={index}>{item.item_name}</option>
+                    ) : null
+                  )}
                 </select>
               </div>
 
@@ -224,6 +220,7 @@ const Level1 = () => {
                 <textarea
                   rows={4}
                   placeholder=""
+                  readOnly
                   value={selectedItems.join("\n")}
                   className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
                 />
