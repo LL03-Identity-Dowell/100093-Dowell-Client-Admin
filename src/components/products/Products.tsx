@@ -27,44 +27,41 @@ const Products = () => {
 
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			dispatch(getloaderstate(false));
-			const username = "uxliveadmin";
-			if (username) {
-				const url = "http://100093.pythonanywhere.com/api/getproducts/";
-				axios
-					.post(url, { username: username })
-					.then((response) => {
-						try {
-							dispatch(getproducts(response.data));
-						} catch (e) {
-							console.log("Failed to parse response");
-						} finally {
-							dispatch(getloaderstate(true));
-						}
-					})
-					.catch((error) => {
-						console.log("Request failed", error);
-						dispatch(getloaderstate(true));
-					});
-			}
-		};
-		fetchData();
-	}, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
 
-	console.log(productData, "productData");
+      const data = {
+        // username: "uxliveadmin",
+				username: userData.userinfo.username,
+
+      };     
+      const response = await axios.post(
+        "http://100093.pythonanywhere.com/api/getproducts/",
+        data
+      );
+
+      dispatch(getproducts(response.data));
+
+      dispatch(getloaderstate(false));
+    } catch (error) {
+      console.error(error);
+    }
+    };
+    fetchData();
+  }, []);
+
+	console.log(userData, "productData");
 
 	return (
 		<>
-			{show_loader ? (
+			{!show_loader ? (
 				<div className="mt-8">
 					<div className="pl-8">
 						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
 							Products of{" "}
 							<span className="text-[#FF0000]">
-								{" "}
-								{userData.own_organisations.map((name) => name.org_name)[0]}
+								{userData.userinfo.username}
 							</span>
 							, Owner{" "}
 							<span className="text-[#FF0000]">
@@ -78,7 +75,7 @@ const Products = () => {
 
 					<section className="relative">
 						<main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
-							{productData.products.length > 1 && (
+							{productData?.products.length > 1 && (
 								<>
 									{productData?.products.map((product) => {
 										return (

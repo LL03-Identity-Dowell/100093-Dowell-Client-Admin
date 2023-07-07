@@ -13,12 +13,15 @@ const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
 const currentPath = window.location.pathname;
 
-console.log(currentPath);
+// console.log(currentPath);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+	const urlParams = new URLSearchParams(window.location.search)
+	const sessionId = urlParams.get('session_id')
+
+	useEffect(() => {
     const fetchData = async () => {
-      const sessionId = "x4qyyvyqunur0hexq8jnxdq5o8oap4yc";
+      // const sessionId = "x4qyyvyqunur0hexq8jnxdq5o8oap4yc";
       if (sessionId) {
         const url = "https://100014.pythonanywhere.com/api/logininfo/";
         axios
@@ -38,7 +41,7 @@ console.log(currentPath);
     fetchData();
   }, []);
 
-  // console.log(userData, "userData");
+  console.log(sessionId, "userData");
 
   return (
 		<>

@@ -8,13 +8,17 @@ import {
   FaSitemap,
   FaToriiGate,
 } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MembersTab from "./membersTab/membersTab";
 import LevelsTab from "./levels/levelsTab";
 import Products from "./products/Products";
 import Portfolio from "./portfolio/Portfolio";
 import Roles from "./roles/Roles";
 import Layers from "./layers/Layers";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { getAdminData } from "../store/slice/adminData";
+import { getloaderstate } from "../store/slice/loaderstate";
 
 const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
@@ -45,6 +49,30 @@ const AdminTabs = () => {
       icon: <FaToriiGate />,
     },
   ];
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = {
+          username: "mayowa25",
+        };
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_data/",
+          data
+        );
+        console.log(response.data, "admin data");
+
+        dispatch(getAdminData(response.data));
+
+        dispatch(getloaderstate(false));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
