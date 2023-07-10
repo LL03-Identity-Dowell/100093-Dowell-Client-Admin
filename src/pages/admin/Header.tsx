@@ -124,7 +124,7 @@ const Header = () => {
 										Refresh
 									</p>
 								</button>
-								<button className="bg-[#54595F] lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm">
+								<button className="bg-[#54595F] lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm" onClick={logout}>
 									<FaPowerOff className="text-white" />
 									<p className="text-[13px] text-white text-center py-[10px] px-[20px]">
 										Logout
