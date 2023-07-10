@@ -1,5 +1,7 @@
 import axios from "axios";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
 
 interface FormInputs {
   username: string;
@@ -25,19 +27,53 @@ const Portfolio: React.FC = () => {
     portfolio_name: "",
     portfolio_code: "",
   });
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  // const handleOnChange = (e) => {
-  //   setFormInputs([...formInputs, [e.target.id]: e.target.value])
-  // }
+  const portfolio = useSelector(
+    (state: RootState) => state.adminData.data[0]?.portpolio
+  );
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+  };
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedItems((prevSelectedItems) => [
+      ...prevSelectedItems,
+      ...selectedOptions,
+    ]);
+  };
+
+  const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+  };
+
+  // const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  //   setFormInputs({ ...formInputs, item_details: e.target.value });
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const data = {
+      username: '',
+      member_type: formInputs.member_type,
+      member: selectedItems,
+      product: formInputs.product,
+      data_type: formInputs.data_type,
+      op_rights: formInputs.op_rights,
+      role: formInputs.role,
+      portfolio_name: formInputs.portfolio_name,
+      portfolio_code: formInputs.portfolio_code,
+    }
     try {
       await axios
         .post(
           "https://100093.pythonanywhere.com/api/create_portfolio/",
-          formInputs
+          data
         )
         .then((res) => {
           console.log(res.data);
@@ -46,6 +82,8 @@ const Portfolio: React.FC = () => {
       console.log(err);
     }
   };
+
+  // console.log(portfolio?.map((name) => name.username[0]));
 
   return (
     <>
@@ -67,6 +105,8 @@ const Portfolio: React.FC = () => {
                 Select Member Type{" "}
               </label>
               <select
+                onChange={handleSelectStatus}
+                id="member_type"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 required
               >
@@ -80,12 +120,15 @@ const Portfolio: React.FC = () => {
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Select Member
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Member 01 </option>
-                <option> Member 02 </option>
-                <option> Member 03 </option>
-                <option> Member 04 </option>
-                <option> Member 05 </option>
+              <select
+                multiple
+                onChange={handleSelectChange}
+                id="member"
+                className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.portfolio_name}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -93,14 +136,14 @@ const Portfolio: React.FC = () => {
                 Select Product
               </label>
               <select
+                onChange={handleSelectStatus}
+                id="product"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
-                <option> Product 01 </option>
-                <option> Product 02 </option>
-                <option> Product 03 </option>
-                <option> Product 04 </option>
-                <option> Product 05 </option>
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.product}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -108,13 +151,14 @@ const Portfolio: React.FC = () => {
                 Select Data Type{" "}
               </label>
               <select
+                onChange={handleSelectStatus}
+                id="data_type"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 required
               >
-                <option>Real Data </option>
-                <option> Learning Member </option>
-                <option>Testing DataData </option>
-                <option> Archived Data</option>
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.data_type}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -122,33 +166,40 @@ const Portfolio: React.FC = () => {
                 Select Operational Rights{" "}
               </label>
               <select
+                onChange={handleSelectStatus}
+                id="op_rights"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 required
               >
-                <option>View </option>
-                <option> Add/Edit </option>
-                <option>Delete </option>
-                <option> Admin</option>
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.operations_right}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Select Roles
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Role 01 </option>
-                <option> Role 02 </option>
-                <option> Role 03 </option>
+              <select
+                onChange={handleSelectStatus}
+                id="role"
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.role}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Portfolio Name
+                Portfolio Name <span className="text-xs text-[#FF0000]"> (Don't use & symbol in portfolio name) </span>
               </label>
               <input
                 type="text"
                 placeholder="Portfolio name"
                 required
+                onChange={handleOnChange}
+                id="portfolio_name"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -160,6 +211,8 @@ const Portfolio: React.FC = () => {
                 type="text"
                 placeholder="Portfolio code"
                 required
+                onChange={handleOnChange}
+                id="portfolio_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -170,6 +223,8 @@ const Portfolio: React.FC = () => {
               <input
                 type="text"
                 placeholder="Portfolio specification"
+                onChange={handleOnChange}
+                id="specification"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -180,6 +235,8 @@ const Portfolio: React.FC = () => {
               <input
                 type="text"
                 placeholder="Portfolio universal code"
+                onChange={handleOnChange}
+                id="universal_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -190,6 +247,8 @@ const Portfolio: React.FC = () => {
               <textarea
                 rows={4}
                 placeholder="Portfolio details"
+                // onChange={handleOnChangeTextArea}
+                // id='detais'
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>
@@ -208,7 +267,11 @@ const Portfolio: React.FC = () => {
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Member Type
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+              <select
+                multiple  onChange={handleSelectStatus}
+                id="member_type"
+                className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
                 <option>Owner </option>
                 <option> Team Member </option>
                 <option>User </option>
@@ -220,59 +283,67 @@ const Portfolio: React.FC = () => {
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Member
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Member 01 </option>
-                <option> Member 02 </option>
-                <option> Member 03 </option>
-                <option> Member 04 </option>
-                <option> Member 05 </option>
-              </select>
+              <textarea
+                rows={4}
+                placeholder="member"
+                readOnly
+                value={formInputs.member_type}
+                // onChange={handleOnChangeTextArea}
+                id="members"
+                className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+              />
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Product
               </label>
               <select
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+                multiple
+                className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
-                <option> Product 01 </option>
-                <option> Product 02 </option>
-                <option> Product 03 </option>
-                <option> Product 04 </option>
-                <option> Product 05 </option>
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.product}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Data Type{" "}
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option>Real Data </option>
-                <option> Learning Member </option>
-                <option>Testing DataData </option>
-                <option> Archived Data</option>
+              <select
+                multiple
+                className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.data_type}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Operational Rights{" "}
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option>View </option>
-                <option> Add/Edit </option>
-                <option>Delete </option>
-                <option> Admin</option>
+              <select
+                multiple
+                className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.operations_right}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Roles
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Role 01 </option>
-                <option> Role 02 </option>
-                <option> Role 03 </option>
+              <select
+                multiple
+                className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {portfolio?.map((products, key) => (
+                  <option key={key}> {products.role}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -280,11 +351,11 @@ const Portfolio: React.FC = () => {
                 Enabled Portfolios
               </label>
               <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Portfolio name 01, Role Name, Member Type </option>
-                <option> Portfolio name 02, Role Name, Member Type </option>
-                <option> Portfolio name 03, Role Name, Member Type </option>
-                <option> Portfolio name 04, Role Name, Member Type </option>
-                <option> Portfolio name 05, Role Name, Member Type </option>
+                {portfolio?.map((products, key) =>
+                  products.status === "enable" ? (
+                    <option key={key}> {products.portfolio_name}</option>
+                  ) : null
+                )}
               </select>
             </div>
             <div className="mb-4">
@@ -292,11 +363,11 @@ const Portfolio: React.FC = () => {
                 Disabled Portfolios
               </label>
               <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Portfolio name 01, Role Name, Member Type </option>
-                <option> Portfolio name 02, Role Name, Member Type </option>
-                <option> Portfolio name 03, Role Name, Member Type </option>
-                <option> Portfolio name 04, Role Name, Member Type </option>
-                <option> Portfolio name 05, Role Name, Member Type </option>
+                {portfolio?.map((products, key) =>
+                  products.status === "disable" ? (
+                    <option key={key}> {products.portfolio_name}</option>
+                  ) : null
+                )}
               </select>
             </div>
             <div className="mb-4">

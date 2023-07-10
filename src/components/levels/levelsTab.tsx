@@ -7,16 +7,9 @@ import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
 import Level2 from "./Level2";
-// import { useSelector } from "react-redux";
-// import { RootState } from "../../store/Store";
 
 const LevelsTab = () => {
-  // const levels = useSelector((state: RootState) => state.adminData);
-
-  const [tabIndex, setTabIndex] = useState(-1);
-
-// console.log(levels.data.map((item) => item.organisations.map((id) => id.level1)));
-  
+  const [tabIndex, setTabIndex] = useState(-1);  
 
   return (
     <div>

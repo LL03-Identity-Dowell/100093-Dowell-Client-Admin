@@ -78,7 +78,7 @@ const AdminTabs = () => {
     <div>
       <Tabs
         className=""
-        selectedTabClassName="client_tabs"
+        selectedTabClassName="bg-[#61CE70] text-white"
         selectedIndex={tabIndex}
         onSelect={(index) => setTabIndex(index)}
       >
