@@ -1004,14 +1004,9 @@ def update_role_status(request):
         for ir in rot:
             if ir["role_code"] == role_code:
                 ir["status"] = role_status
-<<<<<<< HEAD
                 code_status = "success"
         if code_status != "success":
             return Response(f"No role with code {role_code}", status=HTTP_400_BAD_REQUEST)
-=======
-            else:
-                return Response(f"No role with code {role_code}")
->>>>>>> f815387d6d049120e6f18e2f703ad4b881fbf446
         dataorg1["roles"] = rot
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
 
