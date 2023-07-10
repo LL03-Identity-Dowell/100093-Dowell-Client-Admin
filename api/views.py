@@ -995,6 +995,7 @@ def update_role_status(request):
         username = request.data.get("username")
         role_code = request.data.get('role_code')
         role_status = request.data.get('role_status')
+        code_status = ""  ####################### code_status is used to monitor the status of the code
         userorg = UserOrg.objects.all().filter(username=username)
         for i in userorg:
             dataorg = i.org
@@ -1003,8 +1004,9 @@ def update_role_status(request):
         for ir in rot:
             if ir["role_code"] == role_code:
                 ir["status"] = role_status
-            else:
-                return Response(f"No role with code {role_code}"):
+                code_status = "success"
+        if code_status != "success":
+            return Response(f"No role with code {role_code}", status=HTTP_400_BAD_REQUEST)
         dataorg1["roles"] = rot
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
 
