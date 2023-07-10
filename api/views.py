@@ -827,8 +827,6 @@ def get_data(request):
             , status=HTTP_200_OK)
 
 
-
-
 @api_view(['POST'])
 def create_portfolio(request):
     if request.method == 'POST':
@@ -944,9 +942,9 @@ def create_role(request):
             if field is None:
                 return Response("Please ensure data for all required fields are present", status=HTTP_400_BAD_REQUEST)
         response_data = {"level1_item": level1, "level2_item": level2, "level3_item": level3,
-                                 "level4_item": level4, "level5_item": level5, "security_layer": security,
-                                 "role_name": role_name, "role_code": role_code, "role_details": role_det,
-                                 "role_uni_code": roleucode, "role_specification": role_spec, "status": "enable"}
+                         "level4_item": level4, "level5_item": level5, "security_layer": security,
+                         "role_name": role_name, "role_code": role_code, "role_details": role_det,
+                         "role_uni_code": roleucode, "role_specification": role_spec, "status": "enable"}
         userorg = UserOrg.objects.all().filter(username=username)
         for i in userorg:
             o = i.org
@@ -965,3 +963,54 @@ def create_role(request):
                                  "update", field, update)
         print(login)
         return Response(f"{role_name} successfully created", status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_layer_data(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        category = request.data.get('category')
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        try:
+            security_layers = resp["data"][0]["security_layers"]
+        except:
+            return Response("Please check the layer and category to ensure data is correct", status=HTTP_200_OK)
+
+        result = []
+        for layer_number, layer_data in security_layers.items():
+            category_data = layer_data[category]
+            for data in category_data:
+                result.append({category: data, "layer": layer_number})
+
+        return Response(result, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def update_role_status(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        role_code = request.data.get('role_code')
+        role_status = request.data.get('role_status')
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            dataorg = i.org
+            dataorg1 = json.loads(dataorg)
+        rot = dataorg1["roles"]
+        for ir in rot:
+            if ir["role_code"] == role_code:
+                ir["status"] = role_status
+            else:
+                return Response(f"No role with code {role_code}")
+        dataorg1["roles"] = rot
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
+
+        field = {"document_name": username}
+        update = {"roles": rot}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+
+        return Response(f"Role with code '{role_code}' has been {role_status}d", status=HTTP_200_OK)
