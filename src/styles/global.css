@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -54,19 +54,13 @@ body {
   border-radius: 50px 5px 50px 5px;
 }
 
-.client_tabs {
-  /* border-bottom: 3px solid #01cab9; */
-  background-color: #61CE70;
-  color: white;
-}
-
 /* loader */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
-
-
 
 .wrap-loader {
   display: flex;
@@ -117,9 +111,9 @@ body {
 .loader .box:nth-child(1)::before {
   top: 50%;
   left: 50%;
-  background: #4185F3;
+  background: #4185f3;
   -webkit-animation: lightMe1 4s ease-out infinite normal;
-          animation: lightMe1 4s ease-out infinite normal;
+  animation: lightMe1 4s ease-out infinite normal;
 }
 .loader .box:nth-child(2) {
   top: 0;
@@ -128,9 +122,9 @@ body {
 .loader .box:nth-child(2)::before {
   top: 50%;
   right: 50%;
-  background: #33A753;
+  background: #33a753;
   -webkit-animation: lightMe2 4s ease-out infinite normal;
-          animation: lightMe2 4s ease-out infinite normal;
+  animation: lightMe2 4s ease-out infinite normal;
 }
 .loader .box:nth-child(3) {
   bottom: 0;
@@ -139,9 +133,9 @@ body {
 .loader .box:nth-child(3)::before {
   bottom: 50%;
   right: 50%;
-  background: #FABB04;
+  background: #fabb04;
   -webkit-animation: lightMe3 4s ease-out infinite normal;
-          animation: lightMe3 4s ease-out infinite normal;
+  animation: lightMe3 4s ease-out infinite normal;
 }
 .loader .box:nth-child(4) {
   bottom: 0;
@@ -150,9 +144,9 @@ body {
 .loader .box:nth-child(4)::before {
   bottom: 50%;
   left: 50%;
-  background: #E94234;
+  background: #e94234;
   -webkit-animation: lightMe4 4s linear infinite normal;
-          animation: lightMe4 4s linear infinite normal;
+  animation: lightMe4 4s linear infinite normal;
 }
 .loader .wrap-text {
   z-index: 2;
@@ -170,7 +164,7 @@ body {
   height: 40px;
   line-height: 40px;
   -webkit-animation: slider 8s ease-in infinite;
-          animation: slider 8s ease-in infinite;
+  animation: slider 8s ease-in infinite;
 }
 .loader .text span {
   display: block;
@@ -188,7 +182,7 @@ body {
   letter-spacing: 6px;
   opacity: 0.2;
   -webkit-animation: blink 1s ease-out infinite alternate;
-          animation: blink 1s ease-out infinite alternate;
+  animation: blink 1s ease-out infinite alternate;
 }
 
 @-webkit-keyframes lightMe1 {
@@ -409,4 +403,3 @@ body {
   }
 }
 /* loader */
-

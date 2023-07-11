@@ -51,7 +51,6 @@ const Products = () => {
     fetchData();
   }, []);
 
-	console.log(userData, "productData");
 
 	return (
 		<>

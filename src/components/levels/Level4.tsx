@@ -1,4 +1,55 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
+import { ChangeEvent, useState } from "react";
+
 const Level4 = () => {
+  const level4Items = useSelector(
+    (state: RootState) =>
+      state.adminData.data[0]?.organisations[0]?.level4?.items
+  );
+
+  const levelName = useSelector((state: RootState) => {
+    return state.adminData.data[0]?.organisations[0]?.level4?.level_name || "";
+  });
+
+  const [formInputs, setFormInputs] = useState({
+    level_name: "",
+    item_name: "",
+    item_code: "",
+    item_details: "",
+    item_universal_code: "",
+    item_specification: "",
+    item_barcode: "",
+    item_image1: "",
+    item_image2: "",
+    status: "",
+  });
+
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+  };
+
+  const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setFormInputs({ ...formInputs, item_details: e.target.value });
+  };
+
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedItems((prevSelectedItems) => [
+      ...prevSelectedItems,
+      ...selectedOptions,
+    ]);
+  };
+
+  const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormInputs({ ...formInputs, status: e.target.value });
+  };
+
   return (
     <>
       <div className="lg:flex w-full  h-full mt-8">
@@ -17,6 +68,9 @@ const Level4 = () => {
                 type="text"
                 placeholder="Name"
                 required
+                value={levelName}
+                onChange={handleOnChange}
+                id="level_name"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -51,6 +105,8 @@ const Level4 = () => {
                 type="text"
                 placeholder="Item code"
                 required
+                onChange={handleOnChange}
+                id="item_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -61,6 +117,8 @@ const Level4 = () => {
               <input
                 type="text"
                 placeholder="Item specification"
+                onChange={handleOnChange}
+                id="item_specification"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -71,6 +129,8 @@ const Level4 = () => {
               <input
                 type="text"
                 placeholder=" Item universal code"
+                onChange={handleOnChange}
+                id="item_universal_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -81,6 +141,8 @@ const Level4 = () => {
               <textarea
                 rows={4}
                 placeholder="Item details"
+                onChange={handleOnChangeTextArea}
+                id="item_details"
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>
@@ -117,20 +179,34 @@ const Level4 = () => {
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Enabled Items
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Item 1 </option>
-                <option> Item 2 </option>
-                <option> Item 3 </option>
+              <select
+                multiple
+                onChange={handleSelectChange}
+                id="enable_item"
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {level4Items.map((item, index) =>
+                  item.status === "enable" ? (
+                    <option key={index}>{item.item_name}</option>
+                  ) : null
+                )}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Disabled Items
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Item 1 </option>
-                <option> Item 2 </option>
-                <option> Item 3 </option>
+              <select
+                multiple
+                onChange={handleSelectChange}
+                id="disable_item"
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                {level4Items.map((item, index) =>
+                  item.status === "disable" ? (
+                    <option key={index}>{item.item_name}</option>
+                  ) : null
+                )}
               </select>
             </div>
 
@@ -141,6 +217,8 @@ const Level4 = () => {
               <textarea
                 rows={4}
                 placeholder=""
+                readOnly
+                value={selectedItems.join("\n")}
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>
@@ -148,7 +226,11 @@ const Level4 = () => {
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Enable / Disable selected Item
               </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+              <select
+                onChange={handleSelectStatus}
+                id="status"
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
                 <option> Enable </option>
                 <option> Disable </option>
               </select>
