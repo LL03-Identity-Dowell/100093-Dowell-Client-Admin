@@ -54,7 +54,7 @@ const Roles = () => {
 	const handledisablerule = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		
 		const matchrule = disablerules.find(
-			(item, index) => item.role_name === event.target.value
+			(item) => item.role_name === event.target.value
 		);
 		setselectedrule({
 			level1_item: matchrule?.level1_item || "",
@@ -79,7 +79,7 @@ const Roles = () => {
 
 	const handleenablerule = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		const matchrule = enablerules.find(
-			(item, index) => item.role_name === event.target.value
+			(item) => item.role_name === event.target.value
 		);
 		setselectedrule({
 			level1_item: matchrule?.level1_item || "",
