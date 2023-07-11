@@ -922,9 +922,97 @@ def create_portfolio(request):
         return Response(f"{portfolio_name} successfully created", status=HTTP_200_OK)
 
 
+@api_view(['POST'])
+def create_role(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        level1 = request.data.get('level1_item')
+        level2 = request.data.get('level2_item')
+        level3 = request.data.get('level3_item')
+        level4 = request.data.get('level4_item')
+        level5 = request.data.get('level5_item')
+        security = request.data.get('security_layer')
+        role_name = request.data.get('role_name')
+        role_code = request.data.get('role_code')
+        role_spec = request.data.get('role_spec')
+        roleucode = request.data.get('role_u_code')
+        role_det = request.data.get('role_det')
+        required_fields = [username, security, role_name, role_code]
+        for field in required_fields:
+            if field is None:
+                return Response("Please ensure data for all required fields are present", status=HTTP_400_BAD_REQUEST)
+        response_data = {"level1_item": level1, "level2_item": level2, "level3_item": level3,
+                         "level4_item": level4, "level5_item": level5, "security_layer": security,
+                         "role_name": role_name, "role_code": role_code, "role_details": role_det,
+                         "role_uni_code": roleucode, "role_specification": role_spec, "status": "enable"}
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            o = i.org
+            odata = json.loads(o)
+        roles = odata["roles"]
+        print(roles)
+        for checkroles in roles:
+            if checkroles["role_name"] == role_name or checkroles["role_code"] == role_code:
+                return Response("Role name and code Must Be Unique", status=HTTP_400_BAD_REQUEST)
+        odata["roles"].append(response_data)
+        rle = odata["roles"]
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        field = {"document_name": username}
+        update = {"roles": rle}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        print(login)
+        return Response(f"{role_name} successfully created", status=HTTP_200_OK)
 
 
+@api_view(['POST'])
+def get_layer_data(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        category = request.data.get('category')
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        try:
+            security_layers = resp["data"][0]["security_layers"]
+        except:
+            return Response("Please check the layer and category to ensure data is correct", status=HTTP_200_OK)
+
+        result = []
+        for layer_number, layer_data in security_layers.items():
+            category_data = layer_data[category]
+            for data in category_data:
+                result.append({category: data, "layer": layer_number})
+
+        return Response(result, status=HTTP_200_OK)
 
 
+@api_view(['POST'])
+def update_role_status(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        role_code = request.data.get('role_code')
+        role_status = request.data.get('role_status')
+        code_status = ""  ####################### code_status is used to monitor the status of the code
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            dataorg = i.org
+            dataorg1 = json.loads(dataorg)
+        rot = dataorg1["roles"]
+        for ir in rot:
+            if ir["role_code"] == role_code:
+                ir["status"] = role_status
+                code_status = "success"
+        if code_status != "success":
+            return Response(f"No role with code {role_code}", status=HTTP_400_BAD_REQUEST)
+        dataorg1["roles"] = rot
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
 
+        field = {"document_name": username}
+        update = {"roles": rot}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
 
+        return Response(f"Role with code '{role_code}' has been {role_status}d", status=HTTP_200_OK)
