@@ -74,7 +74,7 @@ const Products = () => {
 
 					<section className="relative">
 						<main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
-							{productData?.products.length > 1 && (
+							{productData?.products?.length > 1 && (
 								<>
 									{productData?.products.map((product) => {
 										return (

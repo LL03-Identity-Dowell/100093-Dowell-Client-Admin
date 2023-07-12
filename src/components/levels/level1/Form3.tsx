@@ -1,27 +1,13 @@
+import { useState, ChangeEvent } from 'react';
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/Store";
-import { ChangeEvent, useState } from "react";
-import axios from "axios";
-import Form2 from "./level1/Form2";
+import { RootState } from '../../../store/Store';
 
-const Level1 = () => {
+const Form3 = () => {
   const level1Items = useSelector(
     (state: RootState) =>
       state.adminData.data[0]?.organisations[0]?.level1?.items
   );
-
-  const levelName = useSelector((state: RootState) => {
-    return state.adminData.data[0]?.organisations[0]?.level1?.level_name || "";
-  });
-
-  const userName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.Username
-  );
-  console.log(userName);
-
   const [formInputs, setFormInputs] = useState({
-    username: "",
-    level: "",
     level_name: "",
     item_name: "",
     item_code: "",
@@ -33,63 +19,31 @@ const Level1 = () => {
     item_image2: "",
     status: "",
   });
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const [selectedItem, setSelectedItem] = useState<string>("");
-
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedItems((prevSelectedItems) => [
+      ...prevSelectedItems,
+      ...selectedOptions,
+    ]);
   };
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedItemName = event.target.value;
-    setSelectedItem(selectedItemName);
+  const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setFormInputs({ ...formInputs, item_details: e.target.value });
   };
 
-  const selectedItemData = level1Items.find(
-    (item) => item.item_name === selectedItem
-  );
-
-  // console.log(selectedItemData, 'selectedOptions');
+  
 
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormInputs({ ...formInputs, status: e.target.value });
   };
 
   return (
-    <>
-      <div className="lg:flex w-full  h-full mt-8">
-        <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-          <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
-            <p>{"Level 1 – <Name>,"}</p>
-            <p>{"Total Items – <total enabled items in level 1>"}</p>
-          </span>
-
-          <form className="px-[30px] mb-8">
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Name for Level 1
-              </label>
-              <input
-                type="text"
-                placeholder="Name"
-                required
-                value={levelName}
-                onChange={handleOnChange}
-                id="level_name"
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              />
-            </div>
-
-            <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-              Save Name
-            </button>
-          </form>
-        </div>
-
-        <div className="w-2/3 flex">
-          <Form2 userName={userName} />
-
-          <div className="lg:w-1/2 border border-[#54595F] card-shadow">
+    <div className="lg:w-1/2 border border-[#54595F] card-shadow">
             <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
               Items created in Level 1
             </p>
@@ -99,16 +53,14 @@ const Level1 = () => {
                   Enabled Items
                 </label>
                 <select
+                  multiple
                   onChange={handleSelectChange}
-                  value={selectedItem}
                   id="enable_item"
                   className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 >
                   {level1Items.map((item, index) =>
                     item.status === "enable" ? (
-                      <option key={index} value={item.item_name}>
-                        {item.item_name}
-                      </option>
+                      <option key={index}>{item.item_name}</option>
                     ) : null
                   )}
                 </select>
@@ -118,6 +70,7 @@ const Level1 = () => {
                   Disabled Items
                 </label>
                 <select
+                  multiple
                   onChange={handleSelectChange}
                   id="disable_item"
                   className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -138,7 +91,7 @@ const Level1 = () => {
                   rows={4}
                   placeholder=""
                   readOnly
-                  value={JSON.stringify(selectedItemData, null, 2)}
+                  value={selectedItems.join("\n")}
                   className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
                 />
               </div>
@@ -164,11 +117,7 @@ const Level1 = () => {
               </button>
             </form>
           </div>
-        </div>
-        {/* ))} */}
-      </div>
-    </>
-  );
-};
+  )
+}
 
-export default Level1;
+export default Form3

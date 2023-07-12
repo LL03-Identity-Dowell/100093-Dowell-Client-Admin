@@ -6,7 +6,7 @@ import { RootState } from "../../store/Store";
 interface FormInputs {
   username: string;
   member_type: string;
-  member: any[];
+  member: string[];
   product: string;
   data_type: string;
   op_rights: string;
@@ -28,9 +28,14 @@ const Portfolio: React.FC = () => {
     portfolio_code: "",
   });
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
 
   const portfolio = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio
+  );
+  const userName = useSelector(
+    (state: RootState) => state.adminData.data[0]?.Username
   );
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -51,39 +56,42 @@ const Portfolio: React.FC = () => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
 
-  // const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
-  //   setFormInputs({ ...formInputs, item_details: e.target.value });
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const data = {
-      username: '',
+      username: userName,
       member_type: formInputs.member_type,
-      member: selectedItems,
+      member: JSON.stringify(selectedItems),
       product: formInputs.product,
       data_type: formInputs.data_type,
       op_rights: formInputs.op_rights,
       role: formInputs.role,
       portfolio_name: formInputs.portfolio_name,
       portfolio_code: formInputs.portfolio_code,
-    }
+    };
+    console.log(data, "data");
+
     try {
       await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/create_portfolio/",
-          data
-        )
+        .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
         .then((res) => {
           console.log(res.data);
+          setErrMsg("");
         });
-    } catch (err) {
-      console.log(err);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+        setErrMsg(error.response?.data);
+      } else {
+        console.error("An unknown error occurred:", error);
+        setErrMsg("An unknown error occurred");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  // console.log(portfolio?.map((name) => name.username[0]));
 
   return (
     <>
@@ -103,6 +111,7 @@ const Portfolio: React.FC = () => {
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Select Member Type{" "}
+                <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <select
                 onChange={handleSelectStatus}
@@ -118,7 +127,7 @@ const Portfolio: React.FC = () => {
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Select Member
+                Select Member <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <select
                 multiple
@@ -133,7 +142,7 @@ const Portfolio: React.FC = () => {
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Select Product
+                Select Product <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <select
                 onChange={handleSelectStatus}
@@ -149,6 +158,7 @@ const Portfolio: React.FC = () => {
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Select Data Type{" "}
+                <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <select
                 onChange={handleSelectStatus}
@@ -164,6 +174,7 @@ const Portfolio: React.FC = () => {
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Select Operational Rights{" "}
+                <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <select
                 onChange={handleSelectStatus}
@@ -178,13 +189,14 @@ const Portfolio: React.FC = () => {
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Select Roles
+                Select Roles <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <select
                 onChange={handleSelectStatus}
                 id="role"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
+                <option>...Select...</option>
                 {portfolio?.map((products, key) => (
                   <option key={key}> {products.role}</option>
                 ))}
@@ -192,7 +204,12 @@ const Portfolio: React.FC = () => {
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Portfolio Name <span className="text-xs text-[#FF0000]"> (Don't use & symbol in portfolio name) </span>
+                Portfolio Name{" "}
+                <span className="text-xs text-[#FF0000]">
+                  {" "}
+                  (Don't use & symbol in portfolio name){" "}
+                  <span className="text-[#ff0000] text-xs">*</span>
+                </span>
               </label>
               <input
                 type="text"
@@ -206,6 +223,7 @@ const Portfolio: React.FC = () => {
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Portfolio Code (Unique){" "}
+                <span className="text-[#ff0000] text-xs">*</span>
               </label>
               <input
                 type="text"
@@ -252,9 +270,15 @@ const Portfolio: React.FC = () => {
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>
-            <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+            <button
+              disabled={isLoading}
+              className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
+                isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
+              }`}
+            >
               Create Portfolio
             </button>
+            <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
           </form>
         </div>
         <div className="lg:w-1/2 ">
@@ -268,7 +292,8 @@ const Portfolio: React.FC = () => {
                 Member Type
               </label>
               <select
-                multiple  onChange={handleSelectStatus}
+                multiple
+                onChange={handleSelectStatus}
                 id="member_type"
                 className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
