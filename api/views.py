@@ -785,9 +785,9 @@ def create_item(request):
         item_spec = request.data.get("item_spec")
         item_unicode = request.data.get("item_unicode")
         item_details = request.data.get("item_details")
-        item_barcode = ""
-        item_image1 = ""
-        item_image2 = ""
+        item_barcode = request.data.get("item_barcode")
+        item_image1 = request.data.get("item_image1")
+        item_image2 = request.data.get("item_image2")
         field = {"document_name": username}
         userorg = UserOrg.objects.all().filter(username=username)
         for i in userorg:
@@ -795,8 +795,8 @@ def create_item(request):
             odata = json.loads(o)
         org = odata["organisations"]
         for i_name in org[0][level]["items"]:
-            if item_name in i_name['item_name'] or item_code in i_name['item_code']:
-                return Response("data must be unique", status=HTTP_400_BAD_REQUEST)
+            if item_code in i_name['item_code']:
+                return Response({"error": "Item Code must be unique"}, status=HTTP_400_BAD_REQUEST)
         org[0][level]["items"].append(
             {"item_name": item_name, "item_code": item_code, "item_details": item_details,
              "item_universal_code": item_unicode,
@@ -808,7 +808,7 @@ def create_item(request):
                          "update", field, update)
         odata["organisations"] = org
         UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
-        return Response("success", status=HTTP_200_OK)
+        return Response({"success": "Item created successfully"}, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -846,7 +846,8 @@ def create_portfolio(request):
                            portfolio_code]
         for field in required_fields:
             if field is None:
-                return Response("Please ensure data for all required fields are present", status=HTTP_400_BAD_REQUEST)
+                return Response({"error": "Please ensure data for all required fields are present"},
+                                status=HTTP_400_BAD_REQUEST)
         member = eval(member)
         response_data = {"username": member, "member_type": member_type, "product": product,
                          "data_type": data_type, "operations_right": op_rights, "role": role,
@@ -863,7 +864,7 @@ def create_portfolio(request):
         portls = odata["portpolio"]
         for portcheck in portls:
             if portcheck["portfolio_code"] == portfolio_code:
-                return Response("Portfolio Code Must Be Unique", status=HTTP_400_BAD_REQUEST)
+                return Response({"error": "Portfolio Code Must Be Unique"}, status=HTTP_400_BAD_REQUEST)
         odata["portpolio"].append(response_data)
         if "owner" or "team_member" in member_type:
             typemem = "team_members"
@@ -887,7 +888,7 @@ def create_portfolio(request):
                 update = {"portpolio": odata["portpolio"], "members": memberpublic}
                 login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
                                          "ABCDE", "update", field, update)
-            return Response(f"{portfolio_name} successfully created", status=HTTP_200_OK)
+            return Response({"success": f"{portfolio_name} successfully created"}, status=HTTP_200_OK)
         for imem in odata["members"][typemem]["accept_members"]:
             if imem["name"] in member:
                 imem["portfolio_name"] = "created"
@@ -919,7 +920,7 @@ def create_portfolio(request):
                                           "ABCDE", "update", field2, update)
             except:
                 pass
-        return Response(f"{portfolio_name} successfully created", status=HTTP_200_OK)
+        return Response({"success": f"{portfolio_name} successfully created"}, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -940,7 +941,8 @@ def create_role(request):
         required_fields = [username, security, role_name, role_code]
         for field in required_fields:
             if field is None:
-                return Response("Please ensure data for all required fields are present", status=HTTP_400_BAD_REQUEST)
+                return Response({"error": "Please ensure data for all required fields are present"},
+                                status=HTTP_400_BAD_REQUEST)
         response_data = {"level1_item": level1, "level2_item": level2, "level3_item": level3,
                          "level4_item": level4, "level5_item": level5, "security_layer": security,
                          "role_name": role_name, "role_code": role_code, "role_details": role_det,
@@ -952,8 +954,8 @@ def create_role(request):
         roles = odata["roles"]
         print(roles)
         for checkroles in roles:
-            if checkroles["role_name"] == role_name or checkroles["role_code"] == role_code:
-                return Response("Role name and code Must Be Unique", status=HTTP_400_BAD_REQUEST)
+            if checkroles["role_code"] == role_code:
+                return Response({"error": "Role code Must Be Unique"}, status=HTTP_400_BAD_REQUEST)
         odata["roles"].append(response_data)
         rle = odata["roles"]
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
@@ -962,7 +964,7 @@ def create_role(request):
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
         print(login)
-        return Response(f"{role_name} successfully created", status=HTTP_200_OK)
+        return Response({"success": f"{role_name} successfully created"}, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -978,7 +980,8 @@ def get_layer_data(request):
         try:
             security_layers = resp["data"][0]["security_layers"]
         except:
-            return Response("Please check the layer and category to ensure data is correct", status=HTTP_200_OK)
+            return Response({"error": "Please check the layer and category to ensure data is correct"},
+                            status=HTTP_200_OK)
 
         result = []
         for layer_number, layer_data in security_layers.items():
@@ -1006,7 +1009,7 @@ def update_role_status(request):
                 ir["status"] = role_status
                 code_status = "success"
         if code_status != "success":
-            return Response(f"No role with code {role_code}", status=HTTP_400_BAD_REQUEST)
+            return Response({"error": f"No role with code {role_code}"}, status=HTTP_400_BAD_REQUEST)
         dataorg1["roles"] = rot
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
 
@@ -1015,4 +1018,33 @@ def update_role_status(request):
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
 
-        return Response(f"Role with code '{role_code}' has been {role_status}d", status=HTTP_200_OK)
+        return Response({"success": f"Role with code '{role_code}' has been {role_status}d"}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def update_portfolio_status(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        portfolio_code = request.data.get('portfolio_code')
+        portfolio_status = request.data.get('portfolio_status')
+        code_status = ""  ####################### code_status is used to monitor the status of the code
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            dataorg = i.org
+            dataorg1 = json.loads(dataorg)
+        rot = dataorg1["portpolio"]
+        for ir in rot:
+            if ir["portfolio_code"] == portfolio_code:
+                ir["status"] = portfolio_status
+                code_status = "success"
+        if code_status != "success":
+            return Response({"error": f"No portfolio with code {portfolio_code}"}, status=HTTP_400_BAD_REQUEST)
+        dataorg1["portpolio"] = rot
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
+        field = {"document_name": username}
+        update = {"portpolio": rot}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        return Response({"success": f"Portfolio with code '{portfolio_code}' has been {portfolio_status}d"}, status=status.HTTP_200_OK)
+
+
