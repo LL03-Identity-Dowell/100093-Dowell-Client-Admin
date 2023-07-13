@@ -40,11 +40,17 @@ const Form2: React.FC<Form2Props> = ({ userName }) => {
           console.log(res.data);
           setErrMsg("");
         });
-    } catch (err) {
-      console.log(err);
-      setErrMsg(err?.message);
-    }
-    setIsLoading(false);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error(error);
+          setErrMsg(error.response?.data);
+        } else {
+          console.error("An unknown error occurred:", error);
+          setErrMsg("An unknown error occurred");
+        }
+      } finally {
+        setIsLoading(false);
+      }
   };
 
   // console.log(formInputs);
