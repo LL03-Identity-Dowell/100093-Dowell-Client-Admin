@@ -11,7 +11,7 @@ const Form2 = () => {
 
   const [formInputs, setFormInputs] = useState({
     username: userName,
-    level: "level1",
+    level: "level4",
     item_name: "",
     item_code: "",
     item_details: "",
@@ -35,7 +35,6 @@ const Form2 = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
     await axios
       .post("https://100093.pythonanywhere.com/api/create_item/", formInputs)
       .then((res) => {
@@ -57,9 +56,10 @@ const Form2 = () => {
   return (
     <>
       <ToastContainer position="top-right" />
+
       <div className="lg:w-1/2 border border-[#54595F] card-shadow">
         <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
-          Create Level 1 Items
+          Create Level 4 Items
         </p>
         <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
           <div className="mb-4">

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./utils/ScrollToTop";
 import "./styles/global.css";
+import "react-toastify/dist/ReactToastify.css";
 // import Home from "./pages/Home";
 import ClientAdmin from "./pages/admin/ClientAdmin";
 import AboutUs from "./pages/AboutUs";

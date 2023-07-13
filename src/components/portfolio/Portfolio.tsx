@@ -2,6 +2,7 @@ import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
+import { ToastContainer, toast } from "react-toastify";
 
 interface FormInputs {
   username: string;
@@ -79,6 +80,7 @@ const Portfolio: React.FC = () => {
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
+          toast.success(res.data);
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -95,6 +97,7 @@ const Portfolio: React.FC = () => {
 
   return (
     <>
+      <ToastContainer position="top-right" />
       <div className="mt-8 w-full lg:flex gap-8">
         <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
           <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">

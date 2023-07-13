@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 
 const Form3 = () => {
-  const level1Items = useSelector(
+  const level2Items = useSelector(
     (state: RootState) =>
-      state.adminData.data[0]?.organisations[0]?.level1?.items
+      state.adminData.data[0]?.organisations[0]?.level2?.items
   );
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [status, setStatus] = useState("");
@@ -18,7 +18,8 @@ const Form3 = () => {
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.target.value);
   };
-  const selectedItemData = level1Items.find(
+
+  const selectedItemData = level2Items.find(
     (item) => item.item_name === selectedItem
   );
 
@@ -26,7 +27,7 @@ const Form3 = () => {
   return (
     <div className="lg:w-1/2 border border-[#54595F] card-shadow">
       <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
-        Items created in Level 1
+        Items created in Level 2
       </p>
       <form className="px-[30px] mb-8">
         <div className="mb-4">
@@ -39,7 +40,7 @@ const Form3 = () => {
             id="enable_item"
             className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
           >
-            {level1Items.map((item, index) =>
+            {level2Items.map((item, index) =>
               item.status === "enable" ? (
                 <option key={index} value={item.item_name}>
                   {item.item_name}
@@ -57,7 +58,7 @@ const Form3 = () => {
             id="disable_item"
             className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
           >
-            {level1Items.map((item, index) =>
+            {level2Items.map((item, index) =>
               item.status === "disable" ? (
                 <option key={index}>{item.item_name}</option>
               ) : null
@@ -73,7 +74,7 @@ const Form3 = () => {
             rows={4}
             placeholder=""
             readOnly
-            value={selectedItem ? JSON.stringify(selectedItemData, null, 1)?.slice(1, -1) : ''}
+            value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
             className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
           />
         </div>
