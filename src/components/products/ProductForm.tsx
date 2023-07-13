@@ -17,7 +17,7 @@ const ProductForm = () => {
                 placeholder="Select Product"
               >
                 <option> Select Product </option>
-                {productData.products.map((product) => (
+                {productData?.products?.map((product) => (
                   <option key={product._id} value={product.product_name}>
                     {" "}
                     {product.product_name}{" "}

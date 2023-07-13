@@ -22,7 +22,7 @@ const MembersTab = () => {
           {["Team Member", "User", "Public"].map((team) => {
             return (
               <Tab key={team}
-                 className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 mx-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] outline-none">
+                 className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 mx-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] focus:bg-[#61CE70] outline-none">
                   <FaUser className="text-[#4CAF50] " />
                   <p className="font-roboto text-white font-medium">{team}</p>
                 
