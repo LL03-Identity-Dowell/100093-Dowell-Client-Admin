@@ -1048,3 +1048,32 @@ def update_portfolio_status(request):
         return Response({"success": f"Portfolio with code '{portfolio_code}' has been {portfolio_status}d"}, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def update_item_status(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        item_level = request.data.get('item_level')
+        item_code = request.data.get('item_code')
+        item_status = request.data.get('item_status')
+        code_status = ""  ####################### code_status is used to monitor the status of the code
+        userorg = UserOrg.objects.all().filter(username=username)
+        for i in userorg:
+            dataorg = i.org
+            dataorg1 = json.loads(dataorg)
+        lev = dataorg1["organisations"]
+
+        for ir in lev[0][item_level]["items"]:
+            if ir["item_code"] == item_code:
+                ir["status"] = item_status
+                code_status = "success"
+        if code_status != "success":
+            return Response({"error": f"No item with code {item_code}"},
+                            status=HTTP_400_BAD_REQUEST)
+        dataorg1["organisations"] = lev
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
+
+        field = {"document_name": username}
+        update = {"organisations": lev}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        return Response({"success": f"Item with code '{item_code}' has been {item_status}d"}, status=status.HTTP_200_OK)
