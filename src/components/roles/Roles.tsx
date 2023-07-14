@@ -1,13 +1,22 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent, MouseEvent } from "react";
+import axios from "axios";
+import  { getAdminData } from "../../store/slice/adminData";
 
 
 const Roles = () => {
-
+const dispatch=useDispatch()
+	
 	
 	const rolesdata = useSelector(
 		(state: RootState) => state.adminData.data[0].roles
+	);
+	const currentadmindata = useSelector(
+		(state: RootState) => state.adminData
+	);
+	const username = useSelector(
+		(state: RootState) => state.adminData.data[0].Username
 	);
 
 	const enablerules = rolesdata.filter((r) => r.status == "enable");
@@ -41,18 +50,28 @@ const Roles = () => {
 		role_specification: "",
 		status: "",
 	});
+const [selectedrulestatus, setselectedrulestatus] = useState("..select");
+
+	const formatObject = (obj: Record<string, any>) => {
+		let result = "";
+		Object.entries(obj).forEach(([key, value]) => {
+			result += `'${key}': '${value}'\n`;
+		});
+		return result;
+	};
 
 
-	const formatSelectedRule = (selectedrule: ruleItem): string => {
-  const formattedValue = Object.entries(selectedrule).map(([key, value]) => `'${key}': '${value}'`);
-  return `{ ${formattedValue.join(', ')} }`;
-};
 
-
-
-
+const [rulestatus, setrulestatus] = useState({
+	enablestatus: "..select",
+	disablestatus: "..select",
+});
 	const handledisablerule = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		
+		setrulestatus({
+			enablestatus: "..select",
+			disablestatus: event.target.value,
+		});
+
 		const matchrule = disablerules.find(
 			(item) => item.role_name === event.target.value
 		);
@@ -78,6 +97,11 @@ const Roles = () => {
 
 
 	const handleenablerule = (event: React.ChangeEvent<HTMLSelectElement>) => {
+	
+		setrulestatus({
+			enablestatus: event.target.value,
+			disablestatus: "..select",
+		});
 		const matchrule = enablerules.find(
 			(item) => item.role_name === event.target.value
 		);
@@ -98,6 +122,113 @@ const Roles = () => {
 	};
 
 
+
+
+	const [formData, setFormData] = useState({
+		username: username,
+		level1_item: "..select",
+		level2_item: "..select",
+		level3_item: "..select",
+		level4_item: "..select",
+		level5_item: "..select",
+		security_layer: "..select",
+		role_name: "",
+		role_code: "",
+		status: "enable",
+	});
+
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		try {
+			const response = await axios.post(
+				"https://100093.pythonanywhere.com/api/create_role/",
+				formData
+			);
+			console.log(response.data);
+
+			
+  const updatedAdminData = {
+		...currentadmindata,
+		data: [
+			{
+				...currentadmindata.data[0],
+				roles: [...currentadmindata.data[0].roles, formData],
+			},
+		],
+	};
+			dispatch(getAdminData(updatedAdminData));
+			// Handle the response as needed
+			// Reset the form
+			setFormData({
+				username: "mayowa25",
+				level1_item: "..select",
+				level2_item: "..select",
+				level3_item: "..select",
+				level4_item: "..select",
+				level5_item: "..select",
+				security_layer: "..select",
+				role_name: "",
+				role_code: "",
+				status: "enable",
+			});
+		} catch (error) {
+			console.error(error); // Handle the error appropriately
+		}
+	};
+
+	const handleChange = (e:ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+
+	const changeselectedrulestatus = (e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+		setselectedrulestatus(e.target.value)
+	};
+
+	const updateselectedrulestatus = async (
+		e: MouseEvent<HTMLButtonElement>
+	) => {
+		e.preventDefault();
+		const rulestatusdata = {
+			username: "mayowa25",
+			role_code: selectedrule.role_code,
+			role_status: selectedrulestatus,
+		};
+		try {
+			const response = await axios.post(
+				"https://100093.pythonanywhere.com/api/update_role_status/",
+				rulestatusdata
+			);
+			console.log(response.data);
+
+
+			const updatedRoles = currentadmindata.data[0].roles.map((role) => {
+				if (role.role_code === selectedrule.role_code) {
+					return {
+						...role,
+						status: selectedrulestatus,
+					};
+				}
+				return role;
+			});
+
+			dispatch(
+				getAdminData({
+					...currentadmindata,
+					data: [
+						{
+							...currentadmindata.data[0],
+							roles: updatedRoles,
+						},
+					],
+				})
+			);
+
+		} catch (error) {
+			console.error(error); // Handle the error appropriately
+		}
+	};
 	return (
 		<>
 			<div className="mt-8 w-full lg:flex gap-8">
@@ -111,7 +242,7 @@ const Roles = () => {
 							Create Roles – Define Roles in my organisation
 						</p>
 					</div>
-					<form className="px-[30px] mb-8">
+					<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
 						<div className="mb-4">
 							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 								Select Item in Level 1
@@ -119,7 +250,11 @@ const Roles = () => {
 							<select
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 								required
+								name="level1_item"
+								onChange={handleChange}
+								value={formData.level1_item}
 							>
+								<option value="..select">..select</option>
 								{rolesdata.map((item, index) => (
 									<option key={index} value={item.level1_item}>
 										{item.level1_item}
@@ -131,7 +266,13 @@ const Roles = () => {
 							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 								Select Item in Level 2
 							</label>
-							<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+							<select
+								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+								onChange={handleChange}
+								name="level2_item"
+								value={formData.level2_item}
+							>
+								<option value="..select">..select</option>
 								{rolesdata.map((item, index) => (
 									<option key={index} value={item.level2_item}>
 										{item.level2_item}
@@ -146,7 +287,11 @@ const Roles = () => {
 							<select
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 								placeholder="Select Product"
+								onChange={handleChange}
+								name="level3_item"
+								value={formData.level3_item}
 							>
+								<option value="..select">..select</option>
 								{rolesdata.map((item, index) => (
 									<option key={index} value={item.level3_item}>
 										{item.level3_item}
@@ -158,7 +303,13 @@ const Roles = () => {
 							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 								Select Item in Level 4
 							</label>
-							<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+							<select
+								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+								onChange={handleChange}
+								name="level4_item"
+								value={formData.level4_item}
+							>
+								<option value="..select">..select</option>
 								{rolesdata.map((item, index) => (
 									<option key={index} value={item.level4_item}>
 										{item.level4_item}
@@ -170,10 +321,18 @@ const Roles = () => {
 							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 								Select Item in Level 5
 							</label>
-							<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-								<option>Item 1 </option>
-								<option> Item 2 </option>
-								<option>Item 3 </option>
+							<select
+								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+								onChange={handleChange}
+								name="level5_item"
+								value={formData.level5_item}
+							>
+								<option value="..select">..select</option>
+								{rolesdata.map((item, index) => (
+									<option key={index} value={item.level5_item}>
+										{item.level5_item}
+									</option>
+								))}
 							</select>
 						</div>
 						<div className="mb-4">
@@ -183,7 +342,11 @@ const Roles = () => {
 							<select
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 								required
+								onChange={handleChange}
+								name="security_layer"
+								value={formData.security_layer}
 							>
+								<option value="..select">..select</option>
 								{rolesdata.map((item, index) => (
 									<option key={index} value={item.security_layer}>
 										{item.security_layer}
@@ -200,6 +363,9 @@ const Roles = () => {
 								type="text"
 								placeholder="Role name"
 								required
+								onChange={handleChange}
+								name="role_name"
+								value={formData.role_name}
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							/>
 						</div>
@@ -211,6 +377,9 @@ const Roles = () => {
 								type="text"
 								placeholder="Role code"
 								required
+								name="role_code"
+								value={formData.role_code}
+								onChange={handleChange}
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							/>
 						</div>
@@ -221,6 +390,7 @@ const Roles = () => {
 							<input
 								type="text"
 								placeholder="Role specification"
+								onChange={handleChange}
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							/>
 						</div>
@@ -231,6 +401,7 @@ const Roles = () => {
 							<input
 								type="text"
 								placeholder="Role universal code"
+								onChange={handleChange}
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							/>
 						</div>
@@ -244,7 +415,10 @@ const Roles = () => {
 								className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
 							/>
 						</div>
-						<button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+						<button
+							className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+							type="submit"
+						>
 							Create Role
 						</button>
 					</form>
@@ -353,7 +527,10 @@ const Roles = () => {
 							<select
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 								onChange={handleenablerule}
+								name="enablestatus"
+								value={rulestatus.enablestatus}
 							>
+								<option value="..select">..select</option>
 								{enablerules.map((item, index) => (
 									<option key={index} value={item.role_name}>
 										{item.role_name}
@@ -367,10 +544,11 @@ const Roles = () => {
 							</label>
 							<select
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								value="..select"
 								onChange={handledisablerule}
+								name="disablestatus"
+								value={rulestatus.disablestatus}
 							>
-								<option value="..select"> ..select</option>
+								<option value="..select">..select</option>
 								{disablerules.map((item, index) => (
 									<option key={index} value={item.role_name}>
 										{item.role_name}
@@ -390,7 +568,7 @@ const Roles = () => {
 								value={
 									selectedrule.role_name == ""
 										? ""
-										: `"${formatSelectedRule(selectedrule)}"`
+										: `"${formatObject(selectedrule)}"`
 								}
 							/>
 						</div>
@@ -398,12 +576,17 @@ const Roles = () => {
 							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 								Enable / Disable Selected Role
 							</label>
-							<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-								<option> Enable </option>
-								<option> Disable </option>
+							<select
+								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+								value={selectedrulestatus}
+								onChange={changeselectedrulestatus}
+							>
+								<option value="..select">...select</option>
+								<option value="enable"> Enable </option>
+								<option value="disable"> Disable </option>
 							</select>
 						</div>
-						<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+						<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto" type="button" onClick={updateselectedrulestatus}>
 							Enable / Disable selected Role
 						</button>
 
