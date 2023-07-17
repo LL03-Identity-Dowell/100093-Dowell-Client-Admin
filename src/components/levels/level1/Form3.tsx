@@ -28,7 +28,7 @@ const Form3 = () => {
   };
 
   const selectedItemData = level1Items.find(
-    (item) => item.item_code === selectedItem
+    (item) => item?.item_code === selectedItem
   );
 
 
@@ -55,7 +55,7 @@ const Form3 = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        setStatusErrMsg(error.response?.data);
+        setStatusErrMsg(error.response?.data.error);
       } else {
         console.error("An unknown error occurred:", error);
         setStatusErrMsg("An unknown error occurred");
@@ -85,8 +85,8 @@ const Form3 = () => {
             >
               {level1Items.map((item, index) =>
                 item.status === "enable" ? (
-                  <option key={index} value={item.item_code}>
-                    {item.item_name}
+                  <option key={index} value={item?.item_code}>
+                    {item?.item_name}
                   </option>
                 ) : null
               )}
@@ -102,8 +102,8 @@ const Form3 = () => {
               className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {level1Items.map((item, index) =>
-                item.status === "disable" ? (
-                  <option key={index}>{item.item_name}</option>
+                item?.status === "disable" ? (
+                  <option key={index}>{item?.item_name}</option>
                 ) : null
               )}
             </select>

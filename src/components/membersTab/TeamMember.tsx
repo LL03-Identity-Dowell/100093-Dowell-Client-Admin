@@ -1,11 +1,41 @@
 import { useState } from "react";
 import images from "../images";
 import Modal from "react-modal";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
+import { getAdminData } from "../../store/slice/adminData";
 
 const TeamMember = () => {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
   const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string>("");
+  const [selectedItems, setSelectedItems] = useState<string>("");
+
+  const [filteredNotes, setFilteredNotes] = useState([]);
+
+  const team_member = useSelector(
+    (state: RootState) => state.adminData.data[0]?.members.team_members
+  );
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedItemName = event.target.value;
+    setSelectedItem(selectedItemName);
+  };
+  const handleSelectOnChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedItemName = event.target.value;
+    setSelectedItems(selectedItemName);
+  };
+  const selectedItemData = team_member.accept_members.find(
+    (item) => item.name === selectedItem
+  );
+  const selectedItemsData = team_member.accept_members.find(
+    (item) => item?.member_code === selectedItems
+  );
+
+  const dispatch = useDispatch();
+
+  // console.log(team_member, selectedItemData, selectedItem, "team_member");
 
   const openPrivacyModal = () => {
     setIsPrivacyModalOpen(true);
@@ -22,6 +52,22 @@ const TeamMember = () => {
   const closeUploadLinkModal = () => {
     setUploadLinkModal(false);
   };
+
+  // const handleSearch = (e) => {
+  //   const keyword = e.target.value;
+
+  //   if (keyword !== "") {
+  //     const results = filteredNotes?.filter((data) => {
+  //       return (
+  //         data?.first_name?.toLowerCase().includes(keyword.toLowerCase()) ||
+  //         data?.last_name?.toLowerCase().includes(keyword.toLowerCase())
+  //       );
+  //     });
+  //     dispatch(getAdminData(results));
+  //   } else {
+  //     dispatch(getAdminData(filteredNotes));
+  //   }
+  // };
 
   return (
     <>
@@ -140,30 +186,38 @@ const TeamMember = () => {
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Team Members not having Portfolio
               </label>
-              <select
+              <select onChange={handleSelectOnChange}
+              id='no_portfolio'
+                value={selectedItems}
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
-                <option> Member 01 </option>
-                <option> Member 02 </option>
-                <option> Member 03 </option>
-                <option> Member 04 </option>
-                <option> Member 05 </option>
+                <option>...Select...</option>
+                {team_member.pending_members.map((members, index) => (
+                  <option key={index} value={members?.member_code}>
+                    {" "}
+                    {members?.name}{" "}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Team Members having assigned Portfolio
               </label>
-              <select
+              <select  onChange={handleSelectOnChange}
+              id='have_portfolio'
+                value={selectedItems}
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
-                <option> Member 01 </option>
-                <option> Member 02 </option>
-                <option> Member 03 </option>
-                <option> Member 04 </option>
-                <option> Member 05 </option>
+                <option>...Select...</option>
+                {team_member.accept_members.map((members, index) => (
+                  <option key={index} value={members?.member_code}>
+                    {" "}
+                    {members?.first_name} {members?.last_name}{" "}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -173,6 +227,7 @@ const TeamMember = () => {
               <input
                 type="text"
                 placeholder="Name"
+                // onChange={(event) => handleSearch(event)}
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               />
             </div>
@@ -183,6 +238,8 @@ const TeamMember = () => {
               <textarea
                 rows={4}
                 placeholder="Member details"
+                readOnly
+                value={JSON.stringify(selectedItemsData, null, 1)?.slice(1, -1)}
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>
@@ -199,14 +256,18 @@ const TeamMember = () => {
                 Invited Team Members
               </label>
               <select
+                onChange={handleSelectChange}
+                value={selectedItem}
+                id="invited_team_members"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                 placeholder="Select Product"
               >
-                <option> Member 01 </option>
-                <option> Member 02 </option>
-                <option> Member 03 </option>
-                <option> Member 04 </option>
-                <option> Member 05 </option>
+                <option>...Select...</option>
+                {team_member.accept_members.map((members, index) => (
+                  <option key={index} value={members.name}>
+                    {members?.first_name} {members?.last_name}{" "}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -226,6 +287,8 @@ const TeamMember = () => {
               <textarea
                 rows={4}
                 placeholder="Member details"
+                readOnly
+                value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>

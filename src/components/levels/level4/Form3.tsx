@@ -53,7 +53,7 @@ const Form3 = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        setStatusErrMsg(error.response?.data);
+        setStatusErrMsg(error.response?.data.error);
       } else {
         console.error("An unknown error occurred:", error);
         setStatusErrMsg("An unknown error occurred");

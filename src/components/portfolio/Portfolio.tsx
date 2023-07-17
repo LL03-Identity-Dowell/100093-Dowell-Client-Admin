@@ -78,7 +78,6 @@ const Portfolio: React.FC = () => {
       portfolio_name: formInputs.portfolio_name,
       portfolio_code: formInputs.portfolio_code,
     };
-    console.log(data, "data");
 
     try {
       await axios
