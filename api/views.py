@@ -1045,7 +1045,8 @@ def update_portfolio_status(request):
         update = {"portpolio": rot}
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
-        return Response({"success": f"Portfolio with code '{portfolio_code}' has been {portfolio_status}d"}, status=status.HTTP_200_OK)
+        return Response({"success": f"Portfolio with code '{portfolio_code}' has been {portfolio_status}d"},
+                        status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -1077,3 +1078,29 @@ def update_item_status(request):
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
         return Response({"success": f"Item with code '{item_code}' has been {item_status}d"}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def save_device_layers(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        category = request.data.get('category')
+        data = request.data.get('data')
+        data = eval(data)
+        field = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field, "update")
+        r = json.loads(login)
+        layers = r["data"][0]["security_layers"]
+        for item in data:
+            for key, value in item.items():
+                if value not in layers[key][category]:
+                    layers[key][category].append(value)
+                elif value in layers[key][category]:
+                    return Response({"error": f"{value} already exists in {key}"}, status=status.HTTP_400_BAD_REQUEST)
+
+        update = {"security_layers": layers}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+
+        return Response({"success": f"{category} has been updated successfully"}, status=status.HTTP_200_OK)
