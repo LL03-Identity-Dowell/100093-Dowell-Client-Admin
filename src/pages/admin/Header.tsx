@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
@@ -13,6 +13,7 @@ const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
 
+  const logout_url = 'https://100014.pythonanywhere.com/sign-out';
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,10 +26,16 @@ const Header = () => {
         window.location.origin + window.location.pathname;
       window.history.pushState({}, "", urlWithoutSessionId);
     }
+    
   }, []);
 
   const sessionId = localStorage.getItem("sessionId");
+console.log(sessionId, 'sessionId');
 
+{!sessionId && (
+  location.href = logout_url
+
+)}
   useEffect(() => {
     const fetchData = async () => {
       // const sessionId = "x4qyyvyqunur0hexq8jnxdq5o8oap4yc";
@@ -53,7 +60,7 @@ const Header = () => {
 
   const logout = () => {
     localStorage.removeItem("sessionId");
-    location.href = "https://100014.pythonanywhere.com/sign-out";
+    location.href = logout_url;
   };
   return (
     <>
