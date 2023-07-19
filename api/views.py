@@ -1104,3 +1104,22 @@ def save_device_layers(request):
                                  "update", field, update)
 
         return Response({"success": f"{category} has been updated successfully"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_all_details(request):
+    field_c = {}
+    login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                             "fetch", field_c, "nil")
+    resp = json.loads(login)
+    data = resp['data']
+    user_data = []
+    for user in data:
+        user_dict = {
+            "username": user['document_name'],
+            "owner_name": user['profile_info']['first_name'],
+            "first_name": user['profile_info']['first_name'],
+            "last_name": user['profile_info']['last_name'],
+            "org_name": user['organisations'][0]['org_name'] if user['organisations'] else ""
+        }
+        user_data.append(user_dict)
+    return Response(user_data, status=status.HTTP_200_OK)
