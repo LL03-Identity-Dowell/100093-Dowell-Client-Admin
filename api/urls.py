@@ -2,7 +2,7 @@ from django.urls import path
 from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdate, updateOrg, portfolioview, getProduct, \
     GetDocumentProducts, update_products_client_admin, product_control_platform_admin, MemberControl, filter_portfolio, \
     settings, workspace_name, item_name, create_item, get_data, create_portfolio, create_role, get_layer_data, \
-    update_role_status, update_portfolio_status, update_item_status, save_device_layers
+    update_role_status, update_portfolio_status, update_item_status, save_device_layers, get_all_details
 
 urlpatterns = [
     path('userinfo/', sessionView,name="userinfo"),
@@ -29,5 +29,6 @@ urlpatterns = [
     path('update_portfolio_status/', update_portfolio_status, name='update_portfolio_status'),
     path('update_item_status/', update_item_status, name='update_item_status'),
     path('save_device_layers/', save_device_layers, name='save_device_layers'),
+    path('get_all_details/', get_all_details, name='get_all_details'),
 
 ]
