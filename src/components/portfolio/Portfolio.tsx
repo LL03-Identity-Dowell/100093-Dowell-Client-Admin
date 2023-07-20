@@ -14,6 +14,7 @@ interface FormInputs {
   role: string;
   portfolio_name: string;
   portfolio_code: string;
+  portfolio_status: string;
 }
 
 const Portfolio: React.FC = () => {
@@ -27,10 +28,13 @@ const Portfolio: React.FC = () => {
     role: "",
     portfolio_name: "",
     portfolio_code: "",
+    portfolio_status: "",
   });
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingStatus, setIsLoadingStatus] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [statusErrMsg, setStatusErrMsg] = useState("");
 
   const portfolio = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio
@@ -57,6 +61,8 @@ const Portfolio: React.FC = () => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
 
+  console.log(formInputs);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -72,7 +78,6 @@ const Portfolio: React.FC = () => {
       portfolio_name: formInputs.portfolio_name,
       portfolio_code: formInputs.portfolio_code,
     };
-    console.log(data, "data");
 
     try {
       await axios
@@ -92,6 +97,40 @@ const Portfolio: React.FC = () => {
       }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSubmitStatus = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoadingStatus(true);
+
+    const data = {
+      username: userName,
+      portfolio_code: formInputs.portfolio_code,
+      portfolio_status: formInputs.portfolio_status.toLowerCase(),
+    };
+
+    try {
+      await axios
+        .post(
+          "https://100093.pythonanywhere.com/api/update_portfolio_status/",
+          data
+        )
+        .then((res) => {
+          console.log(res.data);
+          setStatusErrMsg("");
+          toast.success(res.data.success);
+        });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+        setStatusErrMsg(error.response?.data);
+      } else {
+        console.error("An unknown error occurred:", error);
+        setStatusErrMsg("An unknown error occurred");
+      }
+    } finally {
+      setIsLoadingStatus(false);
     }
   };
 
@@ -289,7 +328,7 @@ const Portfolio: React.FC = () => {
             Show Assigned Portfolios, Search in Portfolios
           </h2>
 
-          <form className=" mb-8 mt-12">
+          <div className=" mb-8 mt-12">
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Member Type
@@ -408,26 +447,45 @@ const Portfolio: React.FC = () => {
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Enable / Disable Selected Portfolio
-              </label>
-              <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-                <option> Enable </option>
-                <option> Disable </option>
-              </select>
-            </div>
-            <button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
-              Enable / Disable selected Portfolio
-            </button>
 
-            <button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+            <form onSubmit={handleSubmitStatus}>
+              <div className="mb-4">
+                <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                  Enable / Disable Selected Portfolio
+                </label>
+                <select
+                  required
+                  onChange={handleSelectStatus}
+                  id="portfolio_status"
+                  className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+                >
+                  <option> ...Select... </option>
+                  <option> Enable </option>
+                  <option> Disable </option>
+                </select>
+              </div>
+              <button
+                disabled={isLoadingStatus}
+                className={`w-full h-10 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto ${
+                  isLoadingStatus ? "hover:bg-[#7a7a7a] opacity-50" : ""
+                }`}
+              >
+                Enable / Disable selected Portfolio
+              </button>
+              {statusErrMsg && (
+                <p className="text-xs text-[#FF0000] text-center pt-2">
+                  {statusErrMsg}
+                </p>
+              )}
+            </form>
+
+            <button className="w-full h-10 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
               Duplicate selected Portfolio to create new
             </button>
-            <button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+            <button className="w-full h-10 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
               Refresh Search
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </>

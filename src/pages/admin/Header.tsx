@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
@@ -13,6 +13,7 @@ const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
 
+  const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -21,17 +22,20 @@ const Header = () => {
 
     if (session_id) {
       localStorage.setItem("sessionId", session_id);
-      const urlWithoutSessionId =
-        window.location.origin + window.location.pathname;
-      window.history.pushState({}, "", urlWithoutSessionId);
+      location.href = "/";
     }
   }, []);
 
   const sessionId = localStorage.getItem("sessionId");
 
+  {
+    !sessionId &&
+      (location.href =
+        "https://100014.pythonanywhere.com/?redirect_url=https://100079.pythonanywhere.com/home");
+  }
+
   useEffect(() => {
     const fetchData = async () => {
-      // const sessionId = "x4qyyvyqunur0hexq8jnxdq5o8oap4yc";
       if (sessionId) {
         const url = "https://100014.pythonanywhere.com/api/logininfo/";
         axios
@@ -53,25 +57,25 @@ const Header = () => {
 
   const logout = () => {
     localStorage.removeItem("sessionId");
-    location.href = "https://100014.pythonanywhere.com/sign-out";
+    location.href = logout_url;
   };
   return (
     <>
       <section className="border-y border-[#ff0000] lg:pl-12">
         <h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
-          Hi {userData.userinfo.first_name} {userData.userinfo.last_name}, you
-          are login as {userData.userinfo.User_type}
+          Hi {userData?.userinfo?.first_name} {userData?.userinfo?.last_name},
+          you are login as {userData?.userinfo?.User_type}
         </h2>
         <p className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]">
-          Session starts at {userData.userinfo.dowell_time},
-          {userData.userinfo.user_country}
+          Session starts at {userData?.userinfo?.dowell_time},
+          {userData?.userinfo?.user_country}
         </p>
 
         <div className="lg:flex justify-between">
           <span className="flex items-center lg:justify-between justify-around my-8 lg:w-[30%]">
-            {userData.userinfo.profile_img ? (
+            {userData?.userinfo?.profile_img ? (
               <img
-                src={userData.userinfo.profile_img}
+                src={userData?.userinfo?.profile_img}
                 alt="profile image"
                 className="card-shadow w-[150px] h-[150px]"
               />
@@ -80,9 +84,9 @@ const Header = () => {
                 <img src={images.empty_image} alt="'" />
               </div>
             )}
-            {userData.userinfo.org_img ? (
+            {userData?.userinfo?.org_img ? (
               <img
-                src={userData.userinfo.org_img}
+                src={userData?.userinfo?.org_img}
                 alt="organization logo"
                 className="card-shadow w-[150px] h-[150px]"
               />
