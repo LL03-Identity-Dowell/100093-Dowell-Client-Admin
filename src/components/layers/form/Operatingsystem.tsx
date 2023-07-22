@@ -9,7 +9,7 @@ export default function Operatingsystem() {
 	const linux = os.filter((item) => item.os == "Linux");
 	const windows = os.filter((item) => item.os == "Windows");
 	const android = os.filter((item) => item.os == "Android");
-	const ios = os.filter((item) => item.os == "IOS");
+	// const ios = os.filter((item) => item.os == "IOS");
 	const others = os.filter((item) => item.os == "Others not listed above");
 
 	interface layerform {
