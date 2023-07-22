@@ -1176,7 +1176,8 @@ def create_team_member(request):
                                  "fetch", field_c, "nil")
         resp = json.loads(login)
         data = resp['data']
-        orgnames = data[0]['organisations'][0]['org_name']
+        # orgnames = data[0]['organisations'][0]['org_name']
+        orgnames = ""
         members_data = data[0]['members']
         accepted_members = members_data['team_members']['accept_members']
         accepted_member_codes = [member.get('member_code') for member in accepted_members]
@@ -1226,7 +1227,7 @@ def create_user_member(request):
                                  "fetch", field_c, "nil")
         resp = json.loads(login)
         data = resp['data']
-        orgnames = data[0]['organisations'][0]['org_name']
+        orgnames = ""
         members_data = data[0]['members']
         accepted_members = members_data['guest_members']['accept_members']
         accepted_member_codes = [member.get('member_code') for member in accepted_members]
