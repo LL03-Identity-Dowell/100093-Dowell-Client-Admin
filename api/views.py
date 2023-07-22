@@ -1,3 +1,5 @@
+import base64
+
 from django.shortcuts import render, HttpResponse, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -1086,30 +1088,53 @@ def save_device_layers(request):
         username = request.data.get("username")
         category = request.data.get('category')
         data = request.data.get('data')
-        data = eval(data)
         field = {"document_name": username}
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "fetch", field, "update")
         r = json.loads(login)
+        categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength", "id_verification"]
         layers = r["data"][0]["security_layers"]
-        for item in data:
-            for key, value in item.items():
-                if value not in layers[key][category]:
-                    layers[key][category].append(value)
-                elif value in layers[key][category]:
-                    return Response({"error": f"{value} already exists in {key}"}, status=status.HTTP_400_BAD_REQUEST)
-
+        devices = ["Laptop/Desktop", "Mobile Phone", "Tablet/Ipad", "Others not listed above"]
+        os = ["Windows", "Mac OS", "Linux", "Android", "IOS", "Others not listed above"]
+        browsers = ["Chrome", "Safari", "Bing", "Firefox", "Edge", "Opera", "Others not listed above"]
+        layers_list = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"]
+        connection_type = ["Mobile Data", "Office Wifi/Secured Wifi", "Public Wifi", "Others not listed above"]
+        login_type = ["User Name & Password", "Face ID", "Voice ID", "Biometric ID", "Video ID", "Others not listed above"]
+        password_strength = ["Minimum 8 characters", "Minimum 10 characters", "Minimum 12 characters", "Minimum 16 characters", "Others not listed above"]
+        id_verification = ["Verified ID", "ID not verified", "Phone number verified", "Phone number not verified", "Email verified", "Email not verified", "Others not listed above"]
+        if category not in categories:
+            return Response({"error": f"{category} is not a valid category"}, status=status.HTTP_400_BAD_REQUEST)
+        for key, value in data.items():
+            if category == 'browsers' and key not in browsers:
+                return Response({"error": f"{key} is not an accepted browser type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'devices' and key not in devices:
+                return Response({"error": f"{key} is not an accepted device type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'os' and key not in os:
+                return Response({"error": f"{key} is not an accepted os type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'connection_type' and key not in connection_type:
+                return Response({"error": f"{key} is not an accepted internet connection type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'login_type' and key not in login_type:
+                return Response({"error": f"{key} is not an accepted login type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'password_strength' and key not in password_strength:
+                return Response({"error": f"{key} is not an password strength type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'id_verification' and key not in id_verification:
+                return Response({"error": f"{key} is not an accepted verification status type"}, status=status.HTTP_400_BAD_REQUEST)
+        for layer in layers_list:
+            layers[layer][category].clear()
+        for key, value in data.items():
+            layers[value][category].append(key)
         update = {"security_layers": layers}
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
 
-        return Response({"success": f"{category} has been updated successfully"}, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])
 def get_all_details(request):
     if request.method == 'POST':
-        username = request.data.get("username")         
+        username = request.data.get("username")
         if username == "uxliveadmin":
             field_c = {}
             login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
@@ -1129,3 +1154,104 @@ def get_all_details(request):
             }
             user_data.append(user_dict)
         return Response(user_data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_team_member(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        member_name = request.data.get('member_name')
+        member_code = request.data.get('member_code')
+        member_spec = request.data.get('member_spec', "")
+        member_u_code = request.data.get('member_u_code', "")
+        member_det = request.data.get('member_det', "")
+        membername = base64.b64encode(bytes(member_name, 'utf-8')).decode()  # bytes
+        membercode = base64.b64encode(bytes(member_code, 'utf-8')).decode()
+        memberspec = base64.b64encode(bytes(member_spec, 'utf-8')).decode()
+        memberucode = base64.b64encode(bytes(member_u_code, 'utf-8')).decode()
+        memberdet = base64.b64encode(bytes(member_det, 'utf-8')).decode()
+        teammembers = base64.b64encode(bytes("team_members", 'utf-8')).decode()
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        resp = json.loads(login)
+        data = resp['data']
+        # orgnames = data[0]['organisations'][0]['org_name']
+        orgnames = ""
+        members_data = data[0]['members']
+        accepted_members = members_data['team_members']['accept_members']
+        accepted_member_codes = [member.get('member_code') for member in accepted_members]
+        orgname = base64.b64encode(bytes(orgnames, 'utf-8')).decode()
+        link = f"https://100014.pythonanywhere.com/?org={orgname}&type={teammembers}&name={membername}&code={membercode}&spec={memberspec}&u_code={memberucode}&detail={memberdet}"
+
+        # Check if member_code already exists in accepted or pending member codes
+        if member_code in accepted_member_codes:
+            return Response({"error": "Member code already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        userorg = UserOrg.objects.all().filter(username=username)
+        if userorg:
+            for i in userorg:
+                o = i.org
+                odata = json.loads(o)
+        tmembers = {"name": member_name, "member_code": member_code, "member_spec": member_spec,
+                    "member_uni_code": member_u_code, "member_details": member_det, "link": link,
+                    "status": "unused"}
+        odata["members"]["team_members"]["pending_members"].append(tmembers)
+        field = {"document_name": username}
+        mem = odata["members"]
+        update = {"members": mem}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        response_data = {"link": link}
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_user_member(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        user_name = request.data.get('user_name')
+        user_code = request.data.get('user_code')
+        user_spec = request.data.get('user_spec', "")
+        user_u_code = request.data.get('user_u_code', "")
+        user_det = request.data.get('user_det', "")
+        membername = base64.b64encode(bytes(user_name, 'utf-8')).decode()  # bytes
+        membercode = base64.b64encode(bytes(user_code, 'utf-8')).decode()
+        memberspec = base64.b64encode(bytes(user_spec, 'utf-8')).decode()
+        memberucode = base64.b64encode(bytes(user_u_code, 'utf-8')).decode()
+        memberdet = base64.b64encode(bytes(user_det, 'utf-8')).decode()
+        teammembers = base64.b64encode(bytes("guest_members", 'utf-8')).decode()
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        resp = json.loads(login)
+        data = resp['data']
+        orgnames = ""
+        members_data = data[0]['members']
+        accepted_members = members_data['guest_members']['accept_members']
+        accepted_member_codes = [member.get('member_code') for member in accepted_members]
+        orgname1 = base64.b64encode(bytes(orgnames, 'utf-8')).decode()
+        link = f"https://100014.pythonanywhere.com/?org={orgname1}&type={teammembers}&name={membername}&code={membercode}&spec={memberspec}&u_code={memberucode}&detail={memberdet}"
+
+        # Check if member_code already exists in accepted or pending member codes
+        if user_code in accepted_member_codes:
+            return Response({"error": "Guest Member code already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        userorg = UserOrg.objects.all().filter(username=username)
+        if userorg:
+            for i in userorg:
+                o = i.org
+                odata = json.loads(o)
+        gmembers = {"name": user_name, "member_code": user_code, "member_spec": user_spec,
+                    "member_uni_code": user_u_code, "member_details": user_det, "link": link,
+                    "status": "unused"}
+        odata["members"]["guest_members"]["pending_members"].append(gmembers)
+        field = {"document_name": username}
+        mem = odata["members"]
+        update = {"members": mem}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        response_data = {"link": link}
+        return Response(response_data, status=status.HTTP_200_OK)
