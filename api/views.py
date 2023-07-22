@@ -985,11 +985,11 @@ def get_layer_data(request):
             return Response({"error": "Please check the layer and category to ensure data is correct"},
                             status=HTTP_200_OK)
 
-        result = []
+        result = {}
         for layer_number, layer_data in security_layers.items():
             category_data = layer_data[category]
             for data in category_data:
-                result.append({category: data, "layer": layer_number})
+                result[data] = layer_number
 
         return Response(result, status=HTTP_200_OK)
 
