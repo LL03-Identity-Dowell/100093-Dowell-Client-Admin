@@ -1,25 +1,9 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/Store";
+import { useState } from "react";
 import images from "../../images";
 import Modal from "react-modal";
 
 const Form3 = () => {
-  const [selectedItem, setSelectedItem] = useState<string>("");
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
-
-  const team_member = useSelector(
-    (state: RootState) => state.adminData.data[0]?.members.team_members
-  );
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedItemName = event.target.value;
-    setSelectedItem(selectedItemName);
-  };
-
-  const selectedItemData = team_member.accept_members.find(
-    (item) => item.name === selectedItem
-  );
 
   const openUploadLinkModal = () => {
     setUploadLinkModal(true);
@@ -34,27 +18,23 @@ const Form3 = () => {
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
         <form className="px-4">
           <div className="mb-4 mt-8">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
-              Invited Team Members
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Invited Users
             </label>
             <select
-              onChange={handleSelectChange}
-              value={selectedItem}
-              id="invited_team_members"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              <option>...Select...</option>
-              {team_member.accept_members.map((members, index) => (
-                <option key={index} value={members.name}>
-                  {members?.first_name} {members?.last_name}{" "}
-                </option>
-              ))}
+              <option> Member 01 </option>
+              <option> Member 02 </option>
+              <option> Member 03 </option>
+              <option> Member 04 </option>
+              <option> Member 05 </option>
             </select>
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Search Invited Team Members
+              Search Invited Users
             </label>
             <input
               type="text"
@@ -64,27 +44,25 @@ const Form3 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Details of Inivited Team member
+              Details of Inivted User
             </label>
             <textarea
               rows={4}
               placeholder="Member details"
-              readOnly
-              value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
               className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
             />
           </div>
           <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-            Cancel Selected Team Member Invitation
+            Cancel Selected User Invitation
           </button>
           <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto my-20">
-            Duplicate selected member invitation to create new
+            Duplicate selected User invitation to create new
           </button>
         </form>
-
         <hr className="border-2 border-[#FF0000] mb-8" />
+
         <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
-          Common Invitation to join as TEAM MEMBER to my organisation
+          Common Invitation to join as USER to my organisation
           <span>
             If you don't have any link,{" "}
             <button
@@ -110,7 +88,7 @@ const Form3 = () => {
             />
           </div>
           <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-            Import Team Members
+            Import Users
           </button>
         </form>
         <form className="px-4 my-8">

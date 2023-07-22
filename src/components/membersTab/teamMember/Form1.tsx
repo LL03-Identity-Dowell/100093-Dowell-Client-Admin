@@ -1,10 +1,23 @@
-import Modal from 'react-modal';
-import { useState } from 'react';
-import images from '../../images';
+import Modal from "react-modal";
+import { ChangeEvent, useState } from "react";
+import images from "../../images";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/Store";
+import { ToastContainer, toast } from "react-toastify";
 
 const Form1 = () => {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+  const [formInputs, setFormInputs] = useState({
+    member_name: "",
+    member_code: "",
+    member_spec: "",
+    member_u_code: "",
+    member_det: "",
+  });
 
   const openPrivacyModal = () => {
     setIsPrivacyModalOpen(true);
@@ -14,115 +27,182 @@ const Form1 = () => {
     setIsPrivacyModalOpen(false);
   };
 
+  const userName = useSelector(
+    (state: RootState) => state.adminData.data[0]?.Username
+  );
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+  };
+
+  const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setFormInputs({ ...formInputs, member_det: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const data = {
+      username: userName,
+      member_name: "anthony",
+      member_code: "12344",
+      member_spec: "",
+      member_u_code: "",
+      member_det: "",
+    };
+
+    try {
+      await axios
+        .post(
+          "https://100093.pythonanywhere.com/api/create_team_member/",
+          data
+        )
+        .then((res) => {
+          console.log(res.data);
+          setErrMsg("");
+          toast.success(res.data);
+        });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+        setErrMsg(error.response?.data);
+      } else {
+        console.error("An unknown error occurred:", error);
+        setErrMsg("An unknown error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
+      <ToastContainer position="top-right" />
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-          <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
-            <p>TEAM MEMBERS</p>
-            <p>{"<Total active team members>"}</p>
-          </span>
-          <div className="p-[30px]  my-20">
-            <p className="text-[#FF0000] text-lg font-roboto font-semibold">
-              Invite TEAM MEMBER to my organisation
-            </p>
-          </div>
-          <form className="px-[30px] mb-8">
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Team Member Name
-              </label>
-              <input
-                type="text"
-                placeholder="Member name"
-                required
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Team Member Code (Unique)
-              </label>
-              <input
-                type="text"
-                placeholder="Member code"
-                required
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Team Member Specifications
-              </label>
-              <input
-                type="text"
-                placeholder="Member specifications"
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Team Member Universal Code
-              </label>
-              <input
-                type="text"
-                placeholder="Member universal code"
-                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Team Member Details
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Member details"
-                className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-              />
-            </div>
-            <div className="flex items-center gap-x-2 py-8">
-              <p className="text-[#548625]">
-                Do you accept our{" "}
-                <button
-                  className="text-black"
-                  type="button"
-                  onClick={openPrivacyModal}
-                >
-                  policies?
-                </button>{" "}
-              </p>
-              <input type="checkbox" />
-            </div>
-            <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-              Create Team Member Invitation Link
-            </button>
-
-            <span className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold flex flex-col items-center">
-              <p>Team Member Invitation Link</p>
-            </span>
-
-            <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-              Copy invitation link
-            </button>
-          </form>
-          <form className="border-t border-[#FF0000] mb-8">
-            <div className="px-4 mt-8">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Email
-              </label>
-              <input
-                type="text"
-                placeholder="Email of invitee"
-                required
-                className="outline-none w-full h-12 px-4 mb-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              />
-              <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-                Send invitation link in email
-              </button>
-            </div>
-          </form>
+        <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+          <p>TEAM MEMBERS</p>
+          <p>{"<Total active team members>"}</p>
+        </span>
+        <div className="p-[30px]  my-20">
+          <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+            Invite TEAM MEMBER to my organisation
+          </p>
         </div>
+        <form className="px-[30px]" onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Team Member Name
+            </label>
+            <input
+              type="text"
+              placeholder="Member name"
+              required
+              onChange={handleOnChange}
+              id="member_name"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Team Member Code (Unique)
+            </label>
+            <input
+              type="text"
+              placeholder="Member code"
+              required
+              onChange={handleOnChange}
+              id="member_code"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Team Member Specifications
+            </label>
+            <input
+              type="text"
+              placeholder="Member specifications"
+              onChange={handleOnChange}
+              id="member_spec"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Team Member Universal Code
+            </label>
+            <input
+              type="text"
+              placeholder="Member universal code"
+              onChange={handleOnChange}
+              id="member_u_code"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Team Member Details
+            </label>
+            <textarea
+              rows={4}
+              placeholder="Member details"
+              onChange={handleOnChangeTextArea}
+              id="member_det"
+              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+            />
+          </div>
+          <div className="flex items-center gap-x-2 py-8">
+            <p className="text-[#548625]">
+              Do you accept our{" "}
+              <button
+                className="text-black"
+                type="button"
+                onClick={openPrivacyModal}
+              >
+                policies?
+              </button>{" "}
+            </p>
+            <input type="checkbox" />
+          </div>
+          <button
+            disabled={isLoading}
+            className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
+              isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
+            }`}
+          >
+            Create Team Member Invitation Link
+          </button>
+          <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
+        </form>
 
-        <Modal
+        <span className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold flex flex-col items-center">
+          <p>Team Member Invitation Link</p>
+        </span>
+
+        <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+          Copy invitation link
+        </button>
+
+        <form className="border-t border-[#FF0000] my-8">
+          <div className="px-4 mt-8">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Email
+            </label>
+            <input
+              type="text"
+              placeholder="Email of invitee"
+              required
+              className="outline-none w-full h-12 px-4 mb-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+            <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+              Send invitation link in email
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <Modal
         style={{
           overlay: {
             position: "fixed",
@@ -302,7 +382,7 @@ const Form1 = () => {
         </div>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default Form1
+export default Form1;
