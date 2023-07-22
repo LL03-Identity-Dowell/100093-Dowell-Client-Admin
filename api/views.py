@@ -1088,48 +1088,47 @@ def save_device_layers(request):
         username = request.data.get("username")
         category = request.data.get('category')
         data = request.data.get('data')
-        data = eval(data)
         field = {"document_name": username}
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "fetch", field, "update")
         r = json.loads(login)
-        categories = ["layers", "browsers", "devices", "os", "internet connection type", "login type", "password strength", "id verification status"]
+        categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength", "id_verification"]
         layers = r["data"][0]["security_layers"]
         devices = ["Laptop/Desktop", "Mobile Phone", "Tablet/Ipad", "Others not listed above"]
         os = ["Windows", "Mac OS", "Linux", "Android", "IOS", "Others not listed above"]
         browsers = ["Chrome", "Safari", "Bing", "Firefox", "Edge", "Opera", "Others not listed above"]
-        internet_connection_type = []
-        login_type = []
-        password_strength = []
-        id_verification_status = []
+        layers_list = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"]
+        connection_type = ["Mobile Data", "Office Wifi/Secured Wifi", "Public Wifi", "Others not listed above"]
+        login_type = ["User Name & Password", "Face ID", "Voice ID", "Biometric ID", "Video ID", "Others not listed above"]
+        password_strength = ["Minimum 8 characters", "Minimum 10 characters", "Minimum 12 characters", "Minimum 16 characters", "Others not listed above"]
+        id_verification = ["Verified ID", "ID not verified", "Phone number verified", "Phone number not verified", "Email verified", "Email not verified", "Others not listed above"]
         if category not in categories:
             return Response({"error": f"{category} is not a valid category"}, status=status.HTTP_400_BAD_REQUEST)
-        for item in data:
-            for key, value in item.items():
-                if category == 'browsers' and value not in browsers:
-                    return Response({"error": f"{value} is not an accepted browser type"}, status=status.HTTP_400_BAD_REQUEST)
-                elif category == 'devices' and value not in devices:
-                    return Response({"error": f"{value} is not an accepted device type"}, status=status.HTTP_400_BAD_REQUEST)
-                elif category == 'os' and value not in os:
-                    return Response({"error": f"{value} is not an accepted os type"}, status=status.HTTP_400_BAD_REQUEST)
-                elif category == 'internet connection type ' and value not in internet_connection_type:
-                    return Response({"error": f"{value} is not an accepted internet connection type"}, status=status.HTTP_400_BAD_REQUEST)
-                elif category == 'login type' and value not in login_type:
-                    return Response({"error": f"{value} is not an accepted login type"}, status=status.HTTP_400_BAD_REQUEST)
-                elif category == 'password strength' and value not in password_strength:
-                    return Response({"error": f"{value} is not an password strength type"}, status=status.HTTP_400_BAD_REQUEST)
-                elif category == 'id verification status' and value not in id_verification_status:
-                    return Response({"error": f"{value} is not an accepted verification status type"}, status=status.HTTP_400_BAD_REQUEST)
-                if value not in layers[key][category]:
-                    layers[key][category].append(value)
-                # elif value in layers[key][category]:
-                #     return Response({"error": f"{value} already exists in {key}"}, status=status.HTTP_400_BAD_REQUEST)
-
+        for key, value in data.items():
+            if category == 'browsers' and key not in browsers:
+                return Response({"error": f"{key} is not an accepted browser type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'devices' and key not in devices:
+                return Response({"error": f"{key} is not an accepted device type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'os' and key not in os:
+                return Response({"error": f"{key} is not an accepted os type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'connection_type' and key not in connection_type:
+                return Response({"error": f"{key} is not an accepted internet connection type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'login_type' and key not in login_type:
+                return Response({"error": f"{key} is not an accepted login type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'password_strength' and key not in password_strength:
+                return Response({"error": f"{key} is not an password strength type"}, status=status.HTTP_400_BAD_REQUEST)
+            elif category == 'id_verification' and key not in id_verification:
+                return Response({"error": f"{key} is not an accepted verification status type"}, status=status.HTTP_400_BAD_REQUEST)
+        for layer in layers_list:
+            layers[layer][category].clear()
+        for key, value in data.items():
+            layers[value][category].append(key)
         update = {"security_layers": layers}
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
 
-        return Response({"success": f"{category} successfully updated"}, status=status.HTTP_200_OK)
+        return Response(data, status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])
