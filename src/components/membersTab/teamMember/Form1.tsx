@@ -45,11 +45,11 @@ const Form1 = () => {
 
     const data = {
       username: userName,
-      member_name: "anthony",
-      member_code: "12344",
-      member_spec: "",
-      member_u_code: "",
-      member_det: "",
+      member_name: formInputs.member_name,
+      member_code: formInputs.member_code,
+      member_spec: formInputs.member_spec,
+      member_u_code: formInputs.member_u_code,
+      member_det: formInputs.member_det,
     };
 
     try {

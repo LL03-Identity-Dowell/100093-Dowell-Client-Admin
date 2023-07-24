@@ -44,7 +44,7 @@ const Form3 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Details of Inivted User
+              Details of Invited User
             </label>
             <textarea
               rows={4}
