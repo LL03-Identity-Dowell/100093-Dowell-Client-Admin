@@ -33,16 +33,16 @@ const Form1 = () => {
 
     const data = {
       username: userName,
-      member_name: "anthony",
-      member_code: "12344",
-      member_spec: "",
-      member_u_code: "",
-      member_det: "",
+      user_name: formInputs.user_name,
+      user_code: formInputs.user_code,
+      user_spec: formInputs.user_spec,
+      user_u_code: formInputs.user_u_code,
+      user_det: formInputs.user_det,
     };
 
     try {
       await axios
-        .post("https://100093.pythonanywhere.com/api/create_team_member/", data)
+        .post("https://100093.pythonanywhere.com/api/create_user_member/", data)
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
