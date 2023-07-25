@@ -24,17 +24,7 @@ const Layers = () => {
 
 		const fetchData = async () => {
 			try {
-				const devices = {
-					username: "Jazz3650",
-					category: "devices",
-				};
-
-				const response = await axios.post(
-					"https://100093.pythonanywhere.com/api/get_layer_data/",
-					devices
-				);
-
-				usedispatch(getlayerdevices(response.data));
+				
 				const os = {
 					username: "Jazz3650",
 					category: "os",
@@ -44,20 +34,39 @@ const Layers = () => {
 					"https://100093.pythonanywhere.com/api/get_layer_data/",
 					os
 				);
+
+				
         usedispatch(getlayeros(osresponse.data));
         
-        const browsers = {
-					username: "Jazz3650",
-					category: "browsers",
+       
+const devicesdata = {
+	username: "Jazz3650",
+	category: "devices",
+};
+
+const deviceresponse = await axios.post(
+	"https://100093.pythonanywhere.com/api/get_layer_data/",
+	devicesdata
+);
+
+				usedispatch(getlayerdevices(deviceresponse.data));
+				
+				const browserdata = {
+					"username": "Jazz3650",
+					"category": "browsers",
 				};
 
-				const browsersresponse = await axios.post(
+				const bresponse = await axios.post(
 					"https://100093.pythonanywhere.com/api/get_layer_data/",
-					browsers
+					browserdata
 				);
-				usedispatch(getlayerbrowsers(browsersresponse.data));
+
+				usedispatch(getlayerbrowsers(bresponse.data));
+
+
+				
 				usedispatch(getloaderstate(false));
-				console.log(response.data);
+				
 			} catch (error) {
 				console.error(error);
 			}

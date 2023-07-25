@@ -3,29 +3,43 @@ import { createSlice } from "@reduxjs/toolkit";
 const layerSlice = createSlice({
 	name: "layer",
 	initialState: {
-		devices: [{ devices: "", layer: "" }],
-		os: [{ os: "", layer: "" }],
-		browsers: [{ browsers: "", layer: "" }],
-		location: [{ location: "", layer: "" }],
+		os: {
+			"Mac OS": "",
+			Linux: "",
+			Windows: "",
+			Android: "",
+			IOS: "",
+			"Others not listed above": "",
+		},
+		devices: {
+			"Laptop/Desktop": "",
+			"Others not listed above": "",
+			"Mobile Phone": "",
+			"Tablet/Ipad": "",
+		},
+		browsers: {
+			Chrome: "",
+			Firefox: "",
+			"Others not listed above": "",
+			Edge: "",
+			Safari: "",
+			Bing: "",
+			Opera: "",
+		},
 	},
 	reducers: {
-		getlayerdevices(state, action) {
-			state.devices = action.payload;
-		},
 		getlayeros(state, action) {
 			state.os = action.payload;
 		},
-
+		getlayerdevices(state, action) {
+			state.devices = action.payload;
+		},
 		getlayerbrowsers(state, action) {
 			state.browsers = action.payload;
-		},
-		getlayerlocation(state, action) {
-			state.location = action.payload;
 		},
 	},
 });
 
 export default layerSlice.reducer;
 
-export const { getlayerdevices, getlayeros, getlayerbrowsers, getlayerlocation } =
-	layerSlice.actions;
+export const { getlayeros, getlayerdevices, getlayerbrowsers } = layerSlice.actions;
