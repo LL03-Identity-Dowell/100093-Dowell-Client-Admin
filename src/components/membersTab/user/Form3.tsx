@@ -1,9 +1,12 @@
 import { useState } from "react";
 import images from "../../images";
 import Modal from "react-modal";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/Store";
 
 const Form3 = () => {
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string>("");
 
   const openUploadLinkModal = () => {
     setUploadLinkModal(true);
@@ -13,6 +16,19 @@ const Form3 = () => {
     setUploadLinkModal(false);
   };
 
+  const guest_member = useSelector(
+    (state: RootState) => state.adminData.data[0]?.members.guest_members
+  );
+
+ const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedItemName = event.target.value;
+    setSelectedItem(selectedItemName);
+  };
+
+  const selectedItemData = guest_member.accept_members.find(
+    (item) => item.name === selectedItem
+  );
+
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
@@ -21,15 +37,18 @@ const Form3 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Invited Users
             </label>
-            <select
+            <select  onChange={handleSelectChange}
+              value={selectedItem}
+              id="invited_team_members"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              <option> Member 01 </option>
-              <option> Member 02 </option>
-              <option> Member 03 </option>
-              <option> Member 04 </option>
-              <option> Member 05 </option>
+               <option>...Select...</option>
+              {guest_member.accept_members.map((members, index) => (
+                <option key={index} value={members.name}>
+                  {members?.first_name} {members?.last_name}{" "}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
@@ -49,6 +68,8 @@ const Form3 = () => {
             <textarea
               rows={4}
               placeholder="Member details"
+              readOnly
+              value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
               className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
             />
           </div>
