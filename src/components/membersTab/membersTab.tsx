@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 
 import TeamMember from "./teamMember/TeamMember";
-import User from "./User";
+import User from "./user/User";
 import Public from "./public/Public";
 
 const MembersTab = () => {
