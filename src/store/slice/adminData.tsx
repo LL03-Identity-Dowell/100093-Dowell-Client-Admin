@@ -137,8 +137,30 @@ const adminDataSlice = createSlice({
             ],
           },
           guest_members: {
-            accept_members: [],
-            pending_members: [],
+            accept_members: [
+              {
+                name: "",
+                member_code: "",
+                member_spec: "",
+                member_uni_code: "",
+                member_details: "",
+                link: "",
+                status: "",
+                first_name: "",
+                last_name: "",
+              },
+            ],
+            pending_members: [
+              {
+                name: "",
+                member_code: "",
+                member_spec: "",
+                member_uni_code: "",
+                member_details: "",
+                link: "",
+                status: "",
+              },
+            ],
           },
           public_members: {
             accept_members: [],

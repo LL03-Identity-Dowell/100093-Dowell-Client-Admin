@@ -46,7 +46,7 @@ const Form1 = () => {
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
-          toast.success(res.data);
+          toast.success("success");
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
