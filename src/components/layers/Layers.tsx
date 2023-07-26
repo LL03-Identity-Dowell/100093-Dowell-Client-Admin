@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
-import { getlayerbrowsers, getlayerdevices, getlayeros } from "../../store/slice/layers";
+import { getlayerbrowsers, getlayercontype, getlayerdevices, getlayerlogintype, getlayeros, getlayerpasswordstrength, getlayerverifyid } from "../../store/slice/layers";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import Loader from "../../pages/whiteloader";
 import Deviceform from "./form/Deviceform";
@@ -63,8 +63,60 @@ const deviceresponse = await axios.post(
 
 				usedispatch(getlayerbrowsers(bresponse.data));
 
+const condata = {
+	username: "Jazz3650",
+	category: "connection_type",
+};
+
+const conresponse = await axios.post(
+	"https://100093.pythonanywhere.com/api/get_layer_data/",
+	condata
+);
+
+				usedispatch(getlayercontype(conresponse.data));
+				
+
+
+const logdata = {
+	username: "Jazz3650",
+	category: "login_type",
+};
+
+const logresponse = await axios.post(
+	"https://100093.pythonanywhere.com/api/get_layer_data/",
+	logdata
+);
+
+usedispatch(getlayerlogintype(logresponse.data));
+
+
+
+				const psdata = {
+					username: "Jazz3650",
+					category: "password_strength",
+				};
+
+				const psresponse = await axios.post(
+					"https://100093.pythonanywhere.com/api/get_layer_data/",
+					psdata
+				);
+
+				usedispatch(getlayerpasswordstrength(psresponse.data));
 
 				
+const verifydata = {
+	username: "Jazz3650",
+	category: "id_verification",
+};
+
+const verifyresponse = await axios.post(
+	"https://100093.pythonanywhere.com/api/get_layer_data/",
+	verifydata
+);
+
+usedispatch(getlayerverifyid(verifyresponse.data));
+
+
 				usedispatch(getloaderstate(false));
 				
 			} catch (error) {
@@ -137,7 +189,9 @@ const deviceresponse = await axios.post(
 							Password Strength
 						</p>
 						<Passwordstrenght></Passwordstrenght>
+
 						<hr />
+
 						<p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
 							{" "}
 							ID Verification Status
@@ -155,7 +209,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Security Layer
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>Layer 1 </option>
 									<option>Layer 2 </option>
 									<option>Layer 3 </option>
@@ -168,7 +225,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Devices
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>Laptop/desktop </option>
 									<option>Mobile phone </option>
 									<option>Tablet/Ipad </option>
@@ -179,7 +239,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Operating Systems
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>Windows </option>
 									<option>Mac OS </option>
 									<option>Linux </option>
@@ -192,7 +255,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Browsers
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>Chrome </option>
 									<option>Safari </option>
 									<option>Bing </option>
@@ -206,7 +272,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Internet Connection Type
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>Mobile Data </option>
 									<option>Secured Wifi </option>
 									<option>Public Wifi </option>
@@ -217,7 +286,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Login Type
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>User Name & Password </option>
 									<option>Face ID </option>
 									<option>Voice ID </option>
@@ -231,7 +303,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Change Password
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option> At least once a Week </option>
 									<option> At least once a Month </option>
 									<option> At least once in 3 Months </option>
@@ -244,7 +319,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Geographic Location
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option> 8 characters </option>
 									<option> 10 characters </option>
 									<option> 12 characters </option>
@@ -256,7 +334,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									ID Verification Status
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option> Verified ID </option>
 									<option> ID not verified </option>
 									<option> Phone number verified </option>
@@ -270,7 +351,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Geographic Location
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>India </option>
 									<option> Kenya </option>
 									<option> Nigeria </option>
@@ -281,7 +365,10 @@ const deviceresponse = await axios.post(
 								<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 									Language
 								</label>
-								<select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+								<select
+									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									multiple
+								>
 									<option>English </option>
 									<option> Chinese </option>
 									<option> Korean </option>
