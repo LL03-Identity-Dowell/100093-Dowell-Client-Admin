@@ -1,40 +1,113 @@
-import { useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { ChangeEvent, useState } from "react";
+import {  useEffect, useState } from "react";
+
 
 export default function Operatingsystem() {
-	const os = useSelector((state: RootState) => state.layer.os);
+	const layerlist = [
+		"layer1",
+		"layer2",
+		"layer3",
+		"layer4",
+		"layer5",
+		"layer6",
+	];
+	const macos = useSelector(
+		(state: RootState) => state.layer.os?.["Mac OS"] || ""
+	);
 
-	const mac = os.filter((item) => item.os == "Mac OS");
-	const linux = os.filter((item) => item.os == "Linux");
-	const windows = os.filter((item) => item.os == "Windows");
-	const android = os.filter((item) => item.os == "Android");
-	// const ios = os.filter((item) => item.os == "IOS");
-	const others = os.filter((item) => item.os == "Others not listed above");
 
-	interface layerform {
-		mac: string;
-		linux: string;
-		windows: string;
-		android: string;
-		ios: string;
-		others: string;
-	}
+	const [selectedmacos, setselectedmacos] = useState(macos);
+	const macos_filterlist = layerlist.filter(
+		(item) => item !== macos
+	);
 
-	const [formdata, setformdata] = useState<layerform>({
-		mac: "..select",
-		linux: "..select",
-		windows: "..select",
-		android: "..select",
-		ios: "..select",
-		others: "..select",
-	});
+const linux = useSelector(
+	(state: RootState) => state.layer.os?.["Linux"] || ""
+);
 
-	const handleChange = (
-		e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
-	) => {
-		setformdata({ ...formdata, [e.target.name]: e.target.value });
-	};
+const [selectedlinux, setselectedlinux] = useState(linux);
+const linuxfilterlist = layerlist.filter((item) => item !== linux);
+
+	
+	const Windows = useSelector(
+		(state: RootState) => state.layer.os?.["Windows"] || ""
+	);
+
+	const [selectedWindows, setselectedWindows] = useState(Windows);
+	const Windowsfilterlist = layerlist.filter((item) => item !== Windows);
+
+	const Android = useSelector(
+		(state: RootState) => state.layer.os?.["Android"] || ""
+	);
+
+	const [selectedAndroid, setselectedAndroid] = useState(Android);
+	const Androidfilterlist = layerlist.filter((item) => item !== Android);
+	const Others = useSelector(
+		(state: RootState) => state.layer.os?.["Others not listed above"] || ""
+	);
+
+	const [selectedOthers, setselectedOthers] = useState(Others);
+	const Othersfilterlist = layerlist.filter((item) => item !== Others);
+	
+	useEffect(() => {
+		setselectedmacos(macos);
+		setselectedlinux(linux);
+		setselectedWindows(Windows);
+		setselectedAndroid(Android);
+		setselectedOthers(Others);
+	}, [macos, linux, Windows, Android, Others]);
+
+
+	// const dispatch = useDispatch();
+
+
+	// const handleSubmit = (
+	// 	event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	// ) => {
+	// 	event.preventDefault();
+
+	// 	const postData = async () => {
+	// 		try {
+	// 			dispatch(getloaderstate(true));
+	// 			const data = {
+	// 				"username": "Jazz3650",
+					
+	// 			};
+
+	// 			await axios.post(
+	// 				"http://100093.pythonanywhere.com/api/settings/",
+	// 				data
+	// 			);
+
+	// 			dispatch(
+	// 				getsetting({
+	// 					isSuccess: true,
+	// 					data: {
+	// 						...currentSetting,
+	// 						maxtime_member: selectedmaxtime_member,
+	// 						maxtime_user: selectedmaxtime_user,
+	// 					},
+	// 				})
+	// 			);
+
+	// 			dispatch(getloaderstate(false));
+	// 		} catch (error) {
+	// 			console.error(error);
+	// 		}
+
+	// 		// fetch product
+	// 	};
+
+	// 	// Call the API when the component mounts
+	// 	postData();
+
+	// 	// Make your API call here using the selectedLanguage value
+	// 	// For example:
+	// };
+
+	
+
 	return (
 		<>
 			<form className="px-[30px] mb-8">
@@ -44,14 +117,14 @@ export default function Operatingsystem() {
 					</label>
 					<select
 						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						name="windows"
-						onChange={handleChange}
-						value={formdata.windows}
+						onChange={(e) => setselectedWindows(e.target.value)}
 					>
-						<option value="..select">..select</option>
-						{windows.map((item, index) => (
-							<option key={index} value={item.layer}>
-								{item.layer}
+						<option selected value={selectedWindows}>
+							{selectedWindows}
+						</option>
+						{Windowsfilterlist.map((item, index) => (
+							<option key={index} value={item}>
+								{item}
 							</option>
 						))}
 					</select>
@@ -62,14 +135,14 @@ export default function Operatingsystem() {
 					</label>
 					<select
 						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						name="mac"
-						value={formdata.mac}
-						onChange={handleChange}
+						onChange={(e) => setselectedmacos(e.target.value)}
 					>
-						<option value="..select">..select</option>
-						{mac.map((item, index) => (
-							<option key={index} value={item.layer}>
-								{item.layer}
+						<option selected value={selectedmacos}>
+							{selectedmacos}
+						</option>
+						{macos_filterlist.map((item, index) => (
+							<option key={index} value={item}>
+								{item}
 							</option>
 						))}
 					</select>
@@ -80,14 +153,14 @@ export default function Operatingsystem() {
 					</label>
 					<select
 						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						name="linux"
-						value={formdata.linux}
-						onChange={handleChange}
+						onChange={(e) => setselectedlinux(e.target.value)}
 					>
-						<option value="..select">..select</option>
-						{linux.map((item, index) => (
-							<option key={index} value={item.layer}>
-								{item.layer}
+						<option selected value={selectedlinux}>
+							{selectedlinux}
+						</option>
+						{linuxfilterlist.map((item, index) => (
+							<option key={index} value={item}>
+								{item}
 							</option>
 						))}
 					</select>
@@ -98,14 +171,14 @@ export default function Operatingsystem() {
 					</label>
 					<select
 						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						name="android"
-						value={formdata.android}
-						onChange={handleChange}
+						onChange={(e) => setselectedAndroid(e.target.value)}
 					>
-						<option value="..select">..select</option>
-						{android.map((item, index) => (
-							<option key={index} value={item.layer}>
-								{item.layer}
+						<option selected value={selectedAndroid}>
+							{selectedAndroid}
+						</option>
+						{Androidfilterlist.map((item, index) => (
+							<option key={index} value={item}>
+								{item}
 							</option>
 						))}
 					</select>
@@ -116,20 +189,22 @@ export default function Operatingsystem() {
 					</label>
 					<select
 						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						name="others"
-						value={formdata.others}
-						onChange={handleChange}
-
+						onChange={(e) => setselectedOthers(e.target.value)}
 					>
-						<option value="..select">..select</option>
-						{others.map((item, index) => (
-							<option key={index} value={item.layer}>
-								{item.layer}
+						<option selected value={selectedOthers}>
+							{selectedOthers}
+						</option>
+						{Othersfilterlist.map((item, index) => (
+							<option key={index} value={item}>
+								{item}
 							</option>
 						))}
 					</select>
 				</div>
-				<button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+				<button
+					className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+					
+				>
 					Save OS Settings
 				</button>
 			</form>
