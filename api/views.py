@@ -1092,16 +1092,20 @@ def save_device_layers(request):
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "fetch", field, "update")
         r = json.loads(login)
-        categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength", "id_verification"]
+        categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength",
+                      "id_verification"]
         layers = r["data"][0]["security_layers"]
         devices = ["Laptop/Desktop", "Mobile Phone", "Tablet/Ipad", "Others not listed above"]
         os = ["Windows", "Mac OS", "Linux", "Android", "IOS", "Others not listed above"]
         browsers = ["Chrome", "Safari", "Bing", "Firefox", "Edge", "Opera", "Others not listed above"]
         layers_list = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"]
         connection_type = ["Mobile Data", "Office Wifi/Secured Wifi", "Public Wifi", "Others not listed above"]
-        login_type = ["User Name & Password", "Face ID", "Voice ID", "Biometric ID", "Video ID", "Others not listed above"]
-        password_strength = ["Minimum 8 characters", "Minimum 10 characters", "Minimum 12 characters", "Minimum 16 characters", "Others not listed above"]
-        id_verification = ["Verified ID", "ID not verified", "Phone number verified", "Phone number not verified", "Email verified", "Email not verified", "Others not listed above"]
+        login_type = ["User Name & Password", "Face ID", "Voice ID", "Biometric ID", "Video ID",
+                      "Others not listed above"]
+        password_strength = ["Minimum 8 characters", "Minimum 10 characters", "Minimum 12 characters",
+                             "Minimum 16 characters", "Others not listed above"]
+        id_verification = ["Verified ID", "ID not verified", "Phone number verified", "Phone number not verified",
+                           "Email verified", "Email not verified", "Others not listed above"]
         if category not in categories:
             return Response({"error": f"{category} is not a valid category"}, status=status.HTTP_400_BAD_REQUEST)
         for key, value in data.items():
@@ -1112,13 +1116,16 @@ def save_device_layers(request):
             elif category == 'os' and key not in os:
                 return Response({"error": f"{key} is not an accepted os type"}, status=status.HTTP_400_BAD_REQUEST)
             elif category == 'connection_type' and key not in connection_type:
-                return Response({"error": f"{key} is not an accepted internet connection type"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"{key} is not an accepted internet connection type"},
+                                status=status.HTTP_400_BAD_REQUEST)
             elif category == 'login_type' and key not in login_type:
                 return Response({"error": f"{key} is not an accepted login type"}, status=status.HTTP_400_BAD_REQUEST)
             elif category == 'password_strength' and key not in password_strength:
-                return Response({"error": f"{key} is not an password strength type"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"{key} is not an password strength type"},
+                                status=status.HTTP_400_BAD_REQUEST)
             elif category == 'id_verification' and key not in id_verification:
-                return Response({"error": f"{key} is not an accepted verification status type"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"{key} is not an accepted verification status type"},
+                                status=status.HTTP_400_BAD_REQUEST)
         for layer in layers_list:
             layers[layer][category].clear()
         for key, value in data.items():
@@ -1128,7 +1135,6 @@ def save_device_layers(request):
                                  "update", field, update)
 
         return Response(data, status=status.HTTP_200_OK)
-
 
 
 @api_view(['POST'])
@@ -1255,3 +1261,37 @@ def create_user_member(request):
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
         response_data = {"link": link}
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_workspaces(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data']
+
+        other_workspace_names = [org['org_name'] for org in data[0]['other_organisation']]
+
+        return Response(
+            other_workspace_names
+            , status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_last_login(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
+        data = {"username": username}
+        response_login = requests.post(url_lastlogin, json=data)
+        if response_login.status_code == 200:
+            last_login_times = response_login.json()["data"]["LastloginTimes"]
+        else:
+            last_login_times = None
+        return Response(
+            last_login_times
+            , status=HTTP_200_OK)
