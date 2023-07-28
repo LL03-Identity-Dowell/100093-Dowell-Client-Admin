@@ -16,7 +16,7 @@ const Products = () => {
   const [hovertitle, setHovertitle] = useState("");
 
   // const [selectedProduct, setSelectedProduct] = useState<string>('');
-  const [selectedItem, setSelectedItem] = useState<string>("");
+  // const [selectedItem, setSelectedItem] = useState<string>("");
 
   const portfolioData = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio
