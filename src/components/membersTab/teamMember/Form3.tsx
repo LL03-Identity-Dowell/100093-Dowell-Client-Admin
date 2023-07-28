@@ -17,7 +17,7 @@ const Form3 = () => {
     setSelectedItem(selectedItemName);
   };
 
-  const selectedItemData = team_member.accept_members.find(
+  const selectedItemData = team_member?.accept_members.find(
     (item) => item.name === selectedItem
   );
 
@@ -45,7 +45,7 @@ const Form3 = () => {
               placeholder="Select Product"
             >
               <option>...Select...</option>
-              {team_member.accept_members.map((members, index) => (
+              {team_member?.accept_members.map((members, index) => (
                 <option key={index} value={members.name}>
                   {members?.first_name} {members?.last_name}{" "}
                 </option>

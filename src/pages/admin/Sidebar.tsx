@@ -11,7 +11,7 @@ import { RootState } from '../../store/Store';
 
 const Sidebar = () => {
 const adminusername = useSelector(
-	(state: RootState) => state.adminData.data[0].Username
+	(state: RootState) => state.adminData.data[0]?.Username
 );
 
 	const [defaultusername, setdefaultusername] = useState(adminusername);

@@ -25,7 +25,7 @@ const Form3 = () => {
     setSelectedItem(selectedItemName);
   };
 
-  const selectedItemData = guest_member.accept_members.find(
+  const selectedItemData = guest_member?.accept_members.find(
     (item) => item.name === selectedItem
   );
 
@@ -44,7 +44,7 @@ const Form3 = () => {
               placeholder="Select Product"
             >
                <option>...Select...</option>
-              {guest_member.accept_members.map((members, index) => (
+              {guest_member?.accept_members.map((members, index) => (
                 <option key={index} value={members.name}>
                   {members?.first_name} {members?.last_name}{" "}
                 </option>
