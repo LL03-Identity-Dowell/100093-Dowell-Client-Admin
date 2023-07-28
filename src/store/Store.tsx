@@ -5,6 +5,7 @@ import userinfoSlice from "./slice/userinfo";
 import productSlice from "./slice/products";
 import adminDataSlice from "./slice/adminData";
 import layerSlice from './slice/layers';
+import sidebarslice from './slice/sidebar';
 
 
 const store = configureStore({
@@ -15,6 +16,7 @@ const store = configureStore({
 		products: productSlice,
 		adminData: adminDataSlice,
 		layer: layerSlice,
+		sidebar:sidebarslice
 	},
 });
 
