@@ -40,7 +40,7 @@ const ProductForm = () => {
 
   const filterDataByProduct = portfolioData?.filter(item => item.product === selectedProduct);
 
-  const selectedItemData = portfolioData.find(
+  const selectedItemData = portfolioData?.find(
     (item) => item?.portfolio_code === selectedItem
   );
 
@@ -85,7 +85,7 @@ const ProductForm = () => {
                 {filterDataByProduct?.map((item, index) => (
                   <option key={index} value={item?.portfolio_code}>
                     {" "}
-                    {item?.portfolio_name},{" "}{item?.data_type}, {item?.role}
+                    {item?.portfolio_name}, {item?.role}, {item?.data_type}
                   </option>
                 ))}
               </select>
