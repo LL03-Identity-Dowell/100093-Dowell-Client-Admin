@@ -61,7 +61,9 @@ const AdminTabs = () => {
     const fetchData = async () => {
       try {
         const data = {
-          username: userName,
+          // username: userName,
+          username: 'mayowa25',
+
         };
         const response = await axios.post(
           "https://100093.pythonanywhere.com/api/get_data/",
