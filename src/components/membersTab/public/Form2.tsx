@@ -19,7 +19,7 @@ const Form2 = () => {
             </label>
             <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
               <option>...Select...</option>
-              {public_member.pending_members.map((members, index) => (
+              {public_member?.pending_members.map((members, index) => (
                 <option key={index} value={members?.link}>
                   {" "}
                   {members?.portfolio_name}{" "}
@@ -34,7 +34,7 @@ const Form2 = () => {
             <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
               <option>...Select...</option>
 
-              {public_member.pending_members.map((members, index) =>
+              {public_member?.pending_members.map((members, index) =>
                 members.status === "unused" ? (
                   <option key={index} value={members?.link}>
                     {" "}
@@ -50,7 +50,7 @@ const Form2 = () => {
             </label>
             <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
               <option>...Select...</option>
-              {public_member.pending_members.map((members, index) =>
+              {public_member?.pending_members.map((members, index) =>
                 members.status === "used" ? (
                   <option key={index} value={members?.link}>
                     {" "}

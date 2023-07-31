@@ -11,6 +11,7 @@ const Form1 = () => {
   const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [link, setLink] = useState(null);
   const [formInputs, setFormInputs] = useState({
     member_name: "",
     member_code: "",
@@ -54,19 +55,17 @@ const Form1 = () => {
 
     try {
       await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/create_team_member/",
-          data
-        )
+        .post("https://100093.pythonanywhere.com/api/create_team_member/", data)
         .then((res) => {
           console.log(res.data);
+          setLink(res.data.link);
           setErrMsg("");
-          toast.success('success');
+          toast.success("success");
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        setErrMsg(error.response?.data);
+        setErrMsg(error.response?.data.error);
       } else {
         console.error("An unknown error occurred:", error);
         setErrMsg("An unknown error occurred");
@@ -75,6 +74,7 @@ const Form1 = () => {
       setIsLoading(false);
     }
   };
+  console.log(link, "link");
 
   return (
     <>
@@ -176,9 +176,11 @@ const Form1 = () => {
           <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
         </form>
 
-        <span className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold flex flex-col items-center">
+        <div className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold ">
           <p>Team Member Invitation Link</p>
-        </span>
+
+          <p className="px-6 text-sm truncate">{link}</p>
+        </div>
 
         <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
           Copy invitation link

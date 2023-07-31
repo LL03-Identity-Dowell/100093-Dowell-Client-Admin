@@ -16,7 +16,7 @@ const Form2 = () => {
     setSelectedItems(selectedItemName);
   };
 
-  const selectedItemsData = guest_member.accept_members.find(
+  const selectedItemsData = guest_member?.accept_members.find(
     (item) => item?.member_code === selectedItems
   );
 
@@ -39,7 +39,7 @@ const Form2 = () => {
               placeholder="Select Product"
             >
               <option>...Select...</option>
-              {guest_member.pending_members.map((members, index) => (
+              {guest_member?.pending_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
                   {members?.name}{" "}
@@ -59,7 +59,7 @@ const Form2 = () => {
               placeholder="Select Product"
             >
               <option>...Select...</option>
-              {guest_member.accept_members.map((members, index) => (
+              {guest_member?.accept_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
                   {members?.first_name} {members?.last_name}{" "}

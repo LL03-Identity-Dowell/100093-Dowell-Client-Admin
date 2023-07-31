@@ -15,13 +15,22 @@ import Products from "./products/Products";
 import Portfolio from "./portfolio/Portfolio";
 import Roles from "./roles/Roles";
 import Layers from "./layers/Layers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getAdminData } from "../store/slice/adminData";
 import { getloaderstate } from "../store/slice/loaderstate";
+import { RootState } from "../store/Store";
 
 const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
+
+  // const userName = useSelector(
+  //   (state: RootState) => state.adminData.data[0]?.Username
+  // );
+
+  const userName = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  )
 
   const tabTitle = [
     {
@@ -56,8 +65,12 @@ const AdminTabs = () => {
     const fetchData = async () => {
       try {
         const data = {
-          username: "Jazz3650",
+          username: userName,
+          // username: 'mayowa25',
+
         };
+        console.log(data, 'sdata');
+        
         const response = await axios.post(
           "https://100093.pythonanywhere.com/api/get_data/",
           data
