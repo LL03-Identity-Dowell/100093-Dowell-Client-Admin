@@ -8,7 +8,7 @@ const Settingform9 = () => {
 	const allproducts = useSelector(
 		(state: RootState) => state.products.products
 	);
-	console.log(allproducts);
+	
 	
 
 	

@@ -6,6 +6,16 @@ import { getlayerdevices } from "../../../store/slice/layers";
 import axios from "axios";
 
 export default function Deviceform() {
+const adminusername = useSelector(
+	(state: RootState) => state.userinfo.userinfo.username
+);
+
+const [defaultusername, setdefaultusername] = useState(adminusername);
+
+useEffect(() => {
+	setdefaultusername(adminusername);
+}, [adminusername]);
+
 const layerlist = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"];
 const LaptopDesktop = useSelector(
 	(state: RootState) => state.layer.devices?.["Laptop/Desktop"] 
@@ -63,7 +73,7 @@ const handleSubmit = (
 
 	const postData = async () => {
 		const data = {
-			"username": "Jazz3650",
+			"username": defaultusername,
 			"category": "devices",
 			"data": {
 				"Laptop/Desktop": selectedLaptopDesktop,

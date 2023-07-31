@@ -1,11 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
-import { useState, ChangeEvent, FormEvent, MouseEvent } from "react";
+import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from "react";
 import axios from "axios";
 import  { getAdminData } from "../../store/slice/adminData";
 
 
 const Roles = () => {
+
+const adminusername = useSelector(
+	(state: RootState) => state.userinfo.userinfo.username
+);
+
+const [defaultusername, setdefaultusername] = useState(adminusername);
+
+useEffect(() => {
+	setdefaultusername(adminusername);
+}, [adminusername]);
+
+	
+
+
+
 const dispatch=useDispatch()
 	
 	
@@ -15,9 +30,7 @@ const dispatch=useDispatch()
 	const currentadmindata = useSelector(
 		(state: RootState) => state.adminData
 	);
-	const username = useSelector(
-		(state: RootState) => state.adminData.data[0].Username
-	);
+	
 
 	const enablerules = rolesdata.filter((r) => r.status == "enable");
 	const disablerules = rolesdata.filter((r) => r.status == "disable");
@@ -125,7 +138,7 @@ const [rulestatus, setrulestatus] = useState({
 
 
 	const [formData, setFormData] = useState({
-		username: username,
+		username: defaultusername,
 		level1_item: "..select",
 		level2_item: "..select",
 		level3_item: "..select",
@@ -161,7 +174,7 @@ const [rulestatus, setrulestatus] = useState({
 			// Handle the response as needed
 			// Reset the form
 			setFormData({
-				username: "mayowa25",
+				username: defaultusername,
 				level1_item: "..select",
 				level2_item: "..select",
 				level3_item: "..select",
@@ -191,7 +204,7 @@ const [rulestatus, setrulestatus] = useState({
 	) => {
 		e.preventDefault();
 		const rulestatusdata = {
-			username: "mayowa25",
+			username: defaultusername,
 			role_code: selectedrule.role_code,
 			role_status: selectedrulestatus,
 		};

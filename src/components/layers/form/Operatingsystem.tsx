@@ -9,6 +9,16 @@ import {ToastContainer, toast } from "react-toastify";
 
 export default function Operatingsystem() {
 
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
+
+	const [defaultusername, setdefaultusername] = useState(adminusername);
+
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
+
 
 	const layerlist = [
 		"layer1",
@@ -88,7 +98,7 @@ const dispatch =useDispatch()
 		const postData = async () => {
 
 			const data = {
-				"username": "Jazz3650",
+				"username": defaultusername,
 				"category": "os",
 				"data": {
 					"Mac OS": selectedmacos,

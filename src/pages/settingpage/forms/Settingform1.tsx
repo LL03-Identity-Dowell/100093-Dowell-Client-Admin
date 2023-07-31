@@ -5,7 +5,7 @@ import { RootState } from "../../../store/Store";
 const Settingform1 = () => {
 
 	const allproducts = useSelector((state: RootState) => state.products.products);
-	console.log(allproducts);
+	
 
 	
 

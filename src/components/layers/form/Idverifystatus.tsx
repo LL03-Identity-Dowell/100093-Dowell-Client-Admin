@@ -8,6 +8,17 @@ import axios from "axios";
 
 
 export default function Idverifystatus() {
+
+const adminusername = useSelector(
+	(state: RootState) => state.userinfo.userinfo.username
+);
+
+const [defaultusername, setdefaultusername] = useState(adminusername);
+
+useEffect(() => {
+	setdefaultusername(adminusername);
+}, [adminusername]);
+
 	const layerlist = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"];
 
 	const VerifiedID = useSelector(
@@ -90,7 +101,7 @@ export default function Idverifystatus() {
 
 		const postData = async () => {
 			const data = {
-				username: "Jazz3650",
+				username: defaultusername,
 				category: "id_verification",
 				data: {
 					"Verified ID": selectedVerifiedID,

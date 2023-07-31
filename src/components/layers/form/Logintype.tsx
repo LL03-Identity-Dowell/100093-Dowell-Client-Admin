@@ -8,6 +8,16 @@ import axios from "axios";
 
 export default function Logintype() {
 
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
+
+	const [defaultusername, setdefaultusername] = useState(adminusername);
+
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
+
 	const layerlist = [
 		"layer1",
 		"layer2",
@@ -85,7 +95,7 @@ const handleSubmit = (
 
 	const postData = async () => {
 		const data = {
-			username: "Jazz3650",
+			username: defaultusername,
 			category: "login_type",
 			data: {
 				"User Name & Password": selectedusernamep,
