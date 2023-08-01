@@ -25,7 +25,7 @@ const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
 
   const userName = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
+    (state: RootState) => state.userinfo?.userinfo?.username
   );
 
   const tabTitle = [

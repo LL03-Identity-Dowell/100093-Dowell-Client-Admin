@@ -18,7 +18,6 @@ const Products = () => {
 
   const [isHovering, setIsHovering] = useState(false);
   const [hovertitle, setHovertitle] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<string>("");
 
@@ -68,7 +67,6 @@ const Products = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
 
     const data = {
       username: userName,
@@ -94,9 +92,7 @@ const Products = () => {
       } else {
         console.error("An unknown error occurred:", error);
       }
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   return (

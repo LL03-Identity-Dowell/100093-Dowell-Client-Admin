@@ -16,7 +16,7 @@ const store = configureStore({
 		products: productSlice,
 		adminData: adminDataSlice,
 		layer: layerSlice,
-		sidebar:sidebarslice
+		sidebar: sidebarslice
 	},
 });
 
