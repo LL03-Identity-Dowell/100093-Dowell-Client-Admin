@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { getloaderstate } from '../../../store/slice/loaderstate';
 import { getsetting } from '../../../store/slice/setting';
 import axios from 'axios';
+import { useEffect } from 'react';
 const Settingform4 = () => {
 
 	const disconn_idle = useSelector(
@@ -49,7 +50,17 @@ const [selectedpermit_to_connect, setSelectedpermit_to_connect] =
 	
 	
 const dispatch = useDispatch();
+const adminusername = useSelector(
+	(state: RootState) => state.userinfo.userinfo.username
+);
 
+const [defaultusername, setdefaultusername] = useState(adminusername);
+
+useEffect(() => {
+	setdefaultusername(adminusername);
+}, [adminusername]);
+	
+	
 const handleSubmit = (
 	event: React.MouseEvent<HTMLButtonElement, MouseEvent>
 ) => {
@@ -60,7 +71,7 @@ const handleSubmit = (
 			dispatch(getloaderstate(true));
 
 			const data = {
-				username: "Jazz3650",
+				username: defaultusername,
 				time_limit_disconnect: selecteddisconn_idle,
 				time_limit_connect: selectedpermit_to_connect,
 				permitted_attempts: selectedno_of_conn,

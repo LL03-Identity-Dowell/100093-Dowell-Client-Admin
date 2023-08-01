@@ -9,6 +9,16 @@ import axios from "axios";
 
 export default function Passwordstrenght() {
 
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
+
+	const [defaultusername, setdefaultusername] = useState(adminusername);
+
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
+
 	const layerlist = [
 		"layer1",
 		"layer2",
@@ -81,7 +91,7 @@ export default function Passwordstrenght() {
 
 		const postData = async () => {
 			const data = {
-				username: "Jazz3650",
+				username: defaultusername,
 				category: "password_strength",
 				data: {
 					"Minimum 8 characters": selectedch8,

@@ -10,6 +10,18 @@ import { toast } from 'react-toastify';
 
 export default function Browsers() {
 
+const adminusername = useSelector(
+	(state: RootState) => state.userinfo.userinfo.username
+);
+
+const [defaultusername, setdefaultusername] = useState(adminusername);
+
+useEffect(() => {
+	setdefaultusername(adminusername);
+}, [adminusername]);
+
+
+
 const layerlist = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"];
 const Chrome = useSelector(
 	(state: RootState) => state.layer.browsers?.["Chrome"] || ""
@@ -90,7 +102,7 @@ const handleSubmitbrowser = (
 		try {
 			// dispatch(getloaderstate(true));
 			const databrowser = {
-				username: "Jazz3650",
+				username: defaultusername,
 				category: "browsers",
 				data: {
 					Chrome: selectedChrome,

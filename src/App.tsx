@@ -7,6 +7,7 @@ import ClientAdmin from "./pages/admin/ClientAdmin";
 import AboutUs from "./pages/AboutUs";
 import Faq from "./pages/Faq";
 import Setting from "./pages/settingpage/Setting";
+import Organization from "./pages/organizationpage/organization";
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 					{/* <Route path="/" element={<Home />} /> */}
 					<Route path="/" element={<ClientAdmin />} />
 					<Route path="/about-us" element={<AboutUs />} />
+					<Route path="/org" element={<Organization />} />
 					<Route path="/faq" element={<Faq />} />
 					<Route path="/setting" element={<Setting></Setting>} />
 					{/* <Route path="/loader" element={} /> */}

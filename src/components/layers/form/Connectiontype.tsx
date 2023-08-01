@@ -9,6 +9,16 @@ import { toast } from 'react-toastify';
 
 export default function Connectiontype() {
 
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
+
+	const [defaultusername, setdefaultusername] = useState(adminusername);
+
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
+
 	const layerlist = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"];
 
 
@@ -62,7 +72,7 @@ export default function Connectiontype() {
 
 		const postData = async () => {
 			const data = {
-				username: "Jazz3650",
+				username: defaultusername,
 				category: "connection_type",
 				data: {
 					"Mobile Data": selectedMobileData,

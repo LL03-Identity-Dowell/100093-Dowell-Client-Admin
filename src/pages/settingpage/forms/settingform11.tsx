@@ -1,7 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { getloaderstate } from "../../../store/slice/loaderstate";
@@ -20,6 +20,17 @@ const color_schemelistfilter = color_schemelist.filter(
 
 const [selectedcolor_scheme, setSelectedcolor_scheme] = useState(color_scheme);
 
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
+
+	const [defaultusername, setdefaultusername] = useState(adminusername);
+
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
+	
+	
 	const dispatch=useDispatch()
 
 const handleSubmit = (
@@ -34,8 +45,8 @@ const postData = async () => {
 dispatch(getloaderstate(true));
 
 		const data = {
-			username: "Jazz3650",
-			colour_patterns: selectedcolor_scheme
+			username: defaultusername,
+			colour_patterns: selectedcolor_scheme,
 		};
 
 		await axios.post(

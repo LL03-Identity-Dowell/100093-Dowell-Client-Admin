@@ -1,11 +1,9 @@
 
 import Layout from "../../components/layout";
 
-import { useEffect } from "react";
+
 import Settingform1 from "./forms/Settingform1";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { getsetting } from "../../store/slice/setting";
+import {  useSelector } from "react-redux";
 import Settingform2 from "./forms/settingform2";
 import Settingform3 from "./forms/settingform3";
 import Settingform4 from "./forms/settingform4";
@@ -17,69 +15,15 @@ import Settingform9 from "./forms/settingform9";
 import Settingform10 from "./forms/settingform10";
 import Settingform11 from "./forms/settingform11";
 
-import { getloaderstate } from "../../store/slice/loaderstate";
+
 import { RootState } from "../../store/Store";
 import Loader from "../whiteloader";
-import { getproducts } from "../../store/slice/products";
+
 import Sidebar from "../admin/Sidebar";
 import Header from "../admin/Header";
 const ClientAdmin = () => {
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
 	
-	// const [isSubmenuHidden, setSubmenuHidden] = useState(true);
-	// const toggleSubmenu = () => {
-	// 	setSubmenuHidden(!isSubmenuHidden);
-	// };
-
-	
-	const usedispatch = useDispatch();
-	
-	useEffect(() => {
-		// Function to call the API
-
-		
-		const fetchData = async () => {
-			try {
-				const data = {
-					username: "Jazz3650",
-				};
-
-				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/settings/",
-					data
-				);
-
-				usedispatch(getsetting(response.data));
-console.log(response.data)
-				
-			} catch (error) {
-				console.error(error);
-			}
-			// fetch product
-			try {
-				const data = {
-					username: "uxliveadmin",
-				};
-
-				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/getproducts/",
-					data
-				);
-
-				usedispatch(getproducts(response.data));
-
-				usedispatch(getloaderstate(false));
-			} catch (error) {
-				console.error(error);
-			}
-
-			// fetch product
-		};
-
-		// Call the API when the component mounts
-		fetchData();
-	},[]); // The empty dependency array ensures that the effect runs only once
-
 	return (
 		<>
 			<Layout>

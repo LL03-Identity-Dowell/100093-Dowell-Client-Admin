@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -17,6 +17,18 @@ import Idverifystatus from "./form/Idverifystatus";
 const Layers = () => {
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
 
+
+const adminusername = useSelector(
+	(state: RootState) => state.userinfo.userinfo.username
+);
+
+const [defaultusername, setdefaultusername] = useState(adminusername);
+
+useEffect(() => {
+	setdefaultusername(adminusername);
+}, [adminusername]);
+
+
 	const usedispatch = useDispatch();
 
 	useEffect(() => {
@@ -26,7 +38,7 @@ const Layers = () => {
 			try {
 				
 				const os = {
-					username: "Jazz3650",
+					username: defaultusername,
 					category: "os",
 				};
 
@@ -40,7 +52,7 @@ const Layers = () => {
         
        
 const devicesdata = {
-	username: "Jazz3650",
+	username: defaultusername,
 	category: "devices",
 };
 
@@ -52,7 +64,7 @@ const deviceresponse = await axios.post(
 				usedispatch(getlayerdevices(deviceresponse.data));
 				
 				const browserdata = {
-					"username": "Jazz3650",
+					"username": defaultusername,
 					"category": "browsers",
 				};
 
@@ -64,7 +76,7 @@ const deviceresponse = await axios.post(
 				usedispatch(getlayerbrowsers(bresponse.data));
 
 const condata = {
-	username: "Jazz3650",
+	username: defaultusername,
 	category: "connection_type",
 };
 
@@ -78,7 +90,7 @@ const conresponse = await axios.post(
 
 
 const logdata = {
-	username: "Jazz3650",
+	username: defaultusername,
 	category: "login_type",
 };
 
@@ -92,7 +104,7 @@ usedispatch(getlayerlogintype(logresponse.data));
 
 
 				const psdata = {
-					username: "Jazz3650",
+					username: defaultusername,
 					category: "password_strength",
 				};
 
@@ -105,7 +117,7 @@ usedispatch(getlayerlogintype(logresponse.data));
 
 				
 const verifydata = {
-	username: "Jazz3650",
+	username: defaultusername,
 	category: "id_verification",
 };
 
