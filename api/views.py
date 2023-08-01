@@ -1339,7 +1339,6 @@ def connect_portfolio(request):
             obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
                                                              defaults={'alldata': json.dumps(mydict)})
             if "Workflow AI" in product or "workflow" in product:
-                print("Here3")
                 if s["User_type"] == "betatester":
                     return Response(
                         f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093')
