@@ -6,17 +6,21 @@ import { getproducts } from "../../store/slice/products";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
+import { ToastContainer, toast } from "react-toastify";
 
 const Products = () => {
   const productData = useSelector((state: RootState) => state.products);
   const show_loader = useSelector((state: RootState) => state.loaderslice);
   const userData = useSelector((state: RootState) => state.userinfo);
+  const userName = useSelector(
+    (state: RootState) => state.adminData.data[0]?.Username
+  );
 
   const [isHovering, setIsHovering] = useState(false);
   const [hovertitle, setHovertitle] = useState("");
-
-  // const [selectedProduct, setSelectedProduct] = useState<string>('');
-  // const [selectedItem, setSelectedItem] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<string>("");
 
   const portfolioData = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio
@@ -38,6 +42,8 @@ const Products = () => {
 
   const dispatch = useDispatch();
 
+  const sessionId = localStorage.getItem("sessionId");
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,10 +64,45 @@ const Products = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [dispatch, userData.userinfo.username]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const data = {
+      username: userName,
+      action: "connect_portfolio",
+      portfl: selectedItem,
+      product: selectedProduct,
+      present_org: userName,
+      session_id: sessionId,
+    };
+    console.log(data, "data");
+
+    try {
+      await axios
+        .post("https://100093.pythonanywhere.com/api/connect_portfolio/", data)
+        .then((res) => {
+          console.log(res.data);
+          toast.success("success");
+          window.location.replace(res.data);
+        });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+      } else {
+        console.error("An unknown error occurred:", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
+      <ToastContainer position="top-right" />
+
       {!show_loader ? (
         <div className="mt-8">
           <div className="pl-8">
@@ -84,7 +125,7 @@ const Products = () => {
             <main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
               {productData?.products?.length > 1 && (
                 <>
-                  {productData?.products.map((product) => {
+                  {productData?.products?.map((product) => {
                     return (
                       <div
                         key={product._id}
@@ -93,6 +134,9 @@ const Products = () => {
                           handleMouseOver(product.product_name)
                         }
                         onMouseOut={() => handleMouseOut(product?.product_name)}
+                        onChange={() =>
+                          setSelectedProduct(product.product_name)
+                        }
                       >
                         <div className="">
                           <img
@@ -109,14 +153,23 @@ const Products = () => {
                         </div>
                         {isHovering && product.product_name === hovertitle && (
                           <div className="absolute top-0 w-full h-full">
-                            <div className="relative w-full h-full">
+                            <form
+                              className="relative w-full h-full"
+                              onSubmit={handleSubmit}
+                            >
                               <div className="bg-[#a2a2a2] opacity-50 w-full h-full p-50 rounded-sm"></div>
                               <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-between py-16 items-center">
                                 <h2 className="text-white text-[1.78rem] font-semibold">
                                   {product.product_name}
                                 </h2>
                                 <div>
-                                  <select className="outline-none h-8 w-full">
+                                  <select
+                                    className="outline-none h-8 w-full"
+                                    value={selectedItem}
+                                    onChange={(e) =>
+                                      setSelectedItem(e.target.value)
+                                    }
+                                  >
                                     <option> Select Portfolio </option>
                                     {filterDataByProduct?.map((item, index) => (
                                       <option
@@ -132,14 +185,14 @@ const Products = () => {
                                 </div>
                                 <button
                                   className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]"
-                                  onClick={() =>
-                                    window.location.assign(product.product_link)
-                                  }
+                                  // onClick={() =>
+                                  //   window.location.assign(product.product_link)
+                                  // }
                                 >
                                   Connect
                                 </button>
                               </div>
-                            </div>
+                            </form>
                           </div>
                         )}
                       </div>

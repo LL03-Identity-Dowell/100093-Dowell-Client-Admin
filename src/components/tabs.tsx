@@ -24,13 +24,9 @@ import { RootState } from "../store/Store";
 const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
 
-  // const userName = useSelector(
-  //   (state: RootState) => state.adminData.data[0]?.Username
-  // );
-
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
-  )
+  );
 
   const tabTitle = [
     {
@@ -66,16 +62,12 @@ const AdminTabs = () => {
       try {
         const data = {
           username: userName,
-          // username: 'mayowa25',
-
         };
-        console.log(data, 'sdata');
-        
+
         const response = await axios.post(
           "https://100093.pythonanywhere.com/api/get_data/",
           data
         );
-        console.log(response.data, "admin data");
 
         dispatch(getAdminData(response.data));
 
@@ -85,7 +77,7 @@ const AdminTabs = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [dispatch, userName]);
 
   return (
     <div>
