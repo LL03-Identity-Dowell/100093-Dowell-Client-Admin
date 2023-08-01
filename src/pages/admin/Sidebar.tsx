@@ -96,7 +96,7 @@ const adminusername = useSelector(
 								<ul>
 									<li className="text-[#7a7a7a] text-lg font-medium">
 										<a
-											href="http://100097.pythonanywhere.com/?session_id={{session_id}}"
+											href="https://100097.pythonanywhere.com/?session_id={{session_id}}"
 											className="text-lg font-medium"
 										>
 											1.Edit to Profile

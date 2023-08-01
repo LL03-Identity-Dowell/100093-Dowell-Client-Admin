@@ -56,7 +56,7 @@ const Header = () => {
 			}
 		};
 		fetchData();
-	}, []);
+	}, [dispatch, sessionId]);
 
 	const logout = () => {
 		localStorage.removeItem("sessionId");

@@ -319,8 +319,8 @@ const Form1 = () => {
             complaint with the appropriate EU supervisory authority. These
             rights are more specifically described in the Privacy Notices posted
             on the website at{" "}
-            <a href="http://appsample.com/" className="text-[#0000ee]">
-              http://appsample.com/
+            <a href="https://appsample.com/" className="text-[#0000ee]">
+              https://appsample.com/
             </a>{" "}
           </p>
           <br />
