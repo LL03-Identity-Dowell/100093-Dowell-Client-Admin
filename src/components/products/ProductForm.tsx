@@ -109,9 +109,9 @@ const ProductForm = () => {
           >
             <option> Select Portfolio </option>
             {filterDataByProduct?.map((item, index) => (
-              <option key={index} value={item?.portfolio_code}>
+              <option key={index} value={item?.portfolio_name}>
                 {" "}
-                {item?.portfolio_name}, {item?.role}, {item?.data_type}
+                {item?.portfolio_name}
               </option>
             ))}
           </select>

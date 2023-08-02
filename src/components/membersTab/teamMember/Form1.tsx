@@ -163,7 +163,7 @@ const Form1 = () => {
                 policies?
               </button>{" "}
             </p>
-            <input type="checkbox" />
+            <input type="checkbox" required />
           </div>
           <button
             disabled={isLoading}

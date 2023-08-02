@@ -170,7 +170,7 @@ const Products = () => {
                                     {filterDataByProduct?.map((item, index) => (
                                       <option
                                         key={index}
-                                        value={item?.portfolio_code}
+                                        value={item?.portfolio_name}
                                       >
                                         {" "}
                                         {item?.portfolio_name}, {item?.role},{" "}
