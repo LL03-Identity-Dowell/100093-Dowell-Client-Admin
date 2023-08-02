@@ -1275,6 +1275,7 @@ def get_workspaces(request):
         data = resp['data']
 
         other_workspace_names = [org['org_name'] for org in data[0]['other_organisation']]
+        print(other_workspace_names)
 
         return Response(
             other_workspace_names
@@ -1501,6 +1502,7 @@ def otherorg(request):
     if request.method == 'POST':
         username = request.data.get("username")
         org = request.data.get("org")
+        session_id = request.data.get("session_id")
         context = {}
         user_org = UserOrg.objects.all().filter(username=username)
         for it in user_org:
@@ -1509,7 +1511,7 @@ def otherorg(request):
 
         if username == org:
             # request.session["present_org"] = org
-            return Response("https://100093.pythonanywhere.com/#", status=HTTP_200_OK)
+            return Response(f"https://100093.pythonanywhere.com/?session_id={session_id}#", status=HTTP_200_OK)
         else:
             userorg = UserInfo.objects.all().filter(username=username)
             for i in userorg:
