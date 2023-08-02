@@ -1494,3 +1494,94 @@ def connect_portfolio(request):
             notification_obj.save()
         except:
             pass
+
+
+@api_view(['POST'])
+def otherorg(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        org = request.data.get("org")
+        context = {}
+        user_org = UserOrg.objects.all().filter(username=username)
+        for it in user_org:
+            data12 = it.org
+            data13 = json.loads(data12)
+
+        if username == org:
+            # request.session["present_org"] = org
+            return Response("https://100093.pythonanywhere.com/#", status=HTTP_200_OK)
+        else:
+            userorg = UserInfo.objects.all().filter(username=username)
+            for i in userorg:
+                data1 = i.userinfo
+                data = json.loads(data1)
+            # return HttpResponse(f'{data}')
+            request.session["present_org"] = org
+
+            context["img"] = data13["profile_info"]["profile_img"]
+
+            context["time"] = data["dowell_time"]
+            context["location"] = data["city"]
+            userorg = UserOrg.objects.all().filter(username=username)
+            for i in userorg:
+                dataorg = i.org
+                dataorg1 = json.loads(dataorg)
+            context["datalav"] = dataorg1
+            ors = []
+            context["first"] = dataorg1["profile_info"]["first_name"]
+            context["last"] = dataorg1["profile_info"]["last_name"]
+            for lsr in dataorg1["organisations"]:
+                ors.append(lsr["org_name"])
+            for lst in dataorg1["other_organisation"]:
+                ors.append(lst["org_name"])
+            co = []
+            po = []
+            othero = []
+            for i in dataorg1["other_organisation"]:
+                if i["org_name"] == org:
+                    try:
+                        co.append(i["product"])
+                        if i["portfolio_name"] and "enable" in i["status"]:
+                            othero.append(i)
+                        else:
+                            po.append(i["portfolio_name"])
+                    except:
+                        pass
+
+            publiclinks = UserOrg.objects.all().filter(username=org)
+            print(publiclinks)
+
+            temp = []
+            for ii in publiclinks:
+                publicorg = ii.org
+                # print(publicorg)
+                publicorg1 = json.loads(publicorg)
+                for jj in publicorg1["portpolio"]:
+                    if jj["member_type"] == "public":
+                        temp.append(jj)
+            url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
+
+            # Define the data to be sent in the POST request
+            data = {
+                "username": org
+            }
+
+            # Make the POST request
+            response_login = requests.post(url_lastlogin, json=data)
+
+            # Check if the request was successful
+            if response_login.status_code == 200:
+                # Extract the LastloginTimes data from the response
+                last_login_times = response_login.json()["data"]["LastloginTimes"]
+
+                print("Last login times:", last_login_times)
+            else:
+                print(f"POST request failed with status code {response_login.status_code}.")
+            context["last_login_times"] = last_login_times
+            context["othero"] = othero
+            context["aiport"] = [*set(po)]
+            context["myorg"] = [*set(ors)]
+            context["products"] = [*set(co)]
+            context["public"] = temp
+
+            return Response(context, status=HTTP_200_OK)
