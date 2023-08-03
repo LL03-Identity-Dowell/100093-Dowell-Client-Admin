@@ -24,7 +24,7 @@ const ProductForm = () => {
   );
 
   const selectedItemData = portfolioData?.find(
-    (item) => item?.portfolio_code === selectedItem
+    (item) => item?.portfolio_name === selectedItem
   );
   const sessionId = localStorage.getItem("sessionId");
 
