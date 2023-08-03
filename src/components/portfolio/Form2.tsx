@@ -80,6 +80,17 @@ const Form2 = () => {
     }
   };
 
+  const getMembers = useSelector(
+    (state: RootState) => state.adminData.data[0]?.members
+  );
+
+  const filterUserMember = getMembers?.guest_members?.accept_members.filter(
+    (item) => item
+  );
+  const filterTeamMember = getMembers?.team_members?.accept_members.filter(
+    (item) => item
+  );
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -100,26 +111,38 @@ const Form2 = () => {
               id="member_type"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option>Owner </option>
-              <option> Team Member </option>
-              <option>User </option>
-              <option> Public</option>
+              <option value="owner">Owner </option>
+              <option value={"team_member"}> Team Member </option>
+              <option value="user">User </option>
+              <option value="public"> Public</option>
             </select>
           </div>
 
-          <div className="mb-4">
+         <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Member
+              Select Member <span className="text-[#ff0000] text-xs">*</span>
             </label>
-            <textarea
-              rows={4}
-              placeholder="member"
-              readOnly
-              value={formInputs.member_type}
-              // onChange={handleOnChangeTextArea}
-              id="members"
-              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-            />
+            <select
+              multiple
+              // onChange={handleSelectChange}
+              id="member"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              {formInputs.member_type === "user" &&
+                filterUserMember?.map((member, key) => (
+                  <option key={key}> {member.name}</option>
+                ))}
+              {formInputs.member_type === "team_member" &&
+                filterTeamMember?.map((member, key) => (
+                  <option key={key}>
+                    {" "}
+                    {member.name === "owner" ? userName : member?.name}
+                  </option>
+                ))}
+              {formInputs.member_type === "owner" && (
+                <option> {userName}</option>
+              )}
+            </select>
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">

@@ -181,9 +181,7 @@ const Products = () => {
                                 </div>
                                 <button
                                   className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]"
-                                  // onClick={() =>
-                                  //   window.location.assign(product.product_link)
-                                  // }
+                                  
                                 >
                                   Connect
                                 </button>

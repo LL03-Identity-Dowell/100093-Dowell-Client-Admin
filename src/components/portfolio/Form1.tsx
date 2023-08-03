@@ -20,7 +20,7 @@ interface FormInputs {
 const Form1 = () => {
   const [formInputs, setFormInputs] = useState<FormInputs>({
     username: "",
-    member_type: "",
+    member_type: "owner",
     member: [],
     product: "",
     data_type: "",
@@ -39,6 +39,17 @@ const Form1 = () => {
   );
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
+  );
+
+  const getMembers = useSelector(
+    (state: RootState) => state.adminData.data[0]?.members
+  );
+
+  const filterUserMember = getMembers?.guest_members?.accept_members.filter(
+    (item) => item
+  );
+  const filterTeamMember = getMembers?.team_members?.accept_members.filter(
+    (item) => item
   );
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -123,10 +134,10 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
-              <option>Owner </option>
-              <option> Team Member </option>
-              <option>User </option>
-              <option> Public</option>
+              <option value="owner">Owner </option>
+              <option value={"team_member"}> Team Member </option>
+              <option value="user">User </option>
+              <option value="public"> Public</option>
             </select>
           </div>
           <div className="mb-4">
@@ -139,9 +150,20 @@ const Form1 = () => {
               id="member"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.portfolio_name}</option>
-              ))}
+              {formInputs.member_type === "user" &&
+                filterUserMember?.map((member, key) => (
+                  <option key={key}> {member.name}</option>
+                ))}
+              {formInputs.member_type === "team_member" &&
+                filterTeamMember?.map((member, key) => (
+                  <option key={key}>
+                    {" "}
+                    {member.name === "owner" ? userName : member?.name}
+                  </option>
+                ))}
+              {formInputs.member_type === "owner" && (
+                <option> {userName}</option>
+              )}
             </select>
           </div>
           <div className="mb-4">

@@ -81,6 +81,7 @@ const Form3 = () => {
               id="enable_item"
               className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
+              <option> ...Select... </option>
               {level4Items.map((item, index) =>
                 item.status === "enable" ? (
                   <option key={index} value={item.item_code}>
@@ -99,6 +100,7 @@ const Form3 = () => {
               id="disable_item"
               className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
+              <option> ...Select... </option>
               {level4Items.map((item, index) =>
                 item.status === "disable" ? (
                   <option key={index}>{item.item_name}</option>
