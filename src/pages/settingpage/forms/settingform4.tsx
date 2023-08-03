@@ -78,7 +78,7 @@ const handleSubmit = (
 			};
 
 			await axios.post(
-				"http://100093.pythonanywhere.com/api/settings/",
+				"https://100093.pythonanywhere.com/api/settings/",
 				data
 			);
 

@@ -91,7 +91,7 @@ const Header = () => {
 				};
 
 				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/settings/",
+					"https://100093.pythonanywhere.com/api/settings/",
 					data
 				);
 
@@ -107,7 +107,7 @@ const Header = () => {
 				};
 
 				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/getproducts/",
+					"https://100093.pythonanywhere.com/api/getproducts/",
 					data
 				);
 
