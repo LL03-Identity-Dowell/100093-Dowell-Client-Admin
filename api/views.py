@@ -1587,3 +1587,51 @@ def otherorg(request):
             context["public"] = temp
 
             return Response(context, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def update_level_name(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        level = request.data.get("level")
+        level_name = request.data.get("level_name")
+        ls = []
+
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+
+        resp = json.loads(login)
+        data = resp['data']
+
+        for org in data[0]['organisations']:
+            if level in org:
+                break
+            else:
+                return Response({
+                    "error": "Invalid level provided."
+                }, status=HTTP_400_BAD_REQUEST)
+
+
+        ls.append(level_name)
+        r = level
+
+        userorg = UserOrg.objects.all().filter(username=username)
+        if userorg:
+            for i in userorg:
+                o = i.org
+                odata = json.loads(o)
+            odata["organisations"][0][r]["level_name"] = ls[0]
+            org = odata["organisations"]
+            obj, created = UserOrg.objects.update_or_create(username=username,
+                                                            defaults={'org': json.dumps(odata)})
+
+            field = {"document_name": username}
+            update = {"organisations": org}
+            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                     "update", field, update)
+
+            return Response({
+                "success": f"name successfully changed to {level_name}"
+            }, status=HTTP_400_BAD_REQUEST)
+
