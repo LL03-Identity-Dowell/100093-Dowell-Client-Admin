@@ -1309,36 +1309,65 @@ def connect_portfolio(request):
         session = request.data.get("session_id")
 
         try:
-            lo = UserOrg.objects.all().filter(username=orl)
+            lo=UserOrg.objects.all().filter(username=orl)
         except:
-            return Response("User Org Not Found in Local Database")
-
+            return HttpResponse("User Org Not Found in Local Database")
         for rd in lo:
-            lo1 = rd.org
-            lrf = json.loads(lo1)
-        mydict = {}
+            lo1=rd.org
+            lrf=json.loads(lo1)
+        mydict={}
+        # if "API" in product:
+        #     return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
 
-        ro = UserInfo.objects.all().filter(username=user)
-        ro1 = UserOrg.objects.all().filter(username=user)
+        ro=UserInfo.objects.all().filter(username=user)
+        ro1=UserOrg.objects.all().filter(username=user)
+        # user_orgn = UserOrg.objects.get(username=user)
+        # org_dict = json.loads(user_orgn.org)
+        # # return HttpResponse(org_dict["profile_info"])
+        # try:
+        #     # Iterate over the 'portpolio' list in the data
+        #     for portfolio in org_dict['portpolio']:
+        #         if portfolio['portfolio_name'] == portf:
+        #             status = portfolio['status']
+        #             notification_obj = Notification(username=user, owner=orl,
+        #                     notification=json.dumps(org_dict["profile_info"]),
+        #                     status=status)
+        #             notification_obj.save()
+        # # return HttpResponse(lrf)
+        # except:
+        #     pass
+
         for i in ro:
-            rofield = i.userinfo
-            s = json.loads(rofield)
-            mydict["userinfo"] = s
-        if orl == user:
-            lrst = []
+            rofield=i.userinfo
+            #s = rofield.replace("\'", "\"")
+            s=json.loads(rofield)
+            mydict["userinfo"]=s
+
+        if orl==user:
+            lrst=[]
             for lis in lrf["portpolio"]:
-                if lis["portfolio_name"] == portf:
-                    mydict["portfolio_info"] = [lis]
+                if lis["portfolio_name"]==portf:
+                    mydict["portfolio_info"]=[lis]
+                # if lis["product"]==product:
                 if lis["product"] in product:
                     lrst.append(lis)
+                # else:
+                #     return HttpResponse(f"<h1 align='center'>Data Not Found<br><a href='/'>Home</a></h1>")
             try:
                 if lrf["organisations"][0]["org_img"]:
                     mydict["userinfo"]["org_img"] = lrf["organisations"][0]["org_img"]
             except:
-                mydict["userinfo"][
-                    "org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
-            obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
-                                                             defaults={'alldata': json.dumps(mydict)})
+                    mydict["userinfo"]["org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
+
+            try:
+                mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
+                mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
+                mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
+            except Exception as e:
+                return Response(f"Data Not Found{e} {lrf}")
+            mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
+            # return JsonResponse({"msg":mydict})
+            obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
             if "Workflow AI" in product or "workflow" in product:
                 if s["User_type"] == "betatester":
                     return Response(
