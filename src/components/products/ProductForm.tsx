@@ -11,7 +11,7 @@ const ProductForm = () => {
     (state: RootState) => state.adminData.data[0]?.portpolio
   );
   const userName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.Username
+    (state: RootState) => state.userinfo?.userinfo?.username
   );
 
   const [selectedProduct, setSelectedProduct] = useState<string>("");
@@ -48,7 +48,7 @@ const ProductForm = () => {
           console.log(res.data);
           setErrMsg("");
           toast.success("success");
-          window.location.replace(res.data);
+          window.location.href = 'res.data';
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -82,12 +82,7 @@ const ProductForm = () => {
             placeholder="Select Product"
           >
             <option> Select Product </option>
-            {/* {portfolioData?.map((product, index) => (
-              <option key={index} value={product.product}>
-                {" "}
-                {product.product}{" "}
-              </option>
-            ))} */}
+
             {productData?.products?.map((product) => (
               <option key={product._id} value={product.product_name}>
                 {" "}

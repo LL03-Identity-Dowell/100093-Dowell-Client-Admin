@@ -84,7 +84,7 @@ const Products = () => {
         .then((res) => {
           console.log(res.data);
           toast.success("success");
-          window.location.replace(res.data);
+          window.location.href = 'res.data';
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

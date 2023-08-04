@@ -28,6 +28,7 @@ const Form2 = () => {
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
+  const productData = useSelector((state: RootState) => state.products);
 
   const [formInputs, setFormInputs] = useState<FormInputs>({
     username: "",
@@ -118,7 +119,7 @@ const Form2 = () => {
             </select>
           </div>
 
-         <div className="mb-4">
+          <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Select Member <span className="text-[#ff0000] text-xs">*</span>
             </label>
@@ -153,8 +154,11 @@ const Form2 = () => {
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.product}</option>
+              {productData?.products?.map((product) => (
+                <option key={product._id} value={product.product_name}>
+                  {" "}
+                  {product.product_name}{" "}
+                </option>
               ))}
             </select>
           </div>
@@ -166,9 +170,10 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.data_type}</option>
-              ))}
+              <option value="real_data">Real Data</option>
+              <option value="learning_data">Learning Data</option>
+              <option value="testing_data">Testing Data</option>
+              <option value="archived_data">Archived Data</option>{" "}
             </select>
           </div>
           <div className="mb-4">
@@ -179,9 +184,10 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.operations_right}</option>
-              ))}
+              <option value="view">View</option>
+              <option value="add/edit">Add/Edit</option>
+              <option value="delete">Delete</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
           <div className="mb-4">
@@ -197,42 +203,62 @@ const Form2 = () => {
               ))}
             </select>
           </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Enabled Portfolios
-            </label>
-            <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-              {portfolio?.map((products, key) =>
-                products.status === "enable" ? (
-                  <option key={key}> {products.portfolio_name}</option>
-                ) : null
-              )}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Disabled Portfolios
-            </label>
-            <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
-              {portfolio?.map((products, key) =>
-                products.status === "disable" ? (
-                  <option key={key}> {products.portfolio_name}</option>
-                ) : null
-              )}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Details of selected Portfolio
-            </label>
-            <textarea
-              rows={4}
-              placeholder="Portfolio details"
-              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-            />
-          </div>
-
           <form onSubmit={handleSubmitStatus}>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Enabled Portfolios
+              </label>
+              <select
+                required
+                onChange={handleSelectStatus}
+                id="portfolio_code"
+                value={formInputs.portfolio_code}
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                <option value="">...select...</option>
+                {portfolio?.map((products, key) =>
+                  products.status === "enable" ? (
+                    <option key={key} value={products.portfolio_code}>
+                      {" "}
+                      {products.portfolio_name}
+                    </option>
+                  ) : null
+                )}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Disabled Portfolios
+              </label>
+              <select
+                required
+                onChange={handleSelectStatus}
+                id="portfolio_code"
+                value={formInputs.portfolio_code}
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                <option>...select...</option>
+                {portfolio?.map((products, key) =>
+                  products.status === "disable" ? (
+                    <option key={key} value={products.portfolio_code}>
+                      {" "}
+                      {products.portfolio_name}
+                    </option>
+                  ) : null
+                )}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Details of selected Portfolio
+              </label>
+              <textarea
+                rows={4}
+                placeholder="Portfolio details"
+                className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+              />
+            </div>
+
             <div className="mb-4">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
                 Enable / Disable Selected Portfolio

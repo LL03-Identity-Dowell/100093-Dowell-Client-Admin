@@ -37,6 +37,8 @@ const Form1 = () => {
   const portfolio = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio
   );
+  const productData = useSelector((state: RootState) => state.products);
+
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
@@ -107,6 +109,8 @@ const Form1 = () => {
     }
   };
 
+  console.log(formInputs);
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -135,7 +139,7 @@ const Form1 = () => {
               required
             >
               <option value="owner">Owner </option>
-              <option value={"team_member"}> Team Member </option>
+              <option value="team_member"> Team Member </option>
               <option value="user">User </option>
               <option value="public"> Public</option>
             </select>
@@ -176,8 +180,12 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.product}</option>
+              <option>...select...</option>
+              {productData?.products?.map((product) => (
+                <option key={product._id} value={product.product_name}>
+                  {" "}
+                  {product.product_name}{" "}
+                </option>
               ))}
             </select>
           </div>
@@ -191,9 +199,11 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.data_type}</option>
-              ))}
+              <option>...select...</option>
+              <option value="real_data">Real Data</option>
+              <option value="learning_data">Learning Data</option>
+              <option value="testing_data">Testing Data</option>
+              <option value="archived_data">Archived Data</option>{" "}
             </select>
           </div>
           <div className="mb-4">
@@ -207,9 +217,11 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.operations_right}</option>
-              ))}
+              <option>...select...</option>
+              <option value="view">View</option>
+              <option value="add/edit">Add/Edit</option>
+              <option value="delete">Delete</option>
+              <option value="admin">Admin</option>
             </select>
           </div>
           <div className="mb-4">
