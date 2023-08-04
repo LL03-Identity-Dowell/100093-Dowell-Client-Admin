@@ -3,7 +3,8 @@ from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdat
     GetDocumentProducts, update_products_client_admin, product_control_platform_admin, MemberControl, filter_portfolio, \
     settings, workspace_name, item_name, create_item, get_data, create_portfolio, create_role, get_layer_data, \
     update_role_status, update_portfolio_status, update_item_status, save_device_layers, get_all_details, \
-    create_team_member, create_user_member
+    create_team_member, create_user_member, get_workspaces, get_last_login, connect_portfolio, otherorg, \
+    update_level_name
 
 urlpatterns = [
     path('userinfo/', sessionView, name="userinfo"),
@@ -33,5 +34,9 @@ urlpatterns = [
     path('get_all_details/', get_all_details, name='get_all_details'),
     path('create_team_member/', create_team_member, name='create_team_member'),
     path('create_user_member/', create_user_member, name='create_user_member'),
-
+    path('get_workspaces/', get_workspaces, name='get_workspaces'),
+    path('get_last_login/', get_last_login, name='get_last_login'),
+    path('connect_portfolio/', connect_portfolio, name='connect_portfolio'),
+    path('otherorg/', otherorg, name='otherorg'),
+    path('update_level_name/', update_level_name, name='update_level_name'),
 ]

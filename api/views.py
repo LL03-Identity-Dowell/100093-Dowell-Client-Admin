@@ -3,7 +3,7 @@ import base64
 from django.shortcuts import render, HttpResponse, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from clientadminapp.models import UserData, UserOrg
+from clientadminapp.models import UserData, UserOrg, UserInfo, Notification
 from clientadminapp.dowellconnection import dowellconnection, loginrequired
 from clientadminapp.models import publiclink
 import requests
@@ -218,7 +218,7 @@ def GetDocumentProducts(request):
 @api_view(["POST"])
 def portfolioview(request):
     odata = request.data
-    session = odata["session_id"]
+    session = odata["ses sion_id"]
     orl = odata["org_name"]
     portf = odata["portfolio"]
     user = odata["username"]
@@ -1092,16 +1092,20 @@ def save_device_layers(request):
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "fetch", field, "update")
         r = json.loads(login)
-        categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength", "id_verification"]
+        categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength",
+                      "id_verification"]
         layers = r["data"][0]["security_layers"]
         devices = ["Laptop/Desktop", "Mobile Phone", "Tablet/Ipad", "Others not listed above"]
         os = ["Windows", "Mac OS", "Linux", "Android", "IOS", "Others not listed above"]
         browsers = ["Chrome", "Safari", "Bing", "Firefox", "Edge", "Opera", "Others not listed above"]
         layers_list = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"]
         connection_type = ["Mobile Data", "Office Wifi/Secured Wifi", "Public Wifi", "Others not listed above"]
-        login_type = ["User Name & Password", "Face ID", "Voice ID", "Biometric ID", "Video ID", "Others not listed above"]
-        password_strength = ["Minimum 8 characters", "Minimum 10 characters", "Minimum 12 characters", "Minimum 16 characters", "Others not listed above"]
-        id_verification = ["Verified ID", "ID not verified", "Phone number verified", "Phone number not verified", "Email verified", "Email not verified", "Others not listed above"]
+        login_type = ["User Name & Password", "Face ID", "Voice ID", "Biometric ID", "Video ID",
+                      "Others not listed above"]
+        password_strength = ["Minimum 8 characters", "Minimum 10 characters", "Minimum 12 characters",
+                             "Minimum 16 characters", "Others not listed above"]
+        id_verification = ["Verified ID", "ID not verified", "Phone number verified", "Phone number not verified",
+                           "Email verified", "Email not verified", "Others not listed above"]
         if category not in categories:
             return Response({"error": f"{category} is not a valid category"}, status=status.HTTP_400_BAD_REQUEST)
         for key, value in data.items():
@@ -1112,13 +1116,16 @@ def save_device_layers(request):
             elif category == 'os' and key not in os:
                 return Response({"error": f"{key} is not an accepted os type"}, status=status.HTTP_400_BAD_REQUEST)
             elif category == 'connection_type' and key not in connection_type:
-                return Response({"error": f"{key} is not an accepted internet connection type"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"{key} is not an accepted internet connection type"},
+                                status=status.HTTP_400_BAD_REQUEST)
             elif category == 'login_type' and key not in login_type:
                 return Response({"error": f"{key} is not an accepted login type"}, status=status.HTTP_400_BAD_REQUEST)
             elif category == 'password_strength' and key not in password_strength:
-                return Response({"error": f"{key} is not an password strength type"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"{key} is not an password strength type"},
+                                status=status.HTTP_400_BAD_REQUEST)
             elif category == 'id_verification' and key not in id_verification:
-                return Response({"error": f"{key} is not an accepted verification status type"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": f"{key} is not an accepted verification status type"},
+                                status=status.HTTP_400_BAD_REQUEST)
         for layer in layers_list:
             layers[layer][category].clear()
         for key, value in data.items():
@@ -1128,7 +1135,6 @@ def save_device_layers(request):
                                  "update", field, update)
 
         return Response(data, status=status.HTTP_200_OK)
-
 
 
 @api_view(['POST'])
@@ -1255,3 +1261,377 @@ def create_user_member(request):
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
         response_data = {"link": link}
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_workspaces(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data']
+
+        other_workspace_names = [org['org_name'] for org in data[0]['other_organisation']]
+        print(other_workspace_names)
+
+        return Response(
+            other_workspace_names
+            , status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def get_last_login(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
+        data = {"username": username}
+        response_login = requests.post(url_lastlogin, json=data)
+        if response_login.status_code == 200:
+            last_login_times = response_login.json()["data"]["LastloginTimes"]
+        else:
+            last_login_times = None
+        return Response(
+            last_login_times
+            , status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def connect_portfolio(request):
+    if request.method == "POST" and "connect_portfolio" in request.data.get("action"):
+        user = request.data.get("username")
+        portf = request.data.get("portfl")
+        action = request.data.get("action")
+        product = request.data.get("product")
+        orl = request.data.get("present_org")
+        session = request.data.get("session_id")
+
+        try:
+            lo = UserOrg.objects.all().filter(username=orl)
+        except:
+            return Response("User Org Not Found in Local Database")
+
+        for rd in lo:
+            lo1 = rd.org
+            lrf = json.loads(lo1)
+        mydict = {}
+
+        ro = UserInfo.objects.all().filter(username=user)
+        ro1 = UserOrg.objects.all().filter(username=user)
+        for i in ro:
+            rofield = i.userinfo
+            s = json.loads(rofield)
+            mydict["userinfo"] = s
+        if orl == user:
+            lrst = []
+            for lis in lrf["portpolio"]:
+                if lis["portfolio_name"] == portf:
+                    mydict["portfolio_info"] = [lis]
+                if lis["product"] in product:
+                    lrst.append(lis)
+            try:
+                if lrf["organisations"][0]["org_img"]:
+                    mydict["userinfo"]["org_img"] = lrf["organisations"][0]["org_img"]
+            except:
+                mydict["userinfo"][
+                    "org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
+            obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
+                                                             defaults={'alldata': json.dumps(mydict)})
+            if "Workflow AI" in product or "workflow" in product:
+                if s["User_type"] == "betatester":
+                    return Response(
+                        f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093')
+                else:
+                    # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
+                    return Response(
+                        f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093')
+
+            elif "Scale" in product or "scales" in product:
+                return Response(
+                    f'https://100035.pythonanywhere.com/client?session_id={session}&id=100093')
+            elif "Legalzar" in product or "Legalzard" in product:
+                return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies')
+            elif "Calculator" in product:
+                return Response(
+                    f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093')
+            elif "Team" in product:
+                if s["User_type"] == "betatester":
+                    return Response(
+                        f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093')
+                else:
+                    return Response(
+                        f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093')
+            elif "Media" in product:
+                return Response(f'https://100007.pythonanywhere.com/')
+            elif "Customer" in product:
+                return Response(
+                    f'https://100096.pythonanywhere.com/customer-support/?session_id={session}&id=100093')
+            elif "Chat" in product:
+                return Response(
+                    f'https://100096.pythonanywhere.com/living-lab-support/?session_id={session}&id=100093')
+            elif "Repositories" in product:
+                return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/')
+            elif "Wifi" in product:
+                return Response(
+                    f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093')
+            else:
+                return Response(f"Redirect the URL of this {product} product not avail in database")
+
+        for ii in ro1:
+            pfield = ii.org
+            # s = rofield.replace("\'", "\"")
+            ss = json.loads(pfield)
+            rr = ss["other_organisation"]
+            rr1 = ss["organisations"]
+
+        for iii in rr:
+            if iii["org_name"] == request.session["present_org"]:
+                try:
+                    if iii["portfolio_name"] == portf:
+                        mydict["portfolio_info"] = [iii]
+
+                    else:
+                        pass
+                except:
+                    pass
+        try:
+            selected_role = mydict["portfolio_info"]["role"]
+        except:
+            pass
+        level1 = {}
+        level2 = {}
+        level3 = {}
+        level4 = {}
+        level5 = {}
+        try:
+            for items in lrf["roles"]:
+                if selected_role == items["role_name"]:
+                    if items["level1_item"]:
+                        level1["level1name"] = lrf["organisations"][0]["level1"]["level_name"]
+                        level1["level1items"] = lrf["organisations"][0]["level1"]["items"]
+                    if items["level2_item"]:
+                        level2["level1name"] = lrf["organisations"][0]["level2"]["level_name"]
+                        level2["level1items"] = lrf["organisations"][0]["level2"]["items"]
+                    if items["level3_item"]:
+                        level2["level3name"] = lrf["organisations"][0]["level3"]["level_name"]
+                        level2["level3items"] = lrf["organisations"][0]["level3"]["items"]
+                    if items["level4_item"]:
+                        level2["level4name"] = lrf["organisations"][0]["level4"]["level_name"]
+                        level2["level4items"] = lrf["organisations"][0]["level4"]["items"]
+                    if items["level5_item"]:
+                        level2["level5name"] = lrf["organisations"][0]["level5"]["level_name"]
+                        level2["level5items"] = lrf["organisations"][0]["level5"]["items"]
+        except:
+            pass
+        if "portfolio_info" not in mydict:
+            # return HttpResponse(f'{rr1}')
+            mydict["portfolio_info"] = [ss["portpolio"][0]]
+        productport = []
+        for product2 in lrf["portpolio"]:
+            if product == product2["product"]:
+                productport.append(product2)
+
+        mydict["organisations"] = [{"orgname": lrf["document_name"], "orgowner": lrf["document_name"]}]
+        mydict["selected_product"] = {"product_id": 1, "product_name": product, "platformpermissionproduct": [
+            {"type": "member", "operational_rights": ["view", "add", "edit", "delete"], "role": "admin"}],
+                                      "platformpermissiondata": ["real", "learning", "testing", "archived"],
+                                      "orgid": lrf["_id"], "orglogo": "", "ownerid": "", "userportfolio": productport,
+                                      "payment_status": "unpaid"}
+        mydict["selected_portfoliolevel"] = level1
+        mydict["selected_portfolioleve2"] = level2
+        mydict["selected_portfolioleve3"] = level3
+        mydict["selected_portfolioleve4"] = level4
+        mydict["selected_portfolioleve5"] = level5
+        mydict["portfolio_info"][0]["org_id"] = lrf["_id"]
+        mydict["portfolio_info"][0]["owner_name"] = lrf["document_name"]
+        mydict["portfolio_info"][0]["org_name"] = lrf["document_name"]
+        obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
+                                                         defaults={'alldata': json.dumps(mydict)})
+
+        if "Workflow AI" in product or "workflow" in product:
+            if s["User_type"] == "betatester":
+                return Response(
+                    f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093')
+            else:
+                # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
+                return Response(
+                    f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093')
+            # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
+            # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={request.session["session_id"]}&id=100093')
+        elif "Scale" in product or "scales" in product:
+            return Response(
+                f'https://100035.pythonanywhere.com/client?session_id={session}&id=100093')
+        elif "Legalzar" in product or "Legalzard" in product:
+            return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies')
+        elif "Team" in product:
+            return Response(
+                f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093')
+        elif "Media" in product:
+            return Response(f'https://100007.pythonanywhere.com/')
+        elif "Customer" in product:
+            return Response(
+                f'https://100096.pythonanywhere.com/customer-support/?session_id={session}&id=100093')
+        elif "Repositories" in product:
+            return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/')
+        elif "Chat" in product:
+            return Response(
+                f'https://100096.pythonanywhere.com/living-lab-support/?session_id={session}&id=100093')
+        else:
+            return Response(f"Redirect the URL of this {product} product not avail in database")
+    if request.method == "POST" and "request_portfolio" in request.POST:
+        user = request.data.get("username")
+        orl = request.data.get("present_org")
+        product = request.data.get("product")
+        user_orgn = UserOrg.objects.get(username=user)
+        org_dict = json.loads(user_orgn.org)
+
+        try:
+            # Iterate over the 'portpolio' list in the data
+            notification_obj = Notification(username=user, owner=orl,
+                                            notification=json.dumps(org_dict["profile_info"]),
+                                            status="enable", product=product)
+            notification_obj.save()
+        except:
+            pass
+
+
+@api_view(['POST'])
+def otherorg(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        org = request.data.get("org")
+        session_id = request.data.get("session_id")
+        context = {}
+        user_org = UserOrg.objects.all().filter(username=username)
+        for it in user_org:
+            data12 = it.org
+            data13 = json.loads(data12)
+
+        if username == org:
+            # request.session["present_org"] = org
+            return Response(f"https://100093.pythonanywhere.com/?session_id={session_id}#", status=HTTP_200_OK)
+        else:
+            userorg = UserInfo.objects.all().filter(username=username)
+            for i in userorg:
+                data1 = i.userinfo
+                data = json.loads(data1)
+            # return HttpResponse(f'{data}')
+            request.session["present_org"] = org
+
+            context["img"] = data13["profile_info"]["profile_img"]
+
+            context["time"] = data["dowell_time"]
+            context["location"] = data["city"]
+            userorg = UserOrg.objects.all().filter(username=username)
+            for i in userorg:
+                dataorg = i.org
+                dataorg1 = json.loads(dataorg)
+            context["datalav"] = dataorg1
+            ors = []
+            context["first"] = dataorg1["profile_info"]["first_name"]
+            context["last"] = dataorg1["profile_info"]["last_name"]
+            for lsr in dataorg1["organisations"]:
+                ors.append(lsr["org_name"])
+            for lst in dataorg1["other_organisation"]:
+                ors.append(lst["org_name"])
+            co = []
+            po = []
+            othero = []
+            for i in dataorg1["other_organisation"]:
+                if i["org_name"] == org:
+                    try:
+                        co.append(i["product"])
+                        if i["portfolio_name"] and "enable" in i["status"]:
+                            othero.append(i)
+                        else:
+                            po.append(i["portfolio_name"])
+                    except:
+                        pass
+
+            publiclinks = UserOrg.objects.all().filter(username=org)
+            print(publiclinks)
+
+            temp = []
+            for ii in publiclinks:
+                publicorg = ii.org
+                # print(publicorg)
+                publicorg1 = json.loads(publicorg)
+                for jj in publicorg1["portpolio"]:
+                    if jj["member_type"] == "public":
+                        temp.append(jj)
+            url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
+
+            # Define the data to be sent in the POST request
+            data = {
+                "username": org
+            }
+
+            # Make the POST request
+            response_login = requests.post(url_lastlogin, json=data)
+
+            # Check if the request was successful
+            if response_login.status_code == 200:
+                # Extract the LastloginTimes data from the response
+                last_login_times = response_login.json()["data"]["LastloginTimes"]
+
+                print("Last login times:", last_login_times)
+            else:
+                print(f"POST request failed with status code {response_login.status_code}.")
+            context["last_login_times"] = last_login_times
+            context["othero"] = othero
+            context["aiport"] = [*set(po)]
+            context["myorg"] = [*set(ors)]
+            context["products"] = [*set(co)]
+            context["public"] = temp
+
+            return Response(context, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def update_level_name(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        level = request.data.get("level")
+        level_name = request.data.get("level_name")
+        ls = []
+
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+
+        resp = json.loads(login)
+        data = resp['data']
+
+        for org in data[0]['organisations']:
+            if level in org:
+                break
+            else:
+                return Response({
+                    "error": "Invalid level provided."
+                }, status=HTTP_400_BAD_REQUEST)
+
+
+        ls.append(level_name)
+        r = level
+
+        userorg = UserOrg.objects.all().filter(username=username)
+        if userorg:
+            for i in userorg:
+                o = i.org
+                odata = json.loads(o)
+            odata["organisations"][0][r]["level_name"] = ls[0]
+            org = odata["organisations"]
+            obj, created = UserOrg.objects.update_or_create(username=username,
+                                                            defaults={'org': json.dumps(odata)})
+
+            field = {"document_name": username}
+            update = {"organisations": org}
+            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                     "update", field, update)
+
+            return Response({
+                "success": f"name successfully changed to {level_name}"
+            }, status=HTTP_400_BAD_REQUEST)
+
