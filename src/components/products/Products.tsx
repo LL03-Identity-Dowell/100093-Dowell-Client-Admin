@@ -1,9 +1,7 @@
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
-import { getproducts } from "../../store/slice/products";
-import { getloaderstate } from "../../store/slice/loaderstate";
 import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
 import { ToastContainer, toast } from "react-toastify";
@@ -12,9 +10,7 @@ const Products = () => {
   const productData = useSelector((state: RootState) => state.products);
   const show_loader = useSelector((state: RootState) => state.loaderslice);
   const userData = useSelector((state: RootState) => state.userinfo);
-  const userName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.Username
-  );
+  const userName = userData.userinfo.username;
 
   const [isHovering, setIsHovering] = useState(false);
   const [hovertitle, setHovertitle] = useState("");
@@ -39,31 +35,7 @@ const Products = () => {
     setHovertitle(title);
   };
 
-  const dispatch = useDispatch();
-
   const sessionId = localStorage.getItem("sessionId");
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = {
-          // username: "uxliveadmin",
-          username: userData.userinfo.username,
-        };
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/getproducts/",
-          data
-        );
-
-        dispatch(getproducts(response.data));
-
-        dispatch(getloaderstate(false));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, [dispatch, userData.userinfo.username]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,7 +48,6 @@ const Products = () => {
       present_org: userName,
       session_id: sessionId,
     };
-    console.log(data, "data");
 
     try {
       await axios
@@ -84,7 +55,7 @@ const Products = () => {
         .then((res) => {
           console.log(res.data);
           toast.success("success");
-          window.location.href = 'res.data';
+          window.location.href = "res.data";
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -92,7 +63,7 @@ const Products = () => {
       } else {
         console.error("An unknown error occurred:", error);
       }
-    } 
+    }
   };
 
   return (
@@ -179,10 +150,7 @@ const Products = () => {
                                     ))}
                                   </select>
                                 </div>
-                                <button
-                                  className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]"
-                                  
-                                >
+                                <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
                                   Connect
                                 </button>
                               </div>

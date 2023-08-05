@@ -29,6 +29,9 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.Username
   );
   const productData = useSelector((state: RootState) => state.products);
+  const rolesdata = useSelector(
+    (state: RootState) => state.adminData.data[0].roles
+  );
 
   const [formInputs, setFormInputs] = useState<FormInputs>({
     username: "",
@@ -198,8 +201,8 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.role}</option>
+              {rolesdata?.map((roles, key) => (
+                <option key={key}> {roles.role_name}</option>
               ))}
             </select>
           </div>
@@ -212,7 +215,6 @@ const Form2 = () => {
                 required
                 onChange={handleSelectStatus}
                 id="portfolio_code"
-                value={formInputs.portfolio_code}
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option value="">...select...</option>
@@ -234,7 +236,6 @@ const Form2 = () => {
                 required
                 onChange={handleSelectStatus}
                 id="portfolio_code"
-                value={formInputs.portfolio_code}
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
@@ -269,7 +270,7 @@ const Form2 = () => {
                 id="portfolio_status"
                 className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
-                <option> ...Select... </option>
+                <option value=""> ...Select... </option>
                 <option> Enable </option>
                 <option> Disable </option>
               </select>
@@ -283,7 +284,7 @@ const Form2 = () => {
               Enable / Disable selected Portfolio
             </button>
             {statusErrMsg && (
-              <p className="text-xs text-[#FF0000] text-center pt-2">
+              <p className="text-xs text-[#FF0000] text-center pt-2 truncate">
                 {statusErrMsg}
               </p>
             )}

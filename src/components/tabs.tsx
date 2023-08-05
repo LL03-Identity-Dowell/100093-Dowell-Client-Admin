@@ -20,6 +20,7 @@ import axios from "axios";
 import { getAdminData } from "../store/slice/adminData";
 import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
+import { getproducts } from "../store/slice/products";
 
 const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
@@ -70,6 +71,21 @@ const AdminTabs = () => {
         );
 
         dispatch(getAdminData(response.data));
+
+        dispatch(getloaderstate(false));
+      } catch (error) {
+        console.error(error);
+      }
+      try {
+        const data = {
+          username: "uxliveadmin",
+        };
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/getproducts/",
+          data
+        );
+
+        dispatch(getproducts(response.data));
 
         dispatch(getloaderstate(false));
       } catch (error) {

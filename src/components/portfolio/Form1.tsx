@@ -34,8 +34,8 @@ const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  const portfolio = useSelector(
-    (state: RootState) => state.adminData.data[0]?.portpolio
+  const portfolioLength = useSelector(
+    (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
   const productData = useSelector((state: RootState) => state.products);
 
@@ -45,6 +45,10 @@ const Form1 = () => {
 
   const getMembers = useSelector(
     (state: RootState) => state.adminData.data[0]?.members
+  );
+
+  const rolesdata = useSelector(
+    (state: RootState) => state.adminData.data[0].roles
   );
 
   const filterUserMember = getMembers?.guest_members?.accept_members.filter(
@@ -109,8 +113,6 @@ const Form1 = () => {
     }
   };
 
-  console.log(formInputs);
-
   return (
     <>
       <ToastContainer position="top-right" />
@@ -118,7 +120,7 @@ const Form1 = () => {
       <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
         <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
           <p>PORTFOLIO</p>
-          <p>{"<Total enabled portfolio>"}</p>
+          <p>{`<${portfolioLength}>`}</p>
         </span>
         <div className="p-[30px]  my-20">
           <p className="text-[#FF0000] text-lg font-roboto font-semibold">
@@ -234,8 +236,10 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               <option>...Select...</option>
-              {portfolio?.map((products, key) => (
-                <option key={key}> {products.role}</option>
+              {rolesdata?.map((roles, key) => (
+                <option key={key} value={roles.role_code}>
+                  {roles.role_name}
+                </option>
               ))}
             </select>
           </div>
