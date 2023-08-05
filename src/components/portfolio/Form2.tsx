@@ -201,9 +201,13 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {rolesdata?.map((roles, key) => (
-                <option key={key}> {roles.role_name}</option>
-              ))}
+              {rolesdata?.map((roles, key) =>
+                roles.status === "enable" ? (
+                  <option key={key} value={roles.role_code}>
+                    {roles.role_name}
+                  </option>
+                ) : null
+              )}
             </select>
           </div>
           <form onSubmit={handleSubmitStatus}>

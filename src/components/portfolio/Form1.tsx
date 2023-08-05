@@ -236,11 +236,13 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               <option>...Select...</option>
-              {rolesdata?.map((roles, key) => (
-                <option key={key} value={roles.role_code}>
-                  {roles.role_name}
-                </option>
-              ))}
+              {rolesdata?.map((roles, key) =>
+                roles.status === "enable" ? (
+                  <option key={key} value={roles.role_code}>
+                    {roles.role_name}
+                  </option>
+                ) : null
+              )}
             </select>
           </div>
           <div className="mb-4">
