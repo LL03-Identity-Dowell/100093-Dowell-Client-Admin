@@ -11,7 +11,8 @@ const Form1 = () => {
   const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
-  const [link, setLink] = useState(null);
+  const [link, setLink] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
   const [formInputs, setFormInputs] = useState({
     member_name: "",
     member_code: "",
@@ -31,6 +32,20 @@ const Form1 = () => {
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
+
+  const handleCopyToClipBoard = () => {
+    if (link === "") {
+      toast.error("Unable to copy link");
+    } else {
+      navigator.clipboard
+        .writeText(link)
+        .then(() => {
+          setIsCopied(true);
+          toast.success("copied");
+        })
+        .catch((error) => console.error("Error copying link", error));
+    }
+  };
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
@@ -74,7 +89,6 @@ const Form1 = () => {
       setIsLoading(false);
     }
   };
-  console.log(link, "link");
 
   return (
     <>
@@ -182,8 +196,11 @@ const Form1 = () => {
           <p className="px-6 text-sm truncate">{link}</p>
         </div>
 
-        <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-          Copy invitation link
+        <button
+          className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+          onClick={handleCopyToClipBoard}
+        >
+          {isCopied ? "Copied" : "Copy invitation link"}
         </button>
 
         <form className="border-t border-[#FF0000] my-8">

@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [link, setLink] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
   const [formInputs, setFormInputs] = useState({
     user_name: "",
     user_code: "",
@@ -18,6 +20,20 @@ const Form1 = () => {
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
+
+  const handleCopyToClipBoard = () => {
+    if (link === "") {
+      toast.error("Unable to copy link");
+    } else {
+      navigator.clipboard
+        .writeText(link)
+        .then(() => {
+          setIsCopied(true);
+          toast.success("copied");
+        })
+        .catch((error) => console.error("Error copying link", error));
+    }
+  };
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
@@ -45,6 +61,7 @@ const Form1 = () => {
         .post("https://100093.pythonanywhere.com/api/create_user_member/", data)
         .then((res) => {
           console.log(res.data);
+          setLink(res.data.link);
           setErrMsg("");
           toast.success("success");
         });
@@ -151,11 +168,14 @@ const Form1 = () => {
 
         <span className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold flex flex-col items-center">
           <p>User Invitation Link</p>
-          {/* <p className="px-6 text-sm truncate">{link}</p> */}
+          <p className="px-6 text-sm truncate">{link}</p>
         </span>
 
-        <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
-          Copy invitation link
+        <button
+          className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+          onClick={handleCopyToClipBoard}
+        >
+          {isCopied ? "Copied" : "Copy invitation link"}
         </button>
         <form className="border-t border-[#FF0000] my-8">
           <div className="px-4 mt-8">
