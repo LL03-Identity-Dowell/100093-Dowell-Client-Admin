@@ -48,7 +48,7 @@ const Form1 = () => {
   );
 
   const rolesdata = useSelector(
-    (state: RootState) => state.adminData.data[0].roles
+    (state: RootState) => state.adminData.data[0]?.roles
   );
 
   const filterUserMember = getMembers?.guest_members?.accept_members.filter(

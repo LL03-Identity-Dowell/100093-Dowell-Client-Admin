@@ -30,7 +30,7 @@ const Form2 = () => {
   );
   const productData = useSelector((state: RootState) => state.products);
   const rolesdata = useSelector(
-    (state: RootState) => state.adminData.data[0].roles
+    (state: RootState) => state.adminData.data[0]?.roles
   );
 
   const [formInputs, setFormInputs] = useState<FormInputs>({
