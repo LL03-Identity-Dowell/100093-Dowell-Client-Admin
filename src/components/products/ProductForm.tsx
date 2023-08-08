@@ -48,7 +48,7 @@ const ProductForm = () => {
           console.log(res.data);
           setErrMsg("");
           toast.success("success");
-          window.location.href = 'res.data';
+          window.location.href = res.data;
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

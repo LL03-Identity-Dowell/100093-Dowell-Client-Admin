@@ -70,22 +70,17 @@ const AdminTabs = () => {
           data
         );
 
-        dispatch(getAdminData(response.data));
-
-        dispatch(getloaderstate(false));
-      } catch (error) {
-        console.error(error);
-      }
-      try {
-        const data = {
+        const productData = {
           username: "uxliveadmin",
         };
-        const response = await axios.post(
+        const productResponse = await axios.post(
           "https://100093.pythonanywhere.com/api/getproducts/",
-          data
+          productData
         );
 
-        dispatch(getproducts(response.data));
+        dispatch(getproducts(productResponse.data));
+
+        dispatch(getAdminData(response.data));
 
         dispatch(getloaderstate(false));
       } catch (error) {

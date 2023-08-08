@@ -55,7 +55,7 @@ const Products = () => {
         .then((res) => {
           console.log(res.data);
           toast.success("success");
-          window.location.href = "res.data";
+          window.location.href = res.data;
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -89,14 +89,15 @@ const Products = () => {
           </div>
 
           <section className="relative">
-            <main className={`grid lg:grid-cols-3 grid-cols-1 w-full`}>
+            <main className={`flex flex-col w-full `}>
+<div className="flex flex-wrap justify-center w-full ">
               {productData?.products?.length > 1 && (
                 <>
                   {productData?.products?.map((product) => {
                     return (
                       <div
                         key={product._id}
-                        className="relative w-full h-full "
+                        className="relative flex flex-col flex-wrap h-full hover:accordion_hover"
                         onMouseOver={() =>
                           handleMouseOver(product.product_name)
                         }
@@ -162,6 +163,7 @@ const Products = () => {
                   })}
                 </>
               )}
+</div>
             </main>
           </section>
 
