@@ -89,81 +89,91 @@ const Products = () => {
           </div>
 
           <section className="relative">
-            <main className={`flex flex-col w-full `}>
-<div className="flex flex-wrap justify-center w-full ">
-              {productData?.products?.length > 1 && (
-                <>
-                  {productData?.products?.map((product) => {
-                    return (
-                      <div
-                        key={product._id}
-                        className="relative flex flex-col flex-wrap h-full hover:accordion_hover"
-                        onMouseOver={() =>
-                          handleMouseOver(product.product_name)
-                        }
-                        onMouseOut={() => handleMouseOut(product?.product_name)}
-                        onChange={() =>
-                          setSelectedProduct(product.product_name)
-                        }
-                      >
-                        <div className="">
-                          <img
-                            src={`${
-                              product.product_logo?.includes(
-                                "https://100093.pythonanywhere.com"
-                              )
-                                ? product.product_logo
-                                : `https://100093.pythonanywhere.com${product.product_logo}`
-                            } `}
-                            alt=""
-                            className="w-full h-full"
-                          />
-                        </div>
-                        {isHovering && product.product_name === hovertitle && (
-                          <div className="absolute top-0 w-full h-full">
-                            <form
-                              className="relative w-full h-full"
-                              onSubmit={handleSubmit}
-                            >
-                              <div className="bg-[#a2a2a2] opacity-50 w-full h-full p-50 rounded-sm"></div>
-                              <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-between py-16 items-center">
-                                <h2 className="text-white text-[1.78rem] font-semibold">
-                                  {product.product_name}
-                                </h2>
-                                <div>
-                                  <select
-                                    className="outline-none h-8 w-full"
-                                    value={selectedItem}
-                                    onChange={(e) =>
-                                      setSelectedItem(e.target.value)
-                                    }
-                                  >
-                                    <option> Select Portfolio </option>
-                                    {filterDataByProduct?.map((item, index) => (
-                                      <option
-                                        key={index}
-                                        value={item?.portfolio_name}
-                                      >
-                                        {" "}
-                                        {item?.portfolio_name}, {item?.role},{" "}
-                                        {item?.data_type}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
-                                <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                                  Connect
-                                </button>
-                              </div>
-                            </form>
+          <main className={`flex flex-col w-full`}>
+  <div className="flex flex-wrap w-full">
+    {productData?.products?.length > 1 && (
+      <>
+        {productData?.products?.map((product) => {
+          return (
+            <div
+              key={product._id}
+              className={`relative
+              ${
+                isHovering && product.product_name === hovertitle
+                  ? ""
+                  : ""
+              }`}
+              onMouseOver={() =>
+                handleMouseOver(product.product_name)
+              }
+              onMouseOut={() =>
+                handleMouseOut(product?.product_name)
+              }
+              onChange={() =>
+                setSelectedProduct(product.product_name)
+              }
+            >
+                          <div className="h-80 w-full">
+                            <img
+                              src={`${
+                                product.product_logo?.includes(
+                                  "https://100093.pythonanywhere.com"
+                                )
+                                  ? product.product_logo
+                                  : `https://100093.pythonanywhere.com${product.product_logo}`
+                              } `}
+                              alt=""
+                              className="w-full  object-none "
+                            />
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-</div>
+                          {isHovering &&
+                            product.product_name === hovertitle && (
+                              <div className="absolute top-0 w-full h-full">
+                                <form
+                                  className="relative w-full h-full"
+                                  onSubmit={handleSubmit}
+                                >
+                                  <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-sm"></div>
+                                  <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
+                                    <h2 className="text-white text-[1.78rem] font-semibold">
+                                      {product.product_name}
+                                    </h2>
+                                    <div className="w-full px-6">
+                                      <select
+                                        className="outline-none h-8 w-full"
+                                        value={selectedItem}
+                                        onChange={(e) =>
+                                          setSelectedItem(e.target.value)
+                                        }
+                                      >
+                                        <option> Select Portfolio </option>
+                                        {filterDataByProduct?.map(
+                                          (item, index) => (
+                                            <option
+                                              key={index}
+                                              value={item?.portfolio_name}
+                                            >
+                                              {" "}
+                                              {item?.portfolio_name},{" "}
+                                              {item?.role}, {item?.data_type}
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                    </div>
+                                    <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
+                                      Connect
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            )}
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </div>
             </main>
           </section>
 

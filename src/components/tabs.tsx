@@ -73,6 +73,8 @@ const AdminTabs = () => {
         const productData = {
           username: "uxliveadmin",
         };
+        dispatch(getAdminData(response.data));
+
         const productResponse = await axios.post(
           "https://100093.pythonanywhere.com/api/getproducts/",
           productData
@@ -80,7 +82,6 @@ const AdminTabs = () => {
 
         dispatch(getproducts(productResponse.data));
 
-        dispatch(getAdminData(response.data));
 
         dispatch(getloaderstate(false));
       } catch (error) {
