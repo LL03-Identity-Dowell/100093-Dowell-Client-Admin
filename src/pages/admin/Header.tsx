@@ -56,7 +56,7 @@ const Header = () => {
 			}
 		};
 		fetchData();
-	}, []);
+	}, [dispatch, sessionId]);
 
 	const logout = () => {
 		localStorage.removeItem("sessionId");
@@ -204,9 +204,9 @@ const otherorglist = useSelector((state: RootState) => state.sidebar?.workspace)
 						{currentPath == "/setting" ? (
 							<div className="bg-[#cef9d2] text-center  p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg">
 								Settings for
-								<span className="text-[red]">{userData.userinfo.username}</span>
+								<span className="text-[red]">{userData?.userinfo?.username}</span>
 								, Owner
-								<span className="text-[red]">{userData.userinfo.username}</span>
+								<span className="text-[red]">{userData?.userinfo?.username}</span>
 							</div>
 						) : (
 							<div className="bg-[#cef9d2] p-[15px] border-2 border-[#7a7a7a] mt-8">

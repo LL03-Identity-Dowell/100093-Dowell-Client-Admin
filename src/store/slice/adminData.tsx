@@ -291,7 +291,6 @@ const adminDataSlice = createSlice({
   },
   reducers: {
     getAdminData(_state, action) {
-      console.log(action.payload);
       return action.payload;
     },
   },

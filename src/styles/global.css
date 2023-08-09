@@ -18,6 +18,9 @@ body {
   transform: scale(1.05);
   overflow: hidden !important;
 }
+.accordion_hover:hover {
+  flex: 3 1 0% !important;
+}
 
 @layer components {
   .visuallyHidden {

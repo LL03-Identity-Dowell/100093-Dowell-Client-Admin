@@ -96,7 +96,7 @@ export default function Footer() {
                       <a href="/about-us">About us</a>
                     </li>
                     <li className="text-[#fffff9] hover:text-[#A2D95E] font-raleway">
-                      <a href="http://www.salesagent.dowellstore.org/">Sales Agent</a>
+                      <a href="https://www.salesagent.dowellstore.org/">Sales Agent</a>
                     </li>
                   </ul>
                 </span>

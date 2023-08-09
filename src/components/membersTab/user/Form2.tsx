@@ -31,14 +31,14 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Users not having Portfolio
             </label>
-            <select
+            <select multiple
               id="no_portfolio"
               onChange={handleSelectOnChange}
               value={selectedItems}
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              <option>...Select...</option>
+              {/* <option>...Select...</option> */}
               {guest_member?.pending_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
@@ -51,14 +51,14 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Users having assigned Portfolio
             </label>
-            <select
+            <select multiple
               onChange={handleSelectOnChange}
               id="have_portfolio"
               value={selectedItems}
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              <option>...Select...</option>
+              {/* <option>...Select...</option> */}
               {guest_member?.accept_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
