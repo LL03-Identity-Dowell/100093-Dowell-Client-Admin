@@ -20,16 +20,14 @@ import axios from "axios";
 import { getAdminData } from "../store/slice/adminData";
 import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
-
+import { getproducts } from "../store/slice/products";
 
 const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
 
   const adminusername = useSelector(
-		(state: RootState) => state.userinfo.userinfo.username
-	);
-
-	
+    (state: RootState) => state.userinfo.userinfo.username
+  );
 
   const tabTitle = [
     {
@@ -62,22 +60,32 @@ const AdminTabs = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const productData = {
+        username: "uxliveadmin",
+      };
+
       try {
-        if (adminusername !== '') {
+        if (adminusername !== "") {
           const data = {
-						username: adminusername,
-					};
-					console.log(data, "sdata");
+            username: adminusername,
+          };
+          console.log(data, "sdata");
 
-					const response = await axios.post(
-						"https://100093.pythonanywhere.com/api/get_data/",
-						data
-					);
-					console.log(response.data, "admin data");
+          const response = await axios.post(
+            "https://100093.pythonanywhere.com/api/get_data/",
+            data
+          );
+          const productResponse = await axios.post(
+            "https://100093.pythonanywhere.com/api/getproducts/",
+            productData
+          );
+          console.log(response.data, "admin data");
+          console.log(productResponse.data, "product data");
 
-					dispatch(getAdminData(response.data));
+          dispatch(getAdminData(response.data));
+          dispatch(getproducts(productResponse.data));
 
-					dispatch(getloaderstate(false));
+          dispatch(getloaderstate(false));
         }
       } catch (error) {
         console.error(error);
