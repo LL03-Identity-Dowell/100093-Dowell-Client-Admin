@@ -4,8 +4,12 @@ import AdminTabs from "../../components/tabs";
 
 import Sidebar from "./Sidebar";
 import Header from "./Header";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
+import Otherorgtab from "../../components/otherorgtab";
 
 const ClientAdmin = () => {
+  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
   return (
     <>
       <Layout>
@@ -16,7 +20,10 @@ const ClientAdmin = () => {
             <Sidebar />
 
             <div className="lg:w-3/4">
-              <AdminTabs />
+              {
+                selectedOrg.type=='owner'? <AdminTabs />:<Otherorgtab />
+              }
+             
             </div>
           </section>
         </main>

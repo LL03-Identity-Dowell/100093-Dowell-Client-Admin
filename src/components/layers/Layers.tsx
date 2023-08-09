@@ -1,4 +1,4 @@
-import { useEffect,useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -22,11 +22,6 @@ const adminusername = useSelector(
 	(state: RootState) => state.userinfo.userinfo.username
 );
 
-const [defaultusername, setdefaultusername] = useState(adminusername);
-
-useEffect(() => {
-	setdefaultusername(adminusername);
-}, [adminusername]);
 
 
 	const usedispatch = useDispatch();
@@ -38,7 +33,7 @@ useEffect(() => {
 			try {
 				
 				const os = {
-					username: defaultusername,
+					username: adminusername,
 					category: "os",
 				};
 
@@ -52,7 +47,7 @@ useEffect(() => {
         
        
 const devicesdata = {
-	username: defaultusername,
+	username: adminusername,
 	category: "devices",
 };
 
@@ -64,7 +59,7 @@ const deviceresponse = await axios.post(
 				usedispatch(getlayerdevices(deviceresponse.data));
 				
 				const browserdata = {
-					"username": defaultusername,
+					"username": adminusername,
 					"category": "browsers",
 				};
 
@@ -76,7 +71,7 @@ const deviceresponse = await axios.post(
 				usedispatch(getlayerbrowsers(bresponse.data));
 
 const condata = {
-	username: defaultusername,
+	username: adminusername,
 	category: "connection_type",
 };
 
@@ -90,7 +85,7 @@ const conresponse = await axios.post(
 
 
 const logdata = {
-	username: defaultusername,
+	username: adminusername,
 	category: "login_type",
 };
 
@@ -104,7 +99,7 @@ usedispatch(getlayerlogintype(logresponse.data));
 
 
 				const psdata = {
-					username: defaultusername,
+					username: adminusername,
 					category: "password_strength",
 				};
 
@@ -117,7 +112,7 @@ usedispatch(getlayerlogintype(logresponse.data));
 
 				
 const verifydata = {
-	username: defaultusername,
+	username: adminusername,
 	category: "id_verification",
 };
 
@@ -137,8 +132,10 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 		};
 
 		// Call the API when the component mounts
-		fetchData();
-	}, []);
+		if (adminusername != '') {
+			fetchData();
+		}
+	}, [adminusername]);
 	return (
 		<>
 			{show_loader == false ? (

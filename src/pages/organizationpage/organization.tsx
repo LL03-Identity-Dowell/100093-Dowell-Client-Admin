@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-import Otherorgtab from "../../components/otherorgtab";
+
 
 
 import Header from "../admin/Header";
@@ -22,7 +22,7 @@ const Organization = () => {
 						<Sidebar />
 
 						<div className="lg:w-3/4">
-							<Otherorgtab />
+							
 						</div>
 					</section>
 				</main>
