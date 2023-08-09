@@ -3,14 +3,14 @@ import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 import images from "../../components/images";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserinfo } from "../../store/slice/userinfo";
 import { RootState } from "../../store/Store";
-import { getloaderstate } from "../../store/slice/loaderstate";
-import { getproducts } from "../../store/slice/products";
-import { getsetting } from "../../store/slice/setting";
+import { getorgs } from "../../store/slice/organization";
+import { getselectedorgs } from "../../store/slice/selectedorg";
+
 
 const Header = () => {
 	const userData = useSelector((state: RootState) => state.userinfo);
@@ -63,87 +63,60 @@ const Header = () => {
 		location.href = logout_url;
 	};
 
-	// get setting
-	const adminusername = useSelector(
-		(state: RootState) => state.userinfo.userinfo.username
-	);
+	
 
-	const [defaultusername, setdefaultusername] = useState(adminusername);
 
-	useEffect(() => {
-		setdefaultusername(adminusername);
-	}, [adminusername]);
 
-	// const [isSubmenuHidden, setSubmenuHidden] = useState(true);
-	// const toggleSubmenu = () => {
-	// 	setSubmenuHidden(!isSubmenuHidden);
-	// };
 
-	const usedispatch = useDispatch();
+const ownerorg = useSelector((state: RootState) => state.adminData.data[0].organisations[0].org_name); 
+const otherorglist = useSelector((state: RootState) => state.sidebar?.workspace);
+	
+	
 
-	useEffect(() => {
-		// Function to call the API
 
-		const fetchData = async () => {
-			try {
-				const data = {
-					username: defaultusername,
-				};
+  const organizations = useSelector((state: RootState) => state.org);
+  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
 
-				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/settings/",
-					data
-				);
+  useEffect(() => {
+		// Fetch organizations (e.g., using an API call) and set them in the Redux store
+		interface OrgInfo {
+			orgname: string;
+			type: string;
+		}
 
-				usedispatch(getsetting(response.data));
-				console.log(response.data);
-			} catch (error) {
-				console.error(error);
-			}
-			// fetch product
-			try {
-				const data = {
-					username: defaultusername,
-				};
+		const fetchedOrganizations: OrgInfo[] = otherorglist.map((orgname) => ({
+			orgname,
+			type: "other",
+		}));
 
-				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/getproducts/",
-					data
-				);
+		const ownerObj = { orgname: ownerorg, type: "owner" };
+		fetchedOrganizations.push(ownerObj);
+		console.log(fetchedOrganizations);
 
-				usedispatch(getproducts(response.data));
+		dispatch(getorgs(fetchedOrganizations));
 
-				usedispatch(getloaderstate(false));
-			} catch (error) {
-				console.error(error);
-			}
+		// Find the default organization (type 'owner') and set it as the selected organization
+		const defaultOrg = fetchedOrganizations.find((org) => org.type === "owner");
+		if (defaultOrg) {
+			dispatch(getselectedorgs(defaultOrg));
+		}
+	}, [ownerorg,otherorglist]);
 
-			// fetch product
-		};
 
-		// Call the API when the component mounts
-		fetchData();
-	}, []); // The empty dependency array ensures that the effect runs only once
 
-	// get setting
 
-	// const adminusername = useSelector(
-	// 	(state: RootState) => state.adminData.data[0].other_organisation
-	// );
+  const handleOrgChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedOrgname = event.target.value;
+    const org = organizations.find((org) => `${org.orgname}${org.type}` === selectedOrgname);
+    if (org) {
+      dispatch(getselectedorgs(org));
+    }
+  };
 
-	//   console.log(adminusername)
 
-	const defaultworkspace = "noumanhayat";
-	const allworkspace = [
-		{ org_name: "lav" },
-		{ org_name: "dowell_hr" },
-		{ org_name: "noumanhayat" },
-	];
 
-	const [selectedworkspace, setselectedworkspace] = useState(defaultworkspace);
-	const filterorgname = [...allworkspace.map((item) => item.org_name)].filter(
-		(item) => item != defaultworkspace
-	);
+
+
 
 	return (
 		<>
@@ -241,22 +214,14 @@ const Header = () => {
 									Select Organisation you want to connect
 								</p>
 								<select
-									className="w-full rounded-md outline-none py-1"
-									onChange={(e) => setselectedworkspace(e.target.value)}
-									value={selectedworkspace}
+									className="w-full rounded-md outline-none py-1 text-center"
+									value={`${selectedOrg?.orgname}${selectedOrg?.type}` || ""}
+									onChange={handleOrgChange}
 								>
-									{
-										<option
-											className="text-center "
-											selected
-											value={defaultworkspace}
-										>
-											{defaultworkspace}
-										</option>
-									}
-									{filterorgname.map((item, index) => (
-										<option className="text-center " key={index} value={item}>
-											{item}
+									{organizations.map((org, index) => (
+										<option key={index} value={`${org.orgname}${org.type}`}>
+											{org.orgname}
+											{org.type}
 										</option>
 									))}
 								</select>

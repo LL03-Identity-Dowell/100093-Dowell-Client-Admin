@@ -5,16 +5,14 @@ import {
 	FaRegGem,
 	
 } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState,  } from "react";
 
 import Products from "./products/Products";
 
-import { useDispatch } from "react-redux";
-import axios from "axios";
-import { getAdminData } from "../store/slice/adminData";
-import { getloaderstate } from "../store/slice/loaderstate";
+
 
 const Otherorgtab = () => {
+	
 	const [tabIndex, setTabIndex] = useState(-1);
 
 	const tabTitle = [
@@ -24,29 +22,29 @@ const Otherorgtab = () => {
 		}
 	];
 
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const data = {
-					username: "Jazz3650",
-				};
-				const response = await axios.post(
-					"https://100093.pythonanywhere.com/api/get_data/",
-					data
-				);
-				console.log(response.data, "admin data");
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		try {
+	// 			const data = {
+	// 				username: "Jazz3650",
+	// 			};
+	// 			const response = await axios.post(
+	// 				"https://100093.pythonanywhere.com/api/get_data/",
+	// 				data
+	// 			);
+	// 			console.log(response.data, "admin data");
 
-				dispatch(getAdminData(response.data));
+	// 			dispatch(getAdminData(response.data));
 
-				dispatch(getloaderstate(false));
-			} catch (error) {
-				console.error(error);
-			}
-		};
-		fetchData();
-	}, []);
+	// 			dispatch(getloaderstate(false));
+	// 		} catch (error) {
+	// 			console.error(error);
+	// 		}
+	// 	};
+	// 	fetchData();
+	// }, []);
 
 	return (
 		<div>

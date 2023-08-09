@@ -28,9 +28,11 @@ const AdminTabs = () => {
   //   (state: RootState) => state.adminData.data[0]?.Username
   // );
 
-  const userName = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
-  )
+  const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
+
+	
 
   const tabTitle = [
     {
@@ -64,28 +66,28 @@ const AdminTabs = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = {
-          username: userName,
-          // username: 'mayowa25',
+        if (adminusername !== '') {
+          const data = {
+						username: adminusername,
+					};
+					console.log(data, "sdata");
 
-        };
-        console.log(data, 'sdata');
-        
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_data/",
-          data
-        );
-        console.log(response.data, "admin data");
+					const response = await axios.post(
+						"https://100093.pythonanywhere.com/api/get_data/",
+						data
+					);
+					console.log(response.data, "admin data");
 
-        dispatch(getAdminData(response.data));
+					dispatch(getAdminData(response.data));
 
-        dispatch(getloaderstate(false));
+					dispatch(getloaderstate(false));
+        }
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
-  }, []);
+  }, [adminusername]);
 
   return (
     <div>

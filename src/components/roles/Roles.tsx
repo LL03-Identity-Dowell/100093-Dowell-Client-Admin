@@ -3,10 +3,12 @@ import { RootState } from "../../store/Store";
 import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from "react";
 import axios from "axios";
 import  { getAdminData } from "../../store/slice/adminData";
+import { ToastContainer, toast } from "react-toastify";
+import Loader from "../../pages/whiteloader";
 
 
 const Roles = () => {
-
+const show_loader = useSelector((state: RootState) => state.loaderslice);
 const adminusername = useSelector(
 	(state: RootState) => state.userinfo.userinfo.username
 );
@@ -147,6 +149,9 @@ const [rulestatus, setrulestatus] = useState({
 		security_layer: "..select",
 		role_name: "",
 		role_code: "",
+		role_spec: "",
+		roleucode: "",
+		role_det:"",
 		status: "enable",
 	});
 
@@ -160,17 +165,31 @@ const [rulestatus, setrulestatus] = useState({
 			);
 			console.log(response.data);
 
-			
+			const statedata = {
+				level1_item: formData.level1_item,
+				level2_item: formData.level2_item,
+				level3_item: formData.level3_item,
+				level4_item: formData.level4_item,
+				level5_item: formData.level5_item,
+				security_layer: formData.security_layer,
+				role_name: formData.role_name,
+				role_code: formData.role_code,
+				role_details: formData.role_det,
+				role_uni_code: formData.roleucode,
+				role_specification: formData.role_spec,
+				status: formData.status,
+			};
   const updatedAdminData = {
 		...currentadmindata,
 		data: [
 			{
 				...currentadmindata.data[0],
-				roles: [...currentadmindata.data[0].roles, formData],
+				roles: [...currentadmindata.data[0].roles, statedata],
 			},
 		],
 	};
 			dispatch(getAdminData(updatedAdminData));
+			toast.success("success");
 			// Handle the response as needed
 			// Reset the form
 			setFormData({
@@ -183,6 +202,9 @@ const [rulestatus, setrulestatus] = useState({
 				security_layer: "..select",
 				role_name: "",
 				role_code: "",
+				role_spec: "",
+				roleucode: "",
+				role_det: "",
 				status: "enable",
 			});
 		} catch (error) {
@@ -193,6 +215,10 @@ const [rulestatus, setrulestatus] = useState({
 	const handleChange = (e:ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
+
+ const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+ };
 
 
 	const changeselectedrulestatus = (e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -238,12 +264,17 @@ const [rulestatus, setrulestatus] = useState({
 				})
 			);
 
+			toast.success("success");
+
 		} catch (error) {
 			console.error(error); // Handle the error appropriately
 		}
 	};
 	return (
 		<>
+			{
+				show_loader == false ? <div>
+					<ToastContainer position="top-right" />
 			<div className="mt-8 w-full lg:flex gap-8">
 				<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
 					<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
@@ -404,6 +435,8 @@ const [rulestatus, setrulestatus] = useState({
 								type="text"
 								placeholder="Role specification"
 								onChange={handleChange}
+								name="role_spec"
+								value={formData.role_spec}
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							/>
 						</div>
@@ -415,6 +448,8 @@ const [rulestatus, setrulestatus] = useState({
 								type="text"
 								placeholder="Role universal code"
 								onChange={handleChange}
+								name="roleucode"
+								value={formData.roleucode}
 								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							/>
 						</div>
@@ -425,6 +460,9 @@ const [rulestatus, setrulestatus] = useState({
 							<textarea
 								rows={4}
 								placeholder="Role details"
+								onChange={handleTextareaChange}
+								name="role_det"
+								value={formData.role_det}
 								className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
 							/>
 						</div>
@@ -496,8 +534,8 @@ const [rulestatus, setrulestatus] = useState({
 								multiple
 							>
 								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level1_item}>
-										{item.level1_item}
+									<option key={index} value={item.level4_item}>
+										{item.level4_item}
 									</option>
 								))}
 							</select>
@@ -599,7 +637,11 @@ const [rulestatus, setrulestatus] = useState({
 								<option value="disable"> Disable </option>
 							</select>
 						</div>
-						<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto" type="button" onClick={updateselectedrulestatus}>
+						<button
+							className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
+							type="button"
+							onClick={updateselectedrulestatus}
+						>
 							Enable / Disable selected Role
 						</button>
 
@@ -612,6 +654,8 @@ const [rulestatus, setrulestatus] = useState({
 					</form>
 				</div>
 			</div>
+				</div>:<Loader></Loader>
+			}
 		</>
 	);
 };

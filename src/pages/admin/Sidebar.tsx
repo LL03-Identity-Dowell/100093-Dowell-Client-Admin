@@ -2,7 +2,7 @@
 
 
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Accordion from '../../components/accordion';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,12 +14,7 @@ const adminusername = useSelector(
 	(state: RootState) => state.userinfo.userinfo.username
 );
 
-	const [defaultusername, setdefaultusername] = useState(adminusername);
-
-	useEffect(() => {
-		setdefaultusername(adminusername);
-		
-	}, [adminusername]);
+	
 
 	
 	
@@ -30,7 +25,7 @@ const adminusername = useSelector(
 		const fetchData = async () => {
 			try {
 				const os = {
-					username: defaultusername,
+					username: adminusername,
 				};
 
 				
@@ -42,7 +37,7 @@ const adminusername = useSelector(
 				usedispatch(getsidebarworkspace(osresponse.data));
 
 				const os2 = {
-					username: defaultusername,
+					username: adminusername,
 				};
 
 				const os2response = await axios.post(
@@ -59,8 +54,11 @@ const adminusername = useSelector(
 		};
 
 		// Call the API when the component mounts
-		fetchData();
-	}, [defaultusername]);
+		if (adminusername != '') {
+			fetchData();
+		}
+		
+	}, [adminusername]);
 
 	const workspace = useSelector(
 		(state: RootState) => state.sidebar?.workspace

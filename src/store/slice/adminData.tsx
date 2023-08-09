@@ -4,6 +4,7 @@ const adminDataSlice = createSlice({
   name: "adminData",
   initialState: {
     data: [
+    
       {
         _id: "",
         document_name: "",
