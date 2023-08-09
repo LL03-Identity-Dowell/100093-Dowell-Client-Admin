@@ -20,7 +20,7 @@ import axios from "axios";
 import { getAdminData } from "../store/slice/adminData";
 import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
-import { getproducts } from "../store/slice/products";
+
 
 const AdminTabs = () => {
   const [tabIndex, setTabIndex] = useState(-1);
