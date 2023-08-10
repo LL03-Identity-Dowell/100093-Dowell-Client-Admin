@@ -1266,20 +1266,32 @@ def create_user_member(request):
 @api_view(['POST'])
 def get_workspaces(request):
     if request.method == 'POST':
+        # Get the 'username' from the POST data
         username = request.data.get("username")
+
+        # Create the field conditions for querying
         field_c = {"document_name": username}
+
+        # Make the API call using 'dowellconnection'
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "fetch", field_c, "nil")
-        ##########################################
+
+        # Parse the API response
         resp = json.loads(login)
         data = resp['data']
+        workspace_names = []  # Rename 'value' to a more meaningful name
 
-        other_workspace_names = [org['org_name'] for org in data[0]['other_organisation']]
-        print(other_workspace_names)
+        # Get the name of the first organization and add it to the list
+        org_name = data[0]['organisations'][0]['org_name']
+        workspace_names.append(org_name)
 
-        return Response(
-            other_workspace_names
-            , status=HTTP_200_OK)
+        # Loop through other organizations and add their names to the list if not already present
+        for org in data[0]['other_organisation']:
+            if org['org_name'] not in workspace_names:
+                workspace_names.append(org['org_name'])
+
+        # Return the list of workspace names in the response
+        return Response(workspace_names, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -1309,36 +1321,65 @@ def connect_portfolio(request):
         session = request.data.get("session_id")
 
         try:
-            lo = UserOrg.objects.all().filter(username=orl)
+            lo=UserOrg.objects.all().filter(username=orl)
         except:
-            return Response("User Org Not Found in Local Database")
-
+            return HttpResponse("User Org Not Found in Local Database")
         for rd in lo:
-            lo1 = rd.org
-            lrf = json.loads(lo1)
-        mydict = {}
+            lo1=rd.org
+            lrf=json.loads(lo1)
+        mydict={}
+        # if "API" in product:
+        #     return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
 
-        ro = UserInfo.objects.all().filter(username=user)
-        ro1 = UserOrg.objects.all().filter(username=user)
+        ro=UserInfo.objects.all().filter(username=user)
+        ro1=UserOrg.objects.all().filter(username=user)
+        # user_orgn = UserOrg.objects.get(username=user)
+        # org_dict = json.loads(user_orgn.org)
+        # # return HttpResponse(org_dict["profile_info"])
+        # try:
+        #     # Iterate over the 'portpolio' list in the data
+        #     for portfolio in org_dict['portpolio']:
+        #         if portfolio['portfolio_name'] == portf:
+        #             status = portfolio['status']
+        #             notification_obj = Notification(username=user, owner=orl,
+        #                     notification=json.dumps(org_dict["profile_info"]),
+        #                     status=status)
+        #             notification_obj.save()
+        # # return HttpResponse(lrf)
+        # except:
+        #     pass
+
         for i in ro:
-            rofield = i.userinfo
-            s = json.loads(rofield)
-            mydict["userinfo"] = s
-        if orl == user:
-            lrst = []
+            rofield=i.userinfo
+            #s = rofield.replace("\'", "\"")
+            s=json.loads(rofield)
+            mydict["userinfo"]=s
+
+        if orl==user:
+            lrst=[]
             for lis in lrf["portpolio"]:
-                if lis["portfolio_name"] == portf:
-                    mydict["portfolio_info"] = [lis]
+                if lis["portfolio_name"]==portf:
+                    mydict["portfolio_info"]=[lis]
+                # if lis["product"]==product:
                 if lis["product"] in product:
                     lrst.append(lis)
+                # else:
+                #     return HttpResponse(f"<h1 align='center'>Data Not Found<br><a href='/'>Home</a></h1>")
             try:
                 if lrf["organisations"][0]["org_img"]:
                     mydict["userinfo"]["org_img"] = lrf["organisations"][0]["org_img"]
             except:
-                mydict["userinfo"][
-                    "org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
-            obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
-                                                             defaults={'alldata': json.dumps(mydict)})
+                    mydict["userinfo"]["org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
+
+            try:
+                mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
+                mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
+                mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
+            except Exception as e:
+                return Response(f"Data Not Found{e} {lrf}")
+            mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
+            # return JsonResponse({"msg":mydict})
+            obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
             if "Workflow AI" in product or "workflow" in product:
                 if s["User_type"] == "betatester":
                     return Response(
@@ -1497,96 +1538,33 @@ def connect_portfolio(request):
             pass
 
 
+
 @api_view(['POST'])
 def otherorg(request):
     if request.method == 'POST':
         username = request.data.get("username")
-        org = request.data.get("org")
-        session_id = request.data.get("session_id")
-        context = {}
-        user_org = UserOrg.objects.all().filter(username=username)
-        for it in user_org:
-            data12 = it.org
-            data13 = json.loads(data12)
+        org_name = request.data.get("org_name")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
 
-        if username == org:
-            # request.session["present_org"] = org
-            return Response(f"https://100093.pythonanywhere.com/?session_id={session_id}#", status=HTTP_200_OK)
-        else:
-            userorg = UserInfo.objects.all().filter(username=username)
-            for i in userorg:
-                data1 = i.userinfo
-                data = json.loads(data1)
-            # return HttpResponse(f'{data}')
-            request.session["present_org"] = org
+        ##########################################
+        resp = json.loads(login)
+        other_organisations = resp['data'][0]['other_organisation']
 
-            context["img"] = data13["profile_info"]["profile_img"]
+        # Filter the data based on org_name, status, and member_type
+        filtered_data = [
+            entry for entry in other_organisations
+            if entry.get('org_name') == org_name
+            and entry.get('status') == 'enable'
+            # and entry.get('member_type') == 'team_member'
+        ]
 
-            context["time"] = data["dowell_time"]
-            context["location"] = data["city"]
-            userorg = UserOrg.objects.all().filter(username=username)
-            for i in userorg:
-                dataorg = i.org
-                dataorg1 = json.loads(dataorg)
-            context["datalav"] = dataorg1
-            ors = []
-            context["first"] = dataorg1["profile_info"]["first_name"]
-            context["last"] = dataorg1["profile_info"]["last_name"]
-            for lsr in dataorg1["organisations"]:
-                ors.append(lsr["org_name"])
-            for lst in dataorg1["other_organisation"]:
-                ors.append(lst["org_name"])
-            co = []
-            po = []
-            othero = []
-            for i in dataorg1["other_organisation"]:
-                if i["org_name"] == org:
-                    try:
-                        co.append(i["product"])
-                        if i["portfolio_name"] and "enable" in i["status"]:
-                            othero.append(i)
-                        else:
-                            po.append(i["portfolio_name"])
-                    except:
-                        pass
+        return Response(
+            filtered_data,
+            status=HTTP_200_OK
+        )
 
-            publiclinks = UserOrg.objects.all().filter(username=org)
-            print(publiclinks)
-
-            temp = []
-            for ii in publiclinks:
-                publicorg = ii.org
-                # print(publicorg)
-                publicorg1 = json.loads(publicorg)
-                for jj in publicorg1["portpolio"]:
-                    if jj["member_type"] == "public":
-                        temp.append(jj)
-            url_lastlogin = "https://100014.pythonanywhere.com/api/lastlogins/"
-
-            # Define the data to be sent in the POST request
-            data = {
-                "username": org
-            }
-
-            # Make the POST request
-            response_login = requests.post(url_lastlogin, json=data)
-
-            # Check if the request was successful
-            if response_login.status_code == 200:
-                # Extract the LastloginTimes data from the response
-                last_login_times = response_login.json()["data"]["LastloginTimes"]
-
-                print("Last login times:", last_login_times)
-            else:
-                print(f"POST request failed with status code {response_login.status_code}.")
-            context["last_login_times"] = last_login_times
-            context["othero"] = othero
-            context["aiport"] = [*set(po)]
-            context["myorg"] = [*set(ors)]
-            context["products"] = [*set(co)]
-            context["public"] = temp
-
-            return Response(context, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
