@@ -89,31 +89,26 @@ const Products = () => {
           </div>
 
           <section className="relative">
-          <main className={`flex flex-col w-full`}>
-  <div className="flex flex-wrap w-full">
-    {productData?.products?.length > 1 && (
-      <>
-        {productData?.products?.map((product) => {
-          return (
-            <div
-              key={product._id}
-              className={`relative
-              ${
-                isHovering && product.product_name === hovertitle
-                  ? ""
-                  : ""
-              }`}
-              onMouseOver={() =>
-                handleMouseOver(product.product_name)
-              }
-              onMouseOut={() =>
-                handleMouseOut(product?.product_name)
-              }
-              onChange={() =>
-                setSelectedProduct(product.product_name)
-              }
-            >
-                          <div className="h-80 w-full">
+            <main className={`flex flex-col w-full`}>
+              <div className="flex flex-wrap w-full justify-between">
+                {productData?.products?.length > 1 && (
+                  <>
+                    {productData?.products?.map((product) => {
+                      return (
+                        <div
+                          key={product._id}
+                          className="relative box"
+                          onMouseOver={() =>
+                            handleMouseOver(product.product_name)
+                          }
+                          onMouseOut={() =>
+                            handleMouseOut(product?.product_name)
+                          }
+                          onChange={() =>
+                            setSelectedProduct(product.product_name)
+                          }
+                        >
+                          <div className="h-80 w-80 relative">
                             <img
                               src={`${
                                 product.product_logo?.includes(
@@ -123,7 +118,7 @@ const Products = () => {
                                   : `https://100093.pythonanywhere.com${product.product_logo}`
                               } `}
                               alt=""
-                              className="w-full  object-none "
+                              className="absolute w-full h-full"
                             />
                           </div>
                           {isHovering &&

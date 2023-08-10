@@ -11,26 +11,15 @@ body {
   color: #141317;
 }
 
-
-.accordion_hover {
-  flex: 0 33.333333%;
-}
-.accordion_hover:hover {
-  /* flex: none; */
-}
 .box {
-  transition: .5s;
-  box-sizing: border-box;
-}
-.box {
-  flex-basis: 33.33%;
+  width: 26%;
+  flex: 1 1 2%;
+  transition: all 0.3s ease-in-out;
 }
 
 .box:hover {
-  flex-basis: 50%;
+  flex-grow: 2;
 }
-
-
 
 @layer components {
   .visuallyHidden {
