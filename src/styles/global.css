@@ -14,7 +14,7 @@ body {
 .box {
   width: 26%;
   flex: 1 1 2%;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 
 .box:hover {

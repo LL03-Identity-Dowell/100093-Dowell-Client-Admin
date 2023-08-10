@@ -97,7 +97,7 @@ const Products = () => {
                       return (
                         <div
                           key={product._id}
-                          className="relative box"
+                          className="relative box last:flex-none hover:last:w-[53%]"
                           onMouseOver={() =>
                             handleMouseOver(product.product_name)
                           }
