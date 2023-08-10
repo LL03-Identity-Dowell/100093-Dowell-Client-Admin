@@ -8,6 +8,7 @@ import layerSlice from './slice/layers';
 import sidebarslice from './slice/sidebar';
 import organization from "./slice/organization";
 import selectedorg from "./slice/selectedorg";
+import otherorgdata from "./slice/otherorgdata";
 
 
 const store = configureStore({
@@ -20,7 +21,8 @@ const store = configureStore({
 		layer: layerSlice,
 		sidebar: sidebarslice,
 		org: organization,
-		selectedorg:selectedorg
+		selectedorg: selectedorg,
+		otherorgdata:otherorgdata
 
 	},
 });
