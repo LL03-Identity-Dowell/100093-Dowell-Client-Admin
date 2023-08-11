@@ -95,6 +95,10 @@ const Form2 = () => {
     (item) => item
   );
 
+   const selectedItemData = portfolio.find(
+    (item) => item.portfolio_code === formInputs.portfolio_code
+  );
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -158,7 +162,7 @@ const Form2 = () => {
               placeholder="Select Product"
             >
               {productData?.products?.map((product) => (
-                <option key={product._id} value={product.product_name}>
+                <option key={product._id} >
                   {" "}
                   {product.product_name}{" "}
                 </option>
@@ -173,10 +177,10 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option value="real_data">Real Data</option>
-              <option value="learning_data">Learning Data</option>
-              <option value="testing_data">Testing Data</option>
-              <option value="archived_data">Archived Data</option>{" "}
+              <option >Real Data</option>
+              <option >Learning Data</option>
+              <option >Testing Data</option>
+              <option >Archived Data</option>{" "}
             </select>
           </div>
           <div className="mb-4">
@@ -187,10 +191,10 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option value="view">View</option>
-              <option value="add/edit">Add/Edit</option>
-              <option value="delete">Delete</option>
-              <option value="admin">Admin</option>
+              <option >View</option>
+              <option >Add/Edit</option>
+              <option >Delete</option>
+              <option >Admin</option>
             </select>
           </div>
           <div className="mb-4">
@@ -203,7 +207,7 @@ const Form2 = () => {
             >
               {rolesdata?.map((roles, key) =>
                 roles.status === "enable" ? (
-                  <option key={key} value={roles.role_code}>
+                  <option key={key} >
                     {roles.role_name}
                   </option>
                 ) : null
@@ -221,7 +225,7 @@ const Form2 = () => {
                 id="portfolio_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
-                <option value="">...select...</option>
+                <option>...select...</option>
                 {portfolio?.map((products, key) =>
                   products.status === "enable" ? (
                     <option key={key} value={products.portfolio_code}>
@@ -258,8 +262,9 @@ const Form2 = () => {
                 Details of selected Portfolio
               </label>
               <textarea
-                rows={4}
+                rows={4} readOnly
                 placeholder="Portfolio details"
+                value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
               />
             </div>

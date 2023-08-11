@@ -43,7 +43,7 @@ const Form1 = () => {
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
-          window.location.reload()
+          window.location.reload();
           toast.success("success");
         });
     } catch (error: unknown) {
@@ -77,6 +77,7 @@ const Form1 = () => {
             <input
               type="text"
               placeholder="Name"
+              defaultValue={getLevelName}
               required
               onChange={handleOnChange}
               id="level_name"

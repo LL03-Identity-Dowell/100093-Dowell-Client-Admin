@@ -44,7 +44,7 @@ const Form1 = () => {
           console.log(res.data);
           setErrMsg("");
           toast.success("success");
-          window.location.reload()
+          window.location.reload();
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -77,6 +77,7 @@ const Form1 = () => {
             <input
               type="text"
               placeholder="Name"
+              defaultValue={getLevelName}
               required
               onChange={handleOnChange}
               id="level_name"

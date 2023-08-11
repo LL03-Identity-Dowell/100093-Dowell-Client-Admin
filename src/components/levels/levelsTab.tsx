@@ -7,15 +7,9 @@ import Level3 from "./level3/Level3";
 import Level4 from "./level4/Level4";
 import Level5 from "./level5/Level5";
 import Level2 from "./level2/Level2";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/Store";
 
 const LevelsTab = () => {
   const [tabIndex, setTabIndex] = useState(-1);
-
-  const getLevelName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.organisations[0]
-  );
 
   return (
     <div>
@@ -26,23 +20,19 @@ const LevelsTab = () => {
         onSelect={(index) => setTabIndex(index)}
       >
         <TabList className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-x-2 gap-y-4 mt-4">
-          {[
-            getLevelName?.level1?.level_name,
-            getLevelName?.level2?.level_name,
-            getLevelName?.level3?.level_name,
-            getLevelName?.level4?.level_name,
-            getLevelName?.level5?.level_name,
-          ].map((level, index) => {
-            return (
-              <Tab
-                key={index}
-                className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] focus:bg-[#61CE70] active:bg-[#61CE70] outline-none"
-              >
-                <FaLevelDownAlt className="text-[#4CAF50] " />
-                <p className="font-roboto text-white font-medium">{level}</p>
-              </Tab>
-            );
-          })}
+          {["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"].map(
+            (level, index) => {
+              return (
+                <Tab
+                  key={index}
+                  className="bg-[#7A7A7A] flex items-center rounded-lg px-6 py-3 gap-x-12 hover:bg-[#61CE70] cursor-pointer card-shadow border border-[#F5F5F5] focus:bg-[#61CE70] active:bg-[#61CE70] outline-none"
+                >
+                  <FaLevelDownAlt className="text-[#4CAF50] " />
+                  <p className="font-roboto text-white font-medium">{level}</p>
+                </Tab>
+              );
+            }
+          )}
         </TabList>
         <TabPanel>
           <Level1 />

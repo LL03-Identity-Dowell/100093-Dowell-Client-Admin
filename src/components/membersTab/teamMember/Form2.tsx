@@ -10,29 +10,19 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.team_members
   );
 
-  // const handleSelectOnChange = (
-  //   e: React.ChangeEvent<HTMLSelectElement>
-  // ) => {
-  //   const selectedOptions = Array.from(
-  //     e.target.selectedOptions,
-  //     (option) => option.value
-  //   );
-  //   setSelectedItems((prevSelectedItems) => [
-  //     ...prevSelectedItems,
-  //     ...selectedOptions,
-  //   ]);
-  // };
-  const handleSelectOnChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectOnChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedItemName = event.target.value;
     setSelectedItems(selectedItemName);
   };
 
-  const selectedItemsData = team_member?.accept_members.find(
+  const selectedPendingMembers = team_member?.pending_members.find(
     (item) => item?.member_code === selectedItems
   );
-
-  console.log(selectedItemsData, selectedItems, 'selectedItemsData');
-  
+  const selectedAcceptMembers = team_member?.accept_members.find(
+    (item) => item?.member_code === selectedItems
+  );
 
   return (
     <>
@@ -45,14 +35,13 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Team Members not having Portfolio
             </label>
-            <select multiple
+            <select
+              multiple
               onChange={handleSelectOnChange}
               id="no_portfolio"
-              value={selectedItems}
+              // value={selectedItems}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              placeholder="Select Product"
             >
-              {/* <option>...Select...</option> */}
               {team_member?.pending_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
@@ -65,18 +54,17 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Team Members having assigned Portfolio
             </label>
-            <select multiple
+            <select
+              multiple
               onChange={handleSelectOnChange}
               id="have_portfolio"
-              value={selectedItems}
+              // value={selectedItems}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              placeholder="Select Product"
             >
-              {/* <option>...Select...</option> */}
               {team_member?.accept_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
-                  {members?.first_name} {members?.last_name}{" "}
+                  {members?.name}
                 </option>
               ))}
             </select>
@@ -100,7 +88,11 @@ const Form2 = () => {
               rows={4}
               placeholder="Member details"
               readOnly
-              value={JSON.stringify(selectedItemsData, null, 1)?.slice(1, -1)}
+              value={JSON.stringify(
+                selectedPendingMembers || selectedAcceptMembers,
+                null,
+                1
+              )?.slice(1, -1)}
               className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
             />
           </div>

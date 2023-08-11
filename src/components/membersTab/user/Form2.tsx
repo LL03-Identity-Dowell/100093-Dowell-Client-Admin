@@ -16,9 +16,14 @@ const Form2 = () => {
     setSelectedItems(selectedItemName);
   };
 
-  const selectedItemsData = guest_member?.accept_members.find(
+  const selectedPendingMembers = guest_member?.pending_members.find(
     (item) => item?.member_code === selectedItems
   );
+  const selectedAcceptMembers = guest_member?.accept_members.find(
+    (item) => item?.member_code === selectedItems
+  );
+
+  // console.log(selectedItemsData, selectedItems, 'selectedItemsData');
 
   return (
     <>
@@ -31,12 +36,12 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Users not having Portfolio
             </label>
-            <select multiple
+            <select
+              multiple
               id="no_portfolio"
               onChange={handleSelectOnChange}
-              value={selectedItems}
+              // value={selectedItems}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              placeholder="Select Product"
             >
               {/* <option>...Select...</option> */}
               {guest_member?.pending_members.map((members, index) => (
@@ -51,18 +56,18 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Users having assigned Portfolio
             </label>
-            <select multiple
+            <select
+              multiple
               onChange={handleSelectOnChange}
               id="have_portfolio"
-              value={selectedItems}
+              // value={selectedItems}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              placeholder="Select Product"
             >
               {/* <option>...Select...</option> */}
               {guest_member?.accept_members.map((members, index) => (
                 <option key={index} value={members?.member_code}>
                   {" "}
-                  {members?.first_name} {members?.last_name}{" "}
+                  {members?.name}
                 </option>
               ))}
             </select>
@@ -85,7 +90,11 @@ const Form2 = () => {
               rows={4}
               placeholder="Member details"
               readOnly
-              value={JSON.stringify(selectedItemsData, null, 1)?.slice(1, -1)}
+              value={JSON.stringify(
+                selectedPendingMembers || selectedAcceptMembers,
+                null,
+                1
+              )?.slice(1, -1)}
               className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
             />
           </div>

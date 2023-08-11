@@ -27,7 +27,7 @@ const Form3 = () => {
   };
 
   const selectedItemData = level4Items.find(
-    (item) => item.item_name === selectedItem
+    (item) => item.item_code === selectedItem
   );
 
   const handleSubmitStatus = async (e: React.FormEvent) => {

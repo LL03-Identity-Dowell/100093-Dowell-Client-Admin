@@ -77,6 +77,7 @@ const Form1 = () => {
             <input
               type="text"
               placeholder="Name"
+              defaultValue={getLevelName}
               required
               onChange={handleOnChange}
               id="level_name"
