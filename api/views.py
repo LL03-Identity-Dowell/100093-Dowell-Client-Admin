@@ -1281,13 +1281,14 @@ def get_workspaces(request):
         data = resp['data']
         workspace_names = []  # Rename 'value' to a more meaningful name
 
-        # Get the name of the first organization and add it to the list
+        # Get the name of the first organization and add it to the list if it doesn't match the username
         org_name = data[0]['organisations'][0]['org_name']
-        workspace_names.append(org_name)
+        if org_name != username:
+            workspace_names.append(org_name)
 
-        # Loop through other organizations and add their names to the list if not already present
+        # Loop through other organizations and add their names to the list if not already present and if they don't match the username
         for org in data[0]['other_organisation']:
-            if org['org_name'] not in workspace_names:
+            if org['org_name'] not in workspace_names and org['org_name'] != username:
                 workspace_names.append(org['org_name'])
 
         # Return the list of workspace names in the response
