@@ -108,7 +108,7 @@ const Products = () => {
                             setSelectedProduct(product.product_name)
                           }
                         >
-                          <div className="h-80 w-80 relative">
+                          <div className="h-80 w-80 ">
                             <img
                               src={`${
                                 product.product_logo?.includes(
@@ -118,7 +118,8 @@ const Products = () => {
                                   : `https://100093.pythonanywhere.com${product.product_logo}`
                               } `}
                               alt=""
-                              className="absolute w-full h-full"
+                              className={` w-full h-full absolute ${isHovering ? 'object-cover' : ''} 
+                              `}
                             />
                           </div>
                           {isHovering &&
@@ -128,14 +129,14 @@ const Products = () => {
                                   className="relative w-full h-full"
                                   onSubmit={handleSubmit}
                                 >
-                                  <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-sm"></div>
+                                  <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
                                   <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
                                     <h2 className="text-white text-[1.78rem] font-semibold">
                                       {product.product_name}
                                     </h2>
                                     <div className="w-full px-6">
                                       <select
-                                        className="outline-none h-8 w-full"
+                                        className="outline-none h-8 max-w-full"
                                         value={selectedItem}
                                         onChange={(e) =>
                                           setSelectedItem(e.target.value)

@@ -19,7 +19,9 @@ body {
 
 .box:hover {
   flex-grow: 2;
+  display: flex;
 }
+
 
 @layer components {
   .visuallyHidden {
