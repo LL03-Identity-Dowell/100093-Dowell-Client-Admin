@@ -1281,13 +1281,14 @@ def get_workspaces(request):
         data = resp['data']
         workspace_names = []  # Rename 'value' to a more meaningful name
 
-        # Get the name of the first organization and add it to the list
+        # Get the name of the first organization and add it to the list if it doesn't match the username
         org_name = data[0]['organisations'][0]['org_name']
-        workspace_names.append(org_name)
+        if org_name != username:
+            workspace_names.append(org_name)
 
-        # Loop through other organizations and add their names to the list if not already present
+        # Loop through other organizations and add their names to the list if not already present and if they don't match the username
         for org in data[0]['other_organisation']:
-            if org['org_name'] not in workspace_names:
+            if org['org_name'] not in workspace_names and org['org_name'] != username:
                 workspace_names.append(org['org_name'])
 
         # Return the list of workspace names in the response
@@ -1321,18 +1322,18 @@ def connect_portfolio(request):
         session = request.data.get("session_id")
 
         try:
-            lo=UserOrg.objects.all().filter(username=orl)
+            lo = UserOrg.objects.all().filter(username=orl)
         except:
             return HttpResponse("User Org Not Found in Local Database")
         for rd in lo:
-            lo1=rd.org
-            lrf=json.loads(lo1)
-        mydict={}
+            lo1 = rd.org
+            lrf = json.loads(lo1)
+        mydict = {}
         # if "API" in product:
         #     return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
 
-        ro=UserInfo.objects.all().filter(username=user)
-        ro1=UserOrg.objects.all().filter(username=user)
+        ro = UserInfo.objects.all().filter(username=user)
+        ro1 = UserOrg.objects.all().filter(username=user)
         # user_orgn = UserOrg.objects.get(username=user)
         # org_dict = json.loads(user_orgn.org)
         # # return HttpResponse(org_dict["profile_info"])
@@ -1350,16 +1351,16 @@ def connect_portfolio(request):
         #     pass
 
         for i in ro:
-            rofield=i.userinfo
-            #s = rofield.replace("\'", "\"")
-            s=json.loads(rofield)
-            mydict["userinfo"]=s
+            rofield = i.userinfo
+            # s = rofield.replace("\'", "\"")
+            s = json.loads(rofield)
+            mydict["userinfo"] = s
 
-        if orl==user:
-            lrst=[]
+        if orl == user:
+            lrst = []
             for lis in lrf["portpolio"]:
-                if lis["portfolio_name"]==portf:
-                    mydict["portfolio_info"]=[lis]
+                if lis["portfolio_name"] == portf:
+                    mydict["portfolio_info"] = [lis]
                 # if lis["product"]==product:
                 if lis["product"] in product:
                     lrst.append(lis)
@@ -1369,17 +1370,23 @@ def connect_portfolio(request):
                 if lrf["organisations"][0]["org_img"]:
                     mydict["userinfo"]["org_img"] = lrf["organisations"][0]["org_img"]
             except:
-                    mydict["userinfo"]["org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
+                mydict["userinfo"][
+                    "org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
 
             try:
-                mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
-                mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
-                mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
+                mydict["portfolio_info"][0]["org_id"] = lrf["_id"]
+                mydict["portfolio_info"][0]["owner_name"] = lrf["document_name"]
+                mydict["portfolio_info"][0]["org_name"] = lrf["document_name"]
             except Exception as e:
                 return Response(f"Data Not Found{e} {lrf}")
-            mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
+            mydict["selected_product"] = {"product_id": 1, "product_name": product, "platformpermissionproduct": [
+                {"type": "member", "operational_rights": ["view", "add", "edit", "delete"], "role": "admin"}],
+                                          "platformpermissiondata": ["real", "learning", "testing", "archived"],
+                                          "orgid": lrf["_id"], "orglogo": "", "ownerid": "", "userportfolio": lrst,
+                                          "payment_status": "unpaid"}
             # return JsonResponse({"msg":mydict})
-            obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+            obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
+                                                             defaults={'alldata': json.dumps(mydict)})
             if "Workflow AI" in product or "workflow" in product:
                 if s["User_type"] == "betatester":
                     return Response(
@@ -1537,36 +1544,6 @@ def connect_portfolio(request):
         except:
             pass
 
-
-
-@api_view(['POST'])
-def otherorg(request):
-    if request.method == 'POST':
-        username = request.data.get("username")
-        org_name = request.data.get("org_name")
-        field_c = {"document_name": username}
-        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                                 "fetch", field_c, "nil")
-
-        ##########################################
-        resp = json.loads(login)
-        other_organisations = resp['data'][0]['other_organisation']
-
-        # Filter the data based on org_name, status, and member_type
-        filtered_data = [
-            entry for entry in other_organisations
-            if entry.get('org_name') == org_name
-            and entry.get('status') == 'enable'
-            # and entry.get('member_type') == 'team_member'
-        ]
-
-        return Response(
-            filtered_data,
-            status=HTTP_200_OK
-        )
-
-
-
 @api_view(['POST'])
 def update_level_name(request):
     if request.method == 'POST':
@@ -1590,7 +1567,6 @@ def update_level_name(request):
                     "error": "Invalid level provided."
                 }, status=HTTP_400_BAD_REQUEST)
 
-
         ls.append(level_name)
         r = level
 
@@ -1612,4 +1588,56 @@ def update_level_name(request):
             return Response({
                 "success": f"name successfully changed to {level_name}"
             }, status=HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def otherorg(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        org_name = request.data.get("org_name")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+
+        ##########################################
+        resp = json.loads(login)
+        other_organisations = resp['data'][0]['other_organisation']
+
+        # Filter the data based on org_name, status, and member_type
+        filtered_data = [
+            entry for entry in other_organisations
+            if entry.get('org_name') == org_name
+               and entry.get('status') == 'enable'
+               and entry.get('member_type') == 'team_member' or entry.get('member_type') == 'team_members'
+        ]
+
+
+        for entry in filtered_data:
+            product_name = entry["product"]
+            getProductData = getProductDetails(product_name)  # Call the function to get product details
+            print('here')
+            entry["product_link"] = getProductData.get("product_link", "")
+            entry["product_logo"] = getProductData.get("product_logo", "")
+
+        return Response(
+            filtered_data,
+            status=HTTP_200_OK
+        )
+
+
+def getProductDetails(product_name):
+    field = {}
+    l1 = product = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                                    "fetch", field, "nil")
+    l2 = json.loads(l1)
+
+
+    for product in l2["data"]:
+        if product["product_name"] == product_name:
+            return {
+                "product_link": product.get("product_link", ""),
+                "product_logo": product.get("product_logo", "")
+            }
+
+    return {}
 
