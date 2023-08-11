@@ -1608,7 +1608,7 @@ def otherorg(request):
             entry for entry in other_organisations
             if entry.get('org_name') == org_name
                and entry.get('status') == 'enable'
-               and entry.get('member_type') == 'team_member'
+               and entry.get('member_type') == 'team_member' or entry.get('member_type') == 'team_members'
         ]
 
 
