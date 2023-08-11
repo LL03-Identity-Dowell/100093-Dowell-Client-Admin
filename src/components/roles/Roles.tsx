@@ -619,7 +619,7 @@ const [rulestatus, setrulestatus] = useState({
 								value={
 									selectedrule.role_name == ""
 										? ""
-										: `"${formatObject(selectedrule)}"`
+										: `${formatObject(selectedrule)}`
 								}
 							/>
 						</div>
