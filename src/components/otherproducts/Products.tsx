@@ -100,22 +100,12 @@ const Products = () => {
 													onChange={() => setSelectedProduct(product.product)}
 												>
 													<div className="h-80 w-80 relative">
-														{/* <img
-															src={`${
-																product.product_logo?.includes(
-																	"https://100093.pythonanywhere.com"
-																)
-																	? product.product_logo
-																	: `https://100093.pythonanywhere.com${product.product_logo}`
-															} `}
-															alt=""
-															className="absolute w-full h-full"
-														/> */}
 														<img
-															src="https://uxlivinglab.com/wp-content/uploads/2022/12/Social-media-automation-2.png"
+															src={`${product.product_link}${product.product_logo} `}
 															alt=""
 															className="absolute w-full h-full"
 														/>
+														
 													</div>
 													{isHovering && product.product === hovertitle && (
 														<div className="absolute top-0 w-full h-full">
