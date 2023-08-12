@@ -45,7 +45,7 @@ const Products = () => {
 			action: "connect_portfolio",
 			portfl: selectedItem,
 			product: selectedProduct,
-			present_org: userName,
+			present_org: selectedorgname,
 			session_id: sessionId,
 		};
 
