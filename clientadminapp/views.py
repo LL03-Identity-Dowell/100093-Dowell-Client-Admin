@@ -291,10 +291,12 @@ def portfolio(request):
         if request.method=="POST" and "connect_portfolio" in request.POST:
             portf=request.POST["portfl"]
             product=request.POST["product"]
+            print(f"this is product {product}")
             #return HttpResponse(portf)
             user=request.session["username"]
             orl=request.session["present_org"]
             session=request.session["session_id"]
+
             try:
                 lo=UserOrg.objects.all().filter(username=orl)
             except:
@@ -303,6 +305,8 @@ def portfolio(request):
                 lo1=rd.org
                 lrf=json.loads(lo1)
             mydict={}
+            if "API" in product:
+                return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
 
             ro=UserInfo.objects.all().filter(username=user)
             ro1=UserOrg.objects.all().filter(username=user)
@@ -351,7 +355,9 @@ def portfolio(request):
                 except Exception as e:
                     return HttpResponse(f"<h1 align='center'>Data Not Found<br><a href='/'>Home</a></h1>{e} {mydict}")
                 mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
+                # return JsonResponse({"msg":mydict})
                 obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+
                 if "Workflow AI" in product or "workflow" in product:
                     if s["User_type"]=="betatester":
                         return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={request.session["session_id"]}&id=100093')
@@ -371,17 +377,41 @@ def portfolio(request):
                     else:
                         return redirect(f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={request.session["session_id"]}&id=100093')
                 elif "Media" in product:
-                    return redirect(f'https://100007.pythonanywhere.com/')
+                    return redirect(f'https://www.socialmediaautomation.uxlivinglab.online/#?session_id={request.session["session_id"]}&id=100093')
                 elif "Customer" in product:
-                    return redirect(f'https://100096.pythonanywhere.com/customer-support/?session_id={request.session["session_id"]}&id=100093')
+                    return redirect(f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={request.session["session_id"]}&id=100093')
                 elif "Chat" in product:
-                    return redirect(f'https://100096.pythonanywhere.com/living-lab-support/?session_id={request.session["session_id"]}&id=100093')
-                elif "Repositories" in product:
-                    return redirect(f'https://ll07-team-dowell.github.io/100045-SecureRepository/')
+                    return redirect(f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={request.session["session_id"]}&id=100093')
+                elif "Admin" in product:
+                    return redirect('/')
+
                 elif "Wifi" in product:
                     return redirect(f'https://l.ead.me/dowellwifiqrcode/?session_id={request.session["session_id"]}&id=100093')
+                elif "Monitoring" in product:
+                    return redirect(f'http://100082.pythonanywhere.com/?session_id={request.session["session_id"]}&id=100093')
+
+                elif "API" in product:
+                    return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
+                elif "Repositories" or "Secure Repositories" in product:
+                    return redirect(f'https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={request.session["session_id"]}&id=100093')
                 else:
-                    return HttpResponse(f"<h1 align='center'>Redirect the URL of this {product} product not avail in database<br><a href='/'>Home</a></h1>")
+                    context = {}
+                    data = {
+                    "username": "uxliveadmin"
+                        }
+                    headers = {'Content-Type': 'application/json'}
+
+                    response = requests.post('http://100093.pythonanywhere.com/api/getproducts/', headers=headers, data=json.dumps(data))
+                    response.raise_for_status()  # Ensure we got a successful response
+
+                    products = response.json()['products']
+
+                    for prod in products:
+                        if product in prod['product_name']:
+                            context["product_logo"] = prod['product_logo']
+
+                    return render(request,"new/product_coming.html",context)
+                    # return HttpResponse(f"<h1 align='center'>Redirect the URL of this {product} product not avail in database<br><a href='/'>Home</a></h1>")
             for ii in ro1:
                 pfield=ii.org
                 #s = rofield.replace("\'", "\"")
@@ -463,22 +493,44 @@ def portfolio(request):
             elif "Team" in product:
                     return redirect(f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={request.session["session_id"]}&id=100093')
             elif "Media" in product:
-                return redirect(f'https://100007.pythonanywhere.com/')
+                return redirect(f'https://www.socialmediaautomation.uxlivinglab.online/#?session_id={request.session["session_id"]}&id=100093')
             elif "Customer" in product:
-                return redirect(f'https://100096.pythonanywhere.com/customer-support/?session_id={request.session["session_id"]}&id=100093')
-            elif "Repositories" in product:
-                return redirect(f'https://ll07-team-dowell.github.io/100045-SecureRepository/')
+                return redirect(f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={request.session["session_id"]}&id=100093')
+            elif "Admin" in product:
+                    return redirect('/')
             elif "Chat" in product:
-                return redirect(f'https://100096.pythonanywhere.com/living-lab-support/?session_id={request.session["session_id"]}&id=100093')
+                return redirect(f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={request.session["session_id"]}&id=100093/?session_id={request.session["session_id"]}&id=100093')
+            elif "API" in product:
+                    return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
+            elif "Repositories" or "Secure Repositories" in product:
+                    return redirect(f'https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={request.session["session_id"]}&id=100093')
             else:
-                return HttpResponse(f"<h1 align='center'>Redirect the URL of this {product} product not avail in database<br><a href='/'>Home</a></h1>")
+                context = {}
+                data = {
+                    "username": "uxliveadmin"
+                }
+                headers = {'Content-Type': 'application/json'}
+
+                response = requests.post('http://100093.pythonanywhere.com/api/getproducts/', headers=headers, data=json.dumps(data))
+                response.raise_for_status()  # Ensure we got a successful response
+
+                products = response.json()['products']
+
+                for prod in products:
+                    if product in prod['product_name']:
+                        context["product_logo"] = prod['product_logo']
+
+                return render(request,"new/product_coming.html",context)
+                # return HttpResponse(f"<h1 align='center'>Redirect the URL of this {product} product not avail in database<br><a href='/'>Home</a></h1>")
         if request.method == "POST"  and "request_portfolio" in request.POST:
+            context = {}
             user=request.session["username"]
             orl=request.session["present_org"]
             product=request.POST["product"]
             user_orgn = UserOrg.objects.get(username=user)
             org_dict = json.loads(user_orgn.org)
-
+            if "API" in product:
+                    return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
             # return HttpResponse(org_dict["profile_info"])
             try:
                 # Iterate over the 'portpolio' list in the data
@@ -486,6 +538,22 @@ def portfolio(request):
                         notification=json.dumps(org_dict["profile_info"]),
                         status="enable",product=product)
                 notification_obj.save()
+                data = {
+                    "username": "uxliveadmin"
+                }
+
+                # headers = {'Content-Type': 'application/json'}
+
+                # response = requests.post('http://100093.pythonanywhere.com/api/getproducts/', headers=headers, data=json.dumps(data))
+                # response.raise_for_status()  # Ensure we got a successful response
+
+                # products = response.json()['products']
+
+                # for prod in products:
+                #     if product in prod['product_name']:
+                #         context["product_logo"] = prod['product_logo']
+
+                # return render(request,"new/product_coming.html",context)
                 return redirect("/")
             # return HttpResponse(lrf)
             except:
