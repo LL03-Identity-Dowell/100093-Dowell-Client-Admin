@@ -130,9 +130,9 @@ const Form1 = () => {
         </div>
         <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
               Select Member Type{" "}
-              <span className="text-[#ff0000] text-xs">*</span>
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
@@ -148,7 +148,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Member <span className="text-[#ff0000] text-xs">*</span>
+              Select Member <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               multiple
@@ -174,7 +174,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Product <span className="text-[#ff0000] text-xs">*</span>
+              Select Product <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
@@ -193,7 +193,8 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Data Type <span className="text-[#ff0000] text-xs">*</span>
+              Select Data Type{" "}
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
@@ -211,7 +212,7 @@ const Form1 = () => {
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Select Operational Rights{" "}
-              <span className="text-[#ff0000] text-xs">*</span>
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
@@ -228,7 +229,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Roles <span className="text-[#ff0000] text-xs">*</span>
+              Select Roles <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
@@ -251,7 +252,7 @@ const Form1 = () => {
               <span className="text-xs text-[#FF0000]">
                 {" "}
                 (Don't use & symbol in portfolio name){" "}
-                <span className="text-[#ff0000] text-xs">*</span>
+                <span className="text-[#ff0000] text-base">*</span>
               </span>
             </label>
             <input
@@ -266,7 +267,7 @@ const Form1 = () => {
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Portfolio Code (Unique){" "}
-              <span className="text-[#ff0000] text-xs">*</span>
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <input
               type="text"

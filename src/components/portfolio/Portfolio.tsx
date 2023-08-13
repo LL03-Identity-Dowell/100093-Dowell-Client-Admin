@@ -5,7 +5,7 @@ import Form2 from "./Form2";
 const Portfolio: React.FC = () => {
   return (
     <>
-      <div className="mt-8 w-full lg:flex gap-8">
+      <div className="mt-8 w-full lg:flex">
         <Form1 />
         <Form2 />
       </div>

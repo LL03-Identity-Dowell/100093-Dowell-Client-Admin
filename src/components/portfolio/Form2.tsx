@@ -103,7 +103,7 @@ const Form2 = () => {
     <>
       <ToastContainer position="top-right" />
 
-      <div className="lg:w-1/2 ">
+      <div className="lg:w-1/2 px-5">
         <h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
           Show Assigned Portfolios, Search in Portfolios
         </h2>
