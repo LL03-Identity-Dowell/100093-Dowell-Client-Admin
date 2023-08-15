@@ -34,6 +34,7 @@ const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
+  
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
@@ -91,6 +92,7 @@ const Form1 = () => {
       portfolio_name: formInputs.portfolio_name,
       portfolio_code: formInputs.portfolio_code,
     };
+console.log(data);
 
     try {
       await axios
