@@ -104,7 +104,6 @@ const Form1 = () => {
       portfolio_u_code: formInputs.portfolio_u_code,
       portfolio_det: formInputs.portfolio_det,
     };
-    console.log(data);
 
     try {
       await axios

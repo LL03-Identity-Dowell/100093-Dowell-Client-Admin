@@ -97,7 +97,7 @@ const Products = () => {
                       return (
                         <div
                           key={product._id}
-                          className="relative box last:flex-none hover:last:w-[53%]"
+                          className="relative box "
                           onMouseOver={() =>
                             handleMouseOver(product.product_name)
                           }
@@ -147,7 +147,7 @@ const Products = () => {
                                           (item, index) => (
                                             <option
                                               key={index}
-                                              value={item?.portfolio_name}
+                                              value={item?.portfolio_code}
                                             >
                                               {" "}
                                               {item?.portfolio_name},{" "}
