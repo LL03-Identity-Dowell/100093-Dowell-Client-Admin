@@ -15,6 +15,9 @@ interface FormInputs {
   portfolio_name: string;
   portfolio_code: string;
   portfolio_status: string;
+  portfolio_spec: string;
+  portfolio_u_code: string;
+  portfolio_det: string;
 }
 
 const Form1 = () => {
@@ -29,12 +32,14 @@ const Form1 = () => {
     portfolio_name: "",
     portfolio_code: "",
     portfolio_status: "",
+    portfolio_spec: "",
+    portfolio_u_code: "",
+    portfolio_det: "",
   });
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
@@ -58,6 +63,10 @@ const Form1 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
+
+  const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setFormInputs({ ...formInputs, portfolio_det: e.target.value });
+  };
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
@@ -91,8 +100,11 @@ const Form1 = () => {
       role: formInputs.role,
       portfolio_name: formInputs.portfolio_name,
       portfolio_code: formInputs.portfolio_code,
+      portfolio_spec: formInputs.portfolio_spec,
+      portfolio_u_code: formInputs.portfolio_u_code,
+      portfolio_det: formInputs.portfolio_det,
     };
-console.log(data);
+    console.log(data);
 
     try {
       await axios
@@ -288,7 +300,7 @@ console.log(data);
               type="text"
               placeholder="Portfolio specification"
               onChange={handleOnChange}
-              id="specification"
+              id="portfolio_spec"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
@@ -300,7 +312,7 @@ console.log(data);
               type="text"
               placeholder="Portfolio universal code"
               onChange={handleOnChange}
-              id="universal_code"
+              id="portfolio_u_code"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
@@ -311,8 +323,8 @@ console.log(data);
             <textarea
               rows={4}
               placeholder="Portfolio details"
-              // onChange={handleOnChangeTextArea}
-              // id='detais'
+              onChange={handleOnChangeTextArea}
+              id="portfolio_det"
               className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
             />
           </div>
