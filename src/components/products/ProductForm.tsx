@@ -24,7 +24,7 @@ const ProductForm = () => {
   );
 
   const selectedItemData = portfolioData?.find(
-    (item) => item?.portfolio_name === selectedItem
+    (item) => item?.portfolio_code === selectedItem
   );
   const sessionId = localStorage.getItem("sessionId");
 
@@ -104,7 +104,7 @@ const ProductForm = () => {
           >
             <option> Select Portfolio </option>
             {filterDataByProduct?.map((item, index) => (
-              <option key={index} value={item?.portfolio_name}>
+              <option key={index} value={item?.portfolio_code}>
                 {" "}
                 {item?.portfolio_name}
               </option>

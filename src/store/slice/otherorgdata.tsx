@@ -20,11 +20,13 @@ const otherorgdata = createSlice({
 			portfolio_uni_code: "",
 			portfolio_details: "",
 			status: "",
+			product_link: "",
+			product_logo:"",
 		},
 	],
 	reducers: {
-    getotherorgdata(_state, action) {
-      console.log(_state);
+		getotherorgdata(_state, action) {
+			console.log(_state);
 			return action.payload;
 		},
 	},

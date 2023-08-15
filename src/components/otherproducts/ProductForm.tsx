@@ -7,13 +7,12 @@ import { ToastContainer, toast } from "react-toastify";
 const ProductForm = () => {
   const productData = useSelector((state: RootState) => state.otherorgdata);
 
-  // const portfolioData = useSelector(
-  //   (state: RootState) => state.adminData.data[0]?.portpolio
-  // );
   const userName = useSelector(
     (state: RootState) => state.userinfo?.userinfo?.username
   );
-
+const selectedorgname = useSelector(
+	(state: RootState) => state.selectedorg.orgname
+);
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +37,7 @@ const ProductForm = () => {
       action: "connect_portfolio",
       portfl: selectedItem,
       product: selectedProduct,
-      present_org: userName,
+      present_org: selectedorgname,
       session_id: sessionId,
     };
 
