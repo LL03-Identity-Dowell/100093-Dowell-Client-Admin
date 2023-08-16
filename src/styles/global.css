@@ -17,6 +17,11 @@ body {
   transition: all 0.5s ease-in-out;
 }
 
+.box-placer {
+  width: 26%;
+  flex: 1 1 2%;
+  transition: all 0.5s ease-in-out;
+}
 .box:hover {
   flex-grow: 2;
   display: flex;
@@ -107,6 +112,10 @@ body {
   height: 100%;
   border-radius: 50%;
   opacity: 0.1;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
 }
 .loader .box:nth-child(1) {
   top: 0;
@@ -161,6 +170,10 @@ body {
   width: 40px;
   height: 40px;
   overflow: hidden;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
 }
 .loader .text {
   position: relative;

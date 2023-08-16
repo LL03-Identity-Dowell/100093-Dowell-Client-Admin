@@ -90,31 +90,25 @@ const Products = () => {
 									<>
 										{productData?.map((product) => {
 											return (
-												<div
-													key={product.org_id}
-													className="relative box "
-													onMouseOver={() =>
-														handleMouseOver(product.product)
-													}
-													onMouseOut={() =>
-														handleMouseOut(product?.product)
-													}
-													onChange={() =>
-														setSelectedProduct(product.product)
-													}
-												>
-													<div className="h-80 w-80 ">
-														<img
-															src={`${product.product_link}${product.product_logo} `}
-															alt=""
-															className={` w-full h-full absolute ${
-																isHovering ? "object-cover" : ""
-															} 
+												<>
+													<div
+														key={product.org_id}
+														className="relative box "
+														onMouseOver={() => handleMouseOver(product.product)}
+														onMouseOut={() => handleMouseOut(product?.product)}
+														onChange={() => setSelectedProduct(product.product)}
+													>
+														<div className="h-80 w-80 ">
+															<img
+																src={`${product.product_link}${product.product_logo} `}
+																alt=""
+																className={` w-full h-full absolute ${
+																	isHovering ? "object-cover" : ""
+																} 
                               `}
-														/>
-													</div>
-													{isHovering &&
-														product.product === hovertitle && (
+															/>
+														</div>
+														{isHovering && product.product === hovertitle && (
 															<div className="absolute top-0 w-full h-full">
 																<form
 																	className="relative w-full h-full"
@@ -155,9 +149,23 @@ const Products = () => {
 																</form>
 															</div>
 														)}
-												</div>
+													</div>
+												</>
 											);
 										})}
+										{productData?.length % 3 == 2 ? (
+											<div className="relative box-placer"></div>
+										) : (
+											""
+										)}
+										{productData?.length % 3 == 1 ? (
+											<>
+												<div className="relative box-placer"></div>
+												<div className="relative box-placer"></div>
+											</>
+										) : (
+											""
+										)}
 									</>
 								)}
 							</div>
