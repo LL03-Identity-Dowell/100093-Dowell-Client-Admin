@@ -19,7 +19,7 @@ const Products = () => {
 	const [selectedProduct, setSelectedProduct] = useState<string>("");
 	const [selectedItem, setSelectedItem] = useState<string>("");
 
-	
+
 
 	const filterDataByProduct = productData?.filter(
 		(item) => item.product === hovertitle
@@ -76,9 +76,7 @@ const Products = () => {
 						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
 							Products of{" "}
 							<span className="text-[#FF0000]">{selectedorgname}</span>, Owner{" "}
-							<span className="text-[#FF0000]">
-								{selectedorgname} 
-							</span>
+							<span className="text-[#FF0000]">{selectedorgname}</span>
 						</p>
 						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
 							Select product & Portfolio to connect
@@ -94,60 +92,69 @@ const Products = () => {
 											return (
 												<div
 													key={product.org_id}
-													className="relative box last:flex-none hover:last:w-[53%]"
-													onMouseOver={() => handleMouseOver(product.product)}
-													onMouseOut={() => handleMouseOut(product?.product)}
-													onChange={() => setSelectedProduct(product.product)}
+													className="relative box "
+													onMouseOver={() =>
+														handleMouseOver(product.product)
+													}
+													onMouseOut={() =>
+														handleMouseOut(product?.product)
+													}
+													onChange={() =>
+														setSelectedProduct(product.product)
+													}
 												>
-													<div className="h-80 w-80 relative">
+													<div className="h-80 w-80 ">
 														<img
 															src={`${product.product_link}${product.product_logo} `}
 															alt=""
-															className="absolute w-full h-full"
+															className={` w-full h-full absolute ${
+																isHovering ? "object-cover" : ""
+															} 
+                              `}
 														/>
-														
 													</div>
-													{isHovering && product.product === hovertitle && (
-														<div className="absolute top-0 w-full h-full">
-															<form
-																className="relative w-full h-full"
-																onSubmit={handleSubmit}
-															>
-																<div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-sm"></div>
-																<div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
-																	<h2 className="text-white text-[1.78rem] font-semibold">
-																		{product.product}
-																	</h2>
-																	<div className="w-full px-6">
-																		<select
-																			className="outline-none h-8 w-full"
-																			value={selectedItem}
-																			onChange={(e) =>
-																				setSelectedItem(e.target.value)
-																			}
-																		>
-																			<option> Select Portfolio </option>
-																			{filterDataByProduct?.map(
-																				(item, index) => (
-																					<option
-																						key={index}
-																						value={item?.portfolio_name}
-																					>
-																						{" "}
-																						{item?.portfolio_name}, {item?.role}
-																						, {item?.data_type}
-																					</option>
-																				)
-																			)}
-																		</select>
+													{isHovering &&
+														product.product === hovertitle && (
+															<div className="absolute top-0 w-full h-full">
+																<form
+																	className="relative w-full h-full"
+																	onSubmit={handleSubmit}
+																>
+																	<div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
+																	<div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
+																		<h2 className="text-white text-[1.78rem] font-semibold">
+																			{product.product}
+																		</h2>
+																		<div className="w-full px-6">
+																			<select
+																				className="outline-none h-8 max-w-full"
+																				value={selectedItem}
+																				onChange={(e) =>
+																					setSelectedItem(e.target.value)
+																				}
+																			>
+																				<option> Select Portfolio </option>
+																				{filterDataByProduct?.map(
+																					(item, index) => (
+																						<option
+																							key={index}
+																							value={item?.portfolio_code}
+																						>
+																							{" "}
+																							{item?.portfolio_name},{" "}
+																							{item?.role}, {item?.data_type}
+																						</option>
+																					)
+																				)}
+																			</select>
+																		</div>
+																		<button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
+																			Connect
+																		</button>
 																	</div>
-																	<button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-																		Connect
-																	</button>
-																</div>
-															</form>
-														</div>
-													)}
+																</form>
+															</div>
+														)}
 												</div>
 											);
 										})}
