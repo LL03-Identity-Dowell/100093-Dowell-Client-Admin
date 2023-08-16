@@ -100,10 +100,10 @@ const Products = () => {
 													<div
 														key={product._id}
 														className="relative box "
-														onMouseOver={() =>
+														onMouseEnter={() =>
 															handleMouseOver(product.product_name)
 														}
-														onMouseOut={() =>
+														onMouseLeave={() =>
 															handleMouseOut(product?.product_name)
 														}
 														onChange={() =>

@@ -94,8 +94,9 @@ const Form1 = () => {
         </div>
         <form className="px-[30px]" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
               User Name
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <input
               type="text"
@@ -107,8 +108,9 @@ const Form1 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
               User Code (Unique)
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <input
               type="text"
