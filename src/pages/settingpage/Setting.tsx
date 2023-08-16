@@ -48,7 +48,7 @@ usedispatch(getloaderstate(true));
 				};
 
 				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/settings/",
+					"https://100093.pythonanywhere.com/api/settings/",
 					data
 				);
 
@@ -64,7 +64,7 @@ usedispatch(getloaderstate(true));
 				};
 
 				const response = await axios.post(
-					"http://100093.pythonanywhere.com/api/getproducts/",
+					"https://100093.pythonanywhere.com/api/getproducts/",
 					data
 				);
 
