@@ -47,7 +47,7 @@ org_id = "63cf8114554bd6bedf7b13ce"
 random_org_id = generate_random_string(len(org_id))
 new_org = {
         "org_id": random_org_id,
-        "org_name": "HR_Dowell Research","username":"bu_shi_i","member_type":"team_members","product":"Team Management","data_type":"Real_Data","operations_right":"Add/Edit","role":"Translators ","security_layer":"None","portfolio_name":"Dowell_Bushra","portfolio_code":"1100982","portfolio_specification":"","portfolio_uni_code":"1100982","portfolio_details":"","status":"enable"}
+        "org_name": "HR_Dowell Research","username":"enocksimiyuwafula","member_type":"team_members","product":"Team Management","data_type":"Real_Data","operations_right":"Add/Edit","role":"Python Programmer","security_layer":"None","portfolio_name":"Dowell_Enock","portfolio_code":"026423785467","portfolio_specification":"","portfolio_uni_code":"026423785467","portfolio_details":"","status":"enable"}
 
 def get_other_organisation(document_name, documents,new_org):
 
@@ -62,7 +62,7 @@ def get_other_organisation(document_name, documents,new_org):
             return document.get('other_organisation')
     return None
 
-get_other_organisation("bu_shi_i",r["data"],new_org)
+get_other_organisation("enocksimiyuwafula",r["data"],new_org)
 
 # product =     {
 #       "product_name": "Team Management",
@@ -90,3 +90,23 @@ get_other_organisation("bu_shi_i",r["data"],new_org)
 
 # dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
 #                             "insert", product, "nil")
+
+
+
+# def find_username_position(lst):
+#     """
+#     Find the index position of dictionaries that have a key named "username" 
+#     with a value of "Aderonke" in a given list of dictionaries.
+
+#     Args:
+#     - lst (list): A list of dictionaries to search.
+
+#     Returns:
+#     - None
+#     """
+#     for index, dictionary in enumerate(lst):
+#         if dictionary.get("username") == "Aderonke":
+#             print(f"Found 'Aderonke' at index position: {index}")
+
+
+# find_username_position(r["data"][0]["portpolio"])
