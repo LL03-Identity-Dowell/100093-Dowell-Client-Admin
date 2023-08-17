@@ -991,8 +991,6 @@ def get_layer_data(request):
             for data in category_data:
                 result[data] = layer_number
 
-        print(result)
-
         return Response(result, status=HTTP_200_OK)
 
 
