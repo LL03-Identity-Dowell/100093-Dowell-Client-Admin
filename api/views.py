@@ -1095,7 +1095,7 @@ def save_device_layers(request):
         categories = ["layers", "browsers", "devices", "os", "connection_type", "login_type", "password_strength",
                       "id_verification"]
         layers = r["data"][0]["security_layers"]
-        devices = ["Laptop/Desktop", "Mobile Phone", "Tablet/Ipad", "Others not listed above"]
+        devices = ["Laptop/Desk top", "Mobile Phone", "Tablet / Ipad", "Others not listed above"]
         os = ["Windows", "Mac OS", "Linux", "Android", "IOS", "Others not listed above"]
         browsers = ["Chrome", "Safari", "Bing", "Firefox", "Edge", "Opera", "Others not listed above"]
         layers_list = ["layer1", "layer2", "layer3", "layer4", "layer5", "layer6"]
@@ -1135,6 +1135,7 @@ def save_device_layers(request):
                                  "update", field, update)
 
         return Response(data, status=status.HTTP_200_OK)
+
 
 
 @api_view(['POST'])
