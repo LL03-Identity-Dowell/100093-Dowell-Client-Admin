@@ -272,390 +272,394 @@ const [rulestatus, setrulestatus] = useState({
 	};
 	return (
 		<>
-			{
-				show_loader == false ? <div>
+			{show_loader == false ? (
+				<div>
 					<ToastContainer position="top-right" />
-			<div className="mt-8 w-full lg:flex gap-8">
-				<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
-					<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
-						<p>ROLE</p>
-						<p>{"<Total enabled roles>"}</p>
-					</span>
-					<div className="p-[30px]  my-20">
-						<p className="text-[#FF0000] text-lg font-roboto font-semibold">
-							Create Roles – Define Roles in my organisation
-						</p>
+					<div className="mt-8 w-full lg:flex gap-8">
+						<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
+							<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+								<p>ROLE</p>
+								<p>{"<Total enabled roles>"}</p>
+							</span>
+							<div className="p-[30px]  my-20">
+								<p className="text-[#FF0000] text-lg font-roboto font-semibold">
+									Create Roles – Define Roles in my organisation
+								</p>
+							</div>
+							<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Select Item in Level 1
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										required
+										name="level1_item"
+										onChange={handleChange}
+										value={formData.level1_item}
+									>
+										<option value="..select">..select</option>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level1_item}>
+												{item.level1_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Select Item in Level 2
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleChange}
+										name="level2_item"
+										value={formData.level2_item}
+									>
+										<option value="..select">..select</option>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level2_item}>
+												{item.level2_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Select Item in Level 3
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										placeholder="Select Product"
+										onChange={handleChange}
+										name="level3_item"
+										value={formData.level3_item}
+									>
+										<option value="..select">..select</option>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level3_item}>
+												{item.level3_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Select Item in Level 4
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleChange}
+										name="level4_item"
+										value={formData.level4_item}
+									>
+										<option value="..select">..select</option>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level4_item}>
+												{item.level4_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Select Item in Level 5
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleChange}
+										name="level5_item"
+										value={formData.level5_item}
+									>
+										<option value="..select">..select</option>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level5_item}>
+												{item.level5_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Select Security Layer
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										required
+										onChange={handleChange}
+										name="security_layer"
+										value={formData.security_layer}
+									>
+										<option value="..select">..select</option>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.security_layer}>
+												{item.security_layer}
+											</option>
+										))}
+									</select>
+								</div>
+
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Role Name
+										<span className="text-[#ff0000] text-base">*</span>
+									</label>
+									<input
+										type="text"
+										placeholder="Role name"
+										required
+										onChange={handleChange}
+										name="role_name"
+										value={formData.role_name}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Role Code (Unique){" "}
+										<span className="text-[#ff0000] text-base">*</span>
+									</label>
+									<input
+										type="text"
+										placeholder="Role code"
+										required
+										name="role_code"
+										value={formData.role_code}
+										onChange={handleChange}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Role Specification{" "}
+									</label>
+									<input
+										type="text"
+										placeholder="Role specification"
+										onChange={handleChange}
+										name="role_spec"
+										value={formData.role_spec}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Role Universal Code{" "}
+									</label>
+									<input
+										type="text"
+										placeholder="Role universal code"
+										onChange={handleChange}
+										name="roleucode"
+										value={formData.roleucode}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Role Details{" "}
+									</label>
+									<textarea
+										rows={4}
+										placeholder="Role details"
+										onChange={handleTextareaChange}
+										name="role_det"
+										value={formData.role_det}
+										className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+									/>
+								</div>
+								<button
+									className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+									type="submit"
+								>
+									Create Role
+								</button>
+							</form>
+						</div>
+						<div className="lg:w-1/2 ">
+							<h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
+								Roles created in my organisation
+							</h2>
+
+							<form className=" mb-8 mt-12">
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Level 1
+									</label>
+									<select
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+									>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level1_item}>
+												{item.level1_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Level 2
+									</label>
+									<select
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+									>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level2_item}>
+												{item.level2_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Level 3
+									</label>
+									<select
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+									>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level3_item}>
+												{item.level3_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Level 4
+									</label>
+									<select
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+									>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level4_item}>
+												{item.level4_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Level 5
+									</label>
+									<select
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+									>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.level5_item}>
+												{item.level5_item}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Security Layer
+									</label>
+									<select
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+									>
+										{rolesdata.map((item, index) => (
+											<option key={index} value={item.security_layer}>
+												{item.security_layer}
+											</option>
+										))}
+									</select>
+								</div>
+
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Enabled Roles
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleenablerule}
+										name="enablestatus"
+										value={rulestatus.enablestatus}
+									>
+										<option value="..select">..select</option>
+										{enablerules.map((item, index) => (
+											<option key={index} value={item.role_name}>
+												{item.role_name}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Disabled Roles
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handledisablerule}
+										name="disablestatus"
+										value={rulestatus.disablestatus}
+									>
+										<option value="..select">..select</option>
+										{disablerules.map((item, index) => (
+											<option key={index} value={item.role_name}>
+												{item.role_name}
+											</option>
+										))}
+									</select>
+								</div>
+
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Details of selected Role
+									</label>
+									<textarea
+										rows={4}
+										placeholder=""
+										className="outline-none w-full px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+										value={
+											selectedrule.role_name == ""
+												? ""
+												: `${formatObject(selectedrule)}`
+										}
+									/>
+								</div>
+								<div className="mb-4">
+									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+										Enable / Disable Selected Role
+									</label>
+									<select
+										className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										value={selectedrulestatus}
+										onChange={changeselectedrulestatus}
+									>
+										<option value="..select">...select</option>
+										<option value="enable"> Enable </option>
+										<option value="disable"> Disable </option>
+									</select>
+								</div>
+								<button
+									className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
+									type="button"
+									onClick={updateselectedrulestatus}
+								>
+									Enable / Disable selected Role
+								</button>
+
+								<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+									Duplicate selected Role to create new
+								</button>
+								<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+									Refresh Search
+								</button>
+							</form>
+						</div>
 					</div>
-					<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Select Item in Level 1
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								required
-								name="level1_item"
-								onChange={handleChange}
-								value={formData.level1_item}
-							>
-								<option value="..select">..select</option>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level1_item}>
-										{item.level1_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Select Item in Level 2
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								onChange={handleChange}
-								name="level2_item"
-								value={formData.level2_item}
-							>
-								<option value="..select">..select</option>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level2_item}>
-										{item.level2_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Select Item in Level 3
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								placeholder="Select Product"
-								onChange={handleChange}
-								name="level3_item"
-								value={formData.level3_item}
-							>
-								<option value="..select">..select</option>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level3_item}>
-										{item.level3_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Select Item in Level 4
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								onChange={handleChange}
-								name="level4_item"
-								value={formData.level4_item}
-							>
-								<option value="..select">..select</option>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level4_item}>
-										{item.level4_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Select Item in Level 5
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								onChange={handleChange}
-								name="level5_item"
-								value={formData.level5_item}
-							>
-								<option value="..select">..select</option>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level5_item}>
-										{item.level5_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Select Security Layer
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								required
-								onChange={handleChange}
-								name="security_layer"
-								value={formData.security_layer}
-							>
-								<option value="..select">..select</option>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.security_layer}>
-										{item.security_layer}
-									</option>
-								))}
-							</select>
-						</div>
-
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Role Name
-							</label>
-							<input
-								type="text"
-								placeholder="Role name"
-								required
-								onChange={handleChange}
-								name="role_name"
-								value={formData.role_name}
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Role Code (Unique){" "}
-							</label>
-							<input
-								type="text"
-								placeholder="Role code"
-								required
-								name="role_code"
-								value={formData.role_code}
-								onChange={handleChange}
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Role Specification{" "}
-							</label>
-							<input
-								type="text"
-								placeholder="Role specification"
-								onChange={handleChange}
-								name="role_spec"
-								value={formData.role_spec}
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Role Universal Code{" "}
-							</label>
-							<input
-								type="text"
-								placeholder="Role universal code"
-								onChange={handleChange}
-								name="roleucode"
-								value={formData.roleucode}
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Role Details{" "}
-							</label>
-							<textarea
-								rows={4}
-								placeholder="Role details"
-								onChange={handleTextareaChange}
-								name="role_det"
-								value={formData.role_det}
-								className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-							/>
-						</div>
-						<button
-							className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
-							type="submit"
-						>
-							Create Role
-						</button>
-					</form>
 				</div>
-				<div className="lg:w-1/2 ">
-					<h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
-						Roles created in my organisation
-					</h2>
-
-					<form className=" mb-8 mt-12">
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Level 1
-							</label>
-							<select
-								className="outline-none w-full h-100 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								multiple
-							>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level1_item}>
-										{item.level1_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Level 2
-							</label>
-							<select
-								className="outline-none w-full h-100 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								multiple
-							>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level2_item}>
-										{item.level2_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Level 3
-							</label>
-							<select
-								className="outline-none w-full h-100 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								multiple
-							>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level3_item}>
-										{item.level3_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Level 4
-							</label>
-							<select
-								className="outline-none w-full h-100 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								multiple
-							>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level4_item}>
-										{item.level4_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Level 5
-							</label>
-							<select
-								className="outline-none w-full h-100 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								multiple
-							>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.level5_item}>
-										{item.level5_item}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Security Layer
-							</label>
-							<select
-								className="outline-none w-full h-100 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								multiple
-							>
-								{rolesdata.map((item, index) => (
-									<option key={index} value={item.security_layer}>
-										{item.security_layer}
-									</option>
-								))}
-							</select>
-						</div>
-
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Enabled Roles
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								onChange={handleenablerule}
-								name="enablestatus"
-								value={rulestatus.enablestatus}
-							>
-								<option value="..select">..select</option>
-								{enablerules.map((item, index) => (
-									<option key={index} value={item.role_name}>
-										{item.role_name}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Disabled Roles
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								onChange={handledisablerule}
-								name="disablestatus"
-								value={rulestatus.disablestatus}
-							>
-								<option value="..select">..select</option>
-								{disablerules.map((item, index) => (
-									<option key={index} value={item.role_name}>
-										{item.role_name}
-									</option>
-								))}
-							</select>
-						</div>
-
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Details of selected Role
-							</label>
-							<textarea
-								rows={4}
-								placeholder=""
-								className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-								value={
-									selectedrule.role_name == ""
-										? ""
-										: `${formatObject(selectedrule)}`
-								}
-							/>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Enable / Disable Selected Role
-							</label>
-							<select
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-								value={selectedrulestatus}
-								onChange={changeselectedrulestatus}
-							>
-								<option value="..select">...select</option>
-								<option value="enable"> Enable </option>
-								<option value="disable"> Disable </option>
-							</select>
-						</div>
-						<button
-							className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
-							type="button"
-							onClick={updateselectedrulestatus}
-						>
-							Enable / Disable selected Role
-						</button>
-
-						<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
-							Duplicate selected Role to create new
-						</button>
-						<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
-							Refresh Search
-						</button>
-					</form>
-				</div>
-			</div>
-				</div>:<Loader></Loader>
-			}
+			) : (
+				<Loader></Loader>
+			)}
 		</>
 	);
 };

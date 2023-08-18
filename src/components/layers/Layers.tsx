@@ -219,7 +219,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Security Layer
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>Layer 1 </option>
@@ -235,7 +235,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Devices
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>Laptop/desktop </option>
@@ -249,7 +249,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Operating Systems
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>Windows </option>
@@ -265,7 +265,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Browsers
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>Chrome </option>
@@ -282,7 +282,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Internet Connection Type
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>Mobile Data </option>
@@ -296,7 +296,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Login Type
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>User Name & Password </option>
@@ -313,7 +313,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Change Password
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option> At least once a Week </option>
@@ -329,7 +329,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Geographic Location
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option> 8 characters </option>
@@ -344,7 +344,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									ID Verification Status
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option> Verified ID </option>
@@ -361,7 +361,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Geographic Location
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>India </option>
@@ -375,7 +375,7 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 									Language
 								</label>
 								<select
-									className="outline-none w-full h-32 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 									multiple
 								>
 									<option>English </option>
