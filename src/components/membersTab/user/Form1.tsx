@@ -20,6 +20,10 @@ const Form1 = () => {
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
+  const user_member_length = useSelector(
+    (state: RootState) =>
+      state.adminData.data[0]?.members.guest_members?.accept_members.length
+  );
 
   const handleCopyToClipBoard = () => {
     if (link === "") {
@@ -85,7 +89,8 @@ const Form1 = () => {
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
         <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
           <p>Users</p>
-          <p>{"<Total active users>"}</p>
+
+          <p>{`<${user_member_length}>`}</p>
         </span>
         <div className="p-[30px]  my-20">
           <p className="text-[#FF0000] text-lg font-roboto font-semibold">

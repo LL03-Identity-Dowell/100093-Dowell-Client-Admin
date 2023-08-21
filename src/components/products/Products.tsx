@@ -102,9 +102,6 @@ const Products = () => {
                             onMouseEnter={() =>
                               handleMouseOver(product.product_name)
                             }
-                            onMouseLeave={() =>
-                              handleMouseOut(product.product_name)
-                            }
                             onChange={() =>
                               setSelectedProduct(product.product_name)
                             }
@@ -137,7 +134,7 @@ const Products = () => {
                                       <h2 className="text-white text-[1.78rem] font-semibold">
                                         {product.product_name}
                                       </h2>
-                                      <div className="w-full px-6 absolute">
+                                      <div className="w-full  px-6 ">
                                         <select
                                           className="outline-none h-8 max-w-full"
                                           value={selectedItem}
