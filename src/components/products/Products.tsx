@@ -30,10 +30,10 @@ const Products = () => {
     setHovertitle(title);
   };
 
-  const handleMouseOut = (title: string) => {
-    setIsHovering(false);
-    setHovertitle(title);
-  };
+  // const handleMouseOut = (title: string) => {
+  //   setIsHovering(false);
+  //   setHovertitle(title);
+  // };
 
   const sessionId = localStorage.getItem("sessionId");
 
