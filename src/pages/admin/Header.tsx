@@ -120,15 +120,15 @@ const Header = () => {
         </p>
 
         <div className="lg:flex justify-between">
-          <span className="flex items-center lg:justify-between justify-around my-8 lg:w-[30%]">
+          <span className="flex flex-col sm:flex-row items-center lg:justify-between justify-around my-8 lg:w-[30%]">
             {userData?.userinfo?.profile_img ? (
               <img
                 src={userData?.userinfo?.profile_img}
                 alt="profile image"
-                className="card-shadow w-[150px] h-[150px]"
+                className="card-shadow mt-6 w-[150px] h-[150px]"
               />
             ) : (
-              <div className="card-shadow">
+              <div className="card-shadow mt-6">
                 <img src={images.empty_image} alt="'" />
               </div>
             )}
@@ -136,10 +136,10 @@ const Header = () => {
               <img
                 src={userData?.userinfo?.org_img}
                 alt="organization logo"
-                className="card-shadow w-[150px] h-[150px]"
+                className="card-shadow mt-6 w-[150px] h-[150px]"
               />
             ) : (
-              <div className="card-shadow">
+              <div className="card-shadow mt-6">
                 <img src={images.org_logo} alt="'" />
               </div>
             )}
@@ -214,7 +214,7 @@ const Header = () => {
                   {organizations.map((org, index) => (
                     <option key={index} value={`${org.orgname}${org.type}`}>
                       {org.orgname}
-                      {org.type}
+                     ({org.type})
                     </option>
                   ))}
                 </select>
