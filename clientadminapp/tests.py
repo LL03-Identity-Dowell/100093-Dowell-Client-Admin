@@ -9,8 +9,12 @@ field1 = {}
 login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
                             "ABCDE", "fetch", field1, "update")
 r = json.loads(login1)
-print(type(r))
+# print(r["data"])
+# print((len(r["data"])))
 
+for dict in r["data"][0]["organisations"][0]:
+    if dict["org_name"] == "guest":
+        print( dict)
 
 # def find_other_organisation_with_value(data, target='Dowell_aavhan'):
 #     if isinstance(data, dict):
@@ -57,17 +61,17 @@ def get_other_organisation(document_name, documents,new_org):
             print(document.get('other_organisation'))
             field = {"document_name": document_name}
             update = {"other_organisation":document.get('other_organisation')}
-            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
-                                        "ABCDE", "update", field, update)
+            # login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+            #                             "ABCDE", "update", field, update)
             return document.get('other_organisation')
     return None
 
-get_other_organisation("yvonmcollin",r["data"],new_org)
+# get_other_organisation("yvonmcollin",r["data"],new_org)
 
 # product =     {
-#       "product_name": "Team Management",
-#       "product_logo": "/media/productlogos/Social-media-automation-2.png",
-#       "product_link": "https://100093.pythonanywhere.com",
+#       "product_name": "My Channel",
+#       "product_logo": "/media/productlogos/mychannel.png",
+#       "product_link": "https://dowell-my-channel.flutterflow.app/",
 #       "product_status": "none",
 #       "team_members_status": "enable",
 #       "users_status": "disable",
