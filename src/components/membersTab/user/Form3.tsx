@@ -117,7 +117,13 @@ const Form3 = () => {
               className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
             />
           </div>
-          <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
+          <button
+            disabled={isLoading}
+            className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
+              isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
+            }`}
+          >
+            {" "}
             Cancel Selected User Invitation
           </button>
         </form>

@@ -102,7 +102,6 @@ const Form2 = () => {
               multiple
               onChange={handleSelectOnChange}
               id="have_portfolio"
-              // value={selectedItems}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {team_member?.accept_members.map((members, index) => (
@@ -120,7 +119,6 @@ const Form2 = () => {
             <input
               type="text"
               placeholder="Name"
-              // onChange={(event) => handleSearch(event)}
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
