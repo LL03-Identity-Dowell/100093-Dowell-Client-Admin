@@ -3,10 +3,13 @@ import images from "../../images";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const Form3 = () => {
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const openUploadLinkModal = () => {
     setUploadLinkModal(true);
@@ -20,7 +23,15 @@ const Form3 = () => {
     (state: RootState) => state.adminData.data[0]?.members.guest_members
   );
 
- const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const userName = useSelector(
+    (state: RootState) => state.adminData.data[0]?.Username
+  );
+
+  const porg = useSelector(
+    (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
+  );
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedItemName = event.target.value;
     setSelectedItem(selectedItemName);
   };
@@ -29,24 +40,57 @@ const Form3 = () => {
     (item) => item.name === selectedItem
   );
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const data = {
+      username: userName,
+      selected_member: selectedItem,
+      action: "cancel_member",
+      porg: porg,
+    };
+    console.log(data, "data");
+
+    try {
+      await axios
+        .post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
+        .then((res) => {
+          console.log(res.data);
+          toast.success("success");
+        });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+        toast.error(error.response?.data.error);
+      } else {
+        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
+      <ToastContainer position="top-right" />
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <form className="px-4">
+        <form className="px-4" onSubmit={handleSubmit}>
           <div className="mb-4 mt-8">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Invited Users
             </label>
-            <select  onChange={handleSelectChange}
-              value={selectedItem}
+            <select
+              onChange={handleSelectChange}
+              multiple
               id="invited_team_members"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-               <option>...Select...</option>
-              {guest_member?.accept_members.map((members, index) => (
+              {guest_member?.pending_members.map((members, index) => (
                 <option key={index} value={members.name}>
-                  {members?.first_name} {members?.last_name}{" "}
+                  {members?.name}
                 </option>
               ))}
             </select>
@@ -76,10 +120,13 @@ const Form3 = () => {
           <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto">
             Cancel Selected User Invitation
           </button>
+        </form>
+        <div className="px-4">
           <button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto my-20">
             Duplicate selected User invitation to create new
           </button>
-        </form>
+        </div>
+
         <hr className="border-2 border-[#FF0000] mb-8" />
 
         <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">

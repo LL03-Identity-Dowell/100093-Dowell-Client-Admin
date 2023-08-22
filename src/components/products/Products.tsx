@@ -30,10 +30,10 @@ const Products = () => {
     setHovertitle(title);
   };
 
-  // const handleMouseOut = (title: string) => {
-  //   setIsHovering(false);
-  //   setHovertitle(title);
-  // };
+  const handleMouseOut = (title: string) => {
+    setIsHovering(false);
+    setHovertitle(title);
+  };
 
   const sessionId = localStorage.getItem("sessionId");
 
@@ -102,6 +102,7 @@ const Products = () => {
                             onMouseEnter={() =>
                               handleMouseOver(product.product_name)
                             }
+                            onBlur={() => handleMouseOut(product.product_name)}
                             onChange={() =>
                               setSelectedProduct(product.product_name)
                             }
