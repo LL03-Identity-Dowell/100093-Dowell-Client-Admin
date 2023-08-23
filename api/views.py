@@ -1137,7 +1137,6 @@ def save_device_layers(request):
         return Response(data, status=status.HTTP_200_OK)
 
 
-
 @api_view(['POST'])
 def get_all_details(request):
     if request.method == 'POST':
@@ -1203,7 +1202,7 @@ def create_team_member(request):
         tmembers = {"name": member_name, "member_code": member_code, "member_spec": member_spec,
                     "member_uni_code": member_u_code, "member_details": member_det, "link": link,
                     "status": "unused"}
-        odata["members"]["team_members"]["pending_members"].append(tmembers)
+        odata["members"]["team_members"]["accept_members"].append(tmembers)
         field = {"document_name": username}
         mem = odata["members"]
         update = {"members": mem}
@@ -1607,7 +1606,6 @@ def otherorg(request):
                and entry.get('member_type') == 'team_member' or entry.get('member_type') == 'team_members'
         ]
 
-
         for entry in filtered_data:
             product_name = entry["product"]
             getProductData = getProductDetails(product_name)  # Call the function to get product details
@@ -1627,7 +1625,6 @@ def getProductDetails(product_name):
                                     "fetch", field, "nil")
     l2 = json.loads(l1)
 
-
     for product in l2["data"]:
         if product["product_name"] == product_name:
             return {
@@ -1637,3 +1634,131 @@ def getProductDetails(product_name):
 
     return {}
 
+
+@api_view(['POST'])
+def MemEnDis(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        action = request.data.get("action")
+        rnamedict = request.data.get("selected_member")
+        porg = request.data.get("present_org")
+        membertype = "team_members"
+
+        if action == "remove_member":
+            userorg = UserOrg.objects.all().filter(username=username)
+            for i in userorg:
+                dataorg = i.org
+                dataorgr = json.loads(dataorg)
+            lev = dataorgr["members"]
+            for ir in lev[membertype]["accept_members"]:
+                try:
+                    if ir["name"] == rnamedict:
+                        # ir["status"]="disable"
+                        lev[membertype]["accept_members"].remove(ir)
+                    else:
+                        pass
+                except:
+                    pass
+            UserOrg.objects.all()
+            userorg1 = UserOrg.objects.all().filter(username=f"{rnamedict}")
+            for ii in userorg1:
+                dataorg1 = ii.org
+                dataorg2 = json.loads(dataorg1)
+            levorg = dataorg2["other_organisation"]
+            for irs in levorg:
+                try:
+                    if irs["org_name"] == porg:
+                        irs["status"] = "deleted"
+                    else:
+                        pass
+                except:
+                    pass
+            dataorgr["members"] = lev
+            dataorg2["other_organisation"] = levorg
+            obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorgr)})
+            obj, created = UserOrg.objects.update_or_create(username=rnamedict,
+                                                            defaults={'org': json.dumps(dataorg2)})
+            field = {"document_name": username}
+            update = {"members": lev}
+            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                     "update", field, update)
+            field1 = {"document_name": rnamedict}
+            update1 = {"other_organisation": levorg}
+            login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                      "update", field1, update1)
+            return Response({"success": "Member removed successfully"}, status=HTTP_200_OK)
+
+        elif action == "cancel_member":
+            userorg = UserOrg.objects.all().filter(username=username)
+            for i in userorg:
+                dataorg = i.org
+                dataorg1 = json.loads(dataorg)
+            lev = dataorg1["members"]
+            for ir in lev[membertype]["pending_members"]:
+                try:
+                    if ir["name"] == rnamedict:
+                        # ir["status"]="disable"
+                        lev[membertype]["pending_members"].remove(ir)
+                    else:
+                        pass
+                except:
+                    pass
+            dataorg1["members"] = lev
+            obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
+
+            field = {"document_name": username}
+            update = {"members": lev}
+            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                     "update", field, update)
+            return Response({"success": "Member invitation cancelled successfully"}, status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def create_test_team_member(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        member_name = request.data.get('member_name')
+        member_code = request.data.get('member_code')
+        member_spec = request.data.get('member_spec', "")
+        member_u_code = request.data.get('member_u_code', "")
+        member_det = request.data.get('member_det', "")
+        membername = base64.b64encode(bytes(member_name, 'utf-8')).decode()  # bytes
+        membercode = base64.b64encode(bytes(member_code, 'utf-8')).decode()
+        memberspec = base64.b64encode(bytes(member_spec, 'utf-8')).decode()
+        memberucode = base64.b64encode(bytes(member_u_code, 'utf-8')).decode()
+        memberdet = base64.b64encode(bytes(member_det, 'utf-8')).decode()
+        teammembers = base64.b64encode(bytes("team_members", 'utf-8')).decode()
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        resp = json.loads(login)
+        data = resp['data']
+        # orgnames = data[0]['organisations'][0]['org_name']
+        orgnames = ""
+        members_data = data[0]['members']
+        accepted_members = members_data['team_members']['accept_members']
+        accepted_member_codes = [member.get('member_code') for member in accepted_members]
+        orgname = base64.b64encode(bytes(orgnames, 'utf-8')).decode()
+        link = f"https://100014.pythonanywhere.com/?org={orgname}&type={teammembers}&name={membername}&code={membercode}&spec={memberspec}&u_code={memberucode}&detail={memberdet}"
+
+        # Check if member_code already exists in accepted or pending member codes
+        if member_code in accepted_member_codes:
+            return Response({"error": "Member code already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        userorg = UserOrg.objects.all().filter(username=username)
+        if userorg:
+            for i in userorg:
+                o = i.org
+                odata = json.loads(o)
+        tmembers = {"name": member_name, "member_code": member_code, "member_spec": member_spec,
+                    "member_uni_code": member_u_code, "member_details": member_det, "status": "enable",
+                    "first_name": "", "portfolio_name": "created"}
+        odata["members"]["team_members"]["accept_members"].append(tmembers)
+        field = {"document_name": username}
+        mem = odata["members"]
+        update = {"members": mem}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+        response_data = {"link": link}
+        return Response(response_data, status=status.HTTP_200_OK)
