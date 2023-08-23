@@ -94,13 +94,15 @@ const Products = () => {
 													<div
 														key={product.org_id}
 														className="relative box "
-														onMouseOver={() => handleMouseOver(product.product)}
-														onMouseOut={() => handleMouseOut(product?.product)}
+														onMouseEnter={() =>
+															handleMouseOver(product.product)
+														}
+														onBlur={() => handleMouseOut(product.product)}
 														onChange={() => setSelectedProduct(product.product)}
 													>
 														<div className="h-80 w-80 ">
 															<img
-																src={`${product.product_link}${product.product_logo} `}
+																src={`${product.product_link}${product.product_logo}`}
 																alt=""
 																className={` w-full h-full absolute ${
 																	isHovering ? "object-cover" : ""
@@ -119,7 +121,7 @@ const Products = () => {
 																		<h2 className="text-white text-[1.78rem] font-semibold">
 																			{product.product}
 																		</h2>
-																		<div className="w-full px-6">
+																		<div className="w-full  px-6 ">
 																			<select
 																				className="outline-none h-8 max-w-full"
 																				value={selectedItem}
