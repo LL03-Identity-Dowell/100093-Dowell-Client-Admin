@@ -1666,7 +1666,9 @@ def MemEnDis(request):
                 except:
                     pass
             UserOrg.objects.all()
+            print(userorg)
             userorg1 = UserOrg.objects.all().filter(username=f"{rnamedict}")
+            print(userorg1)
             for ii in userorg1:
                 dataorg1 = ii.org
                 dataorg2 = json.loads(dataorg1)
@@ -1768,3 +1770,29 @@ def create_test_team_member(request):
         obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
         response_data = {"link": link}
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def request_portfolio(request):
+    if request.method == "POST":
+        context = {}
+        user = request.data.get("username")
+        orl = request.data.get("present_org")
+        product = request.data.get("product")
+        user_orgn = UserOrg.objects.get(username=user)
+        org_dict = json.loads(user_orgn.org)
+        if "API" in product:
+            return Response(
+                f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093',
+                status=status.HTTP_200_OK)
+        try:
+            notification_obj = Notification(username=user, owner=orl,
+                                            notification=json.dumps(org_dict["profile_info"]),
+                                            status="enable", product=product)
+            notification_obj.save()
+            data = {
+                "username": "uxliveadmin"
+            }
+            return Response({"success": "Saved successfully"}, status=status.HTTP_200_OK)
+        except:
+            return Response({"error": "Error while saving"}, status=status.HTTP_400_BAD_REQUEST)
