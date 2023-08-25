@@ -12,6 +12,8 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.guest_members
   );
 
+  console.log(guest_member, "guest_member");
+
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
@@ -84,12 +86,15 @@ const Form2 = () => {
               onChange={handleSelectOnChange}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {guest_member?.pending_members.map((members, index) => (
-                <option key={index} value={members?.member_code}>
-                  {" "}
-                  {members?.name}{" "}
-                </option>
-              ))}
+              {guest_member?.accept_members.map(
+                (members, index) =>
+                  members.status !== "enable" && (
+                    <option key={index} value={members?.member_code}>
+                      {" "}
+                      {members?.name}{" "}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="mb-4">
@@ -102,12 +107,15 @@ const Form2 = () => {
               id="have_portfolio"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {guest_member?.accept_members.map((members, index) => (
-                <option key={index} value={members?.member_code}>
-                  {" "}
-                  {members?.name}
-                </option>
-              ))}
+              {guest_member?.accept_members.map(
+                (members, index) =>
+                  members.status === "enable" && (
+                    <option key={index} value={members?.member_code}>
+                      {" "}
+                      {members?.name}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="mb-4">
