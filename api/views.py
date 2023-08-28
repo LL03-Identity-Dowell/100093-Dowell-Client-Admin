@@ -1790,3 +1790,43 @@ def request_portfolio(request):
             return Response({"success": "Saved successfully"}, status=status.HTTP_200_OK)
         except:
             return Response({"error": "Error while saving"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def fetch_notifications(request):
+    if request.method == "POST":
+        present_org = request.data.get("present_org")
+        if present_org:
+            notifications = Notification.objects.filter(owner=present_org, status="enable")
+            notification_list = []
+            for notification in notifications:
+                notification_dict = {
+                    "username": notification.username,
+                    "product": notification.product,
+                }
+                notification_list.append(notification_dict)
+
+            all_notifications = {
+                "notifications": notification_list,
+            }
+            return Response(all_notifications)
+        else:
+            return Response({"error": "No present_org found in session"})
+
+
+@api_view(['POST'])
+def dismiss_notifications(request):
+    if request.method == 'POST':
+        username = request.data.get('username')
+        product = request.data.get('product')
+
+        try:
+            notification = Notification.objects.filter(username=username, product=product, status='enable').first()
+            if notification:
+                notification.status = 'disabled'
+                notification.save()
+                return Response({"success": "Notification disabled"}, status=HTTP_200_OK)
+            else:
+                return Response({"success": "Notification not found or already disabled"}, status=HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(str(e), status=500)
