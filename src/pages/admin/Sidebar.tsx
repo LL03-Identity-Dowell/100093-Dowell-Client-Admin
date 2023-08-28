@@ -58,7 +58,22 @@ const Sidebar = () => {
 
   const lastlogin = useSelector(
     (state: RootState) => state.sidebar?.lastlogin[0]
-  );
+	);
+	
+	const team_member = useSelector(
+		(state: RootState) => state.adminData.data[0].members.team_members.accept_members
+	);
+
+	const public_member = useSelector(
+		(state: RootState) =>
+			state.adminData.data[0].members.public_members.accept_members
+	);
+
+	const user_member = useSelector(
+		(state: RootState) =>
+			state.adminData.data[0].members.guest_members.accept_members
+	);
+	
   return (
 		<>
 			<div className="border border-black card-shadow lg:w-1/4 px-2 py-2">
@@ -243,36 +258,42 @@ const Sidebar = () => {
 						<Accordion title=" Team Member ">
 							<div className="bg-[#CEF9D2] p-4 box-border">
 								<ul>
-									<li className="text-[#7a7a7a] text-lg font-medium">
-										1.Organization 1
-									</li>
-									<li className="text-[#7a7a7a] text-lg font-medium">
-										1.Organization 1
-									</li>
+									{team_member.map((item, index) => (
+										<li
+											className="text-[#7a7a7a] text-lg font-medium"
+											key={index}
+										>
+											{index + 1}.{item.name}
+										</li>
+									))}
 								</ul>
 							</div>
 						</Accordion>
 						<Accordion title=" User ">
 							<div className="bg-[#CEF9D2] p-4 box-border">
 								<ul>
-									<li className="text-[#7a7a7a] text-lg font-medium">
-										1.Organization 1
-									</li>
-									<li className="text-[#7a7a7a] text-lg font-medium">
-										1.Organization 1
-									</li>
+									{user_member.map((item, index) => (
+										<li
+											className="text-[#7a7a7a] text-lg font-medium"
+											key={index}
+										>
+											{index + 1}.{item.name}
+										</li>
+									))}
 								</ul>
 							</div>
 						</Accordion>
 						<Accordion title=" Public ">
 							<div className="bg-[#CEF9D2] p-4 box-border">
 								<ul>
-									<li className="text-[#7a7a7a] text-lg font-medium">
-										1.Organization 1
-									</li>
-									<li className="text-[#7a7a7a] text-lg font-medium">
-										1.Organization 1
-									</li>
+									{public_member.map((item, index) => (
+										<li
+											className="text-[#7a7a7a] text-lg font-medium"
+											key={index}
+										>
+											{index + 1}.{item.name}
+										</li>
+									))}
 								</ul>
 							</div>
 						</Accordion>
@@ -316,8 +337,6 @@ const Sidebar = () => {
 						Chrome Extension
 					</a>
 				</div>
-
-				
 			</div>
 		</>
 	);
