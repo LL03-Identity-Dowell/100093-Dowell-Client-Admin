@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -12,27 +12,31 @@ const Products = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const userName = userData.userinfo.username;
 
-  const [isHovering, setIsHovering] = useState(false);
-  const [hovertitle, setHovertitle] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<string>("");
-
   const portfolioData = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio
   );
 
-  const filterDataByProduct = portfolioData?.filter(
-    (item) => item.product === hovertitle
+  const present_org = useSelector(
+    (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
   );
 
-  const handleMouseOver = (title: string) => {
-    setIsHovering(true);
-    setHovertitle(title);
-  };
+  const [hovertitle, setHovertitle] = useState("");
 
-  const handleMouseOut = (title: string) => {
-    setIsHovering(false);
+  const filterDataByProduct = portfolioData?.filter(
+    (item) => item?.product === hovertitle
+  );
+
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<string>("");
+
+  const handleMouseOver = (title: string) => {
     setHovertitle(title);
+    setSelectedProduct(title);
+
+    const product = portfolioData.find((item) => item.product === title);
+    if (product) {
+      setSelectedItem(product.portfolio_code);
+    }
   };
 
   const sessionId = localStorage.getItem("sessionId");
@@ -45,15 +49,15 @@ const Products = () => {
       action: "connect_portfolio",
       portfl: selectedItem,
       product: selectedProduct,
-      present_org: userName,
+      present_org: present_org,
       session_id: sessionId,
     };
+    // console.log(data);
 
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/connect_portfolio/", data)
         .then((res) => {
-          console.log(res.data);
           toast.success("success");
           window.location.href = res.data;
         });
@@ -64,6 +68,37 @@ const Products = () => {
         console.error("An unknown error occurred:", error);
       }
     }
+  };
+
+  const handleRequestPortfolio = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
+
+    const data = {
+      username: userName,
+      product: selectedProduct,
+      present_org: present_org,
+    };
+
+    try {
+      await axios
+        .post("https://100093.pythonanywhere.com/api/request_portfolio/", data)
+        .then(() => {
+          toast.success("success");
+        });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+        toast.error("An error occurred");
+      } else {
+        console.error("An unknown error occurred:", error);
+      }
+    }
+  };
+
+  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedItem(e.target.value);
   };
 
   return (
@@ -95,78 +130,78 @@ const Products = () => {
                   <>
                     {productData?.products?.map((product) => {
                       return (
-                        <>
-                          <div
-                            key={product._id}
-                            className="relative box "
-                            onMouseEnter={() =>
-                              handleMouseOver(product.product_name)
-                            }
-                            onBlur={() => handleMouseOut(product.product_name)}
-                            onChange={() =>
-                              setSelectedProduct(product.product_name)
-                            }
-                          >
-                            <div className="h-80 w-80 ">
-                              <img
-                                src={`${
-                                  product.product_logo?.includes(
-                                    "https://100093.pythonanywhere.com"
-                                  )
-                                    ? product.product_logo
-                                    : `https://100093.pythonanywhere.com${product.product_logo}`
-                                } `}
-                                alt=""
-                                className={` w-full h-full absolute ${
-                                  isHovering ? "object-cover" : ""
-                                } 
-                              `}
-                              />
-                            </div>
-                            {isHovering &&
-                              product.product_name === hovertitle && (
-                                <div className="absolute top-0 w-full h-full">
-                                  <form
-                                    className="relative w-full h-full"
-                                    onSubmit={handleSubmit}
-                                  >
-                                    <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
-                                    <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
-                                      <h2 className="text-white text-[1.78rem] font-semibold">
-                                        {product.product_name}
-                                      </h2>
-                                      <div className="w-full  px-6 ">
-                                        <select
-                                          className="outline-none h-8 max-w-full"
-                                          value={selectedItem}
-                                          onChange={(e) =>
-                                            setSelectedItem(e.target.value)
-                                          }
-                                        >
-                                          <option> Select Portfolio </option>
-                                          {filterDataByProduct?.map(
+                        <div
+                          key={product._id}
+                          className="relative box"
+                          onMouseEnter={() =>
+                            handleMouseOver(product.product_name)
+                          }
+                        >
+                          <div className="h-80 w-80 ">
+                            <img
+                              src={`${
+                                product.product_logo?.includes(
+                                  "https://100093.pythonanywhere.com"
+                                )
+                                  ? product.product_logo
+                                  : `https://100093.pythonanywhere.com${product.product_logo}`
+                              } `}
+                              alt=""
+                              className="w-full h-full absolute"
+                            />
+                          </div>
+                          {hovertitle &&
+                            product.product_name === hovertitle && (
+                              <div className="absolute top-0 w-full h-full dropdown-container">
+                                <form
+                                  className="relative w-full h-full"
+                                  onSubmit={
+                                    filterDataByProduct.length > 0
+                                      ? handleSubmit
+                                      : handleRequestPortfolio
+                                  }
+                                >
+                                  <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
+                                  <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
+                                    <h2 className="text-white text-[1.78rem] font-semibold">
+                                      {product.product_name}
+                                    </h2>
+                                    <div className="w-full  px-6 ">
+                                      <select
+                                        className="outline-none h-8 max-w-full"
+                                        value={selectedItem}
+                                        id="portfolio"
+                                        onChange={handleSelectChange}
+                                      >
+                                        {filterDataByProduct.length > 0 &&
+                                          filterDataByProduct?.map(
                                             (item, index) => (
                                               <option
                                                 key={index}
                                                 value={item?.portfolio_code}
                                               >
-                                                {" "}
                                                 {item?.portfolio_name},{" "}
                                                 {item?.role}, {item?.data_type}
                                               </option>
                                             )
                                           )}
-                                        </select>
-                                      </div>
-                                      <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                                        Connect
-                                      </button>
+                                        {filterDataByProduct.length === 0 && (
+                                          <option>
+                                            Waiting for portfolio from owner
+                                          </option>
+                                        )}
+                                      </select>
                                     </div>
-                                  </form>
-                                </div>
-                              )}
-                          </div>
-                        </>
+                                    <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
+                                      {filterDataByProduct.length > 0
+                                        ? "Connect"
+                                        : "Request For Connect"}
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            )}
+                        </div>
                       );
                     })}
                     {productData?.products.length % 3 == 2 ? (

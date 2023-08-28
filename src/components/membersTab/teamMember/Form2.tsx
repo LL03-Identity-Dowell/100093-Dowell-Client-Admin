@@ -13,6 +13,9 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.team_members
   );
 
+  console.log(team_member, 'team_member');
+  
+
   const handleSelectOnChange = (
     event: React.ChangeEvent<HTMLSelectElement>
   ) => {
@@ -83,10 +86,10 @@ const Form2 = () => {
               multiple
               onChange={handleSelectOnChange}
               id="no_portfolio"
-              required
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {team_member?.pending_members.map((members, index) => (
+              {team_member?.accept_members.map((members, index) => (
+                members.portfolio_name !== 'created' &&
                 <option key={index} value={members?.name}>
                   {" "}
                   {members?.name}{" "}
@@ -105,6 +108,7 @@ const Form2 = () => {
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {team_member?.accept_members.map((members, index) => (
+                                members.portfolio_name === 'created' &&
                 <option key={index} value={members?.member_code}>
                   {" "}
                   {members?.name}
