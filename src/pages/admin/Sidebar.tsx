@@ -109,6 +109,20 @@ const Sidebar = () => {
 								</ul>
 							</div>
 						</Accordion>
+						<Accordion title="Portfolio Notifications">
+							<div className="bg-[#CEF9D2] py-4 pl-8 box-border">
+								<ul>
+									<li className="text-[#7a7a7a] text-lg font-medium">
+										<a
+											href="https://100097.pythonanywhere.com/?session_id={{session_id}}"
+											className="text-lg font-medium"
+										>
+											{/* 1.Edit to Profile */}
+										</a>
+									</li>
+								</ul>
+							</div>
+						</Accordion>
 					</div>
 				</div>
 
