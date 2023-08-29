@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Accordion from "../../components/accordion";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,6 @@ import {
 } from "../../store/slice/sidebar";
 import { RootState } from "../../store/Store";
 import { toast } from "react-toastify";
-import { NotificationsListProps } from "../../components/types/sidebar";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 
 const Sidebar = () => {
@@ -24,7 +23,7 @@ const Sidebar = () => {
 
   const usedispatch = useDispatch();
 
-  const sessionId = localStorage.getItem("sessionId");
+  // const sessionId = localStorage.getItem("sessionId");
 
   useEffect(() => {
     // Function to call the API
