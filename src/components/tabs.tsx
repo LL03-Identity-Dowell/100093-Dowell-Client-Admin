@@ -69,7 +69,7 @@ const AdminTabs = () => {
           const data = {
             username: adminusername,
           };
-          console.log(data, "sdata");
+          // console.log(data, "sdata");
 
           const response = await axios.post(
             "https://100093.pythonanywhere.com/api/get_data/",
@@ -79,8 +79,8 @@ const AdminTabs = () => {
             "https://100093.pythonanywhere.com/api/getproducts/",
             productData
           );
-          console.log(response.data, "admin data");
-          console.log(productResponse.data, "product data");
+          // console.log(response.data, "admin data");
+          // console.log(productResponse.data, "product data");
 
           dispatch(getAdminData(response.data));
           dispatch(getproducts(productResponse.data));
