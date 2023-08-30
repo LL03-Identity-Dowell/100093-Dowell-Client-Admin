@@ -37,7 +37,7 @@ const Form3 = () => {
   };
 
   const selectedItemData = guest_member?.accept_members.find(
-    (item) => item.name === selectedItem
+    (item) => item.member_code === selectedItem
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -89,7 +89,7 @@ const Form3 = () => {
               placeholder="Select Product"
             >
               {guest_member?.pending_members.map((members, index) => (
-                <option key={index} value={members.name}>
+                <option key={index} value={members.member_code}>
                   {members?.name}
                 </option>
               ))}

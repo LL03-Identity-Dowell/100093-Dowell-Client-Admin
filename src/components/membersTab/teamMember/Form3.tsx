@@ -28,7 +28,7 @@ const Form3 = () => {
   };
 
   const selectedItemData = team_member?.pending_members.find(
-    (item) => item.name === selectedItem
+    (item) => item.member_code === selectedItem
   );
 
   const openUploadLinkModal = () => {
@@ -89,7 +89,7 @@ const Form3 = () => {
               placeholder="Select Product"
             >
               {team_member?.pending_members.map((members, index) => (
-                <option key={index} value={members.name}>
+                <option key={index} value={members.member_code}>
                   {members?.name}
                 </option>
               ))}

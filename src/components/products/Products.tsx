@@ -1,10 +1,11 @@
 import { ChangeEvent, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
 import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
 import { ToastContainer, toast } from "react-toastify";
+import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 
 const Products = () => {
   const productData = useSelector((state: RootState) => state.products);
@@ -70,6 +71,8 @@ const Products = () => {
     }
   };
 
+  const usedispatch = useDispatch();
+
   const handleRequestPortfolio = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -84,8 +87,9 @@ const Products = () => {
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/request_portfolio/", data)
-        .then(() => {
+        .then((res) => {
           toast.success("success");
+          usedispatch(getportfolioNotifications(res.data));
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

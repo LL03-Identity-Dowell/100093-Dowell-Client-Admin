@@ -19,7 +19,6 @@ const Sidebar = () => {
     (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
   );
 
-  // const [notifications, setNotifications] = useState<NotificationsListProps>([]);
 
   const usedispatch = useDispatch();
 
@@ -60,7 +59,6 @@ const Sidebar = () => {
           "https://100093.pythonanywhere.com/api/fetch_notifications/",
           notificationData
         );
-        // setNotifications(notificationResponse.data);
 				usedispatch(getportfolioNotifications(notificationResponse.data));
       } catch (error) {
         console.error(error);
@@ -73,7 +71,7 @@ const Sidebar = () => {
     }
   }, [adminusername, present_org]);
 
-  const removeNotifications = async (product: string) => {
+  const removeNotifications = async (product: string, key: number) => {
     const removeNotificationData = {
       username: adminusername,
       product: product,
@@ -81,13 +79,16 @@ const Sidebar = () => {
     console.log(removeNotificationData, "removeNotificationData");
 
     try {
+			const removeNotification = notifications.filter(
+        (_, id) => id !== key
+      );
+			usedispatch(getportfolioNotifications(removeNotification));
       await axios
         .post(
           "https://100093.pythonanywhere.com/api/dismiss_notifications/",
           removeNotificationData
         )
         .then(() => {
-          window.location.reload();
           toast.success("success");
         });
     } catch (error: unknown) {
@@ -125,7 +126,7 @@ const Sidebar = () => {
     (state: RootState) =>
       state.getportfolioNotifications?.notifications
   );
-	console.log(notifications, 'notifications');
+	// console.log(notifications, 'notifications');
 	
 
   return (
@@ -189,7 +190,7 @@ const Sidebar = () => {
                       </p>
                       <button
                         className="bg-black text-white px-2 rounded-sm"
-                        onClick={() => removeNotifications(item?.product)}
+                        onClick={() => removeNotifications(item?.product, key)}
                       >
                         Dismiss
                       </button>

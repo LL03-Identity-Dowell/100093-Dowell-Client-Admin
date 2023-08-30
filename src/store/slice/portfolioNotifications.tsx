@@ -12,7 +12,6 @@ const portfolioNotificationSlice = createSlice({
   },
   reducers: {
     getportfolioNotifications(_state, action) {
-      // console.log(_state);
       return action.payload;
     },
   },
