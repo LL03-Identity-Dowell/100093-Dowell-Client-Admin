@@ -1603,26 +1603,69 @@ def otherorg(request):
         ##########################################
         resp = json.loads(login)
         other_organisations = resp['data'][0]['other_organisation']
+        aggregated_data = {}
+        # # Filter the data based on org_name, status, and member_type
+        # filtered_data = [
+        #     entry for entry in other_organisations
+        #     if entry.get('org_name') == org_name
+        #       and entry.get('status') == 'enable'
+        #       and entry.get('member_type') == 'team_member' or entry.get('member_type') == 'team_members'
+        # ]
 
-        # Filter the data based on org_name, status, and member_type
-        filtered_data = [
-            entry for entry in other_organisations
-            if entry.get('org_name') == org_name
-               and entry.get('status') == 'enable'
-               and entry.get('member_type') == 'team_member' or entry.get('member_type') == 'team_members'
-        ]
 
-        for entry in filtered_data:
-            product_name = entry["product"]
-            getProductData = getProductDetails(product_name)  # Call the function to get product details
-            print('here')
-            entry["product_link"] = getProductData.get("product_link", "")
-            entry["product_logo"] = getProductData.get("product_logo", "")
+        # for entry in filtered_data:
+        #     product_name = entry["product"]
+        #     getProductData = getProductDetails(product_name)  # Call the function to get product details
+        #     print('here')
+        #     entry["product_link"] = getProductData.get("product_link", "")
+        #     entry["product_logo"] = getProductData.get("product_logo", "")
 
-        return Response(
-            filtered_data,
-            status=HTTP_200_OK
-        )
+        # return Response(
+        #     filtered_data,
+        #     status=HTTP_200_OK
+        # )
+        for entry in other_organisations:
+            # Check if org_name matches the filter and if status is "enable"
+            if entry.get("status") == "enable" and entry.get("org_name") == org_name:
+
+                # Construct a unique key based on the product
+                key = entry.get("product", "")
+
+                # Fetch product details using the provided function
+                product_details = getProductDetails(key)
+
+                # If this product hasn't been seen before, initialize its structure
+                if key not in aggregated_data:
+                    aggregated_data[key] = {
+                        "org_id": entry.get("org_id", ""),
+                        "org_name": entry.get("org_name", ""),
+                        "username": entry.get("username", ""),
+                        "member_type": entry.get("member_type", ""),
+                        "product": entry.get("product", ""),
+                        "portfolios": [],
+                        "product_link": product_details.get("product_link", ""),  # Retrieve link from the product_details
+                        "product_logo": product_details.get("product_logo", "")   # Retrieve logo from the product_details
+                    }
+
+                # Create a portfolio entry from the current data
+                portfolio = {
+                    "data_type": entry.get("data_type", ""),
+                    "operations_right": entry.get("operations_right", ""),
+                    "role": entry.get("role", ""),
+                    "security_layer": entry.get("security_layer", ""),
+                    "portfolio_name": entry.get("portfolio_name", ""),
+                    "portfolio_code": entry.get("portfolio_code", ""),
+                    "portfolio_specification": entry.get("portfolio_specification", ""),
+                    "portfolio_uni_code": entry.get("portfolio_uni_code", ""),
+                    "portfolio_details": entry.get("portfolio_details", ""),
+                    "status": entry.get("status", "")
+                }
+
+                aggregated_data[key]["portfolios"].append(portfolio)
+
+        # Convert the aggregated data dictionary to a list format
+        response = list(aggregated_data.values())
+        return Response({"data":response}, status=HTTP_200_OK)
 
 
 def getProductDetails(product_name):
