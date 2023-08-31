@@ -71,7 +71,7 @@ const Products = () => {
     }
   };
 
-  const usedispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleRequestPortfolio = async (
     e: React.FormEvent<HTMLFormElement>
@@ -89,7 +89,7 @@ const Products = () => {
         .post("https://100093.pythonanywhere.com/api/request_portfolio/", data)
         .then((res) => {
           toast.success("success");
-          usedispatch(getportfolioNotifications(res.data));
+          dispatch(getportfolioNotifications(res.data));
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
