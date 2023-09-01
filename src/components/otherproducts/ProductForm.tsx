@@ -5,7 +5,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 const ProductForm = () => {
-  const productData = useSelector((state: RootState) => state.otherorgdata);
+  const productData = useSelector((state: RootState) => state.otherorgdata.data);
 
   const userName = useSelector(
     (state: RootState) => state.userinfo?.userinfo?.username
@@ -18,12 +18,12 @@ const selectedorgname = useSelector(
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
-  const filterDataByProduct = productData.filter(
+  const filterDataByProduct = productData.find(
 		(item) => item.product === selectedProduct
 	);
 
 
-  const selectedItemData = filterDataByProduct.find(
+  const selectedItemData = filterDataByProduct?.portfolios.find(
 		(item) => item?.portfolio_name === selectedItem
 	);
   const sessionId = localStorage.getItem("sessionId");
@@ -112,7 +112,7 @@ const formatObject = (obj: Record<string, any>) => {
 						placeholder="Select Portfolio"
 					>
 						<option> Select Portfolio </option>
-						{filterDataByProduct.map((item, index) => (
+						{filterDataByProduct?.portfolios.map((item, index) => (
 							<option key={index} value={item.portfolio_name}>
 								{" "}
 								{item?.portfolio_name}
@@ -126,7 +126,7 @@ const formatObject = (obj: Record<string, any>) => {
 					</label>
 					<textarea
 						rows={4}
-						// value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1).trim()}
+						
 						value={
 							selectedItemData == undefined
 								? ""
