@@ -8,7 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 
 const Products = () => {
 
-	const productData = useSelector((state: RootState) => state.otherorgdata);
+	const productData = useSelector((state: RootState) => state.otherorgdata.data);
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
 	const selectedorgname = useSelector((state: RootState) => state.selectedorg.orgname);
 	const userData = useSelector((state: RootState) => state.userinfo);
@@ -21,9 +21,11 @@ const Products = () => {
 
 
 
-	const filterDataByProduct = productData?.filter(
+	const filterDataByProduct = productData.find(
 		(item) => item.product === hovertitle
 	);
+
+	
 
 	const handleMouseOver = (title: string) => {
 		setIsHovering(true);
@@ -48,7 +50,7 @@ const Products = () => {
 			present_org: selectedorgname,
 			session_id: sessionId,
 		};
-
+console.log(data)
 		try {
 			await axios
 				.post("https://100093.pythonanywhere.com/api/connect_portfolio/", data)
@@ -102,7 +104,13 @@ const Products = () => {
 													>
 														<div className="h-80 w-80 ">
 															<img
-																src={`${product.product_link}${product.product_logo}`}
+																src={
+																	product.product_logo.includes(
+																		"https://100093.pythonanywhere.com"
+																	)
+																		?`${product.product_logo}`
+																		: `https://100093.pythonanywhere.com${product.product_logo}`
+																}
 																alt=""
 																className={` w-full h-full absolute ${
 																	isHovering ? "object-cover" : ""
@@ -130,7 +138,8 @@ const Products = () => {
 																				}
 																			>
 																				<option> Select Portfolio </option>
-																				{filterDataByProduct?.map(
+																				
+																				{filterDataByProduct?.portfolios.map(
 																					(item, index) => (
 																						<option
 																							key={index}
