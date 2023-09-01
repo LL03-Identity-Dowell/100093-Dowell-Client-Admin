@@ -23,7 +23,7 @@ interface FormInputs {
 const Form1 = () => {
   const [formInputs, setFormInputs] = useState<FormInputs>({
     username: "",
-    member_type: "owner",
+    member_type: "",
     member: [],
     product: "",
     data_type: "",
@@ -39,6 +39,7 @@ const Form1 = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+  const [rangeInput, setRangeInput] = useState<string>("");
 
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
@@ -80,6 +81,61 @@ const Form1 = () => {
       ...prevSelectedItems,
       ...selectedOptions,
     ]);
+  };
+
+  const handleSelectAll = () => {
+    let allOptions: string[] = [];
+    if (formInputs.member_type === "user") {
+      allOptions = filterUserMember?.map((member) => member.name) || [];
+    } else if (formInputs.member_type === "team_member") {
+      allOptions =
+        filterTeamMember?.map((member) =>
+          member.name === "owner" ? userName : member?.name
+        ) || [];
+    } else if (formInputs.member_type === "owner") {
+      allOptions = [userName];
+    }
+
+    setSelectedItems(allOptions);
+  };
+
+  const handleSelectAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      handleSelectAll();
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  function getAllMemberOptions() {
+    if (formInputs.member_type === "user") {
+      return filterUserMember?.map((member) => member.name) || [];
+    } else if (formInputs.member_type === "team_member") {
+      return (
+        filterTeamMember?.map((member) =>
+          member.name === "owner" ? userName : member?.name
+        ) || []
+      );
+    } else if (formInputs.member_type === "owner") {
+      return [userName];
+    }
+    return [];
+  }
+
+  const handleSelectRange = (start: number, end: number) => {
+    const allOptions = getAllMemberOptions();
+    const selectedRange = allOptions.slice(start - 1, end);
+    setSelectedItems(selectedRange);
+  };
+
+  const handleRangeInput = () => {
+    const [startStr, endStr] = rangeInput.split("-").map((str) => str.trim());
+    const start = parseInt(startStr);
+    const end = parseInt(endStr);
+
+    if (!isNaN(start) && !isNaN(end)) {
+      handleSelectRange(start, end);
+    }
   };
 
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -126,6 +182,13 @@ const Form1 = () => {
     }
   };
 
+  const handleKeyPress = (e: { key: string; preventDefault: () => void }) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleRangeInput();
+    }
+  };
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -153,6 +216,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
+              <option>...select...</option>
               <option value="owner">Owner </option>
               <option value="team_member"> Team Member </option>
               <option value="user">User </option>
@@ -160,29 +224,43 @@ const Form1 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Member <span className="text-[#ff0000] text-base">*</span>
-            </label>
+            <div className="flex items-center gap-3">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Select Member{" "}
+                <span className="text-[#ff0000] text-base">*</span>
+              </label>
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
+                Select All
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAllChange}
+                  checked={
+                    selectedItems.length > 0 &&
+                    selectedItems.length === getAllMemberOptions().length
+                  }
+                />
+              </label>
+            </div>
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="separate numbers with '-'e.g 1-10"
+                onChange={(e) => setRangeInput(e.target.value)}
+                className="w-full outline-none border border-black mb-[10px] p-2 rounded-sm"
+                onBlur={handleRangeInput}
+                onKeyDown={handleKeyPress}
+              />
+            </div>
+
             <select
               multiple
               onChange={handleSelectChange}
               id="member"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {formInputs.member_type === "user" &&
-                filterUserMember?.map((member, key) => (
-                  <option key={key}> {member.name}</option>
-                ))}
-              {formInputs.member_type === "team_member" &&
-                filterTeamMember?.map((member, key) => (
-                  <option key={key}>
-                    {" "}
-                    {member.name === "owner" ? userName : member?.name}
-                  </option>
-                ))}
-              {formInputs.member_type === "owner" && (
-                <option> {userName}</option>
-              )}
+              {getAllMemberOptions().map((option, key) => (
+                <option key={key}>{option}</option>
+              ))}
             </select>
           </div>
           <div className="mb-4">

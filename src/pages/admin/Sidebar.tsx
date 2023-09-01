@@ -19,7 +19,6 @@ const Sidebar = () => {
     (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
   );
 
-
   const usedispatch = useDispatch();
 
   // const sessionId = localStorage.getItem("sessionId");
@@ -51,7 +50,7 @@ const Sidebar = () => {
 
         usedispatch(getsidebarlastlogin(os2response.data));
 
-				// fetch portfolio notifications
+        // fetch portfolio notifications
         const notificationData = {
           present_org: present_org,
         };
@@ -59,7 +58,7 @@ const Sidebar = () => {
           "https://100093.pythonanywhere.com/api/fetch_notifications/",
           notificationData
         );
-				usedispatch(getportfolioNotifications(notificationResponse.data));
+        usedispatch(getportfolioNotifications(notificationResponse.data));
       } catch (error) {
         console.error(error);
       }
@@ -79,10 +78,8 @@ const Sidebar = () => {
     console.log(removeNotificationData, "removeNotificationData");
 
     try {
-			const removeNotification = notifications.filter(
-        (_, id) => id !== key
-      );
-			usedispatch(getportfolioNotifications(removeNotification));
+      const removeNotification = notifications.filter((_, id) => id !== key);
+      usedispatch(getportfolioNotifications(removeNotification));
       await axios
         .post(
           "https://100093.pythonanywhere.com/api/dismiss_notifications/",
@@ -99,7 +96,6 @@ const Sidebar = () => {
       }
     }
   };
-
 
   const workspace = useSelector((state: RootState) => state.sidebar?.workspace);
 
@@ -122,12 +118,9 @@ const Sidebar = () => {
       state.adminData.data[0].members.guest_members.accept_members
   );
 
-	const notifications = useSelector(
-    (state: RootState) =>
-      state.getportfolioNotifications?.notifications
+  const notifications = useSelector(
+    (state: RootState) => state.getportfolioNotifications?.notifications
   );
-	// console.log(notifications, 'notifications');
-	
 
   return (
     <>
@@ -196,7 +189,6 @@ const Sidebar = () => {
                       </button>
                     </li>
                   ))}
-                 
                 </ul>
               </div>
             </Accordion>
