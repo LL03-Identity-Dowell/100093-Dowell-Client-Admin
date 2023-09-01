@@ -64,6 +64,9 @@ const Form1 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
+  const filterPublicMember = getMembers?.public_members?.accept_members.filter(
+    (item) => item
+  );
 
   const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormInputs({ ...formInputs, portfolio_det: e.target.value });
@@ -116,6 +119,8 @@ const Form1 = () => {
           member.name === "owner" ? userName : member?.name
         ) || []
       );
+    } else if (formInputs.member_type === "public") {
+      return filterPublicMember?.map((member) => member?.name) || [];
     } else if (formInputs.member_type === "owner") {
       return [userName];
     }
@@ -189,6 +194,8 @@ const Form1 = () => {
     }
   };
 
+  console.log("formInputs", getMembers);
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -259,12 +266,21 @@ const Form1 = () => {
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {getAllMemberOptions().map((option, key) => (
-                <option key={key}>{option}</option>
+                <option
+                  key={key}
+                  className={
+                    selectedItems.includes(option)
+                      ? "bg-[#007BFF] text-white"
+                      : ""
+                  }
+                >
+                  {option}
+                </option>
               ))}
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
               Select Product <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
