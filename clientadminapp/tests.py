@@ -12,9 +12,6 @@ r = json.loads(login1)
 # print(r["data"])
 # print((len(r["data"])))
 
-for dict in r["data"][0]["organisations"][0]:
-    if dict["org_name"] == "guest":
-        print( dict)
 
 # def find_other_organisation_with_value(data, target='Dowell_aavhan'):
 #     if isinstance(data, dict):
@@ -51,7 +48,7 @@ org_id = "63cf8114554bd6bedf7b13ce"
 random_org_id = generate_random_string(len(org_id))
 new_org = {
         "org_id": random_org_id,
-        "org_name": "HR_Dowell Research","username":"yvonmcollin","member_type":"team_members","product":"Team Management","data_type":"Real_Data","operations_right":"Add/Edit","role":"Flutter Flow Developers ","security_layer":"None","portfolio_name":"Dowell_Collin","portfolio_code":"009612764","portfolio_specification":"","portfolio_uni_code":"009612764","portfolio_details":"","status":"enable"}
+        "org_name": "HR_Dowell Research","username":"ayeshakhalil432","member_type":"team_members","product":"Team Management","data_type":"Real_Data","operations_right":"Add/Edit","role":"Flutter Flow Developers ","security_layer":"None","portfolio_name":"Dowell Ayesha","portfolio_code":"748473","portfolio_specification":"","portfolio_uni_code":"748473","portfolio_details":"","status":"enable"}
 
 def get_other_organisation(document_name, documents,new_org):
 
@@ -61,12 +58,12 @@ def get_other_organisation(document_name, documents,new_org):
             print(document.get('other_organisation'))
             field = {"document_name": document_name}
             update = {"other_organisation":document.get('other_organisation')}
-            # login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
-            #                             "ABCDE", "update", field, update)
+            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                        "ABCDE", "update", field, update)
             return document.get('other_organisation')
     return None
 
-# get_other_organisation("yvonmcollin",r["data"],new_org)
+get_other_organisation("ayeshakhalil432",r["data"],new_org)
 
 # product =     {
 #       "product_name": "My Channel",
@@ -114,3 +111,46 @@ def get_other_organisation(document_name, documents,new_org):
 
 
 # find_username_position(r["data"][0]["portpolio"])
+
+
+# file_name = "ids.txt"
+
+# # Extracting the _id and saving to the file
+# with open(file_name, "w") as f:
+#     for entry in r["data"]:
+#         if "_id" in entry:
+#             f.write(entry["_id"] + "\n")
+
+# print(f"IDs have been saved to {file_name}")
+
+# port_code = generate_random_string(6)
+
+# default =   {
+#         "org_id":"642ae6478f6fd9e0cc884769",
+#         "org_name":"Testing_400413",
+#           "username": "Testing_400413",
+#           "member_type": "owner",
+#           "product": "all",
+#           "data_type": "Real_data",
+#           "operations_right": "Add/Edit",
+#           "role": "owner",
+#           "security_layer": "None",
+#           "portfolio_name": "default",
+#           "portfolio_code": port_code,
+#           "portfolio_specification": "",
+#           "portfolio_uni_code": "default",
+#           "portfolio_details": "",
+#           "status": "enable"
+#         }
+
+
+# # Extract IDs from ids.txt
+# with open("ids.txt", "r") as f:
+#     ids = [line.strip() for line in f]
+
+# # Check each dictionary in data. If its _id matches an id from ids.txt, append the default dictionary to its portpolio
+# for entry in r["data"]:
+#     if entry["_id"] in ids:
+#         entry["portpolio"].append(default)
+
+
