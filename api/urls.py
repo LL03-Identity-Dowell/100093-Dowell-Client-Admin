@@ -4,7 +4,8 @@ from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdat
     settings, workspace_name, item_name, create_item, get_data, create_portfolio, create_role, get_layer_data, \
     update_role_status, update_portfolio_status, update_item_status, save_device_layers, get_all_details, \
     create_team_member, create_user_member, get_workspaces, get_last_login, connect_portfolio, otherorg, \
-    update_level_name, MemEnDis, create_test_team_member, request_portfolio, fetch_notifications, dismiss_notifications
+    update_level_name, MemEnDis, create_test_team_member, request_portfolio, fetch_notifications, dismiss_notifications, \
+    settings_data, public_user
 
 urlpatterns = [
     path('userinfo/', sessionView, name="userinfo"),
@@ -44,4 +45,6 @@ urlpatterns = [
     path('request_portfolio/', request_portfolio, name='request_portfolio'),
     path('fetch_notifications/', fetch_notifications, name='fetch_notifications'),
     path('dismiss_notifications/', dismiss_notifications, name='dismiss_notifications'),
+    path('settings_data/', settings_data, name='settings_data'),
+    path('public_user/', public_user, name='public_user'),
 ]
