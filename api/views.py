@@ -1648,77 +1648,86 @@ def MemEnDis(request):
         action = request.data.get("action")
         rnamedict = request.data.get("selected_member")
         porg = request.data.get("present_org")
-        membertype = "team_members"
+        membertype = request.data.get("member_type")
 
         if action == "remove_member":
-            userorg = UserOrg.objects.all().filter(username=username)
-            for i in userorg:
-                dataorg = i.org
-                dataorgr = json.loads(dataorg)
-            lev = dataorgr["members"]
-            for ir in lev[membertype]["accept_members"]:
-                try:
-                    if ir["name"] == rnamedict:
-                        # ir["status"]="disable"
-                        lev[membertype]["accept_members"].remove(ir)
-                    else:
+            try:
+                userorg = UserOrg.objects.all().filter(username=username)
+                for i in userorg:
+                    dataorg = i.org
+                    dataorgr = json.loads(dataorg)
+                lev = dataorgr["members"]
+                for ir in lev[membertype]["accept_members"]:
+                    try:
+                        if ir["name"] == rnamedict:
+                            # ir["status"]="disable"
+                            lev[membertype]["accept_members"].remove(ir)
+                        else:
+                            pass
+                    except:
                         pass
-                except:
-                    pass
-            UserOrg.objects.all()
-            print(userorg)
-            userorg1 = UserOrg.objects.all().filter(username=f"{rnamedict}")
-            print(userorg1)
-            for ii in userorg1:
-                dataorg1 = ii.org
-                dataorg2 = json.loads(dataorg1)
-            levorg = dataorg2["other_organisation"]
-            for irs in levorg:
-                try:
-                    if irs["org_name"] == porg:
-                        irs["status"] = "deleted"
-                    else:
+                UserOrg.objects.all()
+                print(userorg)
+                userorg1 = UserOrg.objects.all().filter(username=f"{rnamedict}")
+                print(userorg1)
+                for ii in userorg1:
+                    dataorg1 = ii.org
+                    dataorg2 = json.loads(dataorg1)
+                levorg = dataorg2["other_organisation"]
+                for irs in levorg:
+                    try:
+                        if irs["org_name"] == porg:
+                            irs["status"] = "deleted"
+                        else:
+                            pass
+                    except:
                         pass
-                except:
-                    pass
-            dataorgr["members"] = lev
-            dataorg2["other_organisation"] = levorg
-            obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorgr)})
-            obj, created = UserOrg.objects.update_or_create(username=rnamedict,
-                                                            defaults={'org': json.dumps(dataorg2)})
-            field = {"document_name": username}
-            update = {"members": lev}
-            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                                     "update", field, update)
-            field1 = {"document_name": rnamedict}
-            update1 = {"other_organisation": levorg}
-            login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                                      "update", field1, update1)
-            return Response({"success": "Member removed successfully"}, status=HTTP_200_OK)
+                dataorgr["members"] = lev
+                dataorg2["other_organisation"] = levorg
+                obj, created = UserOrg.objects.update_or_create(username=username,
+                                                                defaults={'org': json.dumps(dataorgr)})
+                obj, created = UserOrg.objects.update_or_create(username=rnamedict,
+                                                                defaults={'org': json.dumps(dataorg2)})
+                field = {"document_name": username}
+                update = {"members": lev}
+                login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                         "update", field, update)
+                field1 = {"document_name": rnamedict}
+                update1 = {"other_organisation": levorg}
+                login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                          "ABCDE",
+                                          "update", field1, update1)
+                return Response({"success": "Member removed successfully"}, status=HTTP_200_OK)
+            except:
+                return Response({"error": "Error while removing member"}, status=HTTP_400_BAD_REQUEST)
 
         elif action == "cancel_member":
-            userorg = UserOrg.objects.all().filter(username=username)
-            for i in userorg:
-                dataorg = i.org
-                dataorg1 = json.loads(dataorg)
-            lev = dataorg1["members"]
-            for ir in lev[membertype]["pending_members"]:
-                try:
-                    if ir["name"] == rnamedict:
-                        # ir["status"]="disable"
-                        lev[membertype]["pending_members"].remove(ir)
-                    else:
+            try:
+                userorg = UserOrg.objects.all().filter(username=username)
+                for i in userorg:
+                    dataorg = i.org
+                    dataorg1 = json.loads(dataorg)
+                lev = dataorg1["members"]
+                for ir in lev[membertype]["pending_members"]:
+                    try:
+                        if ir["name"] == rnamedict:
+                            # ir["status"]="disable"
+                            lev[membertype]["pending_members"].remove(ir)
+                        else:
+                            pass
+                    except:
                         pass
-                except:
-                    pass
-            dataorg1["members"] = lev
-            obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(dataorg1)})
+                dataorg1["members"] = lev
+                obj, created = UserOrg.objects.update_or_create(username=username,
+                                                                defaults={'org': json.dumps(dataorg1)})
 
-            field = {"document_name": username}
-            update = {"members": lev}
-            login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                                     "update", field, update)
-            return Response({"success": "Member invitation cancelled successfully"}, status=HTTP_200_OK)
+                field = {"document_name": username}
+                update = {"members": lev}
+                login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                         "update", field, update)
+                return Response({"success": "Member invitation cancelled successfully"}, status=HTTP_200_OK)
+            except:
+                return Response({"error": "Error while processing request"}, status=HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -1836,3 +1845,38 @@ def dismiss_notifications(request):
                 return Response({"success": "Notification not found or already disabled"}, status=HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(str(e), status=500)
+
+
+@api_view(['POST'])
+def settings_data(request):
+    if request.method == 'POST':
+        try:
+            admin_id = request.data.get("admin_id")
+            field_m = {"admin_id": admin_id}
+            data = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001",
+                                    "ABCDE",
+                                    "fetch", field_m, "update")
+            parsed_data = json.loads(data)
+            return Response(parsed_data, status=HTTP_200_OK)
+        except:
+            return Response({"error": "Please check admin id data"}, status=HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def public_user(request):
+    if request.method == 'POST':
+        context = {}
+        session_id = request.data.get("session_id")
+        url = "https://100014.pythonanywhere.com/api/userinfo/"
+        resp = requests.post(url, data={"session_id": session_id})
+        user = json.loads(resp.text)
+        allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
+
+        # Check if the request was successful (status code 200)
+        if resp.status_code == 200:
+            context["public"] = allpub
+            data = context["public"]
+
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
