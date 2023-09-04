@@ -1905,6 +1905,8 @@ def settings_data(request):
             return Response({"error": "Please check admin id data"}, status=HTTP_400_BAD_REQUEST)
 
 
+from django.core import serializers
+
 @api_view(["POST"])
 def public_user(request):
     if request.method == 'POST':
@@ -1915,11 +1917,11 @@ def public_user(request):
         user = json.loads(resp.text)
         allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
 
-        # Check if the request was successful (status code 200)
-        if resp.status_code == 200:
-            context["public"] = allpub
-            data = context["public"]
 
-            return Response(data, status=status.HTTP_200_OK)
+        if resp.status_code == 200:
+            data = serializers.serialize('json', allpub)
+
+            return Response(data, status=status.HTTP_200_OK, content_type='application/json')
         else:
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
+
