@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { useState } from "react";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const ProductForm = () => {
   const productData = useSelector((state: RootState) => state.products);
@@ -18,6 +18,13 @@ const ProductForm = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
+
+  const filteredProducts =
+    userName === "uxliveadmin"
+      ? productData?.products
+      : productData?.products?.filter(
+          (product) => product.product_name !== "Living Lab Monitoring"
+        );
 
   const filterDataByProduct = portfolioData?.filter(
     (item) => item.product === selectedProduct
@@ -65,8 +72,6 @@ const ProductForm = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" />
-
       <form
         className="border border-[#54595f] h-full mt-20 p-[50px]"
         onSubmit={handleSubmit}
@@ -83,7 +88,7 @@ const ProductForm = () => {
           >
             <option> Select Product </option>
 
-            {productData?.products?.map((product) => (
+            {filteredProducts.map((product) => (
               <option key={product._id} value={product.product_name}>
                 {" "}
                 {product.product_name}{" "}
