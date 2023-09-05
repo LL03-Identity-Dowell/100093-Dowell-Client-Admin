@@ -1905,7 +1905,6 @@ def settings_data(request):
             return Response({"error": "Please check admin id data"}, status=HTTP_400_BAD_REQUEST)
 
 
-from django.core import serializers
 
 from django.http import JsonResponse
 
@@ -1920,10 +1919,18 @@ def public_user(request):
         allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
 
         if resp.status_code == 200:
-            data = list(allpub.values())
+            most_recent_item = allpub.order_by('-id').first()
 
-            return JsonResponse(data, safe=False)
+            if most_recent_item:
+                links = json.loads(most_recent_item.link)
+
+                qrcodeids = [{"id": link["qrcodeid"]} for link in links]
+
+                return JsonResponse(qrcodeids, safe=False)
+            else:
+                return JsonResponse([], safe=False)
         else:
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
