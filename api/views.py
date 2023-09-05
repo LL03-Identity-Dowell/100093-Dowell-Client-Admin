@@ -1907,6 +1907,8 @@ def settings_data(request):
 
 from django.core import serializers
 
+from django.http import JsonResponse
+
 @api_view(["POST"])
 def public_user(request):
     if request.method == 'POST':
@@ -1917,11 +1919,11 @@ def public_user(request):
         user = json.loads(resp.text)
         allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
 
-
         if resp.status_code == 200:
-            data = serializers.serialize('json', allpub)
+            data = list(allpub.values())
 
-            return Response(data, status=status.HTTP_200_OK, content_type='application/json')
+            return JsonResponse(data, safe=False)
         else:
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
+
 
