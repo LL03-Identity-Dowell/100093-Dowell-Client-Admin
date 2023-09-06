@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
@@ -18,6 +18,10 @@ interface FormInputs {
   portfolio_spec: string;
   portfolio_u_code: string;
   portfolio_det: string;
+}
+
+interface PublicResponse {
+  id: string;
 }
 
 const Form1 = () => {
@@ -40,6 +44,7 @@ const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [rangeInput, setRangeInput] = useState<string>("");
+  const [publicData, setPublicData] = useState<PublicResponse[]>([]);
 
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
@@ -64,9 +69,30 @@ const Form1 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
-  const filterPublicMember = getMembers?.public_members?.accept_members.filter(
-    (item) => item
-  );
+  // const filterPublicMember = getMembers?.public_members?.accept_members.filter(
+  //   (item) => item
+  // );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = {
+        session_id: "hdhu3l8rrwtmkpq3fpfp92tq2fdgsdct",
+      };
+
+      try {
+       
+          const response = await axios.post(
+            "https://100093.pythonanywhere.com/api/public_user/",
+            data
+          );
+         setPublicData(response.data)
+         
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormInputs({ ...formInputs, portfolio_det: e.target.value });
@@ -95,6 +121,8 @@ const Form1 = () => {
         filterTeamMember?.map((member) =>
           member.name === "owner" ? userName : member?.name
         ) || [];
+    } else if (formInputs.member_type === "public") {
+      allOptions = publicData?.map((member) => member?.id) || [];
     } else if (formInputs.member_type === "owner") {
       allOptions = [userName];
     }
@@ -120,7 +148,7 @@ const Form1 = () => {
         ) || []
       );
     } else if (formInputs.member_type === "public") {
-      return filterPublicMember?.map((member) => member?.name) || [];
+      return publicData?.map((member) => member?.id) || [];
     } else if (formInputs.member_type === "owner") {
       return [userName];
     }
