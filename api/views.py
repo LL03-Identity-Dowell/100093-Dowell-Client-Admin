@@ -1,5 +1,7 @@
 import base64
+import csv
 
+import chardet as chardet
 from django.shortcuts import render, HttpResponse, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -8,8 +10,10 @@ from clientadminapp.dowellconnection import dowellconnection, loginrequired
 from clientadminapp.models import publiclink
 import requests
 import json
+from . import passgen
 from rest_framework import status
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+import pandas as pd
 
 
 @api_view(["GET"])
@@ -1932,5 +1936,62 @@ def public_user(request):
         else:
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(["POST"])
+def file_upload(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        orgname = request.data.get("orgname")
+        sheetname = request.data.get("sheetname")
+        fieldname = request.data.get("fieldname")
+        file = request.FILES.get("file")
+        f = file.name
+        rows_to_delete = request.data.get("rows")
+        if rows_to_delete:
+            n = int(rows_to_delete)
+        file_content = file.read()
+        result = chardet.detect(file_content)
+        file_encoding = result['encoding']
+        file.seek(0)
+        file_content = file.read().decode(file_encoding)
+        sniffer = csv.Sniffer()
+        delimiter = sniffer.sniff(file_content).delimiter
+
+        # Reset the file pointer to the beginning
+        file.seek(0)
+
+        if ".csv" in file.name or ".CSV" in file.name:
+            if request.POST.get("rowsToDelete"):
+                df = pd.read_csv(file, encoding=file_encoding, sep=delimiter, skiprows=n)
+            else:
+                df = pd.read_csv(file, encoding=file_encoding, sep=delimiter)
+        else:
+            if request.POST.get("rowsToDelete"):
+                df = pd.read_excel(file, skiprows=n)
+            else:
+                df = pd.read_excel(file)
+        try:
+            if fieldname != "all":
+                fieldnames = [v for k, v in request.POST.items() if 'fieldname' in k]
+                column_data = df[fieldnames]
+            else:
+                column_data = df.iloc
+        except Exception as e:
+            return Response({"error": f"No columns matching the fieldname provided, if there are empty rows in your excel file make sure to add the number of rows in the Rows to Delete field.{e}"})
+            # Drop rows containing NaN values
+        column_data = column_data.dropna()
+        data = str(column_data.to_dict(orient='records'))
+        table_html = column_data.to_html(classes="table table-striped")
+        datalink = passgen.generate_random_password1(20)
+
+        try:
+            obj = ExcelData.objects.get(username=username, filename=f)
+            obj.data = data
+            obj.datalink = datalink
+            obj.save()
+        except ExcelData.DoesNotExist:
+            obj = ExcelData.objects.create(username=username, data=data, datalink=datalink, filename=f)
+
+        return Response({"table_html": table_html, "datalink": datalink})
 
 
