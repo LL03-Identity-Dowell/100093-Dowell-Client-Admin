@@ -69,9 +69,49 @@ const Form1 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
-  // const filterPublicMember = getMembers?.public_members?.accept_members.filter(
-  //   (item) => item
-  // );
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  function getSearchItems() {
+    const filteredOptions = [];
+
+    if (formInputs.member_type === "user") {
+      filteredOptions.push(
+        ...(filterUserMember || [])
+          .filter((member) =>
+            member.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((member) => member.name)
+      );
+    } else if (formInputs.member_type === "team_member") {
+      filteredOptions.push(
+        ...(filterTeamMember || [])
+          .filter((member) =>
+            (member.name === "owner" ? userName : member.name)
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          )
+          .map((member) => (member.name === "owner" ? userName : member.name))
+      );
+    } else if (formInputs.member_type === "public") {
+      filteredOptions.push(
+        ...(publicData || [])
+          .filter((member) =>
+            member.id.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((member) => member.id)
+      );
+    } else if (formInputs.member_type === "owner") {
+      if (userName.toLowerCase().includes(searchQuery.toLowerCase())) {
+        filteredOptions.push(userName);
+      }
+    }
+
+    return filteredOptions;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -80,13 +120,11 @@ const Form1 = () => {
       };
 
       try {
-       
-          const response = await axios.post(
-            "https://100093.pythonanywhere.com/api/public_user/",
-            data
-          );
-         setPublicData(response.data)
-         
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/public_user/",
+          data
+        );
+        setPublicData(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -222,8 +260,6 @@ const Form1 = () => {
     }
   };
 
-  console.log("formInputs", getMembers);
-
   return (
     <>
       <ToastContainer position="top-right" />
@@ -251,7 +287,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
-              <option>...select...</option>
+              <option value="">...select...</option>
               <option value="owner">Owner </option>
               <option value="team_member"> Team Member </option>
               <option value="user">User </option>
@@ -286,14 +322,23 @@ const Form1 = () => {
                 onKeyDown={handleKeyPress}
               />
             </div>
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Search for a member by name..."
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+                className="w-full outline-none border border-black mb-[10px] p-2 rounded-sm"
+              />
+            </div>
 
             <select
               multiple
               onChange={handleSelectChange}
               id="member"
-              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {getAllMemberOptions().map((option, key) => (
+              {getSearchItems().map((option, key) => (
                 <option
                   key={key}
                   className={
@@ -317,7 +362,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
-              <option>...select...</option>
+              <option value="">...select...</option>
               {productData?.products?.map((product) => (
                 <option key={product._id} value={product.product_name}>
                   {" "}
@@ -337,7 +382,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
-              <option>...select...</option>
+              <option value="">...select...</option>
               <option value="real_data">Real Data</option>
               <option value="learning_data">Learning Data</option>
               <option value="testing_data">Testing Data</option>
@@ -355,7 +400,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
-              <option>...select...</option>
+              <option value="">...select...</option>
               <option value="view">View</option>
               <option value="add/edit">Add/Edit</option>
               <option value="delete">Delete</option>
@@ -371,7 +416,7 @@ const Form1 = () => {
               id="role"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option>...Select...</option>
+              <option value="">...select...</option>
               {rolesdata?.map((roles, key) =>
                 roles.status === "enable" ? (
                   <option key={key} value={roles.role_code}>
