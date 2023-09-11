@@ -262,6 +262,16 @@ class GeoLocation(models.Model):
 
     class Meta:
         db_table = "GeoLocation"
+        
+class ExcelData(models.Model):
+    username=models.CharField(max_length=255)
+    data = models.TextField()
+    userlink = models.CharField(max_length=255)
+    datalink = models.CharField(max_length=255)
+    filename = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    class Meta:
+        db_table="ExcelData"
 
 class Notification(models.Model):
     username=models.CharField(max_length=255)
@@ -277,3 +287,4 @@ class Notification(models.Model):
 class PolicyStatus(models.Model):
     username=models.CharField(max_length=255)
     policies_status = models.CharField(max_length=255)
+
