@@ -5,7 +5,7 @@ import chardet as chardet
 from django.shortcuts import render, HttpResponse, redirect
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from clientadminapp.models import UserData, UserOrg, UserInfo, Notification
+from clientadminapp.models import UserData, UserOrg, UserInfo, Notification, ExcelData
 from clientadminapp.dowellconnection import dowellconnection, loginrequired
 from clientadminapp.models import publiclink
 import requests
@@ -837,6 +837,7 @@ def get_data(request):
 def create_portfolio(request):
     if request.method == 'POST':
         username = request.data.get("username")
+        presentorg = request.data.get("presentorg")
         member_type = request.data.get('member_type')
         member = request.data.get('member')
         product = request.data.get('product')
@@ -848,19 +849,21 @@ def create_portfolio(request):
         portfolio_spec = request.data.get('portfolio_spec')
         portfolio_u_code = request.data.get('portfolio_u_code')
         portfolio_det = request.data.get('portfolio_det')
-        required_fields = [username, member_type, member, product, data_type, op_rights, role, portfolio_name,
-                           portfolio_code]
-        for field in required_fields:
-            if field is None:
-                return Response({"error": "Please ensure data for all required fields are present"},
-                                status=HTTP_400_BAD_REQUEST)
-        member = eval(member)
-        response_data = {"username": member, "member_type": member_type, "product": product,
-                         "data_type": data_type, "operations_right": op_rights, "role": role,
-                         "security_layer": "None", "portfolio_name": portfolio_name,
-                         "portfolio_code": portfolio_code, "portfolio_specification": portfolio_spec,
-                         "portfolio_uni_code": portfolio_u_code, "portfolio_details": portfolio_det,
-                         "status": "enable"}
+        try:
+            user_org = UserOrg.objects.get(username=username)
+            org_dict = json.loads(user_org.org)
+            for portfolio in org_dict.get('portpolio', []):
+                if 'portfolio_code' in portfolio and portfolio['portfolio_code'] == portfolio_code:
+                    return JsonResponse({"resp": "Portfolio code already exists for this user.Try something else."})
+            # If no match is found, continue processing the form...
+        except UserOrg.DoesNotExist:
+            return JsonResponse({"error": "User does not exist."}, status=404)
+        lsmem = eval(member)
+        response_data = {"username": lsmem, "member_type": member_type, "product": product, "data_type": data_type,
+                         "operations_right": op_rights, "role": role, "security_layer": "None",
+                         "portfolio_name": portfolio_name, "portfolio_code": portfolio_code,
+                         "portfolio_specification": portfolio_spec, "portfolio_uni_code": portfolio_u_code,
+                         "portfolio_details": portfolio_det, "status": "enable"}
         userorg = UserOrg.objects.all().filter(username=username)
         for i in userorg:
             o = i.org
@@ -869,34 +872,57 @@ def create_portfolio(request):
         orgid = odata["_id"]
         portls = odata["portpolio"]
         for portcheck in portls:
-            if portcheck["portfolio_code"] == portfolio_code:
-                return Response({"error": "Portfolio Code Must Be Unique"}, status=HTTP_400_BAD_REQUEST)
+            if portcheck["portfolio_name"] == portfolio:
+                return JsonResponse({"resp": f'{portfolio_name} already exist'})
+
         odata["portpolio"].append(response_data)
+
+        # return JsonResponse({"resp":f'{portls} successfully created'})
         if "owner" or "team_member" in member_type:
             typemem = "team_members"
         elif "user" in member_type:
             typemem = "guest_members"
         if member_type == "public":
-            for ir in member:
-                orl = publiclink.objects.all().filter(username=username, qrcodeid=ir)
-                try:
-                    r = orl[0].link
-                except:
-                    r = "no link"
-                odata["members"]["public_members"]["pending_members"].append(
-                    {"name": member, "portfolio_name": portfolio_name, "product": product, "status": "unused",
-                     "link": r})
+            try:
+                orl = publiclink.objects.all().filter(username=username)
+                for l in orl:
+                    link_o = l.link
+                # return JsonResponse({"resp" : link_o })
+                link_o = json.loads(link_o)
+                for i in link_o:
+
+                    if i["qrcodeid"] in lsmem:
+                        i["portfolio_name"] = portfolio_name
+                orl.update(link=json.dumps(link_o))
+                for mem in lsmem:
+                    odata["members"]["public_members"]["pending_members"].append(
+                        {"name": mem, "portfolio_name": portfolio_name, "product": product, "status": "unused",
+                         "link": f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
+
+                master_link = f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
                 memberpublic = odata["members"]
-                obj, created = UserOrg.objects.update_or_create(username=username,
-                                                                defaults={'org': json.dumps(odata)})
-                orl.update(portfolio=portfolio_name)
+                obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
+                odata_port = odata["portpolio"]
+                odata_port.append(
+                    {"username": lsmem, "member_type": member_type, "product": product, "data_type": data_type,
+                     "operations_right": op_rights, "role": role, "portfolio_name": portfolio_name,
+                     "portfolio_code": portfolio_code, "portfolio_specification": portfolio_spec,
+                     "portfolio_uni_code": portfolio_u_code, "portfolio_details": portfolio_det, "status": "enable"})
+
                 field = {"document_name": username}
-                update = {"portpolio": odata["portpolio"], "members": memberpublic}
-                login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
-                                         "ABCDE", "update", field, update)
-            return Response({"success": f"{portfolio_name} successfully created"}, status=HTTP_200_OK)
+                update = {"portpolio": odata_port, "members": memberpublic}
+                login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                         "update", field, update)
+                # return JsonResponse({"resp":f"{memberpublic}"})
+
+                return Response(
+                    {"success": f'{portfolio_name} successfully created',
+                     "masterlink": f"your masterlink is {master_link}"}, status=HTTP_200_OK)
+            except:
+                return Response({"error": "Error while creating public members"})
+
         for imem in odata["members"][typemem]["accept_members"]:
-            if imem["name"] in member:
+            if imem["name"] in lsmem:
                 imem["portfolio_name"] = "created"
 
         field = {"document_name": username}
@@ -905,20 +931,19 @@ def create_portfolio(request):
         login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                  "update", field, update)
 
-        for li in member:
+        for li in lsmem:
             field1 = {"document_name": li}
-            login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
-                                      "ABCDE", "fetch", field1, "update")
+            login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                      "fetch", field1, "update")
             r = json.loads(login1)
             try:
                 lo = r["data"][0]["other_organisation"]
 
                 lo.append({"org_id": orgid, "org_name": ortname, "username": li, "member_type": member_type,
-                           "product": product, "data_type": data_type, "operations_right": op_rights,
-                           "role": role, "security_layer": "None", "portfolio_name": portfolio_name,
-                           "portfolio_code": portfolio_code, "portfolio_specification": portfolio_spec,
-                           "portfolio_uni_code": portfolio_u_code, "portfolio_details": portfolio_det,
-                           "status": "enable"})
+                           "product": product, "data_type": data_type, "operations_right": op_rights, "role": role,
+                           "security_layer": "None", "portfolio_name": portfolio_name, "portfolio_code": portfolio_code,
+                           "portfolio_specification": portfolio_spec, "portfolio_uni_code": portfolio_u_code,
+                           "portfolio_details": portfolio_det, "status": "enable"})
 
                 field2 = {"document_name": li}
                 update = {"other_organisation": lo}
@@ -926,7 +951,7 @@ def create_portfolio(request):
                                           "ABCDE", "update", field2, update)
             except:
                 pass
-        return Response({"success": f"{portfolio_name} successfully created"}, status=HTTP_200_OK)
+        return Response({"success": f'{portfolio_name} successfully created'}, status=HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -1616,7 +1641,6 @@ def otherorg(request):
         #       and entry.get('member_type') == 'team_member' or entry.get('member_type') == 'team_members'
         # ]
 
-
         # for entry in filtered_data:
         #     product_name = entry["product"]
         #     getProductData = getProductDetails(product_name)  # Call the function to get product details
@@ -1647,8 +1671,10 @@ def otherorg(request):
                         "member_type": entry.get("member_type", ""),
                         "product": entry.get("product", ""),
                         "portfolios": [],
-                        "product_link": product_details.get("product_link", ""),  # Retrieve link from the product_details
-                        "product_logo": product_details.get("product_logo", "")   # Retrieve logo from the product_details
+                        "product_link": product_details.get("product_link", ""),
+                        # Retrieve link from the product_details
+                        "product_logo": product_details.get("product_logo", "")
+                        # Retrieve logo from the product_details
                     }
 
                 # Create a portfolio entry from the current data
@@ -1669,7 +1695,7 @@ def otherorg(request):
 
         # Convert the aggregated data dictionary to a list format
         response = list(aggregated_data.values())
-        return Response({"data":response}, status=HTTP_200_OK)
+        return Response({"data": response}, status=HTTP_200_OK)
 
 
 def getProductDetails(product_name):
@@ -1909,8 +1935,8 @@ def settings_data(request):
             return Response({"error": "Please check admin id data"}, status=HTTP_400_BAD_REQUEST)
 
 
-
 from django.http import JsonResponse
+
 
 @api_view(["POST"])
 def public_user(request):
@@ -1945,6 +1971,8 @@ def file_upload(request):
         sheetname = request.data.get("sheetname")
         fieldname = request.data.get("fieldname")
         file = request.FILES.get("file")
+        print("frew")
+        print(file)
         f = file.name
         rows_to_delete = request.data.get("rows")
         if rows_to_delete:
@@ -1977,7 +2005,8 @@ def file_upload(request):
             else:
                 column_data = df.iloc
         except Exception as e:
-            return Response({"error": f"No columns matching the fieldname provided, if there are empty rows in your excel file make sure to add the number of rows in the Rows to Delete field.{e}"})
+            return Response({
+                                "error": f"No columns matching the fieldname provided, if there are empty rows in your excel file make sure to add the number of rows in the Rows to Delete field.{e}"})
             # Drop rows containing NaN values
         column_data = column_data.dropna()
         data = str(column_data.to_dict(orient='records'))
@@ -1993,5 +2022,3 @@ def file_upload(request):
             obj = ExcelData.objects.create(username=username, data=data, datalink=datalink, filename=f)
 
         return Response({"table_html": table_html, "datalink": datalink})
-
-
