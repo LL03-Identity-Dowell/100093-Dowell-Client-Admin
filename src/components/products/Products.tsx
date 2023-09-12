@@ -4,7 +4,7 @@ import { RootState } from "../../store/Store";
 import axios from "axios";
 import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 
 const Products = () => {
@@ -22,6 +22,13 @@ const Products = () => {
   );
 
   const [hovertitle, setHovertitle] = useState("");
+
+   const filteredProducts =
+    userName === "uxliveadmin"
+      ? productData?.products
+      : productData?.products?.filter(
+          (product) => product.product_name !== "Living Lab Monitoring"
+        );
 
   const filterDataByProduct = portfolioData?.filter(
     (item) => item?.product === hovertitle
@@ -53,7 +60,6 @@ const Products = () => {
       present_org: present_org,
       session_id: sessionId,
     };
-    // console.log(data);
 
     try {
       await axios
@@ -107,8 +113,6 @@ const Products = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" />
-
       {!show_loader ? (
         <div className="mt-8">
           <div className="pl-8">
@@ -130,9 +134,9 @@ const Products = () => {
           <section className="relative">
             <main className={`flex flex-col w-full`}>
               <div className="flex flex-wrap w-full justify-between">
-                {productData?.products?.length > 1 && (
+                {filteredProducts.length > 1 && (
                   <>
-                    {productData?.products?.map((product) => {
+                    {filteredProducts.map((product) => {
                       return (
                         <div
                           key={product._id}
@@ -208,12 +212,12 @@ const Products = () => {
                         </div>
                       );
                     })}
-                    {productData?.products.length % 3 == 2 ? (
+                    {filteredProducts.length % 3 == 2 ? (
                       <div className="relative box-placer"></div>
                     ) : (
                       ""
                     )}
-                    {productData?.products.length % 3 == 1 ? (
+                    {filteredProducts.length % 3 == 1 ? (
                       <>
                         <div className="relative box-placer"></div>
                         <div className="relative box-placer"></div>
