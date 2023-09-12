@@ -3,6 +3,7 @@ import { useState, ChangeEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
+import Select from "react-select";
 
 interface FormInputs {
   username: string;
@@ -22,6 +23,11 @@ interface FormInputs {
 
 interface PublicResponse {
   id: string;
+}
+
+interface Option {
+  value: string;
+  label: string;
 }
 
 const Form1 = () => {
@@ -70,53 +76,26 @@ const Form1 = () => {
     (item) => item
   );
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
+  const sessionId = localStorage.getItem("sessionId");
 
-  function getSearchItems() {
-    const filteredOptions = [];
+  const query: Option[] = getAllMemberOptions().map((option) => ({
+    value: option,
+    label: option,
+  }));
 
-    if (formInputs.member_type === "user") {
-      filteredOptions.push(
-        ...(filterUserMember || [])
-          .filter((member) =>
-            member.name.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((member) => member.name)
-      );
-    } else if (formInputs.member_type === "team_member") {
-      filteredOptions.push(
-        ...(filterTeamMember || [])
-          .filter((member) =>
-            (member.name === "owner" ? userName : member.name)
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
-          )
-          .map((member) => (member.name === "owner" ? userName : member.name))
-      );
-    } else if (formInputs.member_type === "public") {
-      filteredOptions.push(
-        ...(publicData || [])
-          .filter((member) =>
-            member.id.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((member) => member.id)
-      );
-    } else if (formInputs.member_type === "owner") {
-      if (userName.toLowerCase().includes(searchQuery.toLowerCase())) {
-        filteredOptions.push(userName);
-      }
+  const handleSearchInputChange = (query: any) => {
+    if (query) {
+      const selectedOptions = (query as Option[]).map((option) => option.value);
+      setSelectedItems([...selectedOptions]);
+    } else {
+      setSelectedItems([]); // Handle the case when no option is selected
     }
-
-    return filteredOptions;
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       const data = {
-        session_id: "hdhu3l8rrwtmkpq3fpfp92tq2fdgsdct",
+        session_id: sessionId,
       };
 
       try {
@@ -260,6 +239,7 @@ const Form1 = () => {
     }
   };
 
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -317,28 +297,27 @@ const Form1 = () => {
                 type="text"
                 placeholder="separate numbers with '-'e.g 1-10"
                 onChange={(e) => setRangeInput(e.target.value)}
-                className="w-full outline-none border border-black mb-[10px] p-2 rounded-sm"
+                className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
                 onBlur={handleRangeInput}
                 onKeyDown={handleKeyPress}
               />
             </div>
+
             <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Search for a member by name..."
-                value={searchQuery}
+              <Select
+                isMulti
+                options={query}
+                placeholder="Select with username:"
                 onChange={handleSearchInputChange}
-                className="w-full outline-none border border-black mb-[10px] p-2 rounded-sm"
               />
             </div>
-
             <select
               multiple
               onChange={handleSelectChange}
               id="member"
               className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {getSearchItems().map((option, key) => (
+              {getAllMemberOptions().map((option, key) => (
                 <option
                   key={key}
                   className={
