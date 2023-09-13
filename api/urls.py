@@ -5,7 +5,7 @@ from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdat
     update_role_status, update_portfolio_status, update_item_status, save_device_layers, get_all_details, \
     create_team_member, create_user_member, get_workspaces, get_last_login, connect_portfolio, otherorg, \
     update_level_name, MemEnDis, create_test_team_member, request_portfolio, fetch_notifications, dismiss_notifications, \
-    settings_data, public_user, file_upload
+    settings_data, public_user, file_upload, create_public_member
 
 urlpatterns = [
     path('userinfo/', sessionView, name="userinfo"),
@@ -35,6 +35,7 @@ urlpatterns = [
     path('get_all_details/', get_all_details, name='get_all_details'),
     path('create_team_member/', create_team_member, name='create_team_member'),
     path('create_user_member/', create_user_member, name='create_user_member'),
+    path('create_public_member/', create_public_member, name='create_public_member'),
     path('get_workspaces/', get_workspaces, name='get_workspaces'),
     path('get_last_login/', get_last_login, name='get_last_login'),
     path('connect_portfolio/', connect_portfolio, name='connect_portfolio'),
