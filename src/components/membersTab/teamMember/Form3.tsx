@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import images from "../../images";
 import Modal from "react-modal";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 const Form3 = () => {
@@ -123,7 +123,7 @@ const Form3 = () => {
 	// manage data
 
 const [file, setFile] = useState<File | null>(null);
-		const [sheetName, setSheetName] = useState("");
+		// const [sheetName, setSheetName] = useState("");
 		const [fields, setFields] = useState<string[]>([""]);
 
 
@@ -134,11 +134,11 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 			}
 		};
 
-	const handleSheetNameChange = (
-			event: React.ChangeEvent<HTMLInputElement>
-		) => {
-			setSheetName(event.target.value);
-		};
+	// const handleSheetNameChange = (
+	// 		event: React.ChangeEvent<HTMLInputElement>
+	// 	) => {
+	// 		setSheetName(event.target.value);
+	// 	};
 	
 	const handleFieldChange = (
 			event: React.ChangeEvent<HTMLInputElement>,
@@ -180,7 +180,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 
 				if (response.ok) {
 					// Handle success
-					console.log(response.json)
+					console.log(response)
 					console.log("Data successfully sent to the API");
 				} else {
 					// Handle error
