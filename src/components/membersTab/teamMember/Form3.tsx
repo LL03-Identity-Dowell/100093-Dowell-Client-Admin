@@ -96,7 +96,13 @@ const Form3 = () => {
 				<input
 					type="text"
 					className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
-					onChange={(event) => handleFieldChange(event, elements.length !== 0 ?newElementCount:newElementCount-1)}
+					required
+					onChange={(event) =>
+						handleFieldChange(
+							event,
+							elements.length !== 0 ? newElementCount : newElementCount - 1
+						)
+					}
 				/>
 			</div>
 		);
@@ -112,6 +118,7 @@ const Form3 = () => {
 			const updatedElements = elements.slice(0, -1);
 			setElements(updatedElements);
 			setElementCount(elementCount - 1);
+			setFields(fields.slice(0,-1));
 		}
 	};
 
@@ -125,7 +132,7 @@ const Form3 = () => {
 const [file, setFile] = useState<File | null>(null);
 		// const [sheetName, setSheetName] = useState("");
 		const [fields, setFields] = useState<string[]>([""]);
-
+const [htmlContent, setHtmlContent] = useState("");
 
 const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 			const selectedFile = event.target.files?.[0];
@@ -160,11 +167,11 @@ const handlesavdata = async (event: React.FormEvent) => {
 	formData.append("orgname",porg)
 	// formData.append("sheetName", sheetName);
 	
-				formData.append("fieldname", "Name");
-				// formData.append("fieldname", "Number");
-				// formData.append("fieldname", JSON.stringify(fields));
-	console.log(formData.get("fieldname"))
-
+				
+	
+	fields.map((item, index) => item!= ''? formData.append(`fieldname${index}`, item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()):"");
+	console.log(formData.get("fieldname1"))
+console.log(fields)
 	console.log(formData)
 	
 
@@ -177,14 +184,19 @@ const handlesavdata = async (event: React.FormEvent) => {
 						body: formData,
 					}
 				);
-
-				if (response.ok) {
+const responseData = await response.json();
+				if (responseData.table_html) {
 					// Handle success
-					console.log(response)
-					console.log("Data successfully sent to the API");
+
+					setHtmlContent(responseData.table_html);
+					console.log(responseData);
+					toast.success("success");
+					
 				} else {
 					// Handle error
-					console.error("Error sending data to the API");
+					
+					toast.error(responseData.error);
+					console.error("Error to sending data ");
 				}
 			} catch (error) {
 				console.error("Error:", error);
@@ -340,7 +352,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 				</div>
 				<form
 					className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md"
-					onSubmit={(e) => e.preventDefault()}
+					onSubmit={handlesavdata}
 				>
 					<h2 className="text-2xl font-semibold text-center pt-4 text-black">
 						Excel or CSV Details
@@ -360,6 +372,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 							accept=".csv"
 							className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
 							onChange={(e) => handleFileChange(e)}
+							required
 						/>
 					</div>
 					<div className="flex items-center justify-between pb-4">
@@ -384,6 +397,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 						<button
 							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
 							onClick={handleAddElement}
+							type="button"
 						>
 							Add
 						</button>
@@ -391,6 +405,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
 							onClick={handleDeleteElement}
 							disabled={elements.length === 1}
+							type="button"
 						>
 							Remove
 						</button>
@@ -407,17 +422,21 @@ const handlesavdata = async (event: React.FormEvent) => {
 					</div>
 					<div className="text-center">
 						<button
-							onClick={handlesavdata}
 							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
+							type="submit"
 						>
 							Save to Database
 						</button>
 					</div>
-					<div>
-						<button className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]">
+					<div className="flex justify-end">
+						<button
+							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
+							type="button"
+						>
 							Copy
 						</button>
 					</div>
+					<div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 				</form>
 			</Modal>
 		</>
