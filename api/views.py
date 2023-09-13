@@ -1,5 +1,6 @@
 import base64
 import csv
+import datetime
 
 import chardet as chardet
 from django.shortcuts import render, HttpResponse, redirect
@@ -2022,3 +2023,38 @@ def file_upload(request):
             obj = ExcelData.objects.create(username=username, data=data, datalink=datalink, filename=f)
 
         return Response({"table_html": table_html, "datalink": datalink})
+
+
+@api_view(['POST'])
+def create_public_member(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        public_count = request.data.get("public_count")
+        present_org = request.data.get("present_org")
+
+        if not present_org or not isinstance(present_org, str):
+            return Response({"error": "Invalid present_org value"})
+
+        if int(public_count) > 50000:
+            response_data = {"error": "Public count is less than 50000"}
+            return JsonResponse(response_data)
+
+        if public_count:
+            links = []
+            org = base64.b64encode(bytes(present_org, 'utf-8')).decode()
+            pmembers = base64.b64encode(bytes("public_member", 'utf-8')).decode()
+            test_list = []
+
+            for i in range(int(public_count)):
+                user = passgen.generate_random_password1(12)
+                linkcode = passgen.generate_random_password1(16)
+                path = f'https://100093.pythonanywhere.com/masterlink?next={org}&type={pmembers}&code={user}'
+                test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user, "linkcode": linkcode}
+                test_list.append(test_dict)
+
+            publiclink.objects.create(dateof=datetime.datetime.now(), org=present_org, username=username, link=json.dumps(test_list))
+
+            response_data = {"success": "Link created successfully"}
+            return Response(response_data)
+        else:
+            return Response({"error": "Please provide the number of required links"})
