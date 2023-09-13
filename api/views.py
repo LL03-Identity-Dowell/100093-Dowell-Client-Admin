@@ -898,9 +898,9 @@ def create_portfolio(request):
                 for mem in lsmem:
                     odata["members"]["public_members"]["pending_members"].append(
                         {"name": mem, "portfolio_name": portfolio_name, "product": product, "status": "unused",
-                         "link": f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
+                         "link": f"https://100014.pythonanywhere.com/?members=all&username={username}&owner_name={username}&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
 
-                master_link = f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
+                master_link = f"https://100014.pythonanywhere.com/?members=all&username={username}&owner_name={username}&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enabl"
                 memberpublic = odata["members"]
                 obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
                 odata_port = odata["portpolio"]
