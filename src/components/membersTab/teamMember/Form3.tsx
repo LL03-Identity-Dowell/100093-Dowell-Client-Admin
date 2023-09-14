@@ -122,17 +122,29 @@ const Form3 = () => {
 		}
 	};
 
+	const uploadlinkcopy = () => {
+		navigator.clipboard.writeText(fileuplaodresponse.datalink);
+		toast.success("Link Copied")
+	}
+
 
 
 
 
 
 	// manage data
-
+	interface fileres {
+		table_html: string;
+		datalink: string;
+	}
 const [file, setFile] = useState<File | null>(null);
 		// const [sheetName, setSheetName] = useState("");
 		const [fields, setFields] = useState<string[]>([""]);
-const [htmlContent, setHtmlContent] = useState("");
+const [fileuplaodresponse, setfileuplaodresponse] = useState<fileres>({
+		"table_html": "",
+		"datalink": ""
+	});
+
 
 const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 			const selectedFile = event.target.files?.[0];
@@ -188,7 +200,7 @@ const responseData = await response.json();
 				if (responseData.table_html) {
 					// Handle success
 
-					setHtmlContent(responseData.table_html);
+					setfileuplaodresponse(responseData);
 					console.log(responseData);
 					toast.success("success");
 					
@@ -428,15 +440,54 @@ const responseData = await response.json();
 							Save to Database
 						</button>
 					</div>
-					<div className="flex justify-end">
-						<button
-							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
+					{fileuplaodresponse.datalink !== "" ? (
+						<div className="flex justify-between items-center mt-3">
+							<span className="text-[#61ce70]">
+								{fileuplaodresponse.datalink}
+							</span>
+							<button
+								className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
 							type="button"
-						>
-							Copy
-						</button>
-					</div>
-					<div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+							onClick={uploadlinkcopy}
+							>
+								Copy
+							</button>
+						</div>
+					) : (
+						""
+					)}
+					<div
+						className="mt-5"
+						dangerouslySetInnerHTML={{ __html: fileuplaodresponse.table_html }}
+					/>
+					{/* <div className="mt-5">
+						<table className="w-full  border-collapse border border-gray-800 table-auto text-center">
+							<thead>
+								<tr className="">
+									<th className="border border-gray-800">Sr.No</th>
+									<th className="border border-gray-800">Name</th>
+									<th className="border border-gray-800">Number</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th className="border border-gray-800">0</th>
+									<td className="border border-gray-800">Jazz</td>
+									<td className="border border-gray-800">1234</td>
+								</tr>
+								<tr>
+									<th className="border border-gray-800">1</th>
+									<td className="border border-gray-800">Nagaraj</td>
+									<td className="border border-gray-800">4321</td>
+								</tr>
+								<tr>
+									<th className="border border-gray-800">2</th>
+									<td className="border border-gray-800">Nouman</td>
+									<td className="border border-gray-800">8888</td>
+								</tr>
+							</tbody>
+						</table>
+					</div> */}
 				</form>
 			</Modal>
 		</>
