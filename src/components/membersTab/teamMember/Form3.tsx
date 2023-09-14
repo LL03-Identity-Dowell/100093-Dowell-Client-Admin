@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import images from "../../images";
 import Modal from "react-modal";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 const Form3 = () => {
@@ -96,7 +96,13 @@ const Form3 = () => {
 				<input
 					type="text"
 					className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
-					onChange={(event) => handleFieldChange(event, elements.length !== 0 ?newElementCount:newElementCount-1)}
+					required
+					onChange={(event) =>
+						handleFieldChange(
+							event,
+							elements.length !== 0 ? newElementCount : newElementCount - 1
+						)
+					}
 				/>
 			</div>
 		);
@@ -112,8 +118,14 @@ const Form3 = () => {
 			const updatedElements = elements.slice(0, -1);
 			setElements(updatedElements);
 			setElementCount(elementCount - 1);
+			setFields(fields.slice(0,-1));
 		}
 	};
+
+	const uploadlinkcopy = () => {
+		navigator.clipboard.writeText(fileuplaodresponse.datalink);
+		toast.success("Link Copied")
+	}
 
 
 
@@ -121,10 +133,17 @@ const Form3 = () => {
 
 
 	// manage data
-
+	interface fileres {
+		table_html: string;
+		datalink: string;
+	}
 const [file, setFile] = useState<File | null>(null);
-		const [sheetName, setSheetName] = useState("");
+		// const [sheetName, setSheetName] = useState("");
 		const [fields, setFields] = useState<string[]>([""]);
+const [fileuplaodresponse, setfileuplaodresponse] = useState<fileres>({
+		"table_html": "",
+		"datalink": ""
+	});
 
 
 const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,11 +153,11 @@ const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 			}
 		};
 
-	const handleSheetNameChange = (
-			event: React.ChangeEvent<HTMLInputElement>
-		) => {
-			setSheetName(event.target.value);
-		};
+	// const handleSheetNameChange = (
+	// 		event: React.ChangeEvent<HTMLInputElement>
+	// 	) => {
+	// 		setSheetName(event.target.value);
+	// 	};
 	
 	const handleFieldChange = (
 			event: React.ChangeEvent<HTMLInputElement>,
@@ -160,11 +179,11 @@ const handlesavdata = async (event: React.FormEvent) => {
 	formData.append("orgname",porg)
 	// formData.append("sheetName", sheetName);
 	
-				formData.append("fieldname", "Name");
-				// formData.append("fieldname", "Number");
-				// formData.append("fieldname", JSON.stringify(fields));
-	console.log(formData.get("fieldname"))
-
+				
+	
+	fields.map((item, index) => item!= ''? formData.append(`fieldname${index}`, item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()):"");
+	console.log(formData.get("fieldname1"))
+console.log(fields)
 	console.log(formData)
 	
 
@@ -177,14 +196,19 @@ const handlesavdata = async (event: React.FormEvent) => {
 						body: formData,
 					}
 				);
-
-				if (response.ok) {
+const responseData = await response.json();
+				if (responseData.table_html) {
 					// Handle success
-					console.log(response.json)
-					console.log("Data successfully sent to the API");
+
+					setfileuplaodresponse(responseData);
+					console.log(responseData);
+					toast.success("success");
+					
 				} else {
 					// Handle error
-					console.error("Error sending data to the API");
+					
+					toast.error(responseData.error);
+					console.error("Error to sending data ");
 				}
 			} catch (error) {
 				console.error("Error:", error);
@@ -340,7 +364,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 				</div>
 				<form
 					className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md"
-					onSubmit={(e) => e.preventDefault()}
+					onSubmit={handlesavdata}
 				>
 					<h2 className="text-2xl font-semibold text-center pt-4 text-black">
 						Excel or CSV Details
@@ -360,6 +384,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 							accept=".csv"
 							className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
 							onChange={(e) => handleFileChange(e)}
+							required
 						/>
 					</div>
 					<div className="flex items-center justify-between pb-4">
@@ -384,6 +409,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 						<button
 							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
 							onClick={handleAddElement}
+							type="button"
 						>
 							Add
 						</button>
@@ -391,6 +417,7 @@ const handlesavdata = async (event: React.FormEvent) => {
 							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
 							onClick={handleDeleteElement}
 							disabled={elements.length === 1}
+							type="button"
 						>
 							Remove
 						</button>
@@ -407,17 +434,60 @@ const handlesavdata = async (event: React.FormEvent) => {
 					</div>
 					<div className="text-center">
 						<button
-							onClick={handlesavdata}
 							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
+							type="submit"
 						>
 							Save to Database
 						</button>
 					</div>
-					<div>
-						<button className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]">
-							Copy
-						</button>
-					</div>
+					{fileuplaodresponse.datalink !== "" ? (
+						<div className="flex justify-between items-center mt-3">
+							<span className="text-[#61ce70]">
+								{fileuplaodresponse.datalink}
+							</span>
+							<button
+								className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
+							type="button"
+							onClick={uploadlinkcopy}
+							>
+								Copy
+							</button>
+						</div>
+					) : (
+						""
+					)}
+					<div
+						className="mt-5"
+						dangerouslySetInnerHTML={{ __html: fileuplaodresponse.table_html }}
+					/>
+					{/* <div className="mt-5">
+						<table className="w-full  border-collapse border border-gray-800 table-auto text-center">
+							<thead>
+								<tr className="">
+									<th className="border border-gray-800">Sr.No</th>
+									<th className="border border-gray-800">Name</th>
+									<th className="border border-gray-800">Number</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th className="border border-gray-800">0</th>
+									<td className="border border-gray-800">Jazz</td>
+									<td className="border border-gray-800">1234</td>
+								</tr>
+								<tr>
+									<th className="border border-gray-800">1</th>
+									<td className="border border-gray-800">Nagaraj</td>
+									<td className="border border-gray-800">4321</td>
+								</tr>
+								<tr>
+									<th className="border border-gray-800">2</th>
+									<td className="border border-gray-800">Nouman</td>
+									<td className="border border-gray-800">8888</td>
+								</tr>
+							</tbody>
+						</table>
+					</div> */}
 				</form>
 			</Modal>
 		</>
