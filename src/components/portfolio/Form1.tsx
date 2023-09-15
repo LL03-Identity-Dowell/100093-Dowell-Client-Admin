@@ -51,6 +51,8 @@ const Form1 = () => {
   const [errMsg, setErrMsg] = useState("");
   const [rangeInput, setRangeInput] = useState<string>("");
   const [publicData, setPublicData] = useState<PublicResponse[]>([]);
+  const [link, setLink] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
 
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
@@ -88,7 +90,7 @@ const Form1 = () => {
       const selectedOptions = (query as Option[]).map((option) => option.value);
       setSelectedItems([...selectedOptions]);
     } else {
-      setSelectedItems([]); // Handle the case when no option is selected
+      setSelectedItems([]); 
     }
   };
 
@@ -217,7 +219,10 @@ const Form1 = () => {
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
-          toast.success(res.data);
+          if (data.member_type === "public") {
+            setLink(res.data.masterlink);
+          }
+          toast.success("success");
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -239,23 +244,40 @@ const Form1 = () => {
     }
   };
 
+  const handleCopyToClipBoard = () => {
+    if (link === "") {
+      toast.error("Unable to copy link");
+    } else {
+      const linkRegex = /https:\/\/\S+/;
+      const extractedLink = link.match(linkRegex);
+      if (extractedLink) {
+        navigator.clipboard
+          .writeText(extractedLink[0])
+          .then(() => {
+            setIsCopied(true);
+            toast.success("copied");
+          })
+          .catch((error) => console.error("Error copying link", error));
+      }
+    }
+  };
 
   return (
     <>
       <ToastContainer position="top-right" />
 
-      <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
+      <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow px-[30px] pb-4">
         <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
           <p>PORTFOLIO</p>
           <p>{`<${portfolioLength}>`}</p>
         </span>
-        <div className="p-[30px]  my-20">
+        <div className="my-20">
           <p className="text-[#FF0000] text-lg font-roboto font-semibold">
             Assign Portfolio – Products, Data types, Operational Rights and
             Roles to Members
           </p>
         </div>
-        <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+        <form className="" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
               Select Member Type{" "}
@@ -303,11 +325,16 @@ const Form1 = () => {
               />
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
+              <span className="font-roboto text-base">
+                Select with username: (Total members:{" "}
+                {getAllMemberOptions().length})
+              </span>
               <Select
+                className="w-full outline-none shadow-none"
                 isMulti
                 options={query}
-                placeholder="Select with username:"
+                placeholder="Search..."
                 onChange={handleSearchInputChange}
               />
             </div>
@@ -479,10 +506,19 @@ const Form1 = () => {
               isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
             }`}
           >
-            Create Portfolio
+            {isLoading ? "Creating..." : "Create Portfolio"}
           </button>
           <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
         </form>
+
+        {link && (
+          <button
+            className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+            onClick={handleCopyToClipBoard}
+          >
+            {isCopied ? "Copied" : "Copy masterlink"}
+          </button>
+        )}
       </div>
     </>
   );
