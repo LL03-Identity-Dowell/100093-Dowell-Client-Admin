@@ -2041,20 +2041,58 @@ def create_public_member(request):
 
         if public_count:
             links = []
+            try:
+                fetch_public = publiclink.objects.filter(username=username).last()
+                # for p in fetch_public:
+                newlink = fetch_public.link
+                test_list = json.loads(newlink)
+            except:
+                test_list = []
+
             org = base64.b64encode(bytes(present_org, 'utf-8')).decode()
             pmembers = base64.b64encode(bytes("public_member", 'utf-8')).decode()
-            test_list = []
 
             for i in range(int(public_count)):
                 user = passgen.generate_random_password1(12)
                 linkcode = passgen.generate_random_password1(16)
                 path = f'https://100093.pythonanywhere.com/masterlink?next={org}&type={pmembers}&code={user}'
-                test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user, "linkcode": linkcode}
+                test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user,
+                             "linkcode": linkcode}
                 test_list.append(test_dict)
-
-            publiclink.objects.create(dateof=datetime.datetime.now(), org=present_org, username=username, link=json.dumps(test_list))
-
+            try:
+                publiclink.objects.filter(username=request.session["present_org"]).update(link=json.dumps(test_list))
+            except:
+                publiclink.objects.create(dateof=datetime.datetime.now(), org=present_org,
+                                          username=username, link=json.dumps(test_list))
             response_data = {"success": "Link created successfully"}
             return Response(response_data)
         else:
             return Response({"error": "Please provide the number of required links"})
+                
+
+
+@api_view(['POST'])
+def get_used_unused_links(request):
+    if request.method == 'POST':
+        session_id = request.data.get("session_id")
+        link_status = request.data.get("link_status")
+        url = "https://100014.pythonanywhere.com/api/userinfo/"
+        resp = requests.post(url, data={"session_id": session_id})
+        user = json.loads(resp.text)
+        allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
+
+        # Initialize an empty list to store filtered links
+        filtered_links = []
+
+        for l in allpub:
+            if len(l.link) >= 120:
+                try:
+                    allpub1 = json.loads(l.link)
+                    for data in allpub1:
+                        if data["linkstatus"] == link_status:
+                            filtered_links.append(data['qrcodeid'])
+                except:
+                    pass
+
+        return Response(filtered_links)
+
