@@ -2094,5 +2094,5 @@ def get_used_unused_links(request):
                 except:
                     pass
 
-        return Response(filtered_links)
+        return Response(filtered_links, status=HTTP_200_OK)
 
