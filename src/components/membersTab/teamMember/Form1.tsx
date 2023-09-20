@@ -103,9 +103,9 @@ const Form1 = () => {
           <p>{`<${team_member_length}>`}</p>
         </span>
         <div className="p-[30px]  my-20">
-          <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+          <i className="text-[#FF0000] text-lg font-roboto font-semibold">
             Invite TEAM MEMBER to my organisation
-          </p>
+          </i>
         </div>
         <form className="px-[30px]" onSubmit={handleSubmit}>
           <div className="mb-4">

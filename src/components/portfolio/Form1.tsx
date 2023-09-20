@@ -90,7 +90,7 @@ const Form1 = () => {
       const selectedOptions = (query as Option[]).map((option) => option.value);
       setSelectedItems([...selectedOptions]);
     } else {
-      setSelectedItems([]); 
+      setSelectedItems([]);
     }
   };
 
@@ -331,6 +331,9 @@ const Form1 = () => {
                 {getAllMemberOptions().length})
               </span>
               <Select
+                classNames={{
+                  control: () => "border border-none shadow-none rounded-md",
+                }}
                 className="w-full outline-none shadow-none"
                 isMulti
                 options={query}

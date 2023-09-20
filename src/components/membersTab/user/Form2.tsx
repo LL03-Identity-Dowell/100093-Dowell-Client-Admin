@@ -72,9 +72,9 @@ const Form2 = () => {
     <>
       <ToastContainer position="top-right" />
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
+        <i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
           Search Users in my organisation
-        </p>
+        </i>
         <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
