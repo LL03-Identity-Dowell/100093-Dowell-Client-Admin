@@ -4,6 +4,7 @@ import datetime
 
 import chardet as chardet
 from django.shortcuts import render, HttpResponse, redirect
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from clientadminapp.models import UserData, UserOrg, UserInfo, Notification, ExcelData
@@ -15,6 +16,8 @@ from . import passgen
 from rest_framework import status
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 import pandas as pd
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 
 @api_view(["GET"])
@@ -898,9 +901,9 @@ def create_portfolio(request):
                 for mem in lsmem:
                     odata["members"]["public_members"]["pending_members"].append(
                         {"name": mem, "portfolio_name": portfolio_name, "product": product, "status": "unused",
-                         "link": f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
+                         "link": f"https://100014.pythonanywhere.com/?members=all&username={username}&owner_name={username}&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
 
-                master_link = f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
+                master_link = f"https://100014.pythonanywhere.com/?members=all&username={username}&owner_name={username}&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enabl"
                 memberpublic = odata["members"]
                 obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
                 odata_port = odata["portpolio"]
@@ -2001,7 +2004,7 @@ def file_upload(request):
                 column_data = df.iloc
         except Exception as e:
             return Response({
-                                "error": f"No columns matching the fieldname provided, if there are empty rows in your excel file make sure to add the number of rows in the Rows to Delete field.{e}"})
+                "error": f"No columns matching the fieldname provided, if there are empty rows in your excel file make sure to add the number of rows in the Rows to Delete field.{e}"})
             # Drop rows containing NaN values
         column_data = column_data.dropna()
         data = str(column_data.to_dict(orient='records'))
@@ -2035,20 +2038,155 @@ def create_public_member(request):
 
         if public_count:
             links = []
+            try:
+                fetch_public = publiclink.objects.filter(username=username).last()
+                # for p in fetch_public:
+                newlink = fetch_public.link
+                test_list = json.loads(newlink)
+            except:
+                test_list = []
+
             org = base64.b64encode(bytes(present_org, 'utf-8')).decode()
             pmembers = base64.b64encode(bytes("public_member", 'utf-8')).decode()
-            test_list = []
 
             for i in range(int(public_count)):
                 user = passgen.generate_random_password1(12)
                 linkcode = passgen.generate_random_password1(16)
                 path = f'https://100093.pythonanywhere.com/masterlink?next={org}&type={pmembers}&code={user}'
-                test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user, "linkcode": linkcode}
+                test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user,
+                             "linkcode": linkcode}
                 test_list.append(test_dict)
-
-            publiclink.objects.create(dateof=datetime.datetime.now(), org=present_org, username=username, link=json.dumps(test_list))
-
+            try:
+                publiclink.objects.filter(username=request.session["present_org"]).update(link=json.dumps(test_list))
+            except:
+                publiclink.objects.create(dateof=datetime.datetime.now(), org=present_org,
+                                          username=username, link=json.dumps(test_list))
             response_data = {"success": "Link created successfully"}
             return Response(response_data)
         else:
             return Response({"error": "Please provide the number of required links"})
+
+
+@api_view(['POST'])
+def get_used_unused_links(request):
+    if request.method == 'POST':
+        session_id = request.data.get("session_id")
+        link_status = request.data.get("link_status")
+        url = "https://100014.pythonanywhere.com/api/userinfo/"
+        resp = requests.post(url, data={"session_id": session_id})
+        user = json.loads(resp.text)
+        allpub = publiclink.objects.all().filter(username=user["userinfo"]["username"])
+
+        # Initialize an empty list to store filtered links
+        filtered_links = []
+
+        for l in allpub:
+            if len(l.link) >= 120:
+                try:
+                    allpub1 = json.loads(l.link)
+                    for data in allpub1:
+                        if data["linkstatus"] == link_status:
+                            filtered_links.append(data['qrcodeid'])
+                except:
+                    pass
+
+        return Response(filtered_links, status=HTTP_200_OK)
+
+
+# @csrf_exempt
+# def is_ajax(request):
+#     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+@api_view(['POST'])
+def invite_team_member(request):
+    if request.method == 'POST':
+        email_body = """\
+                    <table class="body-wrap" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+                        <tbody>
+                            <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+                                <td class="container" width="600" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;"
+                                    valign="top">
+                                    <div class="content" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">
+                                        <table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;"
+                                            bgcolor="#fff">
+                                            <tbody>
+                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #38414a; margin: 0; padding: 20px;"
+                                                        align="center" bgcolor="#71b6f9" valign="top">
+                                                        <a href="#" style="font-size:32px;color:#fff;">DoWell UX Living Lab</a> <br>
+                                                        <span style="margin-top: 10px;display: block; color:yellow">Hi ,you have been invited by <b> {{brand}} </b>  to join in <b>{{brand}}</b>.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-wrap" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">
+                                                        <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                            <tbody>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                                        Please click on the link below to Join.
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                                        <a href="{{link}}" class="btn-primary" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #f1556c; margin: 0; border-color: #f1556c; border-style: solid; border-width: 8px 16px;">
+                                                        Join</a> </td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td> {{link}} You can also copy and paste this link to browser.
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                                        Thanks for choosing <b>DoWell UX Living Lab</b> .
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="footer" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">
+                                            <table width="100%" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                <tbody>
+                                                    <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                                    <a href= "https://100087.pythonanywhere.com/privacyconsents/FB1010000000001665306290565391/?session_id=ayaquq6jdyqvaq9h6dlm9ysu3wkykfggyx0d" > Click Here if you want to read Policies </a>
+
+                    """
+        username = request.data.get('username')
+        org_name = request.data.get("org_name")
+        email = request.data.get('email', 'None')
+        link = request.data.get('link', 'None')
+        if not "Invitation Link" in link:
+            if email:
+                email_body = email_body.replace('{{link}}', link).replace('{{brand}}', username)
+                o = org_name
+                subject = f'Invitation to Join {o}'
+                from_email = 'uxlivinglab@dowellresearch.sg'
+                to_email = email
+                send_mail(subject, "lav", from_email, [to_email], fail_silently=False, html_message=email_body)
+                return Response({"msg": f"Succefully sent invitation to {email}"})
+            else:
+                return Response({"msg": "Enter Email"})
+
+        else:
+            return Response({"msg": "Firstly create link"})
