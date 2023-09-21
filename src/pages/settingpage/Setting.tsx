@@ -1,9 +1,7 @@
-
 import Layout from "../../components/layout";
 
-
 import Settingform1 from "./forms/Settingform1";
-import {  useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Settingform2 from "./forms/settingform2";
 import Settingform3 from "./forms/settingform3";
 import Settingform4 from "./forms/settingform4";
@@ -15,7 +13,6 @@ import Settingform9 from "./forms/settingform9";
 import Settingform10 from "./forms/settingform10";
 import Settingform11 from "./forms/settingform11";
 
-
 import { RootState } from "../../store/Store";
 import Loader from "../whiteloader";
 
@@ -25,117 +22,114 @@ import { getloaderstate } from "../../store/slice/loaderstate";
 import { getproducts } from "../../store/slice/products";
 import axios from "axios";
 import { getsetting } from "../../store/slice/setting";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const ClientAdmin = () => {
-	const show_loader = useSelector((state: RootState) => state.loaderslice);
-	// get setting
-	const adminusername = useSelector(
-		(state: RootState) => state.userinfo.userinfo.username
-	);
+  const show_loader = useSelector((state: RootState) => state.loaderslice);
+  // get setting
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  );
 
-	
+  const usedispatch = useDispatch();
 
-	const usedispatch = useDispatch();
+  useEffect(() => {
+    // Function to call the API
+    usedispatch(getloaderstate(true));
+    const fetchData = async () => {
+      try {
+        const data = {
+          username: adminusername,
+        };
 
-	useEffect(() => {
-		// Function to call the API
-usedispatch(getloaderstate(true));
-		const fetchData = async () => {
-			try {
-				const data = {
-					username: adminusername,
-				};
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/settings/",
+          data
+        );
 
-				const response = await axios.post(
-					"https://100093.pythonanywhere.com/api/settings/",
-					data
-				);
+        usedispatch(getsetting(response.data));
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+      // fetch product
+      try {
+        const data = {
+          username: adminusername,
+        };
 
-				usedispatch(getsetting(response.data));
-				console.log(response.data);
-			} catch (error) {
-				console.error(error);
-			}
-			// fetch product
-			try {
-				const data = {
-					username: adminusername,
-				};
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/getproducts/",
+          data
+        );
+        usedispatch(getproducts(response.data));
+        console.log(response.data);
+        usedispatch(getloaderstate(false));
+      } catch (error) {
+        console.error(error);
+      }
 
-				const response = await axios.post(
-					"https://100093.pythonanywhere.com/api/getproducts/",
-					data
-				);
+      // fetch product
+    };
 
-				usedispatch(getproducts(response.data));
-console.log(response.data);
-				usedispatch(getloaderstate(false));
-			} catch (error) {
-				console.error(error);
-			}
+    // Call the API when the component mounts
+    if (adminusername != "") {
+      fetchData();
+    }
+  }, [adminusername]); // The empty dependency array ensures that the effect runs only once
 
-			// fetch product
-		};
+  // get setting
 
-		// Call the API when the component mounts
-		if (adminusername != '') {
-			fetchData();
-		}
-	}, [adminusername]); // The empty dependency array ensures that the effect runs only once
+  return (
+    <>
+      <Layout>
+        <main className="container mx-auto mb-20 lg:px-0 px-4">
+          <Header></Header>
 
-	// get setting
+          <section className="mt-4 flex lg:flex-row flex-col-reverse gap-4">
+            <Sidebar></Sidebar>
 
-	return (
-		<>
-			<Layout>
-				<main className="container mx-auto mb-20 lg:px-0 px-4">
-					<Header></Header>
+            {show_loader == false ? (
+              <div className="lg:w-3/4">
+                <div className="py-[40px] px-[30px] w-full lg:flex gap-8">
+                  <div className="lg:w-1/2">
+                    <Settingform1></Settingform1>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-					<section className="mt-4 flex lg:flex-row flex-col-reverse gap-4">
-						<Sidebar></Sidebar>
+                    <Settingform2></Settingform2>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-						{show_loader == false ? (
-							<div className="lg:w-3/4">
-								<div className="py-[40px] px-[30px] w-full lg:flex gap-8">
-									<div className="lg:w-1/2">
-										<Settingform1></Settingform1>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform3></Settingform3>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform2></Settingform2>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform4></Settingform4>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform3></Settingform3>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-
-										<Settingform4></Settingform4>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-
-										<Settingform5></Settingform5>
-									</div>
-									<div className="lg:w-1/2">
-										<Settingform6></Settingform6>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform7></Settingform7>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform8></Settingform8>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform9></Settingform9>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform10></Settingform10>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform11></Settingform11>
-									</div>
-								</div>
-							</div>
-						) : (
-							<Loader></Loader>
-						)}
-					</section>
-				</main>
-			</Layout>
-		</>
-	);
+                    <Settingform5></Settingform5>
+                  </div>
+                  <div className="lg:w-1/2">
+                    <Settingform6></Settingform6>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform7></Settingform7>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform8></Settingform8>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform9></Settingform9>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform10></Settingform10>
+                    <div className="w-100 bg-[red] h-[2px] my-8"></div>
+                    <Settingform11></Settingform11>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Loader></Loader>
+            )}
+          </section>
+        </main>
+      </Layout>
+    </>
+  );
 };
 
 export default ClientAdmin;
