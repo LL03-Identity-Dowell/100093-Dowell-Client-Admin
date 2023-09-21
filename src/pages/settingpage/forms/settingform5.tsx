@@ -8,12 +8,10 @@ import { getsetting } from "../../../store/slice/setting";
 const Settingform5 = () => {
   const [selectValue, setSelectValue] = useState("Chat");
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
-
   const chat_method = useSelector(
     (state: RootState) => state.setting?.data?.chat_method
   );
   const [selectedchat_method, setselectedchat_method] = useState(chat_method);
-  console.log("selectedchat_method", selectedchat_method);
 
   const uxlivinglab_method = useSelector(
     (state: RootState) => state.setting?.data?.uxlivinglab_method
@@ -21,7 +19,6 @@ const Settingform5 = () => {
 
   const [selecteduxlivinglab_method, setselecteduxlivinglab_method] =
     useState(uxlivinglab_method);
-  console.log("selecteduxlivinglab_method", selecteduxlivinglab_method);
 
   const dispatch = useDispatch();
   const adminusername = useSelector(
@@ -29,7 +26,6 @@ const Settingform5 = () => {
   );
 
   const [defaultusername, setdefaultusername] = useState(adminusername);
-  console.log(defaultusername);
   useEffect(() => {
     setdefaultusername(adminusername);
   }, [adminusername]);
