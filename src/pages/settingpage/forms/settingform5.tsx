@@ -8,17 +8,19 @@ import { getsetting } from "../../../store/slice/setting";
 const Settingform5 = () => {
   const [selectValue, setSelectValue] = useState("Chat");
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
+  // console.log(currentSetting);
   const chat_method = useSelector(
     (state: RootState) => state.setting?.data?.chat_method
   );
-  const [selectedchat_method, setselectedchat_method] = useState(chat_method);
-
   const uxlivinglab_method = useSelector(
     (state: RootState) => state.setting?.data?.uxlivinglab_method
   );
 
-  const [selecteduxlivinglab_method, setselecteduxlivinglab_method] =
-    useState(uxlivinglab_method);
+  const [selectedchat_method, setselectedchat_method] = useState([chat_method]);
+
+  const [selecteduxlivinglab_method, setselecteduxlivinglab_method] = useState([
+    uxlivinglab_method,
+  ]);
 
   const dispatch = useDispatch();
   const adminusername = useSelector(
@@ -26,9 +28,6 @@ const Settingform5 = () => {
   );
 
   const [defaultusername, setdefaultusername] = useState(adminusername);
-  useEffect(() => {
-    setdefaultusername(adminusername);
-  }, [adminusername]);
 
   const handleSubmit = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -122,33 +121,36 @@ const Settingform5 = () => {
           >
             Methods
           </label>
-          <select
-            className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
-            aria-label="Default select example"
-            multiple
-            onChange={(e) => {
-              selectValue == "Chat"
-                ? setselectedchat_method(e.target.value)
-                : setselecteduxlivinglab_method(e.target.value);
-            }}
-            value={
-              selectValue == "Chat"
-                ? selectedchat_method
-                : selecteduxlivinglab_method
-            }
-          >
-            {selectValue == "Chat" ? (
+          {selectValue == "Chat" ? (
+            <select
+              id="meselect"
+              className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+              aria-label="Default select example"
+              multiple
+              onChange={(e) => {
+                setselectedchat_method([e.target.value]);
+              }}
+              value={selectedchat_method}
+            >
               <>
                 <option value="Email Messages">Email Messages</option>
                 <option value="SMS/Text Messages">SMS/Text Messages</option>
               </>
-            ) : (
+            </select>
+          ) : (
+            <select
+              className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+              aria-label="Default select example"
+              multiple
+              onChange={(e) => setselecteduxlivinglab_method([e.target.value])}
+              value={selecteduxlivinglab_method}
+            >
               <>
                 <option value="Email Messages">Email Messages</option>
                 <option value="SMS/Text Messages">SMS/Text Messages</option>
               </>
-            )}
-          </select>
+            </select>
+          )}
         </div>
         <div className="w-full mb-1">
           <button
