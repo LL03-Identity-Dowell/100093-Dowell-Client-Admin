@@ -94,7 +94,7 @@ const Settingform7 = () => {
             onChange={(e) => setSelectedLanguage(e.target.value)}
             aria-label="Default select example"
           >
-            <option selected value={defaultlang}>
+            <option value={defaultlang}>
               {defaultlang}
             </option>
             {filterlang.map((item, index) => (

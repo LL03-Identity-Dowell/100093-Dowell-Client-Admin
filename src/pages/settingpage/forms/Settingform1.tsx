@@ -1,10 +1,14 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
+import { useState } from "react";
+import products from "../../../store/slice/products";
 
 const Settingform1 = () => {
   const allproducts = useSelector(
     (state: RootState) => state.products.products
   );
+  const [statusValue, SetstatusValue] = useState("enable");
+  const [selectedProduct, SetselectedProduct] = useState("");
 
   return (
     <div className="form-item">
@@ -22,8 +26,12 @@ const Settingform1 = () => {
           >
             Select Product
           </label>
-          <select className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md">
-            <option selected>Select Product</option>
+          <select
+            className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+            value={selectedProduct}
+            onChange={(e) => SetselectedProduct(e.target.value)}
+          >
+            <option value={""}>Select Product</option>
             {allproducts.map((item, index) => (
               <option key={index} value={item.product_name}>
                 {item.product_name}
@@ -41,8 +49,12 @@ const Settingform1 = () => {
           <select
             className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
             aria-label="Default select example"
+            value={statusValue}
+            onChange={(e) => {
+              SetstatusValue(e.target.value);
+            }}
           >
-            <option selected>Enable</option>
+            <option value="enable">Enable</option>
             <option value="disable">Disable</option>
           </select>
         </div>
