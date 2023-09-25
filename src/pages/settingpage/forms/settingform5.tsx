@@ -8,7 +8,7 @@ import { getsetting } from "../../../store/slice/setting";
 const Settingform5 = () => {
   const [selectValue, setSelectValue] = useState("Chat");
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
-  // console.log(currentSetting);
+  console.log(currentSetting);
   const chat_method = useSelector(
     (state: RootState) => state.setting?.data?.chat_method
   );
