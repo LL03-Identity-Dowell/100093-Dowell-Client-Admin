@@ -2077,7 +2077,7 @@ def create_public_member(request):
 def get_used_unused_links(request):
     if request.method == 'POST':
         session_id = request.data.get("session_id")
-        link_status = request.data.get("link_status")
+        portfolio_status = request.data.get("portfolio_status")
         url = "https://100014.pythonanywhere.com/api/userinfo/"
         resp = requests.post(url, data={"session_id": session_id})
         user = json.loads(resp.text)
@@ -2091,17 +2091,17 @@ def get_used_unused_links(request):
                 try:
                     allpub1 = json.loads(l.link)
                     for data in allpub1:
-                        if data["linkstatus"] == link_status:
-                            filtered_links.append(data['qrcodeid'])
+                        if portfolio_status == "assigned":
+                            if data["linkstatus"] == "unused" and "portfolio_name" in data:
+                                filtered_links.append(data['qrcodeid'])
+                        if portfolio_status == "unassigned":
+                            if data["linkstatus"] == "unused" and "portfolio_name" not in data:
+                                filtered_links.append(data['qrcodeid'])
                 except:
                     pass
 
         return Response(filtered_links, status=HTTP_200_OK)
 
-
-# @csrf_exempt
-# def is_ajax(request):
-#     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 @api_view(['POST'])
 def invite_team_member(request):
