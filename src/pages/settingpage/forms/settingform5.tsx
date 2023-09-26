@@ -8,7 +8,7 @@ import { getsetting } from "../../../store/slice/setting";
 const Settingform5 = () => {
   const [selectValue, setSelectValue] = useState("Chat");
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
-  // console.log(currentSetting);
+  console.log("settings", currentSetting);
   const chat_method = useSelector(
     (state: RootState) => state.setting?.data?.chat_method
   );
@@ -29,6 +29,10 @@ const Settingform5 = () => {
 
   const [defaultusername, setdefaultusername] = useState(adminusername);
 
+  useEffect(() => {
+    setdefaultusername(adminusername);
+  }, [adminusername]);
+
   const handleSubmit = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -38,16 +42,17 @@ const Settingform5 = () => {
         dispatch(getloaderstate(true));
         const data = {
           username: defaultusername,
-          uxlivinglab_method:
-            typeof selecteduxlivinglab_method == "object"
+          notifications: selectValue,
+          methods:
+            selectValue === "Chat"
+              ? typeof selectedchat_method == "string"
+                ? selectedchat_method
+                : selectedchat_method[0]
+              : typeof selecteduxlivinglab_method == "string"
               ? selecteduxlivinglab_method
-              : [selecteduxlivinglab_method],
-          chat_method:
-            typeof selectedchat_method == "object"
-              ? selectedchat_method
-              : [selectedchat_method],
+              : selecteduxlivinglab_method[0],
         };
-        console.log(data);
+        console.log({ data });
         await axios
           .post("https://100093.pythonanywhere.com/api/settings/", data)
           .then((res) => {
@@ -111,7 +116,7 @@ const Settingform5 = () => {
             value={selectValue}
           >
             <option value="Chat">Chat</option>
-            <option value="UxLiving LAb">UxLiving LAb</option>
+            <option value="UX Living Lab">UX Living Lab</option>
           </select>
         </div>
         <div className="w-full mb-3">
