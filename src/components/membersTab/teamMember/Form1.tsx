@@ -7,126 +7,202 @@ import { RootState } from "../../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
 
 const Form1 = () => {
-  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
-  const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
-  const [link, setLink] = useState("");
-  const [isCopied, setIsCopied] = useState(false);
-  const [formInputs, setFormInputs] = useState({
-    member_name: "",
-    member_code: "",
-    member_spec: "",
-    member_u_code: "",
-    member_det: "",
-  });
+	const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+	const [isPrivacyPolicy, setIsPrivacyPolicy] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [errMsg, setErrMsg] = useState("");
+	const [link, setLink] = useState("");
+	const [isCopied, setIsCopied] = useState(false);
+	const [formInputs, setFormInputs] = useState({
+		member_name: "",
+		member_code: "",
+		member_spec: "",
+		member_u_code: "",
+		member_det: "",
+	});
 
-  const openPrivacyModal = () => {
-    setIsPrivacyModalOpen(true);
-  };
+	const openPrivacyModal = () => {
+		setIsPrivacyModalOpen(true);
+	};
 
-  const closePrivacyModal = () => {
-    setIsPrivacyModalOpen(false);
-  };
+	const closePrivacyModal = () => {
+		setIsPrivacyModalOpen(false);
+	};
 
-  const userName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.Username
-  );
-  const team_member_length = useSelector(
-    (state: RootState) => state.adminData.data[0]?.members.team_members?.accept_members.length
-  );
-  
-
-  const handleCopyToClipBoard = () => {
-    if (link === "") {
-      toast.error("Unable to copy link");
-    } else {
-      navigator.clipboard
-        .writeText(link)
-        .then(() => {
-          setIsCopied(true);
-          toast.success("copied");
-        })
-        .catch((error) => console.error("Error copying link", error));
-    }
-  };
-
- 
-
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
-  };
-
-  const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setFormInputs({ ...formInputs, member_det: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const data = {
-      username: userName,
-      member_name: formInputs.member_name,
-      member_code: formInputs.member_code,
-      member_spec: formInputs.member_spec,
-      member_u_code: formInputs.member_u_code,
-      member_det: formInputs.member_det,
-    };
-
-    try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/create_team_member/", data)
-        .then((res) => {
-          console.log(res.data);
-          setLink(res.data.link);
-          setErrMsg("");
-          toast.success("success");
-        });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-        setErrMsg(error.response?.data.error);
-      } else {
-        console.error("An unknown error occurred:", error);
-        setErrMsg("An unknown error occurred");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+	const userName = useSelector(
+		(state: RootState) => state.adminData.data[0]?.Username
+	);
+	const first_Name = useSelector(
+		(state: RootState) => state.adminData.data[0]?.profile_info.first_name
+	);
+	const org_name = useSelector(
+		(state: RootState) => state.adminData.data[0]?.organisations[0].org_name
+	);
+	const team_member_length = useSelector(
+		(state: RootState) => state.adminData.data[0]?.members.team_members?.accept_members.length
+	);
 
 
-  const [emailinvite, setemailinvite] = useState('');
+	const handleCopyToClipBoard = () => {
+		if (link === "") {
+			toast.error("Unable to copy link");
+		} else {
+			navigator.clipboard
+				.writeText(link)
+				.then(() => {
+					setIsCopied(true);
+					toast.success("copied");
+				})
+				.catch((error) => console.error("Error copying link", error));
+		}
+	};
 
-   const handleOnChangeemailinvile = (e: ChangeEvent<HTMLInputElement>) => {
-     setemailinvite(e.target.value);
-     console.log(emailinvite)
+
+
+	const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+		setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+	};
+
+	const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
+		setFormInputs({ ...formInputs, member_det: e.target.value });
+	};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsLoading(true);
+
+		const data = {
+			username: userName,
+			member_name: formInputs.member_name,
+			member_code: formInputs.member_code,
+			member_spec: formInputs.member_spec,
+			member_u_code: formInputs.member_u_code,
+			member_det: formInputs.member_det,
 		};
 
-  const handleemailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
+		try {
+			await axios
+				.post("https://100093.pythonanywhere.com/api/create_team_member/", data)
+				.then((res) => {
+					console.log(res.data);
+					setLink(res.data.link);
+					setErrMsg("");
+					toast.success("success");
+				});
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				console.error(error);
+				setErrMsg(error.response?.data.error);
+			} else {
+				console.error("An unknown error occurred:", error);
+				setErrMsg("An unknown error occurred");
+			}
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-     const emaildata = {
-				toname: "Jazz",
+
+	const [emailinvite, setemailinvite] = useState('');
+
+	const handleOnChangeemailinvile = (e: ChangeEvent<HTMLInputElement>) => {
+		setemailinvite(e.target.value);
+		console.log(emailinvite)
+	};
+
+	const handleemailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsLoading(true);
+
+		if (link != '') {
+			const emaildata = {
+				toname: first_Name,
 				toemail: emailinvite,
 				fromname: "uxlivinglab",
 				fromemail: "uxlivinglab@dowellresearch.sg",
-				subject: "Test one",
-				email_content: "<h1>HIIII</h1>",
+				subject: "Invitation",
+				email_content: `<table class="body-wrap" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6">
+                        <tbody>
+                            <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+                                <td class="container" width="600" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;"
+                                    valign="top">
+                                    <div class="content" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">
+                                        <table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;"
+                                            bgcolor="#fff">
+                                            <tbody>
+                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #38414a; margin: 0; padding: 20px;"
+                                                        align="center" bgcolor="#71b6f9" valign="top">
+                                                        <a href="#" style="font-size:32px;color:#fff;">DoWell UX Living Lab</a> <br>
+                                                        <span style="margin-top: 10px;display: block; color:yellow">Hi ,you have been invited by <b> ${org_name} </b>  to join in <b>${org_name}</b>.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                    <td class="content-wrap" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">
+                                                        <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                            <tbody>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                                        Please click on the link below to Join.
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                                        <a href="${link}" class="btn-primary" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #f1556c; margin: 0; border-color: #f1556c; border-style: solid; border-width: 8px 16px;">
+                                                        Join</a> </td>
+                                                        </tr>
+                                                        <tr>
+                                                        <td> ${link} You can also copy and paste this link to browser.
+
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                                    <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+                                                                        Thanks for choosing <b>DoWell UX Living Lab</b> .
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="footer" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; clear: both; color: #999; margin: 0; padding: 20px;">
+                                            <table width="100%" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+                                                <tbody>
+                                                    <tr style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                                    <a href= "https://100087.pythonanywhere.com/privacyconsents/FB1010000000001665306290565391/?session_id=ayaquq6jdyqvaq9h6dlm9ysu3wkykfggyx0d" > Click Here if you want to read Policies </a>
+`,
 			};
-    console.log(emaildata)
-     try {
+			console.log(emaildata)
+			try {
 				await axios
 					.post(
-						"http://100093.pythonanywhere.com/api/invite_team_member/",
+						"https://100085.pythonanywhere.com/api/uxlivinglab/email/",
 						emaildata
 					)
 					.then((res) => {
 						console.log(res.data);
 						setErrMsg("");
-						toast.success("success");
+						toast.success(res.data.message);
 					});
 			} catch (error: unknown) {
 				if (axios.isAxiosError(error)) {
@@ -139,12 +215,16 @@ const Form1 = () => {
 			} finally {
 				setIsLoading(false);
 			}
-  }
+		}
+		else {
+			toast.error("Please First Create Team Member invitation Link");
+		}
+	}
 
-   
 
 
-  return (
+
+	return (
 		<>
 			<ToastContainer position="top-right" />
 			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
@@ -237,9 +317,8 @@ const Form1 = () => {
 					</div>
 					<button
 						disabled={isLoading}
-						className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
-							isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
-						}`}
+						className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
+							}`}
 					>
 						Create Team Member Invitation Link
 					</button>
