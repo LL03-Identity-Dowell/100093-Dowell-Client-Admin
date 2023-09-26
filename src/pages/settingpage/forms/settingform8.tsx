@@ -1,8 +1,13 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getloaderstate } from "../../../store/slice/loaderstate";
+import axios from "axios";
+import { getsetting } from "../../../store/slice/setting";
 
 const Settingform8 = () => {
+  const currentSetting = useSelector((state: RootState) => state.setting?.data);
+  console.log("settings", currentSetting);
   const internet_min_speed = useSelector(
     (state: RootState) => state.setting?.data?.internet_min_speed
   );
@@ -14,6 +19,60 @@ const Settingform8 = () => {
   const internetspeedfilter = internetspeedlist.filter(
     (item) => item !== internet_min_speed
   );
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  );
+
+  const [defaultusername, setdefaultusername] = useState(adminusername);
+
+  useEffect(() => {
+    setdefaultusername(adminusername);
+  }, [adminusername]);
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+
+    const postData = async () => {
+      try {
+        dispatch(getloaderstate(true));
+
+        const data = {
+          username: defaultusername,
+          minimum_speed: internet_min_speed_value,
+        };
+
+        await axios.post(
+          "https://100093.pythonanywhere.com/api/settings/",
+          data
+        );
+
+        dispatch(
+          getsetting({
+            isSuccess: true,
+            data: {
+              ...currentSetting,
+              internet_min_speed: internet_min_speed_value,
+            },
+          })
+        );
+        dispatch(getloaderstate(false));
+      } catch (error) {
+        console.error(error);
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postData();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
 
   return (
     <div className="form-item">
@@ -62,7 +121,7 @@ const Settingform8 = () => {
           </select>
         </div>
         <div className="w-full mb-1">
-          <button className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
+          <button onClick={handleSubmit} className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
             Set as default Internet Settings
           </button>
         </div>
