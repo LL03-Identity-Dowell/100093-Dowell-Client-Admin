@@ -109,10 +109,13 @@ const Form1 = () => {
     setIsLoading(true);
 
      const emaildata = {
-				email: emailinvite,
-				link: link,
-				username: userName,
-    };
+				toname: "Jazz",
+				toemail: emailinvite,
+				fromname: "uxlivinglab",
+				fromemail: "uxlivinglab@dowellresearch.sg",
+				subject: "Test one",
+				email_content: "<h1>HIIII</h1>",
+			};
     console.log(emaildata)
      try {
 				await axios
