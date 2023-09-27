@@ -15,7 +15,7 @@ const Form2 = () => {
   const getUsedAndUnusedLink = async () => {
     const data = {
       session_id: sessionId,
-      link_status: "unused",
+      link_status: "assigned",
     };
     try {
       await axios
@@ -24,7 +24,7 @@ const Form2 = () => {
           data
         )
         .then((res) => {
-          console.log(res.data);
+          console.log(res.data, 'data');
           setUsedAndUnusedData(res.data);
         });
     } catch (error: unknown) {
@@ -41,7 +41,6 @@ const Form2 = () => {
     getUsedAndUnusedLink();
   }, []);
 
-  // console.log(getUsedAndUnusedData, 'getUsedAndUnusedData');
 
   return (
     <>
