@@ -215,7 +215,7 @@ const Header = () => {
             ) : (
               <div className="bg-[#cef9d2] p-[15px] border-2 border-[#7a7a7a] mt-8">
                 <p className="text-lg font-semibold italic text-[#7A7A7A] pb-2">
-                  Select Organisation you want to connect
+                  Select Workspace you want to connect
                 </p>
                 <select
                   className="w-full rounded-md outline-none py-1 text-center"
