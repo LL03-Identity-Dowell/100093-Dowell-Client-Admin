@@ -279,11 +279,11 @@ const [rulestatus, setrulestatus] = useState({
 						<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
 							<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
 								<p>ROLE</p>
-								<p>{"<Total enabled roles>"}</p>
+								<p>{`  <${enablerules.length}>`} </p>
 							</span>
 							<div className="p-[30px]  my-20">
 								<p className="text-[#FF0000] text-lg font-roboto font-semibold">
-									Create Roles – Define Roles in my organisation
+									Create Roles – Define Roles in my Workspace
 								</p>
 							</div>
 							<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
