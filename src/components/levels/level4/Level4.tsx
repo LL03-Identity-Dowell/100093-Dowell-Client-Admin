@@ -7,7 +7,7 @@ const Level4 = () => {
     <>
       <div className="lg:flex w-full  h-full mt-8">
         <Form1 />
-        <div className="w-2/3 flex">
+        <div className="lg:w-2/3 lg:flex">
           <Form2 />
           <Form3 />
         </div>

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import products from "../../../store/slice/products";
+// import products from "../../../store/slice/products";
 import { getloaderstate } from "../../../store/slice/loaderstate";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
@@ -18,6 +18,10 @@ const Settingform1 = () => {
   );
 
   const [defaultusername, setdefaultusername] = useState(adminusername);
+  console.log(defaultusername);
+  
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     setdefaultusername(adminusername);
@@ -27,7 +31,6 @@ const Settingform1 = () => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
-    const dispatch = useDispatch();
     const postData = async () => {
       try {
         dispatch(getloaderstate(true));

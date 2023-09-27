@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import images from "../../images";
 import axios from "axios";
 import { useSelector } from "react-redux";
