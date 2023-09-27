@@ -192,7 +192,7 @@ const Form1 = () => {
                                     <a href= "https://100087.pythonanywhere.com/privacyconsents/FB1010000000001665306290565391/?session_id=ayaquq6jdyqvaq9h6dlm9ysu3wkykfggyx0d" > Click Here if you want to read Policies </a>
 `,
 			};
-			console.log(emaildata)
+			
 			try {
 				await axios
 					.post(
@@ -200,13 +200,13 @@ const Form1 = () => {
 						emaildata
 					)
 					.then((res) => {
-						console.log(res.data);
+						
 						setErrMsg("");
 						toast.success(res.data.message);
 					});
 			} catch (error: unknown) {
 				if (axios.isAxiosError(error)) {
-					console.error(error);
+					
 					setErrMsg(error.response?.data.error);
 				} else {
 					console.error("An unknown error occurred:", error);
