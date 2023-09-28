@@ -1,10 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import products from "../../../store/slice/products";
-import { getloaderstate } from "../../../store/slice/loaderstate";
-import axios from "axios";
-import { getsetting } from "../../../store/slice/setting";
 
 const Settingform1 = () => {
   const allproducts = useSelector(
@@ -12,64 +9,6 @@ const Settingform1 = () => {
   );
   const [statusValue, SetstatusValue] = useState("enable");
   const [selectedProduct, SetselectedProduct] = useState("");
-
-  const adminusername = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
-  );
-
-  const [defaultusername, setdefaultusername] = useState(adminusername);
-  console.log(defaultusername);
-  
-  const dispatch = useDispatch();
-
-
-  useEffect(() => {
-    setdefaultusername(adminusername);
-  }, [adminusername]);
-
-  const handleSubmit = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    const postData = async () => {
-      try {
-        dispatch(getloaderstate(true));
-        // const data = {
-        //   username: defaultusername,
-        //   public_status: selectedmaxtime_member,
-        //   timelimit_users: selectedmaxtime_user,
-        // };
-
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          // data
-        );
-
-        dispatch(
-          getsetting({
-            isSuccess: true,
-            // data: {
-            //   ...currentSetting,
-            //   public_status: selectedmaxtime_member,
-            //   maxtime_user: selectedmaxtime_user,
-            // },
-          })
-        );
-
-        dispatch(getloaderstate(false));
-      } catch (error) {
-        console.error(error);
-      }
-
-      // fetch product
-    };
-
-    // Call the API when the component mounts
-    postData();
-
-    // Make your API call here using the selectedLanguage value
-    // For example:
-  };
 
   return (
     <div className="form-item">
@@ -120,10 +59,7 @@ const Settingform1 = () => {
           </select>
         </div>
         <div className="w-full mb-1">
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md"
-          >
+          <button className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
             Click here to Enable / Disable
           </button>
         </div>

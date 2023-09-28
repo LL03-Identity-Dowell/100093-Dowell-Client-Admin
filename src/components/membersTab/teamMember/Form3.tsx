@@ -5,6 +5,7 @@ import images from "../../images";
 import Modal from "react-modal";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import Select from "react-select";
 
 const Form3 = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
@@ -218,6 +219,39 @@ const responseData = await response.json();
 
 
 
+	// search invited team members
+
+
+	interface Option {
+		value: string;
+		label: string;
+	}
+
+	interface memberobj {
+		name: string;
+		member_code: string;
+		member_spec: string;
+		member_uni_code: string;
+		member_details: string;
+		link: string;
+		status: string;
+	}
+ const [selectedItems, setSelectedItems] = useState<memberobj>();
+	
+	const query: Option[] = team_member?.pending_members.map((option) => ({
+		value: option.member_code,
+		label: option.name,
+	}));
+
+		const handleSearchInputChange = (query: any) => {
+			
+			console.log(query.value)
+		
+			const filtermmember = team_member?.pending_members.find((item) => item.member_code == query.value)
+			
+				setSelectedItems(filtermmember);
+		};
+
 
   return (
 		<>
@@ -247,10 +281,25 @@ const responseData = await response.json();
 						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 							Search Invited Team Members
 						</label>
-						<input
-							type="text"
-							placeholder="Name"
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						<Select
+							classNames={{
+								control: () => "border border-none shadow-none rounded-md",
+							}}
+							className="w-full outline-none  border-red-50 shadow-none"
+							options={query}
+							placeholder="Search member..."
+							onChange={handleSearchInputChange}
+							styles={{
+								control: (baseStyles, state) => ({
+									...baseStyles,
+									borderColor: state.isFocused ? "#82827A" : "#82827A",
+									outline:"none"
+									
+								}),
+
+								
+							}}
+							
 						/>
 					</div>
 					<div className="mb-4">
@@ -261,7 +310,7 @@ const responseData = await response.json();
 							rows={4}
 							placeholder="Member details"
 							readOnly
-							value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
+							value={JSON.stringify(selectedItems, null, 1)?.slice(1, -1)}
 							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
 						/>
 					</div>
@@ -447,8 +496,8 @@ const responseData = await response.json();
 							</span>
 							<button
 								className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
-							type="button"
-							onClick={uploadlinkcopy}
+								type="button"
+								onClick={uploadlinkcopy}
 							>
 								Copy
 							</button>

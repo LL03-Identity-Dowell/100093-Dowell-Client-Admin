@@ -1,15 +1,78 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getloaderstate } from "../../../store/slice/loaderstate";
+import axios from "axios";
+import { getsetting } from "../../../store/slice/setting";
 
 const Settingform9 = () => {
   const allproducts = useSelector(
     (state: RootState) => state.products.products
   );
-
-  const [productName, setProductName] = useState(allproducts[0].product_name);
-  const [plan, setPlan] = useState("Select");
+  const currentSetting = useSelector((state: RootState) => state.setting?.data);
+  const product_plan = useSelector(
+    (state: RootState) => state.setting?.data?.product_plan[0]
+  );
+  console.log({ allproducts });
+  const [productName, setProductName] = useState(product_plan.product_name);
+  const [plan, setPlan] = useState(product_plan.plans);
   const plans = ["Basic Plan", "Free", "Premium Plan"];
+
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  );
+
+  const [defaultusername, setdefaultusername] = useState(adminusername);
+
+  useEffect(() => {
+    setdefaultusername(adminusername);
+  }, [adminusername]);
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+
+    const postData = async () => {
+      try {
+        dispatch(getloaderstate(true));
+
+        const data = {
+          username: defaultusername,
+          updated_product: productName,
+          plans: plan,
+        };
+
+        await axios.post(
+          "https://100093.pythonanywhere.com/api/settings/",
+          data
+        );
+
+        dispatch(
+          getsetting({
+            isSuccess: true,
+            data: {
+              ...currentSetting,
+              product_plan: [{ product_name: productName, plans: plan }],
+            },
+          })
+        );
+        dispatch(getloaderstate(false));
+      } catch (error) {
+        console.error(error);
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postData();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
 
   return (
     <div className="form-item">
@@ -33,9 +96,6 @@ const Settingform9 = () => {
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
           >
-            <option value={allproducts[0].product_name}>
-              {allproducts[0].product_name}
-            </option>
             {allproducts.map((item, index) => (
               <option key={index} value={item?.product_name}>
                 {item?.product_name}
@@ -66,7 +126,10 @@ const Settingform9 = () => {
           </select>
         </div>
         <div className="w-full mb-1">
-          <button className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md"
+          >
             Change Plan of selected Product
           </button>
         </div>
