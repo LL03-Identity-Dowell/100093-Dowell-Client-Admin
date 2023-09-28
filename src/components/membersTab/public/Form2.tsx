@@ -15,7 +15,7 @@ const Form2 = () => {
   const getUsedAndUnusedLink = async () => {
     const data = {
       session_id: sessionId,
-      link_status: "assigned",
+      portfolio_status: "assigned",
     };
     try {
       await axios

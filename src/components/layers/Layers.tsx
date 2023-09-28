@@ -142,11 +142,11 @@ usedispatch(getlayerverifyid(verifyresponse.data));
 				<div className="mt-8 w-full lg:flex gap-8">
 					<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
 						<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
-							<p>Security Layers created in my workspace</p>
+							<p>Security Layers created in my workspace </p>
 						</span>
 						<div className="p-[30px]  my-12">
 							<p className="text-[#FF0000] text-lg font-roboto font-semibold mb-8">
-								Create Layers – Define Security Layers in my organisation
+								Create Layers – Define Security Layers in my workspace
 							</p>
 							<p className="text-[#7A7A7A] text-lg font-roboto font-bold py-8">
 								Set Layers – 1 (High), 2, 3, 4, 5, 6 (Low)
