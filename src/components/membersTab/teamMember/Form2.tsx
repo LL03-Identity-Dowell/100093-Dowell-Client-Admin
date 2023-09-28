@@ -75,7 +75,7 @@ const Form2 = () => {
       <ToastContainer position="top-right" />
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
         <i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
-          Search Team Members in my organisation
+          Search Team Members in my Workspace
         </i>
         <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
           <div className="mb-4">
