@@ -2,37 +2,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from "react";
 import axios from "axios";
-import  { getAdminData } from "../../store/slice/adminData";
+import { getAdminData } from "../../store/slice/adminData";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
 
-
 const Roles = () => {
-const show_loader = useSelector((state: RootState) => state.loaderslice);
-const adminusername = useSelector(
-	(state: RootState) => state.userinfo.userinfo.username
-);
+	const [selectedOptions, setSelectedOptions] = useState([]);
+	const show_loader = useSelector((state: RootState) => state.loaderslice);
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
 
-const [defaultusername, setdefaultusername] = useState(adminusername);
+	const [defaultusername, setdefaultusername] = useState(adminusername);
 
-useEffect(() => {
-	setdefaultusername(adminusername);
-}, [adminusername]);
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
 
-	
+	const dispatch = useDispatch();
 
-
-
-const dispatch=useDispatch()
-	
-	
 	const rolesdata = useSelector(
 		(state: RootState) => state.adminData.data[0].roles
 	);
-	const currentadmindata = useSelector(
-		(state: RootState) => state.adminData
-	);
-	
+	const currentadmindata = useSelector((state: RootState) => state.adminData);
 
 	const enablerules = rolesdata.filter((r) => r.status == "enable");
 	const disablerules = rolesdata.filter((r) => r.status == "disable");
@@ -65,7 +57,7 @@ const dispatch=useDispatch()
 		role_specification: "",
 		status: "",
 	});
-const [selectedrulestatus, setselectedrulestatus] = useState("..select");
+	const [selectedrulestatus, setselectedrulestatus] = useState("..select");
 
 	const formatObject = (obj: Record<string, any>) => {
 		let result = "";
@@ -75,12 +67,10 @@ const [selectedrulestatus, setselectedrulestatus] = useState("..select");
 		return result;
 	};
 
-
-
-const [rulestatus, setrulestatus] = useState({
-	enablestatus: "..select",
-	disablestatus: "..select",
-});
+	const [rulestatus, setrulestatus] = useState({
+		enablestatus: "..select",
+		disablestatus: "..select",
+	});
 	const handledisablerule = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setrulestatus({
 			enablestatus: "..select",
@@ -104,15 +94,9 @@ const [rulestatus, setrulestatus] = useState({
 			role_specification: matchrule?.role_specification || "",
 			status: matchrule?.status || "",
 		});
-
-
-
-		
 	};
 
-
 	const handleenablerule = (event: React.ChangeEvent<HTMLSelectElement>) => {
-	
 		setrulestatus({
 			enablestatus: event.target.value,
 			disablestatus: "..select",
@@ -136,9 +120,6 @@ const [rulestatus, setrulestatus] = useState({
 		});
 	};
 
-
-
-
 	const [formData, setFormData] = useState({
 		username: defaultusername,
 		level1_item: "..select",
@@ -151,7 +132,7 @@ const [rulestatus, setrulestatus] = useState({
 		role_code: "",
 		role_spec: "",
 		roleucode: "",
-		role_det:"",
+		role_det: "",
 		status: "enable",
 	});
 
@@ -179,15 +160,15 @@ const [rulestatus, setrulestatus] = useState({
 				role_specification: formData.role_spec,
 				status: formData.status,
 			};
-  const updatedAdminData = {
-		...currentadmindata,
-		data: [
-			{
-				...currentadmindata.data[0],
-				roles: [...currentadmindata.data[0].roles, statedata],
-			},
-		],
-	};
+			const updatedAdminData = {
+				...currentadmindata,
+				data: [
+					{
+						...currentadmindata.data[0],
+						roles: [...currentadmindata.data[0].roles, statedata],
+					},
+				],
+			};
 			dispatch(getAdminData(updatedAdminData));
 			toast.success("success");
 			// Handle the response as needed
@@ -212,22 +193,23 @@ const [rulestatus, setrulestatus] = useState({
 		}
 	};
 
-	const handleChange = (e:ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
-	};
-
- const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
- };
-
-
-	const changeselectedrulestatus = (e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-		setselectedrulestatus(e.target.value)
-	};
-
-	const updateselectedrulestatus = async (
-		e: MouseEvent<HTMLButtonElement>
+	const handleChange = (
+		e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
 	) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const changeselectedrulestatus = (
+		e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
+	) => {
+		setselectedrulestatus(e.target.value);
+	};
+
+	const updateselectedrulestatus = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		const rulestatusdata = {
 			username: defaultusername,
@@ -240,7 +222,6 @@ const [rulestatus, setrulestatus] = useState({
 				rulestatusdata
 			);
 			console.log(response.data);
-
 
 			const updatedRoles = currentadmindata.data[0].roles.map((role) => {
 				if (role.role_code === selectedrule.role_code) {
@@ -265,10 +246,88 @@ const [rulestatus, setrulestatus] = useState({
 			);
 
 			toast.success("success");
-
 		} catch (error) {
 			console.error(error); // Handle the error appropriately
 		}
+	};
+
+	const handleRemoveSelection = () => {
+		// Clear the selected options array
+		setSelectedOptions([]);
+	};
+
+	interface selectionrule {
+		selectlevel1_item: [];
+		selectlevel2_item: [];
+		selectlevel3_item: [];
+		selectlevel4_item: [];
+		selectlevel5_item: [];
+		selectsecurity_layer: [];
+	}
+	const [selectionrulestate, setselectionrulestate] = useState<selectionrule>({
+		selectlevel1_item: [],
+		selectlevel2_item: [],
+		selectlevel3_item: [],
+		selectlevel4_item: [],
+		selectlevel5_item: [],
+		selectsecurity_layer: [],
+	});
+
+	const clearselection = (e: MouseEvent<HTMLButtonElement>) => {
+		e.preventDefault()
+		setrulestatus({
+			enablestatus: "..select",
+			disablestatus: "..select",
+		});
+
+		setselectionrulestate({
+			selectlevel1_item: [],
+			selectlevel2_item: [],
+			selectlevel3_item: [],
+			selectlevel4_item: [],
+			selectlevel5_item: [],
+			selectsecurity_layer: [],
+		});
+
+		setselectedrule({
+			level1_item: "",
+			level2_item: "",
+			level3_item: "",
+			level4_item: "",
+			level5_item: "",
+			security_layer: "",
+			role_name: "",
+			role_code: "",
+			role_details: "",
+			role_uni_code: "",
+			role_specification: "",
+			status: "",
+		});
+		
+	};
+
+	// const [selectedOptionslayer1, setselectedOptionslayer1] = useState<string[]>([]);
+	// const handleSelectChangelayer1 = (
+	// 		e: React.ChangeEvent<HTMLSelectElement>
+	// 	) => {
+	// 		// Update the selectedOptionslayer1 state when the multi-select value changes
+	// 		setselectedOptionslayer1(
+	// 				Array.from(e.target.selectedOptions, (option) => option.value)
+	// 			);
+	// 	};
+
+	
+	const handleSelectChangelevels = (
+		e: React.ChangeEvent<HTMLSelectElement>
+	) => {
+		// Update the selectedOptionslayer1 state when the multi-select value changes
+		setselectionrulestate({
+			...selectionrulestate,
+			[e.target.name]: Array.from(
+				e.target.selectedOptions,
+				(option) => option.value
+			),
+		});
 	};
 	return (
 		<>
@@ -489,9 +548,12 @@ const [rulestatus, setrulestatus] = useState({
 									<select
 										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 										multiple
+										name="selectlevel1_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel1_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level1_item}>
+											<option key={index} value={index}>
 												{item.level1_item}
 											</option>
 										))}
@@ -504,9 +566,12 @@ const [rulestatus, setrulestatus] = useState({
 									<select
 										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 										multiple
+										name="selectlevel2_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel2_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level2_item}>
+											<option key={index} value={index}>
 												{item.level2_item}
 											</option>
 										))}
@@ -519,9 +584,12 @@ const [rulestatus, setrulestatus] = useState({
 									<select
 										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 										multiple
+										name="selectlevel3_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel3_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level3_item}>
+											<option key={index} value={index}>
 												{item.level3_item}
 											</option>
 										))}
@@ -534,9 +602,12 @@ const [rulestatus, setrulestatus] = useState({
 									<select
 										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 										multiple
+										name="selectlevel4_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel4_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level4_item}>
+											<option key={index} value={index}>
 												{item.level4_item}
 											</option>
 										))}
@@ -549,9 +620,12 @@ const [rulestatus, setrulestatus] = useState({
 									<select
 										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 										multiple
+										name="selectlevel5_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel5_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level5_item}>
+											<option key={index} value={index}>
 												{item.level5_item}
 											</option>
 										))}
@@ -564,9 +638,12 @@ const [rulestatus, setrulestatus] = useState({
 									<select
 										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 										multiple
+										name="selectsecurity_layer"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectsecurity_layer}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={item.security_layer}>
+											<option key={index} value={index}>
 												{item.security_layer}
 											</option>
 										))}
@@ -650,7 +727,11 @@ const [rulestatus, setrulestatus] = useState({
 								<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
 									Duplicate selected Role to create new
 								</button>
-								<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+								<button
+									className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
+									type="button"
+									onClick={clearselection}
+								>
 									Refresh Search
 								</button>
 							</form>
