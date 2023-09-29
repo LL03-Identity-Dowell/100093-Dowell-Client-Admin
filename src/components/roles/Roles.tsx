@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
 
 const Roles = () => {
-	const [selectedOptions, setSelectedOptions] = useState([]);
+	
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
 	const adminusername = useSelector(
 		(state: RootState) => state.userinfo.userinfo.username
@@ -251,10 +251,7 @@ const Roles = () => {
 		}
 	};
 
-	const handleRemoveSelection = () => {
-		// Clear the selected options array
-		setSelectedOptions([]);
-	};
+	
 
 	interface selectionrule {
 		selectlevel1_item: [];
@@ -306,15 +303,6 @@ const Roles = () => {
 		
 	};
 
-	// const [selectedOptionslayer1, setselectedOptionslayer1] = useState<string[]>([]);
-	// const handleSelectChangelayer1 = (
-	// 		e: React.ChangeEvent<HTMLSelectElement>
-	// 	) => {
-	// 		// Update the selectedOptionslayer1 state when the multi-select value changes
-	// 		setselectedOptionslayer1(
-	// 				Array.from(e.target.selectedOptions, (option) => option.value)
-	// 			);
-	// 	};
 
 	
 	const handleSelectChangelevels = (

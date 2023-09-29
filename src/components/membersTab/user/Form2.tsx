@@ -3,6 +3,12 @@ import { RootState } from "../../../store/Store";
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import Select from "react-select";
+
+type Option = {
+  value: string;
+  label: string;
+};
 
 const Form2 = () => {
   const [selectedItems, setSelectedItems] = useState<string>("");
@@ -12,7 +18,16 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.guest_members
   );
 
-  console.log(guest_member, "guest_member");
+  const query = guest_member?.accept_members.map((option) => ({
+    value: option.member_code,
+    label: option.name,
+  }));
+
+  const handleSearchInputChange = (query: Option | null) => {
+    if (query) {
+      setSelectedItems(query.value);
+    }
+  };
 
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
@@ -122,10 +137,11 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Search Users
             </label>
-            <input
-              type="text"
+            <Select
+              className="w-full outline-none shadow-none"
+              options={query}
               placeholder="Name"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              onChange={handleSearchInputChange}
             />
           </div>
           <div className="mb-4">

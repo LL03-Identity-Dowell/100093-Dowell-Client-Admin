@@ -6,6 +6,11 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 
+type Option = {
+  value: string;
+  label: string;
+};
+
 const Form2 = () => {
   const [selectedItems, setSelectedItems] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -14,17 +19,16 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.team_members
   );
 
-
   const query = team_member?.accept_members.map((option) => ({
     value: option.name,
     label: option.name,
   }));
 
-  const handleSearchInputChange = (query: any) => {
-    setSelectedItems(query.value)
-  }
-
-  // console.log(team_member, "team_member", selectedItems, 'query', query);
+  const handleSearchInputChange = (query: Option | null) => {
+    if (query) {
+      setSelectedItems(query.value);
+    }
+  };
 
   const handleSelectOnChange = (
     event: React.ChangeEvent<HTMLSelectElement>

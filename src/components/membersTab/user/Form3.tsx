@@ -5,84 +5,73 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import Select from "react-select";
 
 const Form3 = () => {
-  const [uploadLinkModal, setUploadLinkModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
+	const [uploadLinkModal, setUploadLinkModal] = useState(false);
+	const [selectedItem, setSelectedItem] = useState<string>("");
+	const [isLoading, setIsLoading] = useState(false);
 
-  const openUploadLinkModal = () => {
-    setUploadLinkModal(true);
-  };
+	const openUploadLinkModal = () => {
+		setUploadLinkModal(true);
+	};
 
-  const closeUploadLinkModal = () => {
-    setUploadLinkModal(false);
-  };
+	const closeUploadLinkModal = () => {
+		setUploadLinkModal(false);
+	};
 
-  const guest_member = useSelector(
-    (state: RootState) => state.adminData.data[0]?.members.guest_members
-  );
+	const guest_member = useSelector(
+		(state: RootState) => state.adminData.data[0]?.members.guest_members
+	);
 
-  const userName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.Username
-  );
+	const userName = useSelector(
+		(state: RootState) => state.adminData.data[0]?.Username
+	);
 
-  const porg = useSelector(
-    (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
-  );
+	const porg = useSelector(
+		(state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
+	);
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedItemName = event.target.value;
-    setSelectedItem(selectedItemName);
-  };
+	const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		const selectedItemName = event.target.value;
+		setSelectedItem(selectedItemName);
+	};
 
-  const selectedItemData = guest_member?.accept_members.find(
-    (item) => item.member_code === selectedItem
-  );
+	
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsLoading(true);
 
-    const data = {
-      username: userName,
-      selected_member: selectedItem,
-      action: "cancel_member",
-      porg: porg,
-    };
-    console.log(data, "data");
+		const data = {
+			username: userName,
+			selected_member: selectedItem,
+			action: "cancel_member",
+			porg: porg,
+		};
+		console.log(data, "data");
 
-    try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
-        .then((res) => {
-          console.log(res.data);
-          toast.success("success");
-        });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-        toast.error(error.response?.data.error);
-      } else {
-        console.error("An unknown error occurred:", error);
-        toast.error("An unknown error occurred");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+		try {
+			await axios
+				.post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
+				.then((res) => {
+					console.log(res.data);
+					toast.success("success");
+				});
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				console.error(error);
+				toast.error(error.response?.data.error);
+			} else {
+				console.error("An unknown error occurred:", error);
+				toast.error("An unknown error occurred");
+			}
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-
-
-
-
-
-
-
-
-
-  
-  const [elements, setElements] = useState<JSX.Element[]>([]);
+	const [elements, setElements] = useState<JSX.Element[]>([]);
 	const [elementCount, setElementCount] = useState(0);
 
 	useEffect(() => {
@@ -181,7 +170,7 @@ const Form3 = () => {
 				? formData.append(
 						`fieldname${index}`,
 						item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
-				)
+		)
 				: ""
 		);
 		console.log(formData.get("fieldname1"));
@@ -215,9 +204,40 @@ const Form3 = () => {
 		}
 	};
 
+	// search invited team members
 
+	interface Option {
+		value: string;
+		label: string;
+	}
 
-  return (
+	interface memberobj {
+		name: string;
+		member_code: string;
+		member_spec: string;
+		member_uni_code: string;
+		member_details: string;
+		link: string;
+		status: string;
+	}
+	const [selectedItems, setSelectedItems] = useState<memberobj>();
+
+	const query: Option[] = guest_member?.pending_members.map((option) => ({
+		value: option.member_code,
+		label: option.name,
+	}));
+
+	const handleSearchInputChange = (query: any) => {
+		console.log(query.value);
+
+		const filtermmember = guest_member?.pending_members.find(
+			(item) => item.member_code == query.value
+		);
+
+		setSelectedItems(filtermmember);
+	};
+
+	return (
 		<>
 			<ToastContainer position="top-right" />
 			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
@@ -244,10 +264,21 @@ const Form3 = () => {
 						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 							Search Invited Users
 						</label>
-						<input
-							type="text"
-							placeholder="Name"
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						<Select
+							classNames={{
+								control: () => "border border-none shadow-none rounded-md",
+							}}
+							className="w-full outline-none  border-red-50 shadow-none"
+							options={query}
+							placeholder="Search member..."
+							onChange={handleSearchInputChange}
+							styles={{
+								control: (baseStyles, state) => ({
+									...baseStyles,
+									borderColor: state.isFocused ? "#82827A" : "#82827A",
+									outline: "none",
+								}),
+							}}
 						/>
 					</div>
 					<div className="mb-4">
@@ -258,7 +289,7 @@ const Form3 = () => {
 							rows={4}
 							placeholder="Member details"
 							readOnly
-							value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
+							value={JSON.stringify(selectedItems, null, 1)?.slice(1, -1)}
 							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
 						/>
 					</div>
