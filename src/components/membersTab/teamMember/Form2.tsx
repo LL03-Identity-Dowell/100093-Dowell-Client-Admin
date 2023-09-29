@@ -23,12 +23,6 @@ const Form2 = () => {
 		setSelectedItems(selectedItemName);
 	};
 
-	const selectedPendingMembers = team_member?.pending_members.find(
-		(item) => item?.member_code === selectedItems
-	);
-	const selectedAcceptMembers = team_member?.accept_members.find(
-		(item) => item?.name === selectedItems
-	);
 
 	const userName = useSelector(
 		(state: RootState) => state.adminData.data[0]?.Username
@@ -72,40 +66,40 @@ const Form2 = () => {
 
 	// search invited team members
 
-	// interface Option {
-	// 	value: string;
-	// 	label: string;
-	// }
+	interface Option {
+		value: string;
+		label: string;
+	}
 
-	// interface memberobj {
-	// 	name: string;
-	// 	member_code: string;
-	// 	member_spec: string;
-	// 	member_uni_code: string;
-	// 	member_details: string;
-	// 	status: string;
-	// 	first_name: string;
-	// 	last_name: string;
-	// 	email: string;
-	// 	alias: string;
-	// 	portfolio_name: string;
-	// }
-	// const [selecteddetails, setselecteddetails] = useState<memberobj>();
+	interface memberobj {
+		name: string;
+		member_code: string;
+		member_spec: string;
+		member_uni_code: string;
+		member_details: string;
+		status: string;
+		first_name: string;
+		last_name: string;
+		email: string;
+		alias: string;
+		portfolio_name: string;
+	}
+	const [selecteddetails, setselecteddetails] = useState<memberobj>();
 
-	// const query: Option[] = team_member?.accept_members.map((option) => ({
-	// 	value: option.member_code,
-	// 	label: option.name,
-	// }));
+	const query: Option[] = team_member?.accept_members.map((option) => ({
+		value: option.email,
+		label: option.name,
+	}));
 
-	// const handleSearchInputChange = (query: any) => {
-	// 	console.log(query.value);
+	const handleSearchInputChange = (query: any) => {
+		console.log(query.value);
 
-	// 	const filtermmember = team_member?.accept_members.find(
-	// 		(item) => item.member_code == query.value
-	// 	);
+		const filtermmember = team_member?.accept_members.find(
+			(item) => item.email == query.value
+		);
 
-	// 	setselecteddetails(filtermmember);
-	// };
+		setselecteddetails(filtermmember);
+	};
 
 	return (
 		<>
@@ -161,7 +155,7 @@ const Form2 = () => {
 						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 							Search Team Members
 						</label>
-						{/* <Select
+						<Select
 							classNames={{
 								control: () => "border border-none shadow-none rounded-md",
 							}}
@@ -176,19 +170,19 @@ const Form2 = () => {
 									outline: "none",
 								}),
 							}}
-						/> */}
+						/>
 					</div>
 					<div className="mb-4">
 						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
 							Details of selected Team member
 						</label>
-						{/* <textarea
+						<textarea
 							rows={4}
 							placeholder="Member details"
 							readOnly
 							value={JSON.stringify(selecteddetails, null, 1)?.slice(1, -1)}
 							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-						/> */}
+						/>
 					</div>
 
 					<button

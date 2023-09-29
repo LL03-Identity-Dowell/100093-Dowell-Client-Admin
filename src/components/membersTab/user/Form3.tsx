@@ -37,9 +37,7 @@ const Form3 = () => {
 		setSelectedItem(selectedItemName);
 	};
 
-	const selectedItemData = guest_member?.accept_members.find(
-		(item) => item.member_code === selectedItem
-	);
+	
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
