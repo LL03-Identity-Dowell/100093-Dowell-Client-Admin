@@ -21,6 +21,22 @@ interface FormInputs {
   portfolio_det: string;
 }
 
+const initialFormInputs = {
+  username: "",
+  member_type: "",
+  member: [],
+  product: "",
+  data_type: "",
+  op_rights: "",
+  role: "",
+  portfolio_name: "",
+  portfolio_code: "",
+  portfolio_status: "",
+  portfolio_spec: "",
+  portfolio_u_code: "",
+  portfolio_det: "",
+};
+
 interface PublicResponse {
   id: string;
 }
@@ -31,21 +47,8 @@ interface Option {
 }
 
 const Form1 = () => {
-  const [formInputs, setFormInputs] = useState<FormInputs>({
-    username: "",
-    member_type: "",
-    member: [],
-    product: "",
-    data_type: "",
-    op_rights: "",
-    role: "",
-    portfolio_name: "",
-    portfolio_code: "",
-    portfolio_status: "",
-    portfolio_spec: "",
-    portfolio_u_code: "",
-    portfolio_det: "",
-  });
+  const [formInputs, setFormInputs] = useState(initialFormInputs);
+
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -219,6 +222,7 @@ const Form1 = () => {
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
+          setFormInputs(initialFormInputs);
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
           }

@@ -18,6 +18,19 @@ interface FormInputs {
   portfolio_status: string;
 }
 
+const initialFormInputs = {
+  username: "",
+  member_type: "",
+  member: [],
+  product: "",
+  data_type: "",
+  op_rights: "",
+  role: "",
+  portfolio_name: "",
+  portfolio_code: "",
+  portfolio_status: "",
+};
+
 const Form2 = () => {
   const [isLoadingStatus, setIsLoadingStatus] = useState(false);
   const [statusErrMsg, setStatusErrMsg] = useState("");
@@ -33,18 +46,7 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.roles
   );
 
-  const [formInputs, setFormInputs] = useState<FormInputs>({
-    username: "",
-    member_type: "",
-    member: [],
-    product: "",
-    data_type: "",
-    op_rights: "",
-    role: "",
-    portfolio_name: "",
-    portfolio_code: "",
-    portfolio_status: "",
-  });
+  const [formInputs, setFormInputs] = useState(initialFormInputs);
 
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
@@ -95,9 +97,13 @@ const Form2 = () => {
     (item) => item
   );
 
-   const selectedItemData = portfolio.find(
+  const selectedItemData = portfolio.find(
     (item) => item.portfolio_code === formInputs.portfolio_code
   );
+
+  const refreshSearch = () => {
+    setFormInputs(initialFormInputs);
+  };
 
   return (
     <>
@@ -162,10 +168,7 @@ const Form2 = () => {
               placeholder="Select Product"
             >
               {productData?.products?.map((product) => (
-                <option key={product._id} >
-                  {" "}
-                  {product.product_name}{" "}
-                </option>
+                <option key={product._id}> {product.product_name} </option>
               ))}
             </select>
           </div>
@@ -177,10 +180,10 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option >Real Data</option>
-              <option >Learning Data</option>
-              <option >Testing Data</option>
-              <option >Archived Data</option>{" "}
+              <option>Real Data</option>
+              <option>Learning Data</option>
+              <option>Testing Data</option>
+              <option>Archived Data</option>{" "}
             </select>
           </div>
           <div className="mb-4">
@@ -191,10 +194,10 @@ const Form2 = () => {
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option >View</option>
-              <option >Add/Edit</option>
-              <option >Delete</option>
-              <option >Admin</option>
+              <option>View</option>
+              <option>Add/Edit</option>
+              <option>Delete</option>
+              <option>Admin</option>
             </select>
           </div>
           <div className="mb-4">
@@ -207,9 +210,7 @@ const Form2 = () => {
             >
               {rolesdata?.map((roles, key) =>
                 roles.status === "enable" ? (
-                  <option key={key} >
-                    {roles.role_name}
-                  </option>
+                  <option key={key}>{roles.role_name}</option>
                 ) : null
               )}
             </select>
@@ -262,7 +263,8 @@ const Form2 = () => {
                 Details of selected Portfolio
               </label>
               <textarea
-                rows={4} readOnly
+                rows={4}
+                readOnly
                 placeholder="Portfolio details"
                 value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
                 className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
@@ -302,7 +304,10 @@ const Form2 = () => {
           <button className="w-full h-10 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
             Duplicate selected Portfolio to create new
           </button>
-          <button className="w-full h-10 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+          <button
+            className="w-full h-10 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
+            onClick={refreshSearch}
+          >
             Refresh Search
           </button>
         </div>

@@ -4,6 +4,7 @@ import { RootState } from "../../../store/Store";
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import Select from "react-select";
 
 const Form2 = () => {
   const [selectedItems, setSelectedItems] = useState<string>("");
@@ -13,8 +14,17 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.team_members
   );
 
-  console.log(team_member, 'team_member');
-  
+
+  const query = team_member?.accept_members.map((option) => ({
+    value: option.name,
+    label: option.name,
+  }));
+
+  const handleSearchInputChange = (query: any) => {
+    setSelectedItems(query.value)
+  }
+
+  // console.log(team_member, "team_member", selectedItems, 'query', query);
 
   const handleSelectOnChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -88,13 +98,15 @@ const Form2 = () => {
               id="no_portfolio"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {team_member?.accept_members.map((members, index) => (
-                members.portfolio_name !== 'created' &&
-                <option key={index} value={members?.name}>
-                  {" "}
-                  {members?.name}{" "}
-                </option>
-              ))}
+              {team_member?.accept_members.map(
+                (members, index) =>
+                  members.portfolio_name !== "created" && (
+                    <option key={index} value={members?.name}>
+                      {" "}
+                      {members?.name}{" "}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="mb-4">
@@ -107,23 +119,31 @@ const Form2 = () => {
               id="have_portfolio"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              {team_member?.accept_members.map((members, index) => (
-                                members.portfolio_name === 'created' &&
-                <option key={index} value={members?.member_code}>
-                  {" "}
-                  {members?.name}
-                </option>
-              ))}
+              {team_member?.accept_members.map(
+                (members, index) =>
+                  members.portfolio_name === "created" && (
+                    <option key={index} value={members?.member_code}>
+                      {" "}
+                      {members?.name}
+                    </option>
+                  )
+              )}
             </select>
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Search Team Members
             </label>
-            <input
+            {/* <input
               type="text"
               placeholder="Name"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            /> */}
+            <Select
+              className="w-full outline-none shadow-none"
+              options={query}
+              placeholder="Name"
+              onChange={handleSearchInputChange}
             />
           </div>
           <div className="mb-4">
