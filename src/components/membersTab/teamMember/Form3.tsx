@@ -28,9 +28,7 @@ const Form3 = () => {
     setSelectedItem(selectedItemName);
   };
 
-  const selectedItemData = team_member?.pending_members.find(
-    (item) => item.member_code === selectedItem
-  );
+  
 
   const openUploadLinkModal = () => {
     setUploadLinkModal(true);
