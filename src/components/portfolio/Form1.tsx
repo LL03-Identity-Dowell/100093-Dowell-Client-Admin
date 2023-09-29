@@ -5,7 +5,7 @@ import { RootState } from "../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 
-interface FormInputs {
+type FormInputs = {
   username: string;
   member_type: string;
   member: string[];
@@ -19,9 +19,9 @@ interface FormInputs {
   portfolio_spec: string;
   portfolio_u_code: string;
   portfolio_det: string;
-}
+};
 
-const initialFormInputs = {
+const initialFormInputs: FormInputs = {
   username: "",
   member_type: "",
   member: [],

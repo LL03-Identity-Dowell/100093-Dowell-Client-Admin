@@ -5,7 +5,7 @@ import { useState, ChangeEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
-interface FormInputs {
+type FormInputs = {
   username: string;
   member_type: string;
   member: string[];
@@ -16,9 +16,9 @@ interface FormInputs {
   portfolio_name: string;
   portfolio_code: string;
   portfolio_status: string;
-}
+};
 
-const initialFormInputs = {
+const initialFormInputs: FormInputs = {
   username: "",
   member_type: "",
   member: [],
