@@ -61,7 +61,6 @@ const Form2 = () => {
       action: "remove_member",
       porg: porg,
     };
-    console.log(data, "data");
 
     try {
       await axios
