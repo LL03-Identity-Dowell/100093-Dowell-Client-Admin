@@ -681,7 +681,6 @@ def settings(request):
         product_list = resp["data"][0]["products"]
         admin_id = resp["data"][0]["_id"]
         field = {"admin_id": admin_id}
-
         if product_list and isinstance(product_list[0], dict):
             # iterate over the product list
             for item in product_list:
@@ -695,7 +694,10 @@ def settings(request):
                          field, update_products)
         field_l = {"admin_id": admin_id}
         update = {}  # start with an empty dictionary
-
+        if request.data.get('product'):
+            update["product_name"] = request.data.get('product')
+        if request.data.get('status'):
+            update["product_status"] = request.data.get('status')
         if request.data.get('selected_workspace'):
             update["default_org"] = request.data.get('selected_workspace')
         if request.data.get('timelimit_member'):
@@ -706,6 +708,8 @@ def settings(request):
             update["default_language"] = request.data.get('selected_language')
         if request.data.get('minimum_speed'):
             update["internet_min_speed"] = request.data.get('minimum_speed')
+        if request.data.get('speed_test'):
+            update["speed_test"] = request.data.get('speed_test')
         if request.data.get('mandatory_sections'):
             update["mandatory_sections"] = request.data.get('mandatory_sections')
         if request.data.get('updated_product') and request.data.get('plans'):
