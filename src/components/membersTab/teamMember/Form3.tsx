@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import images from "../../images";
 import Modal from "react-modal";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
+import { getAdminData } from "../../../store/slice/adminData";
 
 const Form3 = () => {
-  const [selectedItem, setSelectedItem] = useState<string>("");
+//   const [selectedItem, setSelectedItem] = useState<string>("");
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,14 +23,14 @@ const Form3 = () => {
   const porg = useSelector(
     (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
   );
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedItemName = event.target.value;
-    setSelectedItem(selectedItemName);
-  };
+const currentadmindata = useSelector((state: RootState) => state.adminData);
+//   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+//     const selectedItemName = event.target.value;
+//     setSelectedItem(selectedItemName);
+//   };
 
   
-
+	const dispatch = useDispatch();
   const openUploadLinkModal = () => {
     setUploadLinkModal(true);
   };
@@ -43,11 +44,11 @@ const Form3 = () => {
     setIsLoading(true);
 
     const data = {
-      username: userName,
-      selected_member: selectedItem,
-      action: "cancel_member",
-      porg: porg,
-    };
+			username: userName,
+			selected_member: selectedItems?.name,
+			action: "cancel_member",
+			porg: porg,
+		};
     console.log(data, "data");
 
     try {
@@ -55,7 +56,36 @@ const Form3 = () => {
         .post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
         .then((res) => {
           console.log(res.data);
-          toast.success("success");
+			toast.success("success");
+			const updatedpendingmember = team_member.pending_members.filter((mem) => selectedItems?.member_code != mem.member_code)
+			console.log(updatedpendingmember)
+			dispatch(
+				getAdminData({
+					...currentadmindata,
+					data: [
+						{
+							...currentadmindata.data[0],
+							members: {
+								...currentadmindata.data[0].members,
+								team_members: {
+									...currentadmindata.data[0].members.team_members,
+									pending_members:updatedpendingmember,
+								},
+							},
+						},
+					],
+				})
+			);
+			setSelectedItems({
+		name: "",
+		member_code: "",
+		member_spec: "",
+		member_uni_code: "",
+		member_details: "",
+		link: "",
+		status: ""
+			});
+			setSelectedvalue(null)
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -235,7 +265,7 @@ const responseData = await response.json();
 		status: string;
 	}
  const [selectedItems, setSelectedItems] = useState<memberobj>();
-	
+	const [selectedvalue, setSelectedvalue] = useState<any>();
 	const query: Option[] = team_member?.pending_members.map((option) => ({
 		value: option.member_code,
 		label: option.name,
@@ -261,9 +291,9 @@ const responseData = await response.json();
 							Invited Team Members
 						</label>
 						<select
-							onChange={handleSelectChange}
+						
 							multiple
-							required
+							
 							id="invited_team_members"
 							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 							placeholder="Select Product"
@@ -285,6 +315,7 @@ const responseData = await response.json();
 							}}
 							className="w-full outline-none  border-red-50 shadow-none"
 							options={query}
+							value={selectedvalue}
 							placeholder="Search member..."
 							onChange={handleSearchInputChange}
 							styles={{
@@ -308,7 +339,7 @@ const responseData = await response.json();
 							rows={4}
 							placeholder="Member details"
 							readOnly
-							value={JSON.stringify(selectedItems, null, 1)?.slice(1, -1)}
+							value={selectedItems?.member_code!=""?JSON.stringify(selectedItems, null, 1)?.slice(1, -1):""}
 							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
 						/>
 					</div>

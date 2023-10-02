@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import images from "../../images";
 import Modal from "react-modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
+import { getAdminData } from "../../../store/slice/adminData";
 
 const Form3 = () => {
 	const [uploadLinkModal, setUploadLinkModal] = useState(false);
-	const [selectedItem, setSelectedItem] = useState<string>("");
+	// const [selectedItem, setSelectedItem] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
 
 	const openUploadLinkModal = () => {
@@ -31,21 +32,21 @@ const Form3 = () => {
 	const porg = useSelector(
 		(state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
 	);
-
-	const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const selectedItemName = event.target.value;
-		setSelectedItem(selectedItemName);
-	};
+const currentadmindata = useSelector((state: RootState) => state.adminData);
+	// const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+	// 	const selectedItemName = event.target.value;
+	// 	setSelectedItem(selectedItemName);
+	// };
 
 	
-
+	const dispatch = useDispatch();
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setIsLoading(true);
 
 		const data = {
 			username: userName,
-			selected_member: selectedItem,
+			selected_member: selectedItems?.name,
 			action: "cancel_member",
 			porg: porg,
 		};
@@ -57,6 +58,38 @@ const Form3 = () => {
 				.then((res) => {
 					console.log(res.data);
 					toast.success("success");
+const updatedpendingmember = guest_member?.pending_members.filter(
+	(mem) => selectedItems?.member_code != mem.member_code
+);
+console.log(updatedpendingmember);
+						dispatch(
+							getAdminData({
+								...currentadmindata,
+								data: [
+									{
+										...currentadmindata.data[0],
+										members: {
+											...currentadmindata.data[0].members,
+											guest_members: {
+												...currentadmindata.data[0].members.guest_members,
+												pending_members: updatedpendingmember,
+											},
+										},
+									},
+								],
+							})
+						);
+						setSelectedItems({
+							name: "",
+							member_code: "",
+							member_spec: "",
+							member_uni_code: "",
+							member_details: "",
+							link: "",
+							status: "",
+						});
+						setSelectedvalue(null);
+
 				});
 		} catch (error: unknown) {
 			if (axios.isAxiosError(error)) {
@@ -221,7 +254,7 @@ const Form3 = () => {
 		status: string;
 	}
 	const [selectedItems, setSelectedItems] = useState<memberobj>();
-
+const [selectedvalue, setSelectedvalue] = useState<any>();
 	const query: Option[] = guest_member?.pending_members.map((option) => ({
 		value: option.member_code,
 		label: option.name,
@@ -247,7 +280,7 @@ const Form3 = () => {
 							Invited Users
 						</label>
 						<select
-							onChange={handleSelectChange}
+							
 							multiple
 							id="invited_team_members"
 							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -270,6 +303,7 @@ const Form3 = () => {
 							}}
 							className="w-full outline-none  border-red-50 shadow-none"
 							options={query}
+							value={selectedvalue}
 							placeholder="Search member..."
 							onChange={handleSearchInputChange}
 							styles={{
@@ -289,7 +323,7 @@ const Form3 = () => {
 							rows={4}
 							placeholder="Member details"
 							readOnly
-							value={JSON.stringify(selectedItems, null, 1)?.slice(1, -1)}
+							value={selectedItems?.name!=""?JSON.stringify(selectedItems, null, 1)?.slice(1, -1):""}
 							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
 						/>
 					</div>
