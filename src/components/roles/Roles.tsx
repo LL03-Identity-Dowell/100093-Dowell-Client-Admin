@@ -7,7 +7,6 @@ import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
 
 const Roles = () => {
-	
 	const show_loader = useSelector((state: RootState) => state.loaderslice);
 	const adminusername = useSelector(
 		(state: RootState) => state.userinfo.userinfo.username
@@ -38,9 +37,9 @@ const Roles = () => {
 		security_layer: string;
 		role_name: string;
 		role_code: string;
-		role_details: string;
-		role_uni_code: string;
-		role_specification: string;
+		role_details: null;
+		role_uni_code: null;
+		role_specification: null;
 		status: string;
 	}
 	const [selectedrule, setselectedrule] = useState<ruleItem>({
@@ -52,9 +51,9 @@ const Roles = () => {
 		security_layer: "",
 		role_name: "",
 		role_code: "",
-		role_details: "",
-		role_uni_code: "",
-		role_specification: "",
+		role_details: null,
+		role_uni_code: null,
+		role_specification: null,
 		status: "",
 	});
 	const [selectedrulestatus, setselectedrulestatus] = useState("..select");
@@ -89,9 +88,9 @@ const Roles = () => {
 			security_layer: matchrule?.security_layer || "",
 			role_name: matchrule?.role_name || "",
 			role_code: matchrule?.role_code || "",
-			role_details: matchrule?.role_details || "",
-			role_uni_code: matchrule?.role_uni_code || "",
-			role_specification: matchrule?.role_specification || "",
+			role_details: matchrule?.role_details || null,
+			role_uni_code: matchrule?.role_uni_code || null,
+			role_specification: matchrule?.role_specification || null,
 			status: matchrule?.status || "",
 		});
 	};
@@ -113,9 +112,9 @@ const Roles = () => {
 			security_layer: matchrule?.security_layer || "",
 			role_name: matchrule?.role_name || "",
 			role_code: matchrule?.role_code || "",
-			role_details: matchrule?.role_details || "",
-			role_uni_code: matchrule?.role_uni_code || "",
-			role_specification: matchrule?.role_specification || "",
+			role_details: matchrule?.role_details || null,
+			role_uni_code: matchrule?.role_uni_code || null,
+			role_specification: matchrule?.role_specification || null,
 			status: matchrule?.status || "",
 		});
 	};
@@ -251,15 +250,8 @@ const Roles = () => {
 		}
 	};
 
-	
-
 	interface selectionrule {
-		selectlevel1_item: [];
-		selectlevel2_item: [];
-		selectlevel3_item: [];
-		selectlevel4_item: [];
-		selectlevel5_item: [];
-		selectsecurity_layer: [];
+		[key: string]: string[];
 	}
 	const [selectionrulestate, setselectionrulestate] = useState<selectionrule>({
 		selectlevel1_item: [],
@@ -271,7 +263,7 @@ const Roles = () => {
 	});
 
 	const clearselection = (e: MouseEvent<HTMLButtonElement>) => {
-		e.preventDefault()
+		e.preventDefault();
 		setrulestatus({
 			enablestatus: "..select",
 			disablestatus: "..select",
@@ -295,28 +287,97 @@ const Roles = () => {
 			security_layer: "",
 			role_name: "",
 			role_code: "",
-			role_details: "",
-			role_uni_code: "",
-			role_specification: "",
+			role_details: null,
+			role_uni_code: null,
+			role_specification: null,
 			status: "",
 		});
-		
 	};
 
+	// const handleSelectChangelevels = (
+	// 	e: React.ChangeEvent<HTMLSelectElement>
+	// ) => {
+	// 	// Update the selectedOptionslayer1 state when the multi-select value changes
+	// 	setselectionrulestate({
+	// 		...selectionrulestate,
+	// 		[e.target.name]: Array.from(
+	// 			e.target.selectedOptions,
+	// 			(option) => option.value
+	// 		),
+	// 	});
+	// 	console.log(selectionrulestate);
+	// };
 
-	
 	const handleSelectChangelevels = (
 		e: React.ChangeEvent<HTMLSelectElement>
 	) => {
-		// Update the selectedOptionslayer1 state when the multi-select value changes
-		setselectionrulestate({
-			...selectionrulestate,
-			[e.target.name]: Array.from(
-				e.target.selectedOptions,
-				(option) => option.value
-			),
-		});
+		const selectedOptions = Array.from(
+			e.target.selectedOptions,
+			(option) => option.value
+		);
+
+		// Check if the selected options are already in the state
+		const newOptions = selectedOptions.filter(
+			(option) => !selectionrulestate[e.target.name].includes(option)
+		);
+
+		// Update the selectedOptionslayer1 state only if there are new options
+		if (newOptions.length > 0) {
+			setselectionrulestate({
+				...selectionrulestate,
+				[e.target.name]: [...selectionrulestate[e.target.name], ...newOptions],
+			});
+		}
 	};
+
+	const [enablerulesitem, setenablerulesitem] = useState<ruleItem[]>([]);
+	const [disablerulesitem, setdisablerulesitem] = useState<ruleItem[]>([]);
+
+	useEffect(() => {
+		console.log(selectionrulestate);
+		const filteredData = rolesdata.filter((item, index) => {
+			console.log(`${item.level1_item}`);
+			console.log(selectionrulestate.selectlevel1_item);
+			return (
+				(selectionrulestate.selectlevel1_item.length == 0
+					? true
+					: selectionrulestate.selectlevel1_item.includes(
+							`${item.level1_item}`
+					)) &&
+				(selectionrulestate.selectlevel2_item.length == 0
+					? true
+					: selectionrulestate.selectlevel2_item.includes(
+							`${item.level2_item}`
+					)) &&
+				(selectionrulestate.selectlevel3_item.length == 0
+					? true
+					: selectionrulestate.selectlevel3_item.includes(
+							`${item.level3_item}`
+					)) &&
+				(selectionrulestate.selectlevel4_item.length == 0
+					? true
+					: selectionrulestate.selectlevel4_item.includes(
+							`${item.level4_item}`
+					)) &&
+				(selectionrulestate.selectlevel5_item.length == 0
+					? true
+					: selectionrulestate.selectlevel5_item.includes(
+							`${item.level5_item}`
+					)) &&
+				(selectionrulestate.selectsecurity_layer.length == 0
+					? true
+					: selectionrulestate.selectsecurity_layer.includes(
+							`${item.security_layer}`
+					)) 
+			);
+			
+		});
+		setenablerulesitem(filteredData.filter((r) => r.status == "enable"));
+		setdisablerulesitem(filteredData.filter((r) => r.status == "disable"));
+		console.log(enablerulesitem);
+		console.log(disablerulesitem);
+	}, [selectionrulestate]);
+
 	return (
 		<>
 			{show_loader == false ? (
@@ -541,7 +602,7 @@ const Roles = () => {
 										value={selectionrulestate.selectlevel1_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={index}>
+											<option key={index} value={item.level1_item}>
 												{item.level1_item}
 											</option>
 										))}
@@ -559,7 +620,7 @@ const Roles = () => {
 										value={selectionrulestate.selectlevel2_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={index}>
+											<option key={index} value={item.level2_item}>
 												{item.level2_item}
 											</option>
 										))}
@@ -577,7 +638,7 @@ const Roles = () => {
 										value={selectionrulestate.selectlevel3_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={index}>
+											<option key={index} value={item.level3_item}>
 												{item.level3_item}
 											</option>
 										))}
@@ -595,7 +656,7 @@ const Roles = () => {
 										value={selectionrulestate.selectlevel4_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={index}>
+											<option key={index} value={item.level4_item}>
 												{item.level4_item}
 											</option>
 										))}
@@ -613,7 +674,7 @@ const Roles = () => {
 										value={selectionrulestate.selectlevel5_item}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={index}>
+											<option key={index} value={item.level5_item}>
 												{item.level5_item}
 											</option>
 										))}
@@ -631,7 +692,7 @@ const Roles = () => {
 										value={selectionrulestate.selectsecurity_layer}
 									>
 										{rolesdata.map((item, index) => (
-											<option key={index} value={index}>
+											<option key={index} value={item.security_layer}>
 												{item.security_layer}
 											</option>
 										))}
@@ -649,11 +710,11 @@ const Roles = () => {
 										value={rulestatus.enablestatus}
 									>
 										<option value="..select">..select</option>
-										{enablerules.map((item, index) => (
-											<option key={index} value={item.role_name}>
-												{item.role_name}
-											</option>
-										))}
+										{enablerulesitem.map((item, index) => (
+													<option key={index} value={item.role_name}>
+														{item.role_name}
+													</option>
+											))}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -667,11 +728,11 @@ const Roles = () => {
 										value={rulestatus.disablestatus}
 									>
 										<option value="..select">..select</option>
-										{disablerules.map((item, index) => (
-											<option key={index} value={item.role_name}>
-												{item.role_name}
-											</option>
-										))}
+										{ disablerulesitem.map((item, index) => (
+													<option key={index} value={item.role_name}>
+														{item.role_name}
+													</option>
+											))}
 									</select>
 								</div>
 
