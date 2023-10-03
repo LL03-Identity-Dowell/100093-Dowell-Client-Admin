@@ -228,7 +228,8 @@ const Form2 = () => {
               >
                 <option>...select...</option>
                 {portfolio?.map((products, key) =>
-                  products.status === "enable" ? (
+                  products.status === "enable" &&
+                  products.member_type === formInputs.member_type ? (
                     <option key={key} value={products.portfolio_code}>
                       {" "}
                       {products.portfolio_name}
@@ -249,7 +250,8 @@ const Form2 = () => {
               >
                 <option>...select...</option>
                 {portfolio?.map((products, key) =>
-                  products.status === "disable" ? (
+                  products.status === "disable" &&
+                  products.member_type === formInputs.member_type ? (
                     <option key={key} value={products.portfolio_code}>
                       {" "}
                       {products.portfolio_name}
