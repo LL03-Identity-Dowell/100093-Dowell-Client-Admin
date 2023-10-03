@@ -9,9 +9,12 @@ const Settingform1 = () => {
   const allproducts = useSelector(
     (state: RootState) => state.products.products
   );
-  const [statusValue, SetstatusValue] = useState("enable");
-  const [selectedProduct, SetselectedProduct] = useState("");
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
+
+  const [statusValue, SetstatusValue] = useState(currentSetting.product_status);
+  const [selectedProduct, SetselectedProduct] = useState(
+    currentSetting.product_name
+  );
   const adminusername = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
@@ -21,12 +24,12 @@ const Settingform1 = () => {
   useEffect(() => {
     setdefaultusername(adminusername);
   }, [adminusername]);
+  const dispatch = useDispatch();
 
   const handleSubmit = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
-    const dispatch = useDispatch();
     const postData = async () => {
       try {
         dispatch(getloaderstate(true));
@@ -35,7 +38,7 @@ const Settingform1 = () => {
           product: selectedProduct,
           status: statusValue,
         };
-
+        console.log(data);
         await axios.post(
           "https://100093.pythonanywhere.com/api/settings/",
           data
@@ -47,7 +50,7 @@ const Settingform1 = () => {
             data: {
               ...currentSetting,
               product_name: selectedProduct,
-              maxtime_user: statusValue,
+              product_status: statusValue,
             },
           })
         );
@@ -66,7 +69,7 @@ const Settingform1 = () => {
     // Make your API call here using the selectedLanguage value
     // For example:
   };
-
+ 
   return (
     <div className="form-item">
       <div className="bg-[#CEF9D2] p-3 text-[18px] font-semibold text-[#7A7A7A] border-[1px] border-[#61CE70] border-solid">
@@ -84,9 +87,11 @@ const Settingform1 = () => {
             Select Product
           </label>
           <select
-            className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+            className="product-select w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
             value={selectedProduct}
-            onChange={(e) => SetselectedProduct(e.target.value)}
+            onChange={(e) => {
+              SetselectedProduct(e.target.value);
+            }}
           >
             <option value={""}>Select Product</option>
             {allproducts.map((item, index) => (
@@ -116,7 +121,10 @@ const Settingform1 = () => {
           </select>
         </div>
         <div className="w-full mb-1">
-          <button className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md">
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-[#7A7A7A] hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md"
+          >
             Click here to Enable / Disable
           </button>
         </div>
