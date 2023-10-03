@@ -62,7 +62,6 @@ const Form2 = () => {
       action: "remove_member",
       porg: porg,
     };
-    console.log(data, "data");
 
     try {
       await axios
@@ -138,11 +137,7 @@ const Form2 = () => {
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               Search Team Members
             </label>
-            {/* <input
-              type="text"
-              placeholder="Name"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            /> */}
+
             <Select
               className="w-full outline-none shadow-none"
               options={query}

@@ -33,6 +33,10 @@ body {
   }
 }
 
+.css-1jj59y3-MenuList2 {
+  max-height: 150px !important;
+}
+
 @layer components {
   .visuallyHidden {
     @apply w-px h-px absolute overflow-hidden whitespace-nowrap;
