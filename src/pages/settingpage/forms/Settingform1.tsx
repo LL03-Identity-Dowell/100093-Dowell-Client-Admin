@@ -1,7 +1,9 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { useState } from "react";
-// import products from "../../../store/slice/products";
+import { useEffect, useState } from "react";
+import { getloaderstate } from "../../../store/slice/loaderstate";
+import axios from "axios";
+import { getsetting } from "../../../store/slice/setting";
 
 const Settingform1 = () => {
   const allproducts = useSelector(
@@ -9,6 +11,61 @@ const Settingform1 = () => {
   );
   const [statusValue, SetstatusValue] = useState("enable");
   const [selectedProduct, SetselectedProduct] = useState("");
+  const currentSetting = useSelector((state: RootState) => state.setting?.data);
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  );
+
+  const [defaultusername, setdefaultusername] = useState(adminusername);
+
+  useEffect(() => {
+    setdefaultusername(adminusername);
+  }, [adminusername]);
+
+  const handleSubmit = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    const dispatch = useDispatch();
+    const postData = async () => {
+      try {
+        dispatch(getloaderstate(true));
+        const data = {
+          username: defaultusername,
+          product: selectedProduct,
+          status: statusValue,
+        };
+
+        await axios.post(
+          "https://100093.pythonanywhere.com/api/settings/",
+          data
+        );
+
+        dispatch(
+          getsetting({
+            isSuccess: true,
+            data: {
+              ...currentSetting,
+              product_name: selectedProduct,
+              maxtime_user: statusValue,
+            },
+          })
+        );
+
+        dispatch(getloaderstate(false));
+      } catch (error) {
+        console.error(error);
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postData();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
 
   return (
     <div className="form-item">
