@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -6,6 +6,7 @@ import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
+import Select from "react-select";
 
 const Products = () => {
   const productData = useSelector((state: RootState) => state.products);
@@ -23,7 +24,7 @@ const Products = () => {
 
   const [hovertitle, setHovertitle] = useState("");
 
-   const filteredProducts =
+  const filteredProducts =
     userName === "uxliveadmin"
       ? productData?.products
       : productData?.products?.filter(
@@ -35,17 +36,29 @@ const Products = () => {
   );
 
   const [selectedProduct, setSelectedProduct] = useState<string>("");
+
   const [selectedItem, setSelectedItem] = useState<string>("");
 
   const handleMouseOver = (title: string) => {
     setHovertitle(title);
     setSelectedProduct(title);
 
-    const product = portfolioData.find((item) => item.product === title);
-    if (product) {
-      setSelectedItem(product.portfolio_code);
+    if (selectedProduct !== title) {
+      const defaultSelectedItem =
+        filterDataByProduct
+          ?.filter((item) => item?.product === title)
+          .map((item) => item?.portfolio_code)[0] || "";
+
+      setSelectedItem(defaultSelectedItem);
     }
   };
+
+  // const customStyles = {
+  //   menuList: (provided) => ({
+  //     ...provided,
+  //     maxHeight: 150,
+  //   })
+  // };
 
   const sessionId = localStorage.getItem("sessionId");
 
@@ -55,11 +68,14 @@ const Products = () => {
     const data = {
       username: userName,
       action: "connect_portfolio",
-      portfl: selectedItem,
+      portfl:
+        selectedItem ||
+        filterDataByProduct?.map((item) => item.portfolio_code)[0],
       product: selectedProduct,
       present_org: present_org,
       session_id: sessionId,
     };
+    console.log(data, "data");
 
     try {
       await axios
@@ -107,9 +123,17 @@ const Products = () => {
     }
   };
 
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedItem(e.target.value);
+  const handleSelectChange = (selectedOption: any) => {
+    setSelectedItem(selectedOption ? selectedOption.value : ""); // Update the single selectedItem state
   };
+
+  const query = filterDataByProduct?.map((item) => ({
+    value: item.portfolio_code,
+    label: item?.portfolio_name,
+  }));
+
+  
+  console.log(query, "query");
 
   return (
     <>
@@ -137,6 +161,19 @@ const Products = () => {
                 {filteredProducts.length > 1 && (
                   <>
                     {filteredProducts.map((product) => {
+                      const title = product.product_name;
+
+                      const options = filterDataByProduct
+                        .filter((item) => item?.product === title)
+                        .map((item) => ({
+                          value: item?.portfolio_code,
+                          label: `${item?.portfolio_name}, ${item?.role}, ${item?.data_type}`,
+                        }));
+
+                      const selectedOption = options.find(
+                        (option) => option.value === selectedItem
+                      );
+
                       return (
                         <div
                           key={product._id}
@@ -144,6 +181,7 @@ const Products = () => {
                           onMouseEnter={() =>
                             handleMouseOver(product.product_name)
                           }
+                         
                         >
                           <div className="h-80 w-80 ">
                             <img
@@ -175,30 +213,23 @@ const Products = () => {
                                       {product.product_name}
                                     </h2>
                                     <div className="w-full  px-6 ">
-                                      <select
-                                        className="outline-none h-8 max-w-full"
-                                        value={selectedItem}
-                                        id="portfolio"
-                                        onChange={handleSelectChange}
-                                      >
-                                        {filterDataByProduct.length > 0 &&
-                                          filterDataByProduct?.map(
-                                            (item, index) => (
-                                              <option
-                                                key={index}
-                                                value={item?.portfolio_code}
-                                              >
-                                                {item?.portfolio_name},{" "}
-                                                {item?.role}, {item?.data_type}
-                                              </option>
-                                            )
-                                          )}
-                                        {filterDataByProduct.length === 0 && (
+                                     
+                                      {filterDataByProduct.length > 0 && (
+                                        <Select
+                                          id="productSelect"
+                                          options={options}
+                                          onChange={handleSelectChange}
+                                          value={selectedOption || options[0]} // Set the default option to the first option
+                                          //  styles={customStyles}
+                                        />
+                                      )}
+                                      {filterDataByProduct.length === 0 && (
+                                        <select>
                                           <option>
                                             Waiting for portfolio from owner
                                           </option>
-                                        )}
-                                      </select>
+                                        </select>
+                                      )}
                                     </div>
                                     <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
                                       {filterDataByProduct.length > 0

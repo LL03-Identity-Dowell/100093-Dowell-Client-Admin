@@ -9,6 +9,8 @@ const Form2 = () => {
     (state: RootState) => state.adminData.data[0]?.members.public_members
   );
   const [getUsedAndUnusedData, setUsedAndUnusedData] = useState([]);
+  const [getUsedAndUnusedUnassigned, setUsedAndUnusedUnassigned] = useState([]);
+
 
   const sessionId = localStorage.getItem("sessionId");
 
@@ -37,8 +39,34 @@ const Form2 = () => {
     }
   };
 
+  const getUsedAndUnusedLinkUnassigned = async () => {
+    const data = {
+      session_id: sessionId,
+      portfolio_status: "unassigned",
+    };
+    try {
+      await axios
+        .post(
+          "https://100093.pythonanywhere.com/api/get_used_unused_links/",
+          data
+        )
+        .then((res) => {
+          console.log(res.data, 'data');
+          setUsedAndUnusedUnassigned(res.data);
+        });
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error);
+      } else {
+        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
+      }
+    }
+  };
+
   useEffect(() => {
     getUsedAndUnusedLink();
+    getUsedAndUnusedLinkUnassigned();
   }, []);
 
 
@@ -69,14 +97,19 @@ const Form2 = () => {
             <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
               <option>...Select...</option>
 
-              {public_member?.pending_members.map((members, index) =>
+              {/* {public_member?.pending_members.map((members, index) =>
                 members.status === "unused" ? (
                   <option key={index} value={members?.link}>
                     {" "}
                     {members?.portfolio_name}{" "}
                   </option>
                 ) : null
-              )}
+              )} */}
+              {getUsedAndUnusedUnassigned?.map((members, index) => (
+                <option key={index} value={members}>
+                  {members}
+                </option>
+              ))}
             </select>
           </div>
           <div className="mb-4">
