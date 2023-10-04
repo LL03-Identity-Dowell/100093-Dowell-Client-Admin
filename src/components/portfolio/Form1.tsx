@@ -4,22 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
-
-type FormInputs = {
-  username: string;
-  member_type: string;
-  member: string[];
-  product: string;
-  data_type: string;
-  op_rights: string;
-  role: string;
-  portfolio_name: string;
-  portfolio_code: string;
-  portfolio_status: string;
-  portfolio_spec: string;
-  portfolio_u_code: string;
-  portfolio_det: string;
-};
+import { FormInputs, Option, PublicResponse } from "./types";
 
 const initialFormInputs: FormInputs = {
   username: "",
@@ -36,15 +21,6 @@ const initialFormInputs: FormInputs = {
   portfolio_u_code: "",
   portfolio_det: "",
 };
-
-interface PublicResponse {
-  id: string;
-}
-
-interface Option {
-  value: string;
-  label: string;
-}
 
 const Form1 = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
