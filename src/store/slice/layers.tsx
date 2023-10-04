@@ -12,10 +12,10 @@ const layerSlice = createSlice({
 			"Others not listed above": "",
 		},
 		devices: {
-			"Laptop/Desktop": "",
+			"Laptop/Desk top": "",
 			"Others not listed above": "",
 			"Mobile Phone": "",
-			"Tablet/Ipad": "",
+			"Tablet / Ipad": "",
 		},
 		browsers: {
 			Chrome: "",
