@@ -4,19 +4,7 @@ import { RootState } from "../../store/Store";
 import { useState, ChangeEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-
-type FormInputs = {
-  username: string;
-  member_type: string;
-  member: string[];
-  product: string;
-  data_type: string;
-  op_rights: string;
-  role: string;
-  portfolio_name: string;
-  portfolio_code: string;
-  portfolio_status: string;
-};
+import { FormInputs } from "./types";
 
 const initialFormInputs: FormInputs = {
   username: "",
@@ -29,6 +17,9 @@ const initialFormInputs: FormInputs = {
   portfolio_name: "",
   portfolio_code: "",
   portfolio_status: "",
+  portfolio_spec: "",
+  portfolio_u_code: "",
+  portfolio_det: "",
 };
 
 const Form2 = () => {
