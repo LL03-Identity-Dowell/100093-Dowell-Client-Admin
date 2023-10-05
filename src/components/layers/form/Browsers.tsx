@@ -56,7 +56,7 @@ export default function Browsers() {
   const Edge = useSelector(
     (state: RootState) => state.layer.browsers?.["Edge"]
   );
-  const browser = useSelector((state: RootState) => state.layer.browsers);
+  
 
   const [selectedEdge, setselectedEdge] = useState(Edge);
   const Edge_filterlist = layerlist.filter((item) => item !== Edge);
