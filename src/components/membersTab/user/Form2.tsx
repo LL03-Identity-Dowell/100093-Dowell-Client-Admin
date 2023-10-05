@@ -166,8 +166,7 @@ const Form2 = () => {
               isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
             }`}
           >
-            {" "}
-            Remove Selected User
+            {isLoading ? "Loading..." : "Remove Selected User"}
           </button>
         </form>
       </div>

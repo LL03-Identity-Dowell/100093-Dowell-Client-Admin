@@ -285,7 +285,7 @@ const Form2 = () => {
                 isLoadingStatus ? "hover:bg-[#7a7a7a] opacity-50" : ""
               }`}
             >
-              Enable / Disable selected Portfolio
+              {isLoadingStatus ? "Loading..." : 'Enable / Disable selected Portfolio'}
             </button>
             {statusErrMsg && (
               <p className="text-xs text-[#FF0000] text-center pt-2 truncate">
