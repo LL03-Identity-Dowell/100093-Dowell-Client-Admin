@@ -13,6 +13,7 @@ const Roles = () => {
 	);
 
 	const [defaultusername, setdefaultusername] = useState(adminusername);
+	const [isloading, setisloading] = useState(false);
 
 	useEffect(() => {
 		setdefaultusername(adminusername);
@@ -121,12 +122,12 @@ const Roles = () => {
 
 	const [formData, setFormData] = useState({
 		username: defaultusername,
-		level1_item: "..select",
-		level2_item: "..select",
-		level3_item: "..select",
-		level4_item: "..select",
-		level5_item: "..select",
-		security_layer: "..select",
+		level1_item: "",
+		level2_item: "",
+		level3_item: "",
+		level4_item: "",
+		level5_item: "",
+		security_layer: "Layer 01",
 		role_name: "",
 		role_code: "",
 		role_spec: "",
@@ -137,7 +138,7 @@ const Roles = () => {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
+setisloading(true)
 		try {
 			const response = await axios.post(
 				"https://100093.pythonanywhere.com/api/create_role/",
@@ -174,12 +175,12 @@ const Roles = () => {
 			// Reset the form
 			setFormData({
 				username: defaultusername,
-				level1_item: "..select",
-				level2_item: "..select",
-				level3_item: "..select",
-				level4_item: "..select",
-				level5_item: "..select",
-				security_layer: "..select",
+				level1_item: "",
+				level2_item: "",
+				level3_item: "",
+				level4_item: "",
+				level5_item: "",
+				security_layer: "Layer 01",
 				role_name: "",
 				role_code: "",
 				role_spec: "",
@@ -187,8 +188,11 @@ const Roles = () => {
 				role_det: "",
 				status: "enable",
 			});
+			setisloading(false)
 		} catch (error) {
-			console.error(error); // Handle the error appropriately
+			console.error(error);
+			// Handle the error appropriately
+			setisloading(false);
 		}
 	};
 
@@ -210,43 +214,48 @@ const Roles = () => {
 
 	const updateselectedrulestatus = async (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		const rulestatusdata = {
-			username: defaultusername,
-			role_code: selectedrule.role_code,
-			role_status: selectedrulestatus,
-		};
-		try {
-			const response = await axios.post(
-				"https://100093.pythonanywhere.com/api/update_role_status/",
-				rulestatusdata
-			);
-			console.log(response.data);
+		if (selectedrulestatus == "..select") {
+			toast.error("Select Enable/Disable Role From Dropdown Menu ");
+		}
+		else {
+			const rulestatusdata = {
+				username: defaultusername,
+				role_code: selectedrule.role_code,
+				role_status: selectedrulestatus,
+			};
+			try {
+				const response = await axios.post(
+					"https://100093.pythonanywhere.com/api/update_role_status/",
+					rulestatusdata
+				);
+				console.log(response.data);
 
-			const updatedRoles = currentadmindata.data[0].roles.map((role) => {
-				if (role.role_code === selectedrule.role_code) {
-					return {
-						...role,
-						status: selectedrulestatus,
-					};
-				}
-				return role;
-			});
+				const updatedRoles = currentadmindata.data[0].roles.map((role) => {
+					if (role.role_code === selectedrule.role_code) {
+						return {
+							...role,
+							status: selectedrulestatus,
+						};
+					}
+					return role;
+				});
 
-			dispatch(
-				getAdminData({
-					...currentadmindata,
-					data: [
-						{
-							...currentadmindata.data[0],
-							roles: updatedRoles,
-						},
-					],
-				})
-			);
+				dispatch(
+					getAdminData({
+						...currentadmindata,
+						data: [
+							{
+								...currentadmindata.data[0],
+								roles: updatedRoles,
+							},
+						],
+					})
+				);
 
-			toast.success("success");
-		} catch (error) {
-			console.error(error); // Handle the error appropriately
+				toast.success("success");
+			} catch (error) {
+				console.error(error); // Handle the error appropriately
+			}
 		}
 	};
 
@@ -294,19 +303,7 @@ const Roles = () => {
 		});
 	};
 
-	// const handleSelectChangelevels = (
-	// 	e: React.ChangeEvent<HTMLSelectElement>
-	// ) => {
-	// 	// Update the selectedOptionslayer1 state when the multi-select value changes
-	// 	setselectionrulestate({
-	// 		...selectionrulestate,
-	// 		[e.target.name]: Array.from(
-	// 			e.target.selectedOptions,
-	// 			(option) => option.value
-	// 		),
-	// 	});
-	// 	console.log(selectionrulestate);
-	// };
+	
 
 	const handleSelectChangelevels = (
 		e: React.ChangeEvent<HTMLSelectElement>
@@ -335,7 +332,7 @@ const Roles = () => {
 
 	useEffect(() => {
 		console.log(selectionrulestate);
-		const filteredData = rolesdata.filter((item, index) => {
+		const filteredData = rolesdata.filter((item) => {
 			console.log(`${item.level1_item}`);
 			console.log(selectionrulestate.selectlevel1_item);
 			return (
@@ -376,7 +373,7 @@ const Roles = () => {
 		setdisablerulesitem(filteredData.filter((r) => r.status == "disable"));
 		console.log(enablerulesitem);
 		console.log(disablerulesitem);
-	}, [selectionrulestate]);
+	}, [selectionrulestate , rolesdata]);
 
 	return (
 		<>
@@ -397,7 +394,7 @@ const Roles = () => {
 							<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
 								<div className="mb-4">
 									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-										Select Item in Level 1
+										Select Item in Level 1 - Departments
 									</label>
 									<select
 										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -406,17 +403,19 @@ const Roles = () => {
 										onChange={handleChange}
 										value={formData.level1_item}
 									>
-										<option value="..select">..select</option>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level1_item}>
-												{item.level1_item}
-											</option>
-										))}
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level1.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
 									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-										Select Item in Level 2
+										Select Item in Level 2 - products
 									</label>
 									<select
 										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -424,17 +423,19 @@ const Roles = () => {
 										name="level2_item"
 										value={formData.level2_item}
 									>
-										<option value="..select">..select</option>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level2_item}>
-												{item.level2_item}
-											</option>
-										))}
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level2.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
 									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-										Select Item in Level 3
+										Select Item in Level 3 - sub departments
 									</label>
 									<select
 										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -443,17 +444,19 @@ const Roles = () => {
 										name="level3_item"
 										value={formData.level3_item}
 									>
-										<option value="..select">..select</option>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level3_item}>
-												{item.level3_item}
-											</option>
-										))}
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level3.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
 									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-										Select Item in Level 4
+										Select Item in Level 4 - Task
 									</label>
 									<select
 										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -461,17 +464,19 @@ const Roles = () => {
 										name="level4_item"
 										value={formData.level4_item}
 									>
-										<option value="..select">..select</option>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level4_item}>
-												{item.level4_item}
-											</option>
-										))}
+										<option >..select</option>
+										{currentadmindata.data[0].organisations[0].level4.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
 									<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-										Select Item in Level 5
+										Select Item in Level 5 - sub task
 									</label>
 									<select
 										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -479,12 +484,14 @@ const Roles = () => {
 										name="level5_item"
 										value={formData.level5_item}
 									>
-										<option value="..select">..select</option>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level5_item}>
-												{item.level5_item}
-											</option>
-										))}
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level5.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -498,12 +505,11 @@ const Roles = () => {
 										name="security_layer"
 										value={formData.security_layer}
 									>
-										<option value="..select">..select</option>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.security_layer}>
-												{item.security_layer}
-											</option>
-										))}
+										<option value="Layer 01">Layer 01</option>
+										<option value="Layer 02">Layer 02</option>
+										<option value="Layer 03">Layer 03</option>
+										<option value="Layer 04">Layer 04</option>
+										<option value="Layer 05">Layer 05</option>
 									</select>
 								</div>
 
@@ -577,7 +583,9 @@ const Roles = () => {
 									/>
 								</div>
 								<button
-									className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+									className={`w-full h-12 ${
+										isloading == true ? "bg-[#b8b8b8]" : "bg-[#7a7a7a]"
+									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="submit"
 								>
 									Create Role
@@ -601,11 +609,13 @@ const Roles = () => {
 										onChange={handleSelectChangelevels}
 										value={selectionrulestate.selectlevel1_item}
 									>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level1_item}>
-												{item.level1_item}
-											</option>
-										))}
+										{currentadmindata.data[0].organisations[0].level1.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -619,11 +629,13 @@ const Roles = () => {
 										onChange={handleSelectChangelevels}
 										value={selectionrulestate.selectlevel2_item}
 									>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level2_item}>
-												{item.level2_item}
-											</option>
-										))}
+										{currentadmindata.data[0].organisations[0].level2.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -637,11 +649,13 @@ const Roles = () => {
 										onChange={handleSelectChangelevels}
 										value={selectionrulestate.selectlevel3_item}
 									>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level3_item}>
-												{item.level3_item}
-											</option>
-										))}
+										{currentadmindata.data[0].organisations[0].level3.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -655,11 +669,13 @@ const Roles = () => {
 										onChange={handleSelectChangelevels}
 										value={selectionrulestate.selectlevel4_item}
 									>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level4_item}>
-												{item.level4_item}
-											</option>
-										))}
+										{currentadmindata.data[0].organisations[0].level4.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -673,11 +689,13 @@ const Roles = () => {
 										onChange={handleSelectChangelevels}
 										value={selectionrulestate.selectlevel5_item}
 									>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.level5_item}>
-												{item.level5_item}
-											</option>
-										))}
+										{currentadmindata.data[0].organisations[0].level5.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -691,11 +709,11 @@ const Roles = () => {
 										onChange={handleSelectChangelevels}
 										value={selectionrulestate.selectsecurity_layer}
 									>
-										{rolesdata.map((item, index) => (
-											<option key={index} value={item.security_layer}>
-												{item.security_layer}
-											</option>
-										))}
+										<option value="Layer 01">Layer 01</option>
+										<option value="Layer 02">Layer 02</option>
+										<option value="Layer 03">Layer 03</option>
+										<option value="Layer 04">Layer 04</option>
+										<option value="Layer 05">Layer 05</option>
 									</select>
 								</div>
 
@@ -711,10 +729,10 @@ const Roles = () => {
 									>
 										<option value="..select">..select</option>
 										{enablerulesitem.map((item, index) => (
-													<option key={index} value={item.role_name}>
-														{item.role_name}
-													</option>
-											))}
+											<option key={index} value={item.role_name}>
+												{item.role_name}
+											</option>
+										))}
 									</select>
 								</div>
 								<div className="mb-4">
@@ -728,11 +746,11 @@ const Roles = () => {
 										value={rulestatus.disablestatus}
 									>
 										<option value="..select">..select</option>
-										{ disablerulesitem.map((item, index) => (
-													<option key={index} value={item.role_name}>
-														{item.role_name}
-													</option>
-											))}
+										{disablerulesitem.map((item, index) => (
+											<option key={index} value={item.role_name}>
+												{item.role_name}
+											</option>
+										))}
 									</select>
 								</div>
 
