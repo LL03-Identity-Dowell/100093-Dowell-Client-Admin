@@ -862,10 +862,10 @@ def create_portfolio(request):
             org_dict = json.loads(user_org.org)
             for portfolio in org_dict.get('portpolio', []):
                 if 'portfolio_code' in portfolio and portfolio['portfolio_code'] == portfolio_code:
-                    return JsonResponse({"resp": "Portfolio code already exists for this user.Try something else."})
+                    return JsonResponse({"resp": "Portfolio code already exists for this user.Try something else."}, status=HTTP_400_BAD_REQUEST)
             # If no match is found, continue processing the form...
         except UserOrg.DoesNotExist:
-            return JsonResponse({"error": "User does not exist."}, status=404)
+            return JsonResponse({"error": "User does not exist."}, status=HTTP_400_BAD_REQUEST)
         lsmem = eval(member)
         response_data = {"username": lsmem, "member_type": member_type, "product": product, "data_type": data_type,
                          "operations_right": op_rights, "role": role, "security_layer": "None",
@@ -881,7 +881,7 @@ def create_portfolio(request):
         portls = odata["portpolio"]
         for portcheck in portls:
             if portcheck["portfolio_name"] == portfolio:
-                return JsonResponse({"resp": f'{portfolio_name} already exist'})
+                return JsonResponse({"resp": f'{portfolio_name} already exist'}, status=HTTP_400_BAD_REQUEST)
 
         odata["portpolio"].append(response_data)
 
@@ -927,7 +927,7 @@ def create_portfolio(request):
                     {"success": f'{portfolio_name} successfully created',
                      "masterlink": f"your masterlink is {master_link}"}, status=HTTP_200_OK)
             except:
-                return Response({"error": "Error while creating public members"})
+                return Response({"error": "Error while creating public members"}, status=HTTP_400_BAD_REQUEST)
 
         for imem in odata["members"][typemem]["accept_members"]:
             if imem["name"] in lsmem:
@@ -1790,6 +1790,7 @@ def MemEnDis(request):
                     dataorg1 = json.loads(dataorg)
                 lev = dataorg1["members"]
                 for ir in lev[membertype]["pending_members"]:
+
                     try:
                         if ir["name"] == rnamedict:
                             # ir["status"]="disable"
