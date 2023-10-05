@@ -13,7 +13,12 @@ const Roles = () => {
 	);
 
 	const [defaultusername, setdefaultusername] = useState(adminusername);
-	const [isloading, setisloading] = useState(false);
+	const [loading, setloading] = useState({
+		createrole:false,
+		enabledisable:false,
+		refreshsearch:false,
+	});
+	
 
 	useEffect(() => {
 		setdefaultusername(adminusername);
@@ -138,7 +143,10 @@ const Roles = () => {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-setisloading(true)
+		setloading({
+			...loading,
+			createrole:true
+})
 		try {
 			const response = await axios.post(
 				"https://100093.pythonanywhere.com/api/create_role/",
@@ -188,11 +196,17 @@ setisloading(true)
 				role_det: "",
 				status: "enable",
 			});
-			setisloading(false)
+			
 		} catch (error) {
 			console.error(error);
 			// Handle the error appropriately
-			setisloading(false);
+			
+		}
+		finally {
+			setloading({
+				...loading,
+				createrole: false,
+			});
 		}
 	};
 
@@ -213,11 +227,20 @@ setisloading(true)
 	};
 
 	const updateselectedrulestatus = async (e: MouseEvent<HTMLButtonElement>) => {
+		setloading({
+			...loading,
+			enabledisable: true,
+		});
 		e.preventDefault();
 		if (selectedrulestatus == "..select") {
-			toast.error("Select Enable/Disable Role From Dropdown Menu ");
+			toast.error(
+				"Select Enable/Disable Role From Dropdown Enable / Disable Selected Role "
+			);
+			
 		}
-		else {
+	else if  (selectedrule.role_code == "") {
+			toast.error("Select  Role From Dropdown Enabled Roles or Disabled Roles ");
+		} else {
 			const rulestatusdata = {
 				username: defaultusername,
 				role_code: selectedrule.role_code,
@@ -255,8 +278,13 @@ setisloading(true)
 				toast.success("success");
 			} catch (error) {
 				console.error(error); // Handle the error appropriately
-			}
+			} 
+			
 		}
+		setloading({
+			...loading,
+			enabledisable: false,
+		});
 	};
 
 	interface selectionrule {
@@ -273,6 +301,10 @@ setisloading(true)
 
 	const clearselection = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
+		setloading({
+			...loading,
+			refreshsearch: true,
+		});
 		setrulestatus({
 			enablestatus: "..select",
 			disablestatus: "..select",
@@ -300,6 +332,10 @@ setisloading(true)
 			role_uni_code: null,
 			role_specification: null,
 			status: "",
+		});
+		setloading({
+			...loading,
+			refreshsearch: false,
 		});
 	};
 
@@ -464,7 +500,7 @@ setisloading(true)
 										name="level4_item"
 										value={formData.level4_item}
 									>
-										<option >..select</option>
+										<option>..select</option>
 										{currentadmindata.data[0].organisations[0].level4.items.map(
 											(item, index) => (
 												<option key={index} value={item.item_name}>
@@ -584,11 +620,11 @@ setisloading(true)
 								</div>
 								<button
 									className={`w-full h-12 ${
-										isloading == true ? "bg-[#b8b8b8]" : "bg-[#7a7a7a]"
+										loading.createrole == true ? "bg-[#b8b8b8]" : "bg-[#7a7a7a]"
 									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="submit"
 								>
-									Create Role
+									{loading.createrole == true ? "..Creating" : "Create Role"}
 								</button>
 							</form>
 						</div>
@@ -784,22 +820,38 @@ setisloading(true)
 									</select>
 								</div>
 								<button
-									className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
+									className={`w-full h-12 mb-12 ${
+										loading.enabledisable == true
+											? "bg-[#b8b8b8]"
+											: "bg-[#7a7a7a]"
+									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="button"
 									onClick={updateselectedrulestatus}
 								>
-									Enable / Disable selected Role
+									{loading.enabledisable
+										? selectedrulestatus === "enable"
+											? "..Enabling"
+											: "..Disabling"
+										: "Enable / Disable selected Role"}
 								</button>
 
-								<button className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto">
+								<button
+									className={`w-full h-12 mb-12
+											bg-[#7a7a7a]
+									  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+								>
 									Duplicate selected Role to create new
 								</button>
 								<button
-									className="w-full h-12 mb-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-lg text-white font-roboto"
+									className={`w-full h-12 mb-12 ${
+										loading.refreshsearch == true
+											? "bg-[#b8b8b8]"
+											: "bg-[#7a7a7a]"
+									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="button"
 									onClick={clearselection}
 								>
-									Refresh Search
+									{loading.refreshsearch ? "Refreshing" : "Refresh Search"}
 								</button>
 							</form>
 						</div>
