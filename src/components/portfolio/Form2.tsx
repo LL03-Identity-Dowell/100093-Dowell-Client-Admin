@@ -4,19 +4,7 @@ import { RootState } from "../../store/Store";
 import { useState, ChangeEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-
-type FormInputs = {
-  username: string;
-  member_type: string;
-  member: string[];
-  product: string;
-  data_type: string;
-  op_rights: string;
-  role: string;
-  portfolio_name: string;
-  portfolio_code: string;
-  portfolio_status: string;
-};
+import { FormInputs } from "./types";
 
 const initialFormInputs: FormInputs = {
   username: "",
@@ -29,6 +17,9 @@ const initialFormInputs: FormInputs = {
   portfolio_name: "",
   portfolio_code: "",
   portfolio_status: "",
+  portfolio_spec: "",
+  portfolio_u_code: "",
+  portfolio_det: "",
 };
 
 const Form2 = () => {
@@ -228,7 +219,8 @@ const Form2 = () => {
               >
                 <option>...select...</option>
                 {portfolio?.map((products, key) =>
-                  products.status === "enable" ? (
+                  products.status === "enable" &&
+                  products.member_type === formInputs.member_type ? (
                     <option key={key} value={products.portfolio_code}>
                       {" "}
                       {products.portfolio_name}
@@ -249,7 +241,8 @@ const Form2 = () => {
               >
                 <option>...select...</option>
                 {portfolio?.map((products, key) =>
-                  products.status === "disable" ? (
+                  products.status === "disable" &&
+                  products.member_type === formInputs.member_type ? (
                     <option key={key} value={products.portfolio_code}>
                       {" "}
                       {products.portfolio_name}

@@ -11,36 +11,15 @@ const Form2 = () => {
   const [getUsedAndUnusedData, setUsedAndUnusedData] = useState([]);
   const [getUsedAndUnusedUnassigned, setUsedAndUnusedUnassigned] = useState([]);
 
-
   const sessionId = localStorage.getItem("sessionId");
 
   const getUsedAndUnusedLink = async () => {
-    const data = {
+    const assignedData = {
       session_id: sessionId,
       portfolio_status: "assigned",
     };
-    try {
-      await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/get_used_unused_links/",
-          data
-        )
-        .then((res) => {
-          console.log(res.data, 'data');
-          setUsedAndUnusedData(res.data);
-        });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-      } else {
-        console.error("An unknown error occurred:", error);
-        toast.error("An unknown error occurred");
-      }
-    }
-  };
 
-  const getUsedAndUnusedLinkUnassigned = async () => {
-    const data = {
+    const unassignedData = {
       session_id: sessionId,
       portfolio_status: "unassigned",
     };
@@ -48,10 +27,20 @@ const Form2 = () => {
       await axios
         .post(
           "https://100093.pythonanywhere.com/api/get_used_unused_links/",
-          data
+          assignedData
         )
         .then((res) => {
-          console.log(res.data, 'data');
+          console.log(res.data, "data");
+          setUsedAndUnusedData(res.data);
+        });
+
+      await axios
+        .post(
+          "https://100093.pythonanywhere.com/api/get_used_unused_links/",
+          unassignedData
+        )
+        .then((res) => {
+          console.log(res.data, "data");
           setUsedAndUnusedUnassigned(res.data);
         });
     } catch (error: unknown) {
@@ -66,9 +55,7 @@ const Form2 = () => {
 
   useEffect(() => {
     getUsedAndUnusedLink();
-    getUsedAndUnusedLinkUnassigned();
   }, []);
-
 
   return (
     <>

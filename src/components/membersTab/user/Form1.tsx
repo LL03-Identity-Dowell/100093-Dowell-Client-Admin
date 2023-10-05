@@ -175,7 +175,7 @@ const Form1 = () => {
 
         <span className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold flex flex-col items-center">
           <p>User Invitation Link</p>
-          <p className="px-6 text-sm truncate">{link}</p>
+          <p className="w-full px-6 text-sm truncate">{link}</p>
         </span>
 
         <button
