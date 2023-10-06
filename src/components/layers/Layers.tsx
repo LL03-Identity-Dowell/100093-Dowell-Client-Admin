@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -29,7 +29,72 @@ const Layers = () => {
     (state: RootState) => state.userinfo.userinfo.username
   );
 
+  type devices = {
+    "Laptop/Desk top": string;
+    "Others not listed above": string;
+    "Mobile Phone": string;
+    "Tablet / Ipad": string;
+    [key: string]: any;
+  };
+  type os = {
+    "Mac OS": string;
+    Linux: string;
+    Windows: string;
+    Android: string;
+    IOS: string;
+    "Others not listed above": string;
+    [key: string]: any;
+  };
+  type browser = {
+    Chrome: string;
+    Firefox: string;
+    "Others not listed above": string;
+    Edge: string;
+    Safari: string;
+    Bing: string;
+    Opera: string;
+    [key: string]: any;
+  };
   const usedispatch = useDispatch();
+  const devices = useSelector((state: RootState) => state.layer.devices);
+  const operating = useSelector((state: RootState) => state.layer.os);
+  const browser = useSelector((state: RootState) => state.layer.browsers);
+
+  const [devicesObj, setDevicesObj] = useState<devices>(devices);
+  const [operatingObj, setOperatingObj] = useState<os>(operating);
+  const [browserObj, setBrowserObj] = useState<browser>(browser);
+  useEffect(() => {
+    setDevicesObj(devices);
+    setOperatingObj(operating);
+    setBrowserObj(browser);
+  }, [devices, operating, browser]);
+
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [devicesKeys, setDevicesKeys] = useState<string[]>([]);
+  const [operatingKeys, setOperatingKeys] = useState<string[]>([]);
+  const [browserKeys, setBrowserKeys] = useState<string[]>([]);
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const SelectedValues = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedValues(SelectedValues);
+
+    const DevicesKeys = Object.keys(devicesObj).filter((key) => {
+      return SelectedValues.includes(devicesObj[key]);
+    });
+    const OperatingKeys = Object.keys(operatingObj).filter((key) =>
+      SelectedValues.includes(operatingObj[key])
+    );
+    const BrowserKeys = Object.keys(browserObj).filter((key) =>
+      SelectedValues.includes(browserObj[key])
+    );
+
+    setDevicesKeys(DevicesKeys);
+    setOperatingKeys(OperatingKeys);
+    setBrowserKeys(BrowserKeys);
+  };
 
   useEffect(() => {
     // Function to call the API
@@ -214,15 +279,18 @@ const Layers = () => {
                   Security Layer
                 </label>
                 <select
+                  id="SecurityLayer"
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
+                  value={selectedValues}
+                  onChange={handleChange}
                 >
-                  <option>Layer 1 </option>
-                  <option>Layer 2 </option>
-                  <option>Layer 3 </option>
-                  <option>Layer 4 </option>
-                  <option>Layer 5 </option>
-                  <option>Layer 6 </option>
+                  <option value="layer1">Layer 1</option>
+                  <option value="layer2">Layer 2</option>
+                  <option value="layer3">Layer 3</option>
+                  <option value="layer4">Layer 4</option>
+                  <option value="layer5">Layer 5</option>
+                  <option value="layer6">Layer 6</option>
                 </select>
               </div>
               <div className="mb-4">
@@ -233,10 +301,13 @@ const Layers = () => {
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option>Laptop/desktop </option>
-                  <option>Mobile phone </option>
-                  <option>Tablet/Ipad </option>
-                  <option>Others </option>
+                  {devicesKeys
+                    ? devicesKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
               <div className="mb-4">
@@ -247,12 +318,13 @@ const Layers = () => {
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option>Windows </option>
-                  <option>Mac OS </option>
-                  <option>Linux </option>
-                  <option>Android </option>
-                  <option>IOS </option>
-                  <option>Others </option>
+                  {operatingKeys
+                    ? operatingKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
               <div className="mb-4">
@@ -263,13 +335,13 @@ const Layers = () => {
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option>Chrome </option>
-                  <option>Safari </option>
-                  <option>Bing </option>
-                  <option>Firefox </option>
-                  <option>Edge </option>
-                  <option>Opera </option>
-                  <option>Others </option>
+                  {browserKeys
+                    ? browserKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
               <div className="mb-4">
