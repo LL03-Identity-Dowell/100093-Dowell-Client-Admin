@@ -330,7 +330,7 @@ const Form1 = () => {
               isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
             }`}
           >
-            Create Team Member Invitation Link
+            {isLoading ? "Loading..." : "Create Team Member Invitation Link"}
           </button>
           <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
         </form>

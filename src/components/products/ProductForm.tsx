@@ -133,7 +133,9 @@ const ProductForm = () => {
             isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
           }`}
         >
-          Click here to connect selected Portfolio in selected Product
+          {isLoading
+            ? "Connecting..."
+            : "Click here to connect selected Portfolio in selected Product"}
         </button>
         <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
       </form>

@@ -202,7 +202,7 @@ const Form1 = () => {
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
           }
-          toast.success("success");
+          toast.success(res.data.success);
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
