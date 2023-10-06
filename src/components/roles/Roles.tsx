@@ -349,18 +349,10 @@ const Roles = () => {
 			(option) => option.value
 		);
 
-		// Check if the selected options are already in the state
-		const newOptions = selectedOptions.filter(
-			(option) => !selectionrulestate[e.target.name].includes(option)
-		);
-
-		// Update the selectedOptionslayer1 state only if there are new options
-		if (newOptions.length > 0) {
-			setselectionrulestate({
-				...selectionrulestate,
-				[e.target.name]: [...selectionrulestate[e.target.name], ...newOptions],
-			});
-		}
+		setselectionrulestate({
+			...selectionrulestate,
+			[e.target.name]: selectedOptions,
+		});
 	};
 
 	const [enablerulesitem, setenablerulesitem] = useState<ruleItem[]>([]);
@@ -624,7 +616,7 @@ const Roles = () => {
 									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="submit"
 								>
-									{loading.createrole == true ? "..Creating" : "Create Role"}
+									{loading.createrole == true ? "Creating..." : "Create Role"}
 								</button>
 							</form>
 						</div>
@@ -830,8 +822,8 @@ const Roles = () => {
 								>
 									{loading.enabledisable
 										? selectedrulestatus === "enable"
-											? "..Enabling"
-											: "..Disabling"
+											? "Enabling..."
+											: "Disabling..."
 										: "Enable / Disable selected Role"}
 								</button>
 
@@ -851,7 +843,7 @@ const Roles = () => {
 									type="button"
 									onClick={clearselection}
 								>
-									{loading.refreshsearch ? "Refreshing" : "Refresh Search"}
+									{loading.refreshsearch ? "Refreshing..." : "Refresh Search"}
 								</button>
 							</form>
 						</div>
