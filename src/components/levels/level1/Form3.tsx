@@ -18,7 +18,7 @@ const Form3 = () => {
   const dispatch = useDispatch()
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [status, setStatus] = useState("");
-  const [statusErrMsg, setStatusErrMsg] = useState("");
+  const [_statusErrMsg, setStatusErrMsg] = useState("");
   const [isLoadingStatus, setIsLoadingStatus] = useState(false);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
