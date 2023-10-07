@@ -96,6 +96,10 @@ const Form2 = () => {
     setFormInputs(initialFormInputs);
   };
 
+  const filterDataByProduct = portfolio?.filter(
+    (item) => item.product === formInputs?.product
+  );
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -155,6 +159,8 @@ const Form2 = () => {
             </label>
             <select
               multiple
+              id="product"
+              onChange={handleSelectStatus}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
@@ -218,7 +224,7 @@ const Form2 = () => {
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
-                {portfolio?.map((products, key) =>
+                {filterDataByProduct?.map((products, key) =>
                   products.status === "enable" &&
                   products.member_type === formInputs.member_type ? (
                     <option key={key} value={products.portfolio_code}>
@@ -240,7 +246,7 @@ const Form2 = () => {
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
-                {portfolio?.map((products, key) =>
+                {filterDataByProduct?.map((products, key) =>
                   products.status === "disable" &&
                   products.member_type === formInputs.member_type ? (
                     <option key={key} value={products.portfolio_code}>
@@ -285,7 +291,9 @@ const Form2 = () => {
                 isLoadingStatus ? "hover:bg-[#7a7a7a] opacity-50" : ""
               }`}
             >
-              {isLoadingStatus ? "Loading..." : 'Enable / Disable selected Portfolio'}
+              {isLoadingStatus
+                ? "Loading..."
+                : "Enable / Disable selected Portfolio"}
             </button>
             {statusErrMsg && (
               <p className="text-xs text-[#FF0000] text-center pt-2 truncate">

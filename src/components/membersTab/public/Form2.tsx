@@ -16,12 +16,12 @@ const Form2 = () => {
   const getUsedAndUnusedLink = async () => {
     const assignedData = {
       session_id: sessionId,
-      portfolio_status: "assigned",
+      portfolio_status: "unassigned",
     };
 
     const unassignedData = {
       session_id: sessionId,
-      portfolio_status: "unassigned",
+      portfolio_status: "assigned",
     };
     try {
       await axios
