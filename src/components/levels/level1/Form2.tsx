@@ -1,14 +1,15 @@
 import axios from "axios";
 import { useState, ChangeEvent } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
+import { getAdminData } from "../../../store/slice/adminData";
 
 const Form2 = () => {
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
-
+const currentadmindata = useSelector((state: RootState) => state.adminData);
   const [formInputs, setFormInputs] = useState({
     username: userName,
     level: "level1",
@@ -22,7 +23,7 @@ const Form2 = () => {
     item_image2: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
+  const [_errMsg, setErrMsg] = useState("");
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
@@ -32,6 +33,7 @@ const Form2 = () => {
     setFormInputs({ ...formInputs, item_details: e.target.value });
   };
 
+	const dispatch=useDispatch()
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -41,14 +43,47 @@ const Form2 = () => {
       .then((res) => {
         console.log(res.data);
         setErrMsg("");
-        toast.success(res.data);
+		toast.success(res.data);
+		const newdata = {
+				item_name: formInputs.item_name,
+				item_code: formInputs.item_code,
+				item_details: formInputs.item_details,
+				item_universal_code: formInputs.item_universal_code,
+				item_specification: formInputs.item_specification,
+				item_barcode: formInputs.item_barcode,
+				item_image1: formInputs.item_image1,
+				item_image2: formInputs.item_image2,
+				status: "enable",
+			};
+			dispatch(
+				getAdminData({
+					...currentadmindata,
+					data: [
+						{
+							...currentadmindata.data[0],
+							organisations: [
+								{
+									...currentadmindata.data[0].organisations[0],
+									level1: {
+										...currentadmindata.data[0].organisations[0].level1,
+										items: [
+											...currentadmindata.data[0].organisations[0].level1.items,
+											newdata,
+										],
+									},
+								},
+							],
+						},
+					],
+				})
+			);
       })
       .catch((error) => {
         if (error.response) {
-          setErrMsg(error.response?.data);
+          toast.error(error.response?.data);
         } else {
           console.log("Error", error.message);
-          setErrMsg(error.message);
+          toast.error(error.message);
         }
       });
     setIsLoading(false);
@@ -152,7 +187,7 @@ const Form2 = () => {
 					>
 						{isLoading?"Creating..":"Create Item"}
 					</button>
-					<p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
+					
 				</form>
 			</div>
 		</>
