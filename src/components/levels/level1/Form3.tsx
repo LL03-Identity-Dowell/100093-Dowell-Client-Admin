@@ -18,7 +18,7 @@ const Form3 = () => {
   const dispatch = useDispatch()
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [status, setStatus] = useState("");
-  const [statusErrMsg, setStatusErrMsg] = useState("");
+  const [_statusErrMsg, setStatusErrMsg] = useState("");
   const [isLoadingStatus, setIsLoadingStatus] = useState(false);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -96,10 +96,10 @@ const Form3 = () => {
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
           console.error(error);
-          setStatusErrMsg(error.response?.data.error);
+          toast.error(error.response?.data.error);
         } else {
           console.error("An unknown error occurred:", error);
-          setStatusErrMsg("An unknown error occurred");
+          toast.error("An unknown error occurred");
         }
       } finally {
         setIsLoadingStatus(false);
