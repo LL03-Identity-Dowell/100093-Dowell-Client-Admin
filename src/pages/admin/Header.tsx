@@ -33,7 +33,7 @@ const Header = () => {
     {
       !sessionId &&
         (location.href =
-          "https://100014.pythonanywhere.com/?redirect_url=https://100079.pythonanywhere.com");
+          "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
     }
 
   useEffect(() => {
