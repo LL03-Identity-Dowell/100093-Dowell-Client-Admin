@@ -55,24 +55,92 @@ const Layers = () => {
     Opera: string;
     [key: string]: any;
   };
+  type connection = {
+    "Others not listed above": string;
+    "Office Wifi/Secured Wifi": string;
+    "Public Wifi": string;
+    "Mobile Data": string;
+    [key: string]: any;
+  };
+  type login = {
+    "User Name & Password": string;
+    "Biometric ID": string;
+    "Voice ID": string;
+    "Video ID": string;
+    "Face ID": string;
+    "Others not listed above": string;
+    [key: string]: any;
+  };
+  type verification = {
+    "Verified ID": string;
+    "ID not verified": string;
+    "Phone number verified": string;
+    "Phone number not verified": string;
+    "Email verified": string;
+    "Email not verified": string;
+    "Others not listed above": string;
+    [key: string]: any;
+  };
+  type password_strength = {
+    "Minimum 8 characters": string;
+    "Minimum 16 characters": string;
+    "Minimum 12 characters": string;
+    "Minimum 10 characters": string;
+    "Others not listed above": string;
+    [key: string]: any;
+  };
   const usedispatch = useDispatch();
   const devices = useSelector((state: RootState) => state.layer.devices);
   const operating = useSelector((state: RootState) => state.layer.os);
   const browser = useSelector((state: RootState) => state.layer.browsers);
-
+  const connectionType = useSelector(
+    (state: RootState) => state.layer.con_type
+  );
+  const loginType = useSelector((state: RootState) => state.layer.login_type);
+  const verificationType = useSelector(
+    (state: RootState) => state.layer.idverify
+  );
+  const passwordStrengthType = useSelector(
+    (state: RootState) => state.layer.password_strength
+  );
   const [devicesObj, setDevicesObj] = useState<devices>(devices);
   const [operatingObj, setOperatingObj] = useState<os>(operating);
   const [browserObj, setBrowserObj] = useState<browser>(browser);
+  const [loginObj, setLoginObj] = useState<login>(loginType);
+  const [passwordStrengthObj, setPasswordStrengthObj] =
+    useState<password_strength>(passwordStrengthType);
+  const [verificationObj, setVerificationObj] =
+    useState<verification>(verificationType);
+  const [connectionObj, setConnectionObj] =
+    useState<connection>(connectionType);
   useEffect(() => {
     setDevicesObj(devices);
     setOperatingObj(operating);
     setBrowserObj(browser);
-  }, [devices, operating, browser]);
+    setConnectionObj(connectionType);
+    setLoginObj(loginType);
+    setPasswordStrengthObj(passwordStrengthType);
+    setVerificationObj(verificationType);
+  }, [
+    devices,
+    operating,
+    browser,
+    connectionType,
+    loginType,
+    verificationType,
+    passwordStrengthType,
+  ]);
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [devicesKeys, setDevicesKeys] = useState<string[]>([]);
   const [operatingKeys, setOperatingKeys] = useState<string[]>([]);
   const [browserKeys, setBrowserKeys] = useState<string[]>([]);
+  const [connectionKeys, setConnectionKeys] = useState<string[]>([]);
+  const [loginKeys, setLoginKeys] = useState<string[]>([]);
+  const [passwordStrengthKeys, setPasswordStrengthKeys] = useState<string[]>(
+    []
+  );
+  const [verificationKeys, setVerificationKeys] = useState<string[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const SelectedValues = Array.from(
@@ -90,10 +158,26 @@ const Layers = () => {
     const BrowserKeys = Object.keys(browserObj).filter((key) =>
       SelectedValues.includes(browserObj[key])
     );
+    const connectionKeys = Object.keys(connectionObj).filter((key) =>
+      SelectedValues.includes(connectionObj[key])
+    );
+    const loginKeys = Object.keys(loginObj).filter((key) =>
+      SelectedValues.includes(loginObj[key])
+    );
+    const passwordStrengthKeys = Object.keys(passwordStrengthObj).filter(
+      (key) => SelectedValues.includes(passwordStrengthObj[key])
+    );
+    const verificationKeys = Object.keys(verificationObj).filter((key) =>
+      SelectedValues.includes(verificationObj[key])
+    );
 
     setDevicesKeys(DevicesKeys);
     setOperatingKeys(OperatingKeys);
     setBrowserKeys(BrowserKeys);
+    setConnectionKeys(connectionKeys);
+    setLoginKeys(loginKeys);
+    setVerificationKeys(verificationKeys);
+    setPasswordStrengthKeys(passwordStrengthKeys);
   };
 
   useEffect(() => {
@@ -352,10 +436,13 @@ const Layers = () => {
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option>Mobile Data </option>
-                  <option>Secured Wifi </option>
-                  <option>Public Wifi </option>
-                  <option>Others </option>
+                  {connectionKeys
+                    ? connectionKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
               <div className="mb-4">
@@ -366,12 +453,13 @@ const Layers = () => {
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option>User Name & Password </option>
-                  <option>Face ID </option>
-                  <option>Voice ID </option>
-                  <option>Biometric ID </option>
-                  <option>Video ID </option>
-                  <option>Others </option>
+                  {loginKeys
+                    ? loginKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
 
@@ -393,17 +481,19 @@ const Layers = () => {
               </div>
               <div className="mb-4">
                 <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                  Geographic Location
+                  Password Strength
                 </label>
                 <select
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option> 8 characters </option>
-                  <option> 10 characters </option>
-                  <option> 12 characters </option>
-                  <option> 16 characters </option>
-                  <option> Others </option>
+                  {passwordStrengthKeys
+                    ? passwordStrengthKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
               <div className="mb-4">
@@ -414,13 +504,13 @@ const Layers = () => {
                   className="outline-none w-full h-32 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
                   multiple
                 >
-                  <option> Verified ID </option>
-                  <option> ID not verified </option>
-                  <option> Phone number verified </option>
-                  <option> Phone number not verified </option>
-                  <option> Email verified </option>
-                  <option> Email not verified </option>
-                  <option> Others </option>
+                  {verificationKeys
+                    ? verificationKeys.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
+                    : null}
                 </select>
               </div>
               <div className="mb-4">
