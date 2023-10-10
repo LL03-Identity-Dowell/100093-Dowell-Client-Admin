@@ -203,11 +203,13 @@ const Form1 = () => {
             setLink(res.data.masterlink);
           }
           toast.success(res.data.success);
+          toast.error(res.data.resp);
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
         setErrMsg(error.response?.data);
+        toast.error(error.message)
       } else {
         console.error("An unknown error occurred:", error);
         setErrMsg("An unknown error occurred");
