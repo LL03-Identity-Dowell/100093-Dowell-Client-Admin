@@ -113,7 +113,7 @@ const formatObject = (obj: Record<string, any>) => {
 					>
 						<option> Select Portfolio </option>
 						{filterDataByProduct?.portfolios.map((item, index) => (
-							<option key={index} value={item.portfolio_name}>
+							<option key={index} value={item.portfolio_code}>
 								{" "}
 								{item?.portfolio_name}
 							</option>
