@@ -1,4 +1,4 @@
-import Footer from "./footer"
+// import Footer from "./footer"
 import Navbar from "./navbar"
 import { ReactNode } from 'react';
 
@@ -11,7 +11,7 @@ const Layout:React.FC<Props> = ({children}) => {
     <>
     <Navbar />
     <main>{children}</main>
-    <Footer />
+    {/* <Footer /> */}
     </>
   )
 }
