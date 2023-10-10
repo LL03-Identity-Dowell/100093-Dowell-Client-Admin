@@ -38,6 +38,7 @@ const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("");
 
   const [selectedItem, setSelectedItem] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleMouseOver = (title: string) => {
     setHovertitle(title);
@@ -53,17 +54,11 @@ const Products = () => {
     }
   };
 
-  // const customStyles = {
-  //   menuList: (provided) => ({
-  //     ...provided,
-  //     maxHeight: 150,
-  //   })
-  // };
-
   const sessionId = localStorage.getItem("sessionId");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const data = {
       username: userName,
@@ -90,6 +85,8 @@ const Products = () => {
       } else {
         console.error("An unknown error occurred:", error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -132,7 +129,6 @@ const Products = () => {
     label: item?.portfolio_name,
   }));
 
-  
   console.log(query, "query");
 
   return (
@@ -181,7 +177,6 @@ const Products = () => {
                           onMouseEnter={() =>
                             handleMouseOver(product.product_name)
                           }
-                         
                         >
                           <div className="h-80 w-80 ">
                             <img
@@ -213,14 +208,12 @@ const Products = () => {
                                       {product.product_name}
                                     </h2>
                                     <div className="w-full  px-6 ">
-                                     
                                       {filterDataByProduct.length > 0 && (
                                         <Select
                                           id="productSelect"
                                           options={options}
                                           onChange={handleSelectChange}
-                                          value={selectedOption || options[0]} // Set the default option to the first option
-                                          //  styles={customStyles}
+                                          value={selectedOption || options[0]} 
                                         />
                                       )}
                                       {filterDataByProduct.length === 0 && (
@@ -232,9 +225,13 @@ const Products = () => {
                                       )}
                                     </div>
                                     <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                                      {filterDataByProduct.length > 0
-                                        ? "Connect"
-                                        : "Request For Connect"}
+                                      {filterDataByProduct.length > 0 ? (
+                                        <p>
+                                          {isLoading ? "Loading..." : "Connect"}
+                                        </p>
+                                      ) : (
+                                        "Request For Connect"
+                                      )}
                                     </button>
                                   </div>
                                 </form>
