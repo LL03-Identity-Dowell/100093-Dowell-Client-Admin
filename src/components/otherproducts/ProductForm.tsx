@@ -24,7 +24,7 @@ const selectedorgname = useSelector(
 
 
   const selectedItemData = filterDataByProduct?.portfolios.find(
-		(item) => item?.portfolio_name === selectedItem
+		(item) => item?.portfolio_code === selectedItem
 	);
   const sessionId = localStorage.getItem("sessionId");
 
@@ -113,7 +113,7 @@ const formatObject = (obj: Record<string, any>) => {
 					>
 						<option> Select Portfolio </option>
 						{filterDataByProduct?.portfolios.map((item, index) => (
-							<option key={index} value={item.portfolio_name}>
+							<option key={index} value={item.portfolio_code}>
 								{" "}
 								{item?.portfolio_name}
 							</option>
