@@ -24,7 +24,7 @@ const selectedorgname = useSelector(
 
 
   const selectedItemData = filterDataByProduct?.portfolios.find(
-		(item) => item?.portfolio_name === selectedItem
+		(item) => item?.portfolio_code === selectedItem
 	);
   const sessionId = localStorage.getItem("sessionId");
 
