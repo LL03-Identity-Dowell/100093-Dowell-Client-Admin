@@ -70,7 +70,7 @@ const Products = () => {
       present_org: present_org,
       session_id: sessionId,
     };
-    console.log(data, "data");
+    // console.log(data, "data");
 
     try {
       await axios
@@ -124,12 +124,12 @@ const Products = () => {
     setSelectedItem(selectedOption ? selectedOption.value : ""); // Update the single selectedItem state
   };
 
-  const query = filterDataByProduct?.map((item) => ({
-    value: item.portfolio_code,
-    label: item?.portfolio_name,
-  }));
+  // const query = filterDataByProduct?.map((item) => ({
+  //   value: item.portfolio_code,
+  //   label: item?.portfolio_name,
+  // }));
 
-  console.log(query, "query");
+  // console.log(filterDataByProduct, "query", selectedProduct);
 
   return (
     <>
@@ -197,7 +197,8 @@ const Products = () => {
                                 <form
                                   className="relative w-full h-full"
                                   onSubmit={
-                                    filterDataByProduct.length > 0
+                                    filterDataByProduct.length > 0 ||
+                                    selectedProduct === "Dowell Services"
                                       ? handleSubmit
                                       : handleRequestPortfolio
                                   }
@@ -213,19 +214,31 @@ const Products = () => {
                                           id="productSelect"
                                           options={options}
                                           onChange={handleSelectChange}
-                                          value={selectedOption || options[0]} 
+                                          value={selectedOption || options[0]}
                                         />
                                       )}
-                                      {filterDataByProduct.length === 0 && (
-                                        <select>
-                                          <option>
-                                            Waiting for portfolio from owner
-                                          </option>
-                                        </select>
-                                      )}
+                                      {filterDataByProduct.length === 0 &&
+                                        selectedProduct !==
+                                          "Dowell Services" && (
+                                          <select>
+                                            <option>
+                                              Waiting for portfolio from owner
+                                            </option>
+                                          </select>
+                                        )}
+                                      {filterDataByProduct.length === 0 &&
+                                        selectedProduct ===
+                                          "Dowell Services" && (
+                                          <select>
+                                            <option>
+                                              Waiting for portfolio from owner
+                                            </option>
+                                          </select>
+                                        )}
                                     </div>
                                     <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                                      {filterDataByProduct.length > 0 ? (
+                                      {filterDataByProduct.length > 0 ||
+                                      selectedProduct === "Dowell Services" ? (
                                         <p>
                                           {isLoading ? "Loading..." : "Connect"}
                                         </p>
