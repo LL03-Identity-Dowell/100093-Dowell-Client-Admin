@@ -14,7 +14,9 @@ const Sidebar = () => {
   const adminusername = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
-
+  const allProducts = useSelector(
+    (state: RootState) => state.products.products
+  );
   const present_org = useSelector(
     (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
   );
@@ -75,8 +77,6 @@ const Sidebar = () => {
       username: adminusername,
       product: product,
     };
-    console.log(removeNotificationData, "removeNotificationData");
-
     try {
       const removeNotification = notifications.filter((_, id) => id !== key);
       usedispatch(getportfolioNotifications(removeNotification));
@@ -316,12 +316,13 @@ const Sidebar = () => {
             <Accordion title="Products ">
               <div className="bg-[#CEF9D2] p-4 box-border">
                 <ul>
-                  <li className="text-[#7a7a7a] text-lg font-medium">
-                    1.Organization 1
-                  </li>
-                  <li className="text-[#7a7a7a] text-lg font-medium">
-                    1.Organization 1
-                  </li>
+                  {allProducts
+                    ? allProducts.map((product, index) => (
+                        <li className="text-[#7a7a7a] text-lg font-medium">
+                          {index + 1}. {product.product_name}
+                        </li>
+                      ))
+                    : null}
                 </ul>
               </div>
             </Accordion>
