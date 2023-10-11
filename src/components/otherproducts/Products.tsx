@@ -51,7 +51,7 @@ const Products = () => {
       present_org: selectedorgname,
       session_id: sessionId,
     };
-    console.log(data);
+    console.log("data", data);
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/connect_portfolio/", data)
@@ -95,76 +95,72 @@ const Products = () => {
                   <>
                     {productData?.map((product) => {
                       return (
-                        <>
-                          <div
-                            key={product.org_id}
-                            className="relative box "
-                            onMouseEnter={() =>
-                              handleMouseOver(product.product)
-                            }
-                            onBlur={() => handleMouseOut(product.product)}
-                            onChange={() => setSelectedProduct(product.product)}
-                          >
-                            <div className="h-80 w-80 ">
-                              <img
-                                src={
-                                  product.product_logo.includes(
-                                    "https://100093.pythonanywhere.com"
-                                  )
-                                    ? `${product.product_logo}`
-                                    : `https://100093.pythonanywhere.com${product.product_logo}`
-                                }
-                                alt=""
-                                className={` w-full h-full absolute ${
-                                  isHovering ? "object-cover" : ""
-                                } 
+                        <div
+                          key={product.org_id}
+                          className="relative box "
+                          onMouseEnter={() => handleMouseOver(product.product)}
+                          onBlur={() => handleMouseOut(product.product)}
+                          onChange={() => setSelectedProduct(product.product)}
+                        >
+                          <div className="h-80 w-80 ">
+                            <img
+                              src={
+                                product.product_logo.includes(
+                                  "https://100093.pythonanywhere.com"
+                                )
+                                  ? `${product.product_logo}`
+                                  : `https://100093.pythonanywhere.com${product.product_logo}`
+                              }
+                              alt=""
+                              className={` w-full h-full absolute ${
+                                isHovering ? "object-cover" : ""
+                              } 
                               `}
-                              />
-                            </div>
-                            {isHovering && product.product === hovertitle && (
-                              <div className="absolute top-0 w-full h-full">
-                                <form
-                                  className="relative w-full h-full"
-                                  onSubmit={handleSubmit}
-                                >
-                                  <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
-                                  <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
-                                    <h2 className="text-white text-[1.78rem] font-semibold">
-                                      {product.product}
-                                    </h2>
-                                    <div className="w-full  px-6 ">
-                                      <select
-                                        className="outline-none h-8 max-w-full"
-                                        value={selectedItem}
-                                        onChange={(e) =>
-                                          setSelectedItem(e.target.value)
-                                        }
-                                      >
-                                        <option> Select Portfolio </option>
-
-                                        {filterDataByProduct?.portfolios.map(
-                                          (item, index) => (
-                                            <option
-                                              key={index}
-                                              value={item?.portfolio_code}
-                                            >
-                                              {" "}
-                                              {item?.portfolio_name},{" "}
-                                              {item?.role}, {item?.data_type}
-                                            </option>
-                                          )
-                                        )}
-                                      </select>
-                                    </div>
-                                    <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-																		{isLoading ? "Loading..." : "Connect"}
-                                    </button>
-                                  </div>
-                                </form>
-                              </div>
-                            )}
+                            />
                           </div>
-                        </>
+                          {isHovering && product.product === hovertitle && (
+                            <div className="absolute top-0 w-full h-full">
+                              <form
+                                className="relative w-full h-full"
+                                onSubmit={handleSubmit}
+                              >
+                                <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
+                                <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
+                                  <h2 className="text-white text-[1.78rem] font-semibold">
+                                    {product.product}
+                                  </h2>
+                                  <div className="w-full  px-6 ">
+                                    <select
+                                      className="outline-none h-8 max-w-full"
+                                      value={selectedItem}
+                                      onChange={(e) =>
+                                        setSelectedItem(e.target.value)
+                                      }
+                                    >
+                                      <option> Select Portfolio </option>
+
+                                      {filterDataByProduct?.portfolios.map(
+                                        (item, index) => (
+                                          <option
+                                            key={index}
+                                            value={item?.portfolio_code}
+                                          >
+                                            {" "}
+                                            {item?.portfolio_name}, {item?.role}
+                                            , {item?.data_type}
+                                          </option>
+                                        )
+                                      )}
+                                    </select>
+                                  </div>
+                                  <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
+                                    {isLoading ? "Loading..." : "Connect"}
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                     {productData?.length % 3 == 2 ? (

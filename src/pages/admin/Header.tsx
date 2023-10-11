@@ -30,11 +30,11 @@ const Header = () => {
 
   const sessionId = localStorage.getItem("sessionId");
 
-    {
-      !sessionId &&
-        (location.href =
-          "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
-    }
+  {
+    !sessionId &&
+      (location.href =
+        "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
+  }
 
   useEffect(() => {
     const fetchData = async () => {
