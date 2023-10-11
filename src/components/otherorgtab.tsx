@@ -11,7 +11,6 @@ import Products from "./otherproducts/Products";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getotherorgdata } from "../store/slice/otherorgdata";
-import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
 import Loader from "../pages/whiteloader";
 
@@ -28,44 +27,47 @@ const Otherorgtab = () => {
 		}
 	];
 
-	const show_loader = useSelector((state: RootState) => state.loaderslice);
+	const [isLoading, setIsLoading] = useState(false);
 const adminusername = useSelector(
 	(state: RootState) => state.userinfo.userinfo.username
 );
 const selectedname = useSelector(
 	(state: RootState) => state.selectedorg.orgname
 );
+const selecteddata= useSelector(
+	(state: RootState) => state.selectedorg
+);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		const fetchData = async () => {
-			dispatch(getloaderstate(true));
-			try {
-			
-				const data = {
-					username: adminusername,
-					org_name: selectedname
-				};
-				const response = await axios.post(
-					"https://100093.pythonanywhere.com/api/otherorg/",
-					data
-				);
-				
+		if (selecteddata.type !== "owner") {
+			const fetchData = async () => {
+				setIsLoading(true)
+				try {
+					const data = {
+						username: adminusername,
+						org_name: selectedname,
+					};
+					const response = await axios.post(
+						"https://100093.pythonanywhere.com/api/otherorg/",
+						data
+					);
 
-				dispatch(getotherorgdata(response.data));
-console.log(response.data, "other org data");
-				dispatch(getloaderstate(false));
-			} catch (error) {
-				console.error(error);
-			}
-		};
-		fetchData();
+					dispatch(getotherorgdata(response.data));
+					console.log(response.data, "other org data");
+						setIsLoading(false);
+				} catch (error) {
+					console.error(error);
+				}
+			};
+			fetchData();
+		} 
 	}, [adminusername,selectedname]);
 
 	return (
 		<div>
 			{
-				show_loader==false?(<Tabs
+				isLoading==false?(<Tabs
 				className=""
 				selectedTabClassName="bg-[#61CE70] text-white"
 				selectedIndex={tabIndex}
