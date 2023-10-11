@@ -63,7 +63,7 @@ const Header = () => {
   };
 
   const ownerorg = useSelector(
-    (state: RootState) => state.adminData.data[0].organisations[0].org_name
+    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
   );
   const otherorglist = useSelector(
     (state: RootState) => state.sidebar?.workspace
