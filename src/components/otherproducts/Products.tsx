@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -10,7 +10,8 @@ const Products = () => {
   const productData = useSelector(
     (state: RootState) => state.otherorgdata.data
   );
-  const show_loader = useSelector((state: RootState) => state?.loaderslice);
+  // const show_loader = useSelector((state: RootState) => state?.loaderslice);
+
   const selectedorgname = useSelector(
     (state: RootState) => state.selectedorg.orgname
   );
@@ -23,6 +24,13 @@ const Products = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    if (productData) {
+      setIsLoading(false);
+      return;
+    }
+    setIsLoading(true);
+  }, [productData]);
   const filterDataByProduct = productData.find(
     (item) => item.product === hovertitle
   );
@@ -75,7 +83,7 @@ const Products = () => {
     <>
       <ToastContainer position="top-right" />
 
-      {!show_loader ? (
+      {!isLoading ? (
         <div className="mt-8">
           <div className="pl-8">
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
