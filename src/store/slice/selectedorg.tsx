@@ -2,12 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const selectedorg = createSlice({
 	name: "selectedorg",
 	initialState: {
-        type: '',
-        orgname: '',
-      },
+		type: 'owner',
+		orgname: "",
+	},
 	reducers: {
 		getselectedorgs(_state, action) {
-			
 			return action.payload;
 		},
 	},
