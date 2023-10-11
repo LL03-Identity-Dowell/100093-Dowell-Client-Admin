@@ -89,7 +89,7 @@ const AdminTabs = () => {
 					dispatch(getAdminData(response.data));
 					dispatch(getproducts(productResponse.data));
 
-					dispatch(getloaderstate(true));
+					dispatch(getloaderstate(false));
 				}
       } catch (error) {
         console.error(error);
