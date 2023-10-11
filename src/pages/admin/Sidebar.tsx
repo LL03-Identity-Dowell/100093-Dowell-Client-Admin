@@ -149,7 +149,9 @@ const Sidebar = () => {
                 <ul>
                   <li className="text-[#7a7a7a] text-lg font-medium">
                     <a
-                      href="https://100097.pythonanywhere.com/?session_id={{session_id}}"
+                      href={`https://100097.pythonanywhere.com/?session_id=${localStorage.getItem(
+                        "sessionId"
+                      )}`}
                       className="text-lg font-medium"
                     >
                       1.Edit to Profile
@@ -378,7 +380,9 @@ const Sidebar = () => {
         </div>
         <div className="button-container flex justify-between text-center border-black border p-[2px] w-full bg-[#CEF9D2]">
           <a
-            href="https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={{session_id}}"
+            href={`https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${localStorage.getItem(
+              "sessionId"
+            )}`}
             className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
           >
             Customer Support
