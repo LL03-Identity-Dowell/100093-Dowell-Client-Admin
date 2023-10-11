@@ -10,7 +10,7 @@ const Products = () => {
   const productData = useSelector(
     (state: RootState) => state.otherorgdata.data
   );
-  const show_loader = useSelector((state: RootState) => state?.loaderslice);
+  const show_loader = useSelector((state: RootState) => state.loaderslice);
   const selectedorgname = useSelector(
     (state: RootState) => state.selectedorg.orgname
   );
