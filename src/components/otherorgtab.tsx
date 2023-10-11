@@ -11,7 +11,6 @@ import Products from "./otherproducts/Products";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { getotherorgdata } from "../store/slice/otherorgdata";
-import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
 import Loader from "../pages/whiteloader";
 
