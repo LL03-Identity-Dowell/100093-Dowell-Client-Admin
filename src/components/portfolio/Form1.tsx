@@ -27,7 +27,6 @@ const Form1 = () => {
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
   const [rangeInput, setRangeInput] = useState<string>("");
   const [publicData, setPublicData] = useState<PublicResponse[]>([]);
   const [link, setLink] = useState("");
@@ -197,7 +196,6 @@ const Form1 = () => {
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
         .then((res) => {
           console.log(res.data);
-          setErrMsg("");
           setFormInputs(initialFormInputs);
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
@@ -208,11 +206,9 @@ const Form1 = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        setErrMsg(error.response?.data);
         toast.error(error.message)
       } else {
         console.error("An unknown error occurred:", error);
-        setErrMsg("An unknown error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -493,7 +489,7 @@ const Form1 = () => {
           >
             {isLoading ? "Creating..." : "Create Portfolio"}
           </button>
-          <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
+          
         </form>
 
         {link && (
