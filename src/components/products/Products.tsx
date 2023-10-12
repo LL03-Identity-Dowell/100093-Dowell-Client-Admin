@@ -44,14 +44,14 @@ const Products = () => {
     setHovertitle(title);
     setSelectedProduct(title);
 
-    // if (selectedProduct !== title) {
-    //   const defaultSelectedItem =
-    //     filterDataByProduct
-    //       ?.filter((item) => item?.product === title)
-    //       .map((item) => item?.portfolio_code)[0] || "";
+    if (selectedProduct !== title && selectedItem) {
+      const defaultSelectedItem =
+        filterDataByProduct
+          ?.filter((item) => item?.product === title)
+          .map((item) => item?.portfolio_code)[0] || "";
 
-    //   setSelectedItem(defaultSelectedItem);
-    // }
+      setSelectedItem(defaultSelectedItem);
+    }
   };
 
   const sessionId = localStorage.getItem("sessionId");
@@ -211,9 +211,11 @@ const Products = () => {
                                           id="productSelect"
                                           options={options}
                                           onChange={handleSelectChange}
-                                          value={selectedOption || options[0]}
+                                          defaultValue={options[0]}
+                                          value={selectedOption}
                                         />
                                       )}
+
                                       {filterDataByProduct.length === 0 &&
                                         selectedProduct !==
                                           "Dowell Services" && (
