@@ -30,11 +30,11 @@ const Header = () => {
 
   const sessionId = localStorage.getItem("sessionId");
 
-    {
-      !sessionId &&
-        (location.href =
-          "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
-    }
+  {
+    !sessionId &&
+      (location.href =
+        "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,10 +63,10 @@ const Header = () => {
   };
 
   const ownerorg = useSelector(
-    (state: RootState) => state.adminData.data[0].organisations[0].org_name
+    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
   );
   const otherorglist = useSelector(
-    (state: RootState) => state.sidebar?.workspace
+    (state: RootState) => state?.sidebar?.workspace
   );
 
   const organizations = useSelector((state: RootState) => state.org);

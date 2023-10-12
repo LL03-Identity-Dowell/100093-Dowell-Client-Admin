@@ -60,7 +60,7 @@ const AdminTabs = () => {
   ];
 
   const dispatch = useDispatch();
-
+ const sessionId = localStorage.getItem("sessionId");
   useEffect(() => {
     dispatch(getloaderstate(false));
     const fetchData = async () => {
@@ -71,7 +71,8 @@ const AdminTabs = () => {
       try {
         if (adminusername !== "" && present_org == "") {
 					const data = {
-						username: adminusername,
+            username: adminusername,
+            session_id:sessionId
 					};
 					// console.log(data, "sdata");
 
