@@ -44,14 +44,14 @@ const Products = () => {
     setHovertitle(title);
     setSelectedProduct(title);
 
-    if (selectedProduct !== title) {
-      const defaultSelectedItem =
-        filterDataByProduct
-          ?.filter((item) => item?.product === title)
-          .map((item) => item?.portfolio_code)[0] || "";
+    // if (selectedProduct !== title) {
+    //   const defaultSelectedItem =
+    //     filterDataByProduct
+    //       ?.filter((item) => item?.product === title)
+    //       .map((item) => item?.portfolio_code)[0] || "";
 
-      setSelectedItem(defaultSelectedItem);
-    }
+    //   setSelectedItem(defaultSelectedItem);
+    // }
   };
 
   const sessionId = localStorage.getItem("sessionId");
@@ -70,7 +70,7 @@ const Products = () => {
       present_org: present_org,
       session_id: sessionId,
     };
-    // console.log(data, "data");
+    console.log(data, "data");
 
     try {
       await axios
@@ -121,15 +121,8 @@ const Products = () => {
   };
 
   const handleSelectChange = (selectedOption: any) => {
-    setSelectedItem(selectedOption ? selectedOption.value : ""); // Update the single selectedItem state
+    setSelectedItem(selectedOption ? selectedOption.value : "");
   };
-
-  // const query = filterDataByProduct?.map((item) => ({
-  //   value: item.portfolio_code,
-  //   label: item?.portfolio_name,
-  // }));
-
-  // console.log(filterDataByProduct, "query", selectedProduct);
 
   return (
     <>
@@ -188,7 +181,11 @@ const Products = () => {
                                   : `https://100093.pythonanywhere.com${product.product_logo}`
                               } `}
                               alt=""
-                              className="w-full h-full absolute"
+                              className={`w-full h-full ${
+                                product.product_name === hovertitle
+                                  ? "absolute"
+                                  : ""
+                              }`}
                             />
                           </div>
                           {hovertitle &&
