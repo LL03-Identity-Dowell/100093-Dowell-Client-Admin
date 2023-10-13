@@ -12,7 +12,15 @@ const Exportfolio = () => {
   );
 
   const ownerorg = useSelector(
-    (state: RootState) => state?.adminData?.data[0]
+    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
+  );
+
+  const porfolio = useSelector(
+    (state: RootState) => state?.adminData?.data[0]?.portpolio[0]?.portfolio_name
+  );
+
+  const product = useSelector(
+    (state: RootState) => state?.adminData?.data[0]?.portpolio[0]?.product
   );
 
   console.log(ownerorg, 'ownerorg');
@@ -21,9 +29,9 @@ const Exportfolio = () => {
   const handleSubmit = async () => {
     const data = {
       session_id: sessionId,
-      org: "",
-      product: "",
-      portfolio: "",
+      org: ownerorg,
+      product: product,
+      portfolio: porfolio,
       username: userName,
     };
 
