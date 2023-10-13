@@ -1,45 +1,39 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { RootState } from "../store/Store";
 import axios from "axios";
-
-const sessionId = localStorage.getItem("sessionId");
+import Loader from "./whiteloader";
+import { getloaderstate } from "../store/slice/loaderstate";
 
 const Exportfolio = () => {
-  const userName = useSelector(
-    (state: RootState) => state.adminData.data[0]?.Username
-  );
-
-  const ownerorg = useSelector(
-    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
-  );
-
-  const porfolio = useSelector(
-    (state: RootState) => state?.adminData?.data[0]?.portpolio[0]?.portfolio_name
-  );
-
-  const product = useSelector(
-    (state: RootState) => state?.adminData?.data[0]?.portpolio[0]?.product
-  );
-
-  console.log(ownerorg, 'ownerorg');
-  
+  const show_loader = useSelector((state: RootState) => state.loaderslice);
+  console.log(show_loader);
+  const dispatch = useDispatch();
 
   const handleSubmit = async () => {
+    dispatch(getloaderstate(false));
+    // Capture URL parameters
+    const queryParams = new URLSearchParams(window.location.search);
+    const sessionId = queryParams.get("session_id");
+    const org = queryParams.get("org");
+    const product = queryParams.get("product");
+    const portfolio = queryParams.get("portfolio");
+    const username = queryParams.get("username");
+
     const data = {
       session_id: sessionId,
-      org: ownerorg,
+      org: org,
       product: product,
-      portfolio: porfolio,
-      username: userName,
+      portfolio: portfolio,
+      username: username,
     };
 
     try {
       await axios
-        .get(
-          `https://100093.pythonanywhere.com/api/exportfolio?session_id=${sessionId}&org=${data.org}&product=${data.product}&portfolio=${data.portfolio}&username=${data.username}`
-        )
+        .get(`https://100093.pythonanywhere.com/api/exportfolio`, {
+          params: data, // Send the parameters as an object
+        })
         .then((res) => {
           console.log(res.data);
           toast.success("success");
@@ -58,7 +52,7 @@ const Exportfolio = () => {
     handleSubmit();
   }, []);
 
-  return <></>;
+  return <>{!show_loader && <Loader />}</>;
 };
 
 export default Exportfolio;
