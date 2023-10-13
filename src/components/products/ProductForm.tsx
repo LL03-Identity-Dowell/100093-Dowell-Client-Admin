@@ -109,10 +109,14 @@ const ProductForm = () => {
           >
             <option> Select Portfolio </option>
             {filterDataByProduct?.map((item, index) => (
-              <option key={index} value={item?.portfolio_code}>
-                {" "}
-                {item?.portfolio_name}
-              </option>
+              <>
+                {item.member_type === "owner" && (
+                  <option key={index} value={item?.portfolio_code}>
+                    {" "}
+                    {item?.portfolio_name}
+                  </option>
+                )}
+              </>
             ))}
           </select>
         </div>
