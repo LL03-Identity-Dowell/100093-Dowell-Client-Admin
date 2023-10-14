@@ -98,16 +98,16 @@ const Form1 = () => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedItems((prevSelectedItems) => [
-      ...prevSelectedItems,
-      ...selectedOptions,
-    ]);
-  };
+  // const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedOptions = Array.from(
+  //     e.target.selectedOptions,
+  //     (option) => option.value
+  //   );
+  //   setSelectedItems((prevSelectedItems) => [
+  //     ...prevSelectedItems,
+  //     ...selectedOptions,
+  //   ]);
+  // };
 
   const handleSelectAll = () => {
     let allOptions: string[] = [];
@@ -206,7 +206,7 @@ const Form1 = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        toast.error(error.message)
+        toast.error(error.message);
       } else {
         console.error("An unknown error occurred:", error);
       }
@@ -321,7 +321,7 @@ const Form1 = () => {
             </div>
             <select
               multiple
-              onChange={handleSelectChange}
+              // onChange={handleSelectChange}
               id="member"
               className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
@@ -489,7 +489,6 @@ const Form1 = () => {
           >
             {isLoading ? "Creating..." : "Create Portfolio"}
           </button>
-          
         </form>
 
         {link && (

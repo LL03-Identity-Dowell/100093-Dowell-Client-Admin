@@ -3,7 +3,7 @@ import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import images from "../../components/images";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserinfo } from "../../store/slice/userinfo";
