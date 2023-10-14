@@ -3,13 +3,14 @@ import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import images from "../../components/images";
 import { useDispatch, useSelector } from "react-redux";
 import { getuserinfo } from "../../store/slice/userinfo";
 import { RootState } from "../../store/Store";
 import { getorgs } from "../../store/slice/organization";
 import { getselectedorgs } from "../../store/slice/selectedorg";
+import { getsetting } from "../../store/slice/setting";
 
 const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
@@ -17,7 +18,28 @@ const Header = () => {
 
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = {
+          username: adminusername,
+        };
 
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/settings/",
+          data
+        );
+        dispatch(getsetting(response.data));
+      } catch (err) {}
+    };
+    // Call the API when the component mounts
+    if (adminusername != "") {
+      fetchData();
+    }
+  }, [adminusername]);
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const session_id = urlParams.get("session_id");
@@ -35,6 +57,9 @@ const Header = () => {
       (location.href =
         "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
   }
+  const defaultselected: string = useSelector(
+    (state: RootState) => state.setting?.data?.default_org
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,8 +95,9 @@ const Header = () => {
   );
 
   const organizations = useSelector((state: RootState) => state.org);
-  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
 
+  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
+  console.log({ selectedOrg });
   useEffect(() => {
     // Fetch organizations (e.g., using an API call) and set them in the Redux store
     interface OrgInfo {
@@ -86,12 +112,15 @@ const Header = () => {
 
     const ownerObj = { orgname: ownerorg, type: "owner" };
     fetchedOrganizations.push(ownerObj);
-    console.log(fetchedOrganizations);
+    console.log({ fetchedOrganizations });
 
     dispatch(getorgs(fetchedOrganizations));
 
     // Find the default organization (type 'owner') and set it as the selected organization
-    const defaultOrg = fetchedOrganizations.find((org) => org.type === "owner");
+    const defaultOrg = fetchedOrganizations.find(
+      (org) => org.orgname === defaultselected
+    );
+    console.log({ defaultOrg });
     if (defaultOrg) {
       dispatch(getselectedorgs(defaultOrg));
     }
@@ -100,8 +129,9 @@ const Header = () => {
   const handleOrgChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOrgname = event.target.value;
     const org = organizations.find(
-      (org) => `${org.orgname}${org.type}` === selectedOrgname
+      (org) => `${org.orgname}` === selectedOrgname
     );
+    console.log({ org });
     if (org) {
       dispatch(getselectedorgs(org));
     }
@@ -219,11 +249,11 @@ const Header = () => {
                 </p>
                 <select
                   className="w-full rounded-md outline-none py-1 text-center"
-                  value={`${selectedOrg?.orgname}${selectedOrg?.type}` || ""}
+                  value={`${selectedOrg?.orgname}` || ""}
                   onChange={handleOrgChange}
                 >
                   {organizations.map((org, index) => (
-                    <option key={index} value={`${org.orgname}${org.type}`}>
+                    <option key={index} value={`${org.orgname}`}>
                       {org.orgname}({org.type})
                     </option>
                   ))}
