@@ -10,10 +10,21 @@ const Settingform6 = () => {
   const defaultorg = useSelector(
     (state: RootState) => state.setting?.data?.default_org
   );
+  console.log({ defaultorg });
   const [defaultorgValue, setdefaultorgValue] = useState(defaultorg);
-  const workspacelist = ["Workspace 1", "Workspace 2", "noumanhayat"];
+  console.log(defaultorg);
+  const organizations = useSelector((state: RootState) => state.org);
+  // const workspacelist = ["", ""];
+  const [workspacelist, setWorkspacelist] = useState(organizations);
 
-  const filterworkspace = workspacelist.filter((item) => item !== defaultorg);
+  useEffect(() => {
+    setWorkspacelist(organizations);
+  }, [organizations]);
+
+  // const filterworkspace = workspacelist.filter(
+  //   (item) => item.orgname !== defaultorg
+  // );
+
   const dispatch = useDispatch();
 
   const adminusername = useSelector(
@@ -40,7 +51,6 @@ const Settingform6 = () => {
           .post("https://100093.pythonanywhere.com/api/settings/", data)
           .then((res) => {
             console.log(res);
-            console.log("response data", res.data);
             dispatch(
               getsetting({
                 isSuccess: true,

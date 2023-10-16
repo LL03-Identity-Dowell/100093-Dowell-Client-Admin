@@ -153,7 +153,7 @@ const Products = () => {
                       const title = product.product_name;
 
                       const options = filterDataByProduct
-                        .filter((item) => item?.product === title)
+                        .filter((item) => item?.product === title && item?.member_type === 'owner')
                         .map((item) => ({
                           value: item?.portfolio_code,
                           label: `${item?.portfolio_name}, ${item?.role}, ${item?.data_type}`,
@@ -171,6 +171,7 @@ const Products = () => {
                             handleMouseOver(product.product_name)
                           }
                         >
+                          
                           <div className="h-80 w-80 ">
                             <img
                               src={`${
@@ -188,6 +189,7 @@ const Products = () => {
                               }`}
                             />
                           </div>
+
                           {hovertitle &&
                             product.product_name === hovertitle && (
                               <div className="absolute top-0 w-full h-full dropdown-container">
@@ -250,6 +252,7 @@ const Products = () => {
                               </div>
                             )}
                         </div>
+
                       );
                     })}
                     {filteredProducts.length % 3 == 2 ? (

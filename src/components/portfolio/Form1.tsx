@@ -98,16 +98,16 @@ const Form1 = () => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedOptions = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setSelectedItems((prevSelectedItems) => [
-      ...prevSelectedItems,
-      ...selectedOptions,
-    ]);
-  };
+  // const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedOptions = Array.from(
+  //     e.target.selectedOptions,
+  //     (option) => option.value
+  //   );
+  //   setSelectedItems((prevSelectedItems) => [
+  //     ...prevSelectedItems,
+  //     ...selectedOptions,
+  //   ]);
+  // };
 
   const handleSelectAll = () => {
     let allOptions: string[] = [];
@@ -206,7 +206,7 @@ const Form1 = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        toast.error(error.message)
+        toast.error(error.message);
       } else {
         console.error("An unknown error occurred:", error);
       }

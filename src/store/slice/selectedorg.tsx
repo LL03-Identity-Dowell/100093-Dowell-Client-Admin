@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 const selectedorg = createSlice({
-	name: "selectedorg",
-	initialState: {
-		type: 'owner',
-		orgname: "",
-	},
-	reducers: {
-		getselectedorgs(_state, action) {
-			return action.payload;
-		},
-	},
+  name: "selectedorg",
+  initialState: {
+    type: "",
+    orgname: "",
+  },
+  reducers: {
+    getselectedorgs(_state, action) {
+      return action.payload;
+    },
+  },
 });
 
 export default selectedorg.reducer;

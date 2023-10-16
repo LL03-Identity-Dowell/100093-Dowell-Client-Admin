@@ -11,6 +11,7 @@ import { RootState } from "../../store/Store";
 import { getorgs } from "../../store/slice/organization";
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getsetting } from "../../store/slice/setting";
+import { getsetting } from "../../store/slice/setting";
 
 const Header = () => {
 	const userData = useSelector((state: RootState) => state.userinfo);

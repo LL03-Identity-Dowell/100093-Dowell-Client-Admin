@@ -8,6 +8,7 @@ import AboutUs from "./pages/AboutUs";
 import Faq from "./pages/Faq";
 import Setting from "./pages/settingpage/Setting";
 import Organization from "./pages/organizationpage/organization";
+import Exportfolio from "./pages/exportfolio";
 
 function App() {
 	return (
@@ -22,6 +23,8 @@ function App() {
 					<Route path="/org" element={<Organization />} />
 					<Route path="/faq" element={<Faq />} />
 					<Route path="/setting" element={<Setting></Setting>} />
+					<Route path="/exportfolio" element={<Exportfolio />} />
+
 					{/* <Route path="/loader" element={} /> */}
 					{/* <Routes path="/element" element={<Example />} /> */}
 				</Routes>
