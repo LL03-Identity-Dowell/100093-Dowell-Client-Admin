@@ -115,7 +115,9 @@ export default function Connectiontype() {
 	};
 
 
-
+ const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+ );
 
 
 	return (
@@ -199,7 +201,16 @@ export default function Connectiontype() {
 						))}
 					</select>
 				</div>
-				<button className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto" onClick={handleSubmit}>
+				<button
+					className={`w-full ${
+						color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+							? "bg-[#14A44D]"
+							: "bg-[#7A7A7A]"
+					}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+					onClick={handleSubmit}
+				>
 					Save Internet Settings
 				</button>
 			</form>

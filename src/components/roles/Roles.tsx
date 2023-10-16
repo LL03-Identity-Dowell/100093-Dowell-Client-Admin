@@ -403,6 +403,11 @@ const Roles = () => {
 		console.log(disablerulesitem);
 	}, [selectionrulestate , rolesdata]);
 
+
+const color_scheme = useSelector(
+	(state: RootState) => state.setting?.data?.color_scheme
+);
+
 	return (
 		<>
 			{show_loader == false ? (
@@ -611,8 +616,14 @@ const Roles = () => {
 									/>
 								</div>
 								<button
-									className={`w-full h-12 ${
-										loading.createrole == true ? "bg-[#b8b8b8]" : "bg-[#7a7a7a]"
+									className={`w-full h-12  ${
+										loading.createrole == true
+											? "bg-[#b8b8b8]"
+											: color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
 									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="submit"
 								>
@@ -812,11 +823,15 @@ const Roles = () => {
 									</select>
 								</div>
 								<button
-									className={`w-full h-12 mb-12 ${
+									className={`w-full h-12  ${
 										loading.enabledisable == true
 											? "bg-[#b8b8b8]"
-											: "bg-[#7a7a7a]"
-									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+											: color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="button"
 									onClick={updateselectedrulestatus}
 								>
@@ -828,17 +843,25 @@ const Roles = () => {
 								</button>
 
 								<button
-									className={`w-full h-12 mb-12
-											bg-[#7a7a7a]
-									  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+									className={`w-full h-12  ${
+										color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 								>
 									Duplicate selected Role to create new
 								</button>
 								<button
-									className={`w-full h-12 mb-12 ${
+									className={`w-full h-12  ${
 										loading.refreshsearch == true
 											? "bg-[#b8b8b8]"
-											: "bg-[#7a7a7a]"
+											: color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
 									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 									type="button"
 									onClick={clearselection}

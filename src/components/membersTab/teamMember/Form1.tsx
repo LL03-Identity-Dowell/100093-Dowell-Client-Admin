@@ -54,6 +54,10 @@ const Form1 = () => {
           toast.success("copied");
         })
         .catch((error) => console.error("Error copying link", error));
+
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 5000);
     }
   };
 
@@ -335,10 +339,11 @@ const Form1 = () => {
           <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
         </form>
 
-        <div className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold ">
+        <div className=" bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold ">
           <p>Team Member Invitation Link</p>
-
-          <p className="px-6 text-sm truncate">{link}</p>
+          {link ? (
+            <p className="break-words p-2 text-sm bg-yellow-300">{link}</p>
+          ) : null}
         </div>
 
         <button
