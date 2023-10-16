@@ -240,269 +240,277 @@ const Form1 = () => {
     }
   };
 
+  const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+	);
   return (
-    <>
-      <ToastContainer position="top-right" />
+		<>
+			<ToastContainer position="top-right" />
 
-      <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow px-[30px] pb-4">
-        <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
-          <p>PORTFOLIO</p>
-          <p>{`<${portfolioLength}>`}</p>
-        </span>
-        <div className="my-20">
-          <p className="text-[#FF0000] text-lg font-roboto font-semibold">
-            Assign Portfolio – Products, Data types, Operational Rights and
-            Roles to Members
-          </p>
-        </div>
-        <form className="" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
-              Select Member Type{" "}
-              <span className="text-[#ff0000] text-base">*</span>
-            </label>
-            <select
-              onChange={handleSelectStatus}
-              id="member_type"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              required
-            >
-              <option value="">...select...</option>
-              <option value="owner">Owner </option>
-              <option value="team_member"> Team Member </option>
-              <option value="user">User </option>
-              <option value="public"> Public</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <div className="flex items-center gap-3">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Select Member{" "}
-                <span className="text-[#ff0000] text-base">*</span>
-              </label>
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
-                Select All
-                <input
-                  type="checkbox"
-                  onChange={handleSelectAllChange}
-                  checked={
-                    selectedItems.length > 0 &&
-                    selectedItems.length === getAllMemberOptions().length
-                  }
-                />
-              </label>
-            </div>
-            <div className="w-full">
-              <input
-                type="text"
-                placeholder="separate numbers with '-'e.g 1-10"
-                onChange={(e) => setRangeInput(e.target.value)}
-                className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-                onBlur={handleRangeInput}
-                onKeyDown={handleKeyPress}
-              />
-            </div>
+			<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow px-[30px] pb-4">
+				<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+					<p>PORTFOLIO</p>
+					<p>{`<${portfolioLength}>`}</p>
+				</span>
+				<div className="my-20">
+					<p className="text-[#FF0000] text-lg font-roboto font-semibold">
+						Assign Portfolio – Products, Data types, Operational Rights and
+						Roles to Members
+					</p>
+				</div>
+				<form className="" onSubmit={handleSubmit}>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
+							Select Member Type{" "}
+							<span className="text-[#ff0000] text-base">*</span>
+						</label>
+						<select
+							onChange={handleSelectStatus}
+							id="member_type"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+							required
+						>
+							<option value="">...select...</option>
+							<option value="owner">Owner </option>
+							<option value="team_member"> Team Member </option>
+							<option value="user">User </option>
+							<option value="public"> Public</option>
+						</select>
+					</div>
+					<div className="mb-4">
+						<div className="flex items-center gap-3">
+							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+								Select Member{" "}
+								<span className="text-[#ff0000] text-base">*</span>
+							</label>
+							<label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
+								Select All
+								<input
+									type="checkbox"
+									onChange={handleSelectAllChange}
+									checked={
+										selectedItems.length > 0 &&
+										selectedItems.length === getAllMemberOptions().length
+									}
+								/>
+							</label>
+						</div>
+						<div className="w-full">
+							<input
+								type="text"
+								placeholder="separate numbers with '-'e.g 1-10"
+								onChange={(e) => setRangeInput(e.target.value)}
+								className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
+								onBlur={handleRangeInput}
+								onKeyDown={handleKeyPress}
+							/>
+						</div>
 
-            <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
-              <span className="font-roboto text-base">
-                Select with username: (Total members:{" "}
-                {getAllMemberOptions().length})
-              </span>
-              <Select
-                classNames={{
-                  control: () => "border border-none shadow-none rounded-md",
-                }}
-                className="w-full outline-none shadow-none"
-                isMulti
-                options={query}
-                placeholder="Search..."
-                onChange={handleSearchInputChange}
-              />
-            </div>
-            <select
-              multiple
-              onChange={handleSelectChange}
-              id="member"
-              className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            >
-              {getAllMemberOptions().map((option, key) => (
-                <option
-                  key={key}
-                  className={
-                    selectedItems.includes(option)
-                      ? "bg-[#007BFF] text-white"
-                      : ""
-                  }
-                >
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
-              Select Product <span className="text-[#ff0000] text-base">*</span>
-            </label>
-            <select
-              onChange={handleSelectStatus}
-              id="product"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              placeholder="Select Product"
-            >
-              <option value="">...select...</option>
-              {productData?.products?.map((product) => (
-                <option key={product._id} value={product.product_name}>
-                  {" "}
-                  {product.product_name}{" "}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Data Type{" "}
-              <span className="text-[#ff0000] text-base">*</span>
-            </label>
-            <select
-              onChange={handleSelectStatus}
-              id="data_type"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              required
-            >
-              <option value="">...select...</option>
-              <option value="real_data">Real Data</option>
-              <option value="learning_data">Learning Data</option>
-              <option value="testing_data">Testing Data</option>
-              <option value="archived_data">Archived Data</option>{" "}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Operational Rights{" "}
-              <span className="text-[#ff0000] text-base">*</span>
-            </label>
-            <select
-              onChange={handleSelectStatus}
-              id="op_rights"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              required
-            >
-              <option value="">...select...</option>
-              <option value="view">View</option>
-              <option value="add/edit">Add/Edit</option>
-              <option value="delete">Delete</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Roles <span className="text-[#ff0000] text-base">*</span>
-            </label>
-            <select
-              onChange={handleSelectStatus}
-              id="role"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            >
-              <option value="">...select...</option>
-              {rolesdata?.map((roles, key) =>
-                roles.status === "enable" ? (
-                  <option key={key} value={roles.role_code}>
-                    {roles.role_name}
-                  </option>
-                ) : null
-              )}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Name{" "}
-              <span className="text-xs text-[#FF0000]">
-                {" "}
-                (Don't use & symbol in portfolio name){" "}
-                <span className="text-[#ff0000] text-base">*</span>
-              </span>
-            </label>
-            <input
-              type="text"
-              placeholder="Portfolio name"
-              required
-              onChange={handleOnChange}
-              id="portfolio_name"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Code (Unique){" "}
-              <span className="text-[#ff0000] text-base">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Portfolio code"
-              required
-              onChange={handleOnChange}
-              id="portfolio_code"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Specification{" "}
-            </label>
-            <input
-              type="text"
-              placeholder="Portfolio specification"
-              onChange={handleOnChange}
-              id="portfolio_spec"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Universal Code{" "}
-            </label>
-            <input
-              type="text"
-              placeholder="Portfolio universal code"
-              onChange={handleOnChange}
-              id="portfolio_u_code"
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Details{" "}
-            </label>
-            <textarea
-              rows={4}
-              placeholder="Portfolio details"
-              onChange={handleOnChangeTextArea}
-              id="portfolio_det"
-              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-            />
-          </div>
-          <button
-            disabled={isLoading}
-            className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
-              isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
-            }`}
-          >
-            {isLoading ? "Creating..." : "Create Portfolio"}
-          </button>
-          
-        </form>
+						<div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
+							<span className="font-roboto text-base">
+								Select with username: (Total members:{" "}
+								{getAllMemberOptions().length})
+							</span>
+							<Select
+								classNames={{
+									control: () => "border border-none shadow-none rounded-md",
+								}}
+								className="w-full outline-none shadow-none"
+								isMulti
+								options={query}
+								placeholder="Search..."
+								onChange={handleSearchInputChange}
+							/>
+						</div>
+						<select
+							multiple
+							onChange={handleSelectChange}
+							id="member"
+							className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						>
+							{getAllMemberOptions().map((option, key) => (
+								<option
+									key={key}
+									className={
+										selectedItems.includes(option)
+											? "bg-[#007BFF] text-white"
+											: ""
+									}
+								>
+									{option}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+							Select Product <span className="text-[#ff0000] text-base">*</span>
+						</label>
+						<select
+							onChange={handleSelectStatus}
+							id="product"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+							placeholder="Select Product"
+						>
+							<option value="">...select...</option>
+							{productData?.products?.map((product) => (
+								<option key={product._id} value={product.product_name}>
+									{" "}
+									{product.product_name}{" "}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Select Data Type{" "}
+							<span className="text-[#ff0000] text-base">*</span>
+						</label>
+						<select
+							onChange={handleSelectStatus}
+							id="data_type"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+							required
+						>
+							<option value="">...select...</option>
+							<option value="real_data">Real Data</option>
+							<option value="learning_data">Learning Data</option>
+							<option value="testing_data">Testing Data</option>
+							<option value="archived_data">Archived Data</option>{" "}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Select Operational Rights{" "}
+							<span className="text-[#ff0000] text-base">*</span>
+						</label>
+						<select
+							onChange={handleSelectStatus}
+							id="op_rights"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+							required
+						>
+							<option value="">...select...</option>
+							<option value="view">View</option>
+							<option value="add/edit">Add/Edit</option>
+							<option value="delete">Delete</option>
+							<option value="admin">Admin</option>
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Select Roles <span className="text-[#ff0000] text-base">*</span>
+						</label>
+						<select
+							onChange={handleSelectStatus}
+							id="role"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						>
+							<option value="">...select...</option>
+							{rolesdata?.map((roles, key) =>
+								roles.status === "enable" ? (
+									<option key={key} value={roles.role_code}>
+										{roles.role_name}
+									</option>
+								) : null
+							)}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Portfolio Name{" "}
+							<span className="text-xs text-[#FF0000]">
+								{" "}
+								(Don't use & symbol in portfolio name){" "}
+								<span className="text-[#ff0000] text-base">*</span>
+							</span>
+						</label>
+						<input
+							type="text"
+							placeholder="Portfolio name"
+							required
+							onChange={handleOnChange}
+							id="portfolio_name"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Portfolio Code (Unique){" "}
+							<span className="text-[#ff0000] text-base">*</span>
+						</label>
+						<input
+							type="text"
+							placeholder="Portfolio code"
+							required
+							onChange={handleOnChange}
+							id="portfolio_code"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Portfolio Specification{" "}
+						</label>
+						<input
+							type="text"
+							placeholder="Portfolio specification"
+							onChange={handleOnChange}
+							id="portfolio_spec"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Portfolio Universal Code{" "}
+						</label>
+						<input
+							type="text"
+							placeholder="Portfolio universal code"
+							onChange={handleOnChange}
+							id="portfolio_u_code"
+							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Portfolio Details{" "}
+						</label>
+						<textarea
+							rows={4}
+							placeholder="Portfolio details"
+							onChange={handleOnChangeTextArea}
+							id="portfolio_det"
+							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+						/>
+					</div>
+					<button
+						disabled={isLoading}
+						className={`w-full h-12  ${
+						isLoading== true
+								? "bg-[#b8b8b8]"
+								: color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+					>
+						{isLoading ? "Creating..." : "Create Portfolio"}
+					</button>
+				</form>
 
-        {link && (
-          <button
-            className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
-            onClick={handleCopyToClipBoard}
-          >
-            {isCopied ? "Copied" : "Copy masterlink"}
-          </button>
-        )}
-      </div>
-    </>
-  );
+				{link && (
+					<button
+						className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+						onClick={handleCopyToClipBoard}
+					>
+						{isCopied ? "Copied" : "Copy masterlink"}
+					</button>
+				)}
+			</div>
+		</>
+	);
 };
 
 export default Form1;

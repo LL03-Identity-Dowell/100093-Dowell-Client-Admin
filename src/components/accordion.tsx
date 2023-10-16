@@ -1,5 +1,7 @@
 import  { useState, ReactNode } from "react";
 import { BiCaretRight, BiCaretUp } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/Store";
 
 interface AccordionProps {
 	title: string;
@@ -12,11 +14,19 @@ export default function Accordion({ title, children }: AccordionProps) {
 	const toggleAccordion = () => {
 		setIsOpen((prevState) => !prevState);
 	};
+	const color_scheme = useSelector(
+			(state: RootState) => state.setting?.data?.color_scheme
+		);
 	return (
 		<>
 			<div>
 				<button
-					className=" bg-[#7a7a7a] p-4 mb-[1px] flex items-center justify-between w-full focus:outline-none"
+					className={` ${color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						} p-4 mb-[1px] flex items-center justify-between w-full focus:outline-none`}
 					onClick={toggleAccordion}
 				>
 					<div className="flex items-center">
