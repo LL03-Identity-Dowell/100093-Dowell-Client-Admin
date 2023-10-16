@@ -324,7 +324,7 @@ const Form1 = () => {
 						</div>
 						<select
 							multiple
-							onChange={handleSelectChange}
+							
 							id="member"
 							className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 						>
