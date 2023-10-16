@@ -40,11 +40,11 @@ const Products = () => {
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleMouseOver = (title: string) => {
+  const handleMouseEnter = (title: string) => {
     setHovertitle(title);
     setSelectedProduct(title);
 
-    if (selectedProduct !== title && selectedItem) {
+    if (selectedProduct !== title) {
       const defaultSelectedItem =
         filterDataByProduct
           ?.filter((item) => item?.product === title)
@@ -53,6 +53,7 @@ const Products = () => {
       setSelectedItem(defaultSelectedItem);
     }
   };
+// console.log(selectedItem, 'selectedItem');
 
   const sessionId = localStorage.getItem("sessionId");
 
@@ -124,6 +125,14 @@ const Products = () => {
     setSelectedItem(selectedOption ? selectedOption.value : "");
   };
 
+  const style = {
+    control: (base: any) => ({
+      ...base,
+      border: 0,
+      boxShadow: "none",
+    }),
+  };
+
   return (
     <>
       {!show_loader ? (
@@ -153,7 +162,11 @@ const Products = () => {
                       const title = product.product_name;
 
                       const options = filterDataByProduct
-                        .filter((item) => item?.product === title && item?.member_type === 'owner')
+                        .filter(
+                          (item) =>
+                            item?.product === title &&
+                            item?.member_type === "owner"
+                        )
                         .map((item) => ({
                           value: item?.portfolio_code,
                           label: `${item?.portfolio_name}, ${item?.role}, ${item?.data_type}`,
@@ -168,10 +181,9 @@ const Products = () => {
                           key={product._id}
                           className="relative box"
                           onMouseEnter={() =>
-                            handleMouseOver(product.product_name)
+                            handleMouseEnter(product.product_name)
                           }
                         >
-                          
                           <div className="h-80 w-80 ">
                             <img
                               src={`${
@@ -181,7 +193,7 @@ const Products = () => {
                                   ? product.product_logo
                                   : `https://100093.pythonanywhere.com${product.product_logo}`
                               } `}
-                              alt=""
+                              alt="product logo"
                               className={`w-full h-full ${
                                 product.product_name === hovertitle
                                   ? "absolute"
@@ -210,6 +222,7 @@ const Products = () => {
                                     <div className="w-full  px-6 ">
                                       {filterDataByProduct.length > 0 && (
                                         <Select
+                                          styles={style}
                                           id="productSelect"
                                           options={options}
                                           onChange={handleSelectChange}
@@ -252,7 +265,6 @@ const Products = () => {
                               </div>
                             )}
                         </div>
-
                       );
                     })}
                     {filteredProducts.length % 3 == 2 ? (

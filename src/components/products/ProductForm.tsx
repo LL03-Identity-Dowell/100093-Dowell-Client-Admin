@@ -16,8 +16,8 @@ const ProductForm = () => {
 
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string>("");
 
   const filteredProducts =
     userName === "uxliveadmin"
@@ -112,7 +112,6 @@ const ProductForm = () => {
               <>
                 {item.member_type === "owner" && (
                   <option key={index} value={item?.portfolio_code}>
-                    {" "}
                     {item?.portfolio_name}
                   </option>
                 )}

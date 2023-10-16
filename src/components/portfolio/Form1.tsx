@@ -206,7 +206,7 @@ const Form1 = () => {
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
-        toast.error(error.message)
+        toast.error(error.message);
       } else {
         console.error("An unknown error occurred:", error);
       }
@@ -238,6 +238,14 @@ const Form1 = () => {
           .catch((error) => console.error("Error copying link", error));
       }
     }
+  };
+
+  const style = {
+    control: (base: any) => ({
+      ...base,
+      border: 0,
+      boxShadow: "none",
+    }),
   };
 
   return (
@@ -309,10 +317,8 @@ const Form1 = () => {
                 {getAllMemberOptions().length})
               </span>
               <Select
-                classNames={{
-                  control: () => "border border-none shadow-none rounded-md",
-                }}
-                className="w-full outline-none shadow-none"
+                styles={style}
+                className="w-full outline-none shadow-none border border-black rounded-[4px]"
                 isMulti
                 options={query}
                 placeholder="Search..."
@@ -489,7 +495,6 @@ const Form1 = () => {
           >
             {isLoading ? "Creating..." : "Create Portfolio"}
           </button>
-          
         </form>
 
         {link && (
