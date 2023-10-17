@@ -88,7 +88,9 @@ const currentadmindata = useSelector((state: RootState) => state.adminData);
       });
     setIsLoading(false);
   };
-
+ const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+ );
   return (
 		<>
 			<ToastContainer position="top-right" />
@@ -181,13 +183,18 @@ const currentadmindata = useSelector((state: RootState) => state.adminData);
 
 					<button
 						disabled={isLoading}
-						className={`w-full h-10 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
-							isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
-						}`}
+						className={`w-full h-12  ${
+							isLoading == true
+								? "bg-[#b8b8b8]"
+								: color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 					>
-						{isLoading?"Creating..":"Create Item"}
+						{isLoading ? "Creating.." : "Create Item"}
 					</button>
-					
 				</form>
 			</div>
 		</>

@@ -21,9 +21,9 @@ const Settingform6 = () => {
     setWorkspacelist(organizations);
   }, [organizations]);
 
-  // const filterworkspace = workspacelist.filter(
-  //   (item) => item.orgname !== defaultorg
-  // );
+  const filterworkspace = workspacelist.filter(
+    (item) => item.orgname !== defaultorg
+  );
 
   const dispatch = useDispatch();
 
@@ -105,8 +105,8 @@ const Settingform6 = () => {
 					>
 						<option value={defaultorgValue}>{defaultorgValue}</option>
 						{filterworkspace.map((item, index) => (
-							<option key={index} value={item}>
-								{item}
+							<option key={index} value={item.orgname}>
+								{item.orgname}
 							</option>
 						))}
 					</select>

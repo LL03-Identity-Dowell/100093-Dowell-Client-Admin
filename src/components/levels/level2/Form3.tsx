@@ -107,7 +107,9 @@ const Form3 = () => {
 			}
 		}
 	};
-
+ const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+ );
 	return (
 		<>
 			<ToastContainer position="top-right" />
@@ -186,9 +188,15 @@ const Form3 = () => {
 						</div>
 
 						<button
-							className={`w-full h-10 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white text-[14px] font-roboto ${
-								isLoadingStatus ? "hover:bg-[#7a7a7a] opacity-50" : ""
-							}`}
+							className={`w-full h-12  ${
+								isLoadingStatus == true
+									? "bg-[#b8b8b8]"
+									: color_scheme == "Red"
+									? "bg-[#DC4C64]"
+									: color_scheme == "Green"
+									? "bg-[#14A44D]"
+									: "bg-[#7A7A7A]"
+							} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 						>
 							{isLoadingStatus
 								? status === "enable"
@@ -198,7 +206,15 @@ const Form3 = () => {
 						</button>
 					</form>
 
-					<button className="w-full h-10 mt-20 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white text-[14px] font-roboto">
+					<button
+						className={`w-full ${
+							color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+					>
 						Duplicate selected Item to create new
 					</button>
 				</div>

@@ -81,97 +81,105 @@ const Form2 = () => {
       setIsLoading(false);
     }
   };
-
+ const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+ );
   return (
-    <>
-      <ToastContainer position="top-right" />
-      <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
-          Search Users in my Workspace
-        </i>
-        <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Users not having Portfolio
-            </label>
-            <select
-              multiple
-              id="no_portfolio"
-              onChange={handleSelectOnChange}
-              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            >
-              {guest_member?.accept_members.map(
-                (members, index) =>
-                  members.status !== "enable" && (
-                    <option key={index} value={members?.member_code}>
-                      {" "}
-                      {members?.name}{" "}
-                    </option>
-                  )
-              )}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Users having assigned Portfolio
-            </label>
-            <select
-              multiple
-              onChange={handleSelectOnChange}
-              id="have_portfolio"
-              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            >
-              {guest_member?.accept_members.map(
-                (members, index) =>
-                  members.status === "enable" && (
-                    <option key={index} value={members?.member_code}>
-                      {" "}
-                      {members?.name}
-                    </option>
-                  )
-              )}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Search Users
-            </label>
-            <Select
-              className="w-full outline-none shadow-none"
-              options={query}
-              placeholder="Name"
-              onChange={handleSearchInputChange}
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Details of selected User
-            </label>
-            <textarea
-              rows={4}
-              placeholder="Member details"
-              readOnly
-              value={JSON.stringify(
-                selectedPendingMembers || selectedAcceptMembers,
-                null,
-                1
-              )?.slice(1, -1)}
-              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-            />
-          </div>
+		<>
+			<ToastContainer position="top-right" />
+			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
+				<i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
+					Search Users in my Workspace
+				</i>
+				<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Users not having Portfolio
+						</label>
+						<select
+							multiple
+							id="no_portfolio"
+							onChange={handleSelectOnChange}
+							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						>
+							{guest_member?.accept_members.map(
+								(members, index) =>
+									members.status !== "enable" && (
+										<option key={index} value={members?.member_code}>
+											{" "}
+											{members?.name}{" "}
+										</option>
+									)
+							)}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Users having assigned Portfolio
+						</label>
+						<select
+							multiple
+							onChange={handleSelectOnChange}
+							id="have_portfolio"
+							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						>
+							{guest_member?.accept_members.map(
+								(members, index) =>
+									members.status === "enable" && (
+										<option key={index} value={members?.member_code}>
+											{" "}
+											{members?.name}
+										</option>
+									)
+							)}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Search Users
+						</label>
+						<Select
+							className="w-full outline-none shadow-none"
+							options={query}
+							placeholder="Name"
+							onChange={handleSearchInputChange}
+						/>
+					</div>
+					<div className="mb-4">
+						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+							Details of selected User
+						</label>
+						<textarea
+							rows={4}
+							placeholder="Member details"
+							readOnly
+							value={JSON.stringify(
+								selectedPendingMembers || selectedAcceptMembers,
+								null,
+								1
+							)?.slice(1, -1)}
+							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+						/>
+					</div>
 
-          <button
-            disabled={isLoading}
-            className={`w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto ${
-              isLoading ? "hover:bg-[#7a7a7a] opacity-50" : ""
-            }`}
-          >
-            {isLoading ? "Loading..." : "Remove Selected User"}
-          </button>
-        </form>
-      </div>
-    </>
-  );
+					<button
+						disabled={isLoading}
+						className={`w-full h-12  ${
+							isLoading == true
+								? "bg-[#b8b8b8]"
+								: color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+					>
+						{isLoading ? "Loading..." : "Remove Selected User"}
+					</button>
+				</form>
+			</div>
+		</>
+	);
 };
 
 export default Form2;

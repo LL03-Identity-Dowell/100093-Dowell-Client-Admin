@@ -1,7 +1,7 @@
 import Layout from "../../components/layout";
 
 import Settingform1 from "./forms/Settingform1";
-import { useDispatch, useSelector } from "react-redux";
+
 import Settingform2 from "./forms/settingform2";
 import Settingform3 from "./forms/settingform3";
 import Settingform4 from "./forms/settingform4";
