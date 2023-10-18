@@ -11,7 +11,7 @@ import {
   getlayerpasswordstrength,
   getlayerverifyid,
 } from "../../store/slice/layers";
-import { getloaderstate } from "../../store/slice/loaderstate";
+
 import Loader from "../../pages/whiteloader";
 import Deviceform from "./form/Deviceform";
 import Operatingsystem from "./form/Operatingsystem";
@@ -23,7 +23,7 @@ import Passwordstrenght from "./form/Passwordstrenght";
 import Idverifystatus from "./form/Idverifystatus";
 
 const Layers = () => {
-  const show_loader = useSelector((state: RootState) => state.loaderslice);
+   const [isLoading, setIsLoading] = useState(false);
 
   const adminusername = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
@@ -182,7 +182,7 @@ const Layers = () => {
 
   useEffect(() => {
     // Function to call the API
-
+setIsLoading(true);
     const fetchData = async () => {
       try {
         const os = {
@@ -268,8 +268,8 @@ const Layers = () => {
         );
 
         usedispatch(getlayerverifyid(verifyresponse.data));
-
-        usedispatch(getloaderstate(false));
+setIsLoading(false)
+       
       } catch (error) {
         console.error(error);
       }
@@ -286,7 +286,7 @@ const Layers = () => {
 	);
   return (
     <>
-      {show_loader == false ? (
+      {isLoading == false ? (
         <div className="mt-8 w-full lg:flex gap-8">
           <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
             <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">

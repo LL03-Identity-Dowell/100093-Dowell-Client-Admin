@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import { getloaderstate } from "../../../store/slice/loaderstate";
+
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
@@ -40,8 +40,6 @@ const Settingform8 = () => {
     const postData = async () => {
       try {
         setIsLoading(true);
-        dispatch(getloaderstate(true));
-
         const data = {
           username: defaultusername,
           minimum_speed: internet_min_speed_value,
@@ -63,7 +61,6 @@ const Settingform8 = () => {
         );
 		toast.success("Success");
         setIsLoading(false);
-        dispatch(getloaderstate(false));
       } catch (error) {
         console.error(error);
       }

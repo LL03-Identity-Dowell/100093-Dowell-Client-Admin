@@ -1,10 +1,27 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/Store";
 import Form1 from "./Form1";
 import Form2 from "./Form2";
+import { useState } from 'react';
+import { useEffect } from 'react';
+import Loader from "../../../pages/whiteloader";
 
 function Public() {
+
+   const [isLoading, setIsLoading] = useState(false);
+		const currentadmindata = useSelector((state: RootState) => state.adminData);
+
+		useEffect(() => {
+			if (currentadmindata.data[0]._id == "") {
+				setIsLoading(true);
+			} else {
+				setIsLoading(false);
+			}
+		}, [currentadmindata]);
   return (
     <>
-      <div className="lg:flex w-full  h-full mt-8">
+      {
+        isLoading==false?( <div className="lg:flex w-full  h-full mt-8">
         <Form1 />
         <Form2 />
 
@@ -14,7 +31,10 @@ function Public() {
             <p>{"<Total public links used>"}</p>
           </span>
         </div>
-      </div>
+        </div>) : (
+            <Loader></Loader>
+      )
+     }
     </>
   );
 }

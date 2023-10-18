@@ -5,7 +5,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getsetting } from "../../../store/slice/setting";
-import { getloaderstate } from "../../../store/slice/loaderstate";
 import { RootState } from "../../../store/Store";
 import { toast } from "react-toastify";
 
@@ -55,7 +54,6 @@ const Settingform10 = () => {
     const postData = async () => {
       try {
         setIsLoading(true);
-        dispatch(getloaderstate(true));
 
         const data = {
           username: defaultusername,
@@ -86,7 +84,6 @@ const Settingform10 = () => {
         );
 		toast.success("Success");
         setIsLoading(false);
-        dispatch(getloaderstate(false));
       } catch (error) {
         console.error(error);
       }

@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import { getloaderstate } from "../../../store/slice/loaderstate";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
@@ -40,8 +39,7 @@ const Settingform5 = () => {
     event.preventDefault();
     const postData = async () => {
       try {
-        setIsLoading(true);
-        dispatch(getloaderstate(true));
+		setIsLoading(true);
         const data = {
           username: defaultusername,
           notifications: selectValue,
@@ -77,9 +75,8 @@ const Settingform5 = () => {
               })
             );
           });
-		  toast.success("Success");
+        toast.success("Success");
         setIsLoading(false);
-        dispatch(getloaderstate(false));
       } catch (error) {
         console.error(error);
       }

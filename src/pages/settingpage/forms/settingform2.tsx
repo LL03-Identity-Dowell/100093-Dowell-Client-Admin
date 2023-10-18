@@ -3,7 +3,6 @@ import { RootState } from "../../../store/Store";
 import { useState, useEffect } from "react";
 import { getsetting } from "../../../store/slice/setting";
 import axios from "axios";
-import { getloaderstate } from "../../../store/slice/loaderstate";
 import { toast } from "react-toastify";
 
 const Settingform2 = () => {
@@ -53,8 +52,7 @@ const Settingform2 = () => {
 
     const postData = async () => {
       try {
-        setIsLoading(true);
-        dispatch(getloaderstate(true));
+		setIsLoading(true);
         const data = {
           username: defaultusername,
           timelimit_member: selectedmaxtime_member,
@@ -77,8 +75,7 @@ const Settingform2 = () => {
           })
         );
 		toast.success("Success");
-		setIsLoading(false);
-        dispatch(getloaderstate(false));
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }

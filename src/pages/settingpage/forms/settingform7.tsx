@@ -3,7 +3,6 @@ import { RootState } from "../../../store/Store";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
-import { getloaderstate } from "../../../store/slice/loaderstate";
 import { toast } from "react-toastify";
 
 const Settingform7 = () => {
@@ -38,8 +37,6 @@ const Settingform7 = () => {
     const postData = async () => {
       try {
         setIsLoading(true);
-        dispatch(getloaderstate(true));
-
         const data = {
           username: defaultusername,
           selected_language: selectedLanguage,
@@ -61,7 +58,6 @@ const Settingform7 = () => {
         );
         toast.success("Success");
         setIsLoading(false);
-        dispatch(getloaderstate(false));
       } catch (error) {
         console.error(error);
       }

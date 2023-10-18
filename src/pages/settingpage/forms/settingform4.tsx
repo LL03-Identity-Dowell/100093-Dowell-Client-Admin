@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useState } from "react";
-import { getloaderstate } from "../../../store/slice/loaderstate";
+
 import { getsetting } from "../../../store/slice/setting";
 import axios from "axios";
 import { useEffect } from "react";
@@ -62,9 +62,7 @@ const Settingform4 = () => {
 
     const postData = async () => {
       try {
-        setIsLoading(true);
-        dispatch(getloaderstate(true));
-
+		setIsLoading(true);
         const data = {
           username: defaultusername,
           time_limit_disconnect: selecteddisconn_idle,
@@ -88,9 +86,8 @@ const Settingform4 = () => {
             },
           })
         );
-		toast.success("Success");
-        setIsLoading(false);
-        dispatch(getloaderstate(false));
+		toast.success("Success")
+		setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
