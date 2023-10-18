@@ -63,7 +63,7 @@ const AdminTabs = () => {
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   useEffect(() => {
-    // dispatch(getloaderstate(false));
+    dispatch(getloaderstate(false));
     const fetchData = async () => {
       const productData = {
         username: "uxliveadmin",
@@ -75,7 +75,6 @@ const AdminTabs = () => {
             username: adminusername,
             session_id: sessionId,
           };
-          // console.log(data, "sdata");
 
           const response = await axios.post(
             "https://100093.pythonanywhere.com/api/get_data/",

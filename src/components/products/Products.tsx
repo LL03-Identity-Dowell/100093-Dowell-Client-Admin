@@ -167,7 +167,7 @@ const Products: React.FC = () => {
 
   return (
     <>
-      {!showLoader ? (
+      {showLoader ? (
         <div className="mt-8">
           <div className="pl-8">
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
@@ -203,6 +203,23 @@ const Products: React.FC = () => {
                     isLoading={isLoading}
                   />
                 ))}
+                <>
+                  {filteredProducts?.length % 3 == 2 ? (
+                    <>
+                      <div className="relative box-placer"></div>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {filteredProducts?.length % 3 == 1 ? (
+                    <>
+                      <div className="relative box-placer"></div>
+                      <div className="relative box-placer"></div>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </>
               </div>
             </main>
           </section>
