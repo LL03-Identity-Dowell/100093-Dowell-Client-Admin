@@ -36,7 +36,7 @@ const Header = () => {
           data
         );
         dispatch(getsetting(response.data));
-      } catch (err) {}
+      } catch (err) { /* empty */ }
     };
     // Call the API when the component mounts
     if (adminusername != "") {
