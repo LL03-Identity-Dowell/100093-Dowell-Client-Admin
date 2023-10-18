@@ -12,12 +12,12 @@ const Settingform1 = () => {
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [statusValue, SetstatusValue] = useState(currentSetting.product_status);
+  const [statusValue, SetstatusValue] = useState(currentSetting?.product_status);
   const [selectedProduct, SetselectedProduct] = useState(
-    currentSetting.product_name
+    currentSetting?.product_name
   );
   const adminusername = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
+    (state: RootState) => state.userinfo?.userinfo?.username
   );
 
   const [defaultusername, setdefaultusername] = useState(adminusername);
