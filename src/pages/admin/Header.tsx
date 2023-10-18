@@ -117,7 +117,7 @@ const Header = () => {
 		}
 	};
 
-  const settingdata = useSelector((state: RootState) => state.setting.data._id);
+  const settingdata = useSelector((state: RootState) => state.setting?.data?._id);
 	useEffect(() => {
 		// Function to call the API
 
