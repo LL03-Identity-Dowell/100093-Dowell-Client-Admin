@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getloaderstate } from "../../../store/slice/loaderstate";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
+import { toast } from "react-toastify";
 
 const Settingform5 = () => {
   const [selectValue, setSelectValue] = useState("Chat");
@@ -15,7 +16,7 @@ const Settingform5 = () => {
   const uxlivinglab_method = useSelector(
     (state: RootState) => state.setting?.data?.uxlivinglab_method
   );
-
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedchat_method, setselectedchat_method] = useState([chat_method]);
 
   const [selecteduxlivinglab_method, setselecteduxlivinglab_method] = useState([
@@ -39,6 +40,7 @@ const Settingform5 = () => {
     event.preventDefault();
     const postData = async () => {
       try {
+        setIsLoading(true);
         dispatch(getloaderstate(true));
         const data = {
           username: defaultusername,
@@ -75,12 +77,13 @@ const Settingform5 = () => {
               })
             );
           });
-
+		  toast.success("Success");
+        setIsLoading(false);
         dispatch(getloaderstate(false));
       } catch (error) {
         console.error(error);
       }
-
+      setIsLoading(false);
       // fetch product
     };
 
@@ -91,93 +94,94 @@ const Settingform5 = () => {
     // For example:
   };
 
-
   const color_scheme = useSelector(
-		(state: RootState) => state.setting?.data?.color_scheme
-	);
+    (state: RootState) => state.setting?.data?.color_scheme
+  );
   return (
-		<div className="form-item">
-			<div className="bg-[#CEF9D2] p-3 text-[18px] font-semibold text-[#7A7A7A] border-[1px] border-[#61CE70] border-solid">
-				Set Notifications to my email and phone message
-			</div>
-			<form
-				action=""
-				className="p-3 border-[1px] border-[#61CE70] border-solid"
-			>
-				<div className="w-full mb-3">
-					<label
-						htmlFor=""
-						className="text-[18px] font-semibold text-[#7A7A7A]"
-					>
-						Notifications from
-					</label>
-					<select
-						onChange={(e) => {
-							setSelectValue(e.target.value);
-						}}
-						className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
-						aria-label="Default select example"
-						value={selectValue}
-					>
-						<option value="Chat">Chat</option>
-						<option value="UX Living Lab">UX Living Lab</option>
-					</select>
-				</div>
-				<div className="w-full mb-3">
-					<label
-						htmlFor=""
-						className="text-[18px] font-semibold text-[#7A7A7A]"
-					>
-						Methods
-					</label>
-					{selectValue == "Chat" ? (
-						<select
-							id="meselect"
-							className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
-							aria-label="Default select example"
-							multiple
-							onChange={(e) => {
-								setselectedchat_method([e.target.value]);
-							}}
-							value={selectedchat_method}
-						>
-							<>
-								<option value="Email Messages">Email Messages</option>
-								<option value="SMS/Text Messages">SMS/Text Messages</option>
-							</>
-						</select>
-					) : (
-						<select
-							className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
-							aria-label="Default select example"
-							multiple
-							onChange={(e) => setselecteduxlivinglab_method([e.target.value])}
-							value={selecteduxlivinglab_method}
-						>
-							<>
-								<option value="Email Messages">Email Messages</option>
-								<option value="SMS/Text Messages">SMS/Text Messages</option>
-							</>
-						</select>
-					)}
-				</div>
-				<div className="w-full mb-1">
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-						onClick={handleSubmit}
-					>
-						Forward Notifications
-					</button>
-				</div>
-			</form>
-		</div>
-	);
+    <div className="form-item">
+      <div className="bg-[#CEF9D2] p-3 text-[18px] font-semibold text-[#7A7A7A] border-[1px] border-[#61CE70] border-solid">
+        Set Notifications to my email and phone message
+      </div>
+      <form
+        action=""
+        className="p-3 border-[1px] border-[#61CE70] border-solid"
+      >
+        <div className="w-full mb-3">
+          <label
+            htmlFor=""
+            className="text-[18px] font-semibold text-[#7A7A7A]"
+          >
+            Notifications from
+          </label>
+          <select
+            onChange={(e) => {
+              setSelectValue(e.target.value);
+            }}
+            className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+            aria-label="Default select example"
+            value={selectValue}
+          >
+            <option value="Chat">Chat</option>
+            <option value="UX Living Lab">UX Living Lab</option>
+          </select>
+        </div>
+        <div className="w-full mb-3">
+          <label
+            htmlFor=""
+            className="text-[18px] font-semibold text-[#7A7A7A]"
+          >
+            Methods
+          </label>
+          {selectValue == "Chat" ? (
+            <select
+              id="meselect"
+              className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+              aria-label="Default select example"
+              multiple
+              onChange={(e) => {
+                setselectedchat_method([e.target.value]);
+              }}
+              value={selectedchat_method}
+            >
+              <>
+                <option value="Email Messages">Email Messages</option>
+                <option value="SMS/Text Messages">SMS/Text Messages</option>
+              </>
+            </select>
+          ) : (
+            <select
+              className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
+              aria-label="Default select example"
+              multiple
+              onChange={(e) => setselecteduxlivinglab_method([e.target.value])}
+              value={selecteduxlivinglab_method}
+            >
+              <>
+                <option value="Email Messages">Email Messages</option>
+                <option value="SMS/Text Messages">SMS/Text Messages</option>
+              </>
+            </select>
+          )}
+        </div>
+        <div className="w-full mb-1">
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md ${
+              isLoading ? "opacity-50" : null
+            }`}
+            onClick={handleSubmit}
+          >
+            {isLoading ? "saving..." : "Forward Notifications"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default Settingform5;
