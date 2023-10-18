@@ -163,7 +163,7 @@ const Header = () => {
 			{isLoading == false ? (
 				""
 			) : (
-				<section className="border-y border-[#ff0000] lg:pl-12">
+				<section className="border-b border-[#ff0000] lg:pl-12">
 					<h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
 						Hi {userData?.userinfo?.first_name} {userData?.userinfo?.last_name},
 						you are login as {userData?.userinfo?.User_type}
