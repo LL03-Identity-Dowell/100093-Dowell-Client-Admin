@@ -3,7 +3,7 @@ import { RootState } from "../../../store/Store";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
-import { getloaderstate } from "../../../store/slice/loaderstate";
+
 
 const Settingform7 = () => {
   const defaultlang = useSelector(
@@ -36,7 +36,7 @@ const Settingform7 = () => {
 
     const postData = async () => {
       try {
-        dispatch(getloaderstate(true));
+        
 
         const data = {
           username: defaultusername,
@@ -57,7 +57,7 @@ const Settingform7 = () => {
             },
           })
         );
-        dispatch(getloaderstate(false));
+        
       } catch (error) {
         console.error(error);
       }

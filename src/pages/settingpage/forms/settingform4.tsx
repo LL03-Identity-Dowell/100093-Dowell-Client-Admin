@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useState } from "react";
-import { getloaderstate } from "../../../store/slice/loaderstate";
+
 import { getsetting } from "../../../store/slice/setting";
 import axios from "axios";
 import { useEffect } from "react";
@@ -61,7 +61,7 @@ const Settingform4 = () => {
 
     const postData = async () => {
       try {
-        dispatch(getloaderstate(true));
+        
 
         const data = {
           username: defaultusername,
@@ -86,7 +86,7 @@ const Settingform4 = () => {
             },
           })
         );
-        dispatch(getloaderstate(false));
+        
       } catch (error) {
         console.error(error);
       }

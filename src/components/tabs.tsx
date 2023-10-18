@@ -90,10 +90,13 @@ const AdminTabs = () => {
           dispatch(getAdminData(response.data));
           dispatch(getproducts(productResponse.data));
 
-					dispatch(getloaderstate(false));
+					dispatch(getloaderstate(true));
 				}
 			} catch (error) {
 				console.error(error);
+			}
+			finally {
+				dispatch(getloaderstate(true));
 			}
 		};
 		fetchData();

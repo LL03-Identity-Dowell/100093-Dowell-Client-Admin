@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
 
 const Roles = () => {
-	const show_loader = useSelector((state: RootState) => state.loaderslice);
+	const [isLoading, setIsLoading] = useState(false);
 	const adminusername = useSelector(
 		(state: RootState) => state.userinfo.userinfo.username
 	);
@@ -29,8 +29,17 @@ const Roles = () => {
 	const rolesdata = useSelector(
 		(state: RootState) => state.adminData.data[0].roles
 	);
+
+	
 	const currentadmindata = useSelector((state: RootState) => state.adminData);
 
+	useEffect(() => {
+		if (currentadmindata.data[0]._id == "") {
+			setIsLoading(true);
+		} else {
+			setIsLoading(false);
+		}
+	}, [currentadmindata]);
 	const enablerules = rolesdata.filter((r) => r.status == "enable");
 	const disablerules = rolesdata.filter((r) => r.status == "disable");
 
@@ -410,7 +419,7 @@ const color_scheme = useSelector(
 
 	return (
 		<>
-			{show_loader == false ? (
+			{isLoading == false ? (
 				<div>
 					<ToastContainer position="top-right" />
 					<div className="mt-8 w-full lg:flex gap-8">

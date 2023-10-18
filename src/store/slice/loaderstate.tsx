@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const loaderslice = createSlice({
 	name: "loader",
-	initialState: true,
+	initialState: false,
 	reducers: {
 		getloaderstate(_state, action) {
 			

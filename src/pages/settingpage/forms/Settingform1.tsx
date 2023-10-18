@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import { getloaderstate } from "../../../store/slice/loaderstate";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 
@@ -32,7 +31,7 @@ const Settingform1 = () => {
     event.preventDefault();
     const postData = async () => {
       try {
-        dispatch(getloaderstate(true));
+       
         const data = {
           username: defaultusername,
           product: selectedProduct,
@@ -55,7 +54,7 @@ const Settingform1 = () => {
           })
         );
 
-        dispatch(getloaderstate(false));
+       
       } catch (error) {
         console.error(error);
       }

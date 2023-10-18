@@ -3,7 +3,7 @@ import { RootState } from "../../../store/Store";
 import { useState, useEffect } from "react";
 import { getsetting } from "../../../store/slice/setting";
 import axios from "axios";
-import { getloaderstate } from "../../../store/slice/loaderstate";
+
 
 const Settingform2 = () => {
   const maxtime_member = useSelector(
@@ -52,7 +52,7 @@ const Settingform2 = () => {
 
     const postData = async () => {
       try {
-        dispatch(getloaderstate(true));
+        
         const data = {
           username: defaultusername,
           timelimit_member: selectedmaxtime_member,
@@ -75,7 +75,7 @@ const Settingform2 = () => {
           })
         );
 
-        dispatch(getloaderstate(false));
+        
       } catch (error) {
         console.error(error);
       }
