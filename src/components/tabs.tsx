@@ -123,7 +123,7 @@ const AdminTabs = () => {
 						return (
 							<Tab
 								key={tabs.title}
-								className={`w-full card-shadow h-12 flex items-center px-8 text-[#7a7a7a] gap-x-20 border border-[#7a7a7a] rounded-lg ${
+								className={`w-[90%] card-shadow h-12 flex items-center px-8 text-[#7a7a7a] gap-x-20 border border-[#7a7a7a] rounded-lg ${
 									color_scheme == "Red"
 										? "hover:bg-[#DC4C64]"
 										: color_scheme == "Green"

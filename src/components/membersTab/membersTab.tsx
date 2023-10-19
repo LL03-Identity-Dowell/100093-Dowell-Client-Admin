@@ -18,7 +18,7 @@ const MembersTab = () => {
         selectedIndex={tabIndex}
         onSelect={(index) => setTabIndex(index)}
       >
-        <TabList className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-2 gap-y-4 mt-4">
+        <TabList className="w-[90%] grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-x-2 gap-y-4 mt-4">
           {["Team Member", "User", "Public"].map((team) => {
             return (
               <Tab

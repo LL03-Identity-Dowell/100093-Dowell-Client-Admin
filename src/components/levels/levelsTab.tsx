@@ -19,7 +19,7 @@ const LevelsTab = () => {
         selectedIndex={tabIndex}
         onSelect={(index) => setTabIndex(index)}
       >
-        <TabList className="grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-x-2 gap-y-4 mt-4">
+        <TabList className="w-[90%] grid lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-x-2 gap-y-4 mt-4">
           {["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"].map(
             (level, index) => {
               return (
