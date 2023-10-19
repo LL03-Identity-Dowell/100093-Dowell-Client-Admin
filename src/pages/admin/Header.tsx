@@ -116,7 +116,7 @@ const Header = () => {
 		}
 	};
 
-  const settingdata = useSelector((state: RootState) => state.setting?.data?._id);
+  const settingdata = useSelector((state: RootState) => state.setting.data._id);
 	useEffect(() => {
 		// Function to call the API
 
@@ -162,7 +162,7 @@ const Header = () => {
 			{isLoading == false ? (
 				""
 			) : (
-				<section className="border-b border-[#ff0000] lg:pl-12">
+				<section className="border-y border-[#ff0000] lg:pl-12">
 					<h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
 						Hi {userData?.userinfo?.first_name} {userData?.userinfo?.last_name},
 						you are login as {userData?.userinfo?.User_type}
@@ -217,7 +217,7 @@ const Header = () => {
 													? "bg-[lightcoral]"
 													: color_scheme == "Green"
 													? "bg-[lightgreen]"
-													: "bg-[#54595F] "
+													: "bg-[#a1a1a1] "
 											} lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
 										>
 											<IoSettings className="text-white" />
@@ -234,7 +234,7 @@ const Header = () => {
 															? "bg-[#f3a1a1]"
 															: color_scheme == "Green"
 															? "bg-[#a1e4a1]"
-															: "bg-[#bdb9b2] "
+															: "bg-[#c9c5c1] "
 													}   lg:w-auto w-full flex items-center gap-12 px-4 rounded-sm`}
 												>
 													<IoSettings className="text-white" />
@@ -250,7 +250,7 @@ const Header = () => {
 															? "bg-[lightcoral]"
 															: color_scheme == "Green"
 															? "bg-[lightgreen]"
-															: "bg-[#54595F] "
+															: "bg-[#a1a1a1] "
 													}  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
 												>
 													<IoSettings className="text-white" />
@@ -268,7 +268,7 @@ const Header = () => {
 												? "bg-[lightcoral]"
 												: color_scheme == "Green"
 												? "bg-[lightgreen]"
-												: "bg-[#54595F] "
+												: "bg-[#a1a1a1] "
 										}  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
 										onClick={() => window.location.reload()}
 									>
@@ -283,7 +283,7 @@ const Header = () => {
 												? "bg-[lightcoral]"
 												: color_scheme == "Green"
 												? "bg-[lightgreen]"
-												: "bg-[#54595F] "
+												: "bg-[#a1a1a1] "
 										}  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
 										onClick={logout}
 									>
@@ -295,7 +295,15 @@ const Header = () => {
 								</div>
 							</span>
 							{currentPath == "/setting" ? (
-								<div className="bg-[#cef9d2] text-center  p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg">
+								<div
+									className={`${
+										color_scheme == "Red"
+											? "bg-[lightcoral]"
+											: color_scheme == "Green"
+											? "bg-[lightgreen]"
+											: "bg-[#a1a1a1] "
+									}  text-center  p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg`}
+								>
 									Settings for
 									<span className="text-[red]">
 										{userData?.userinfo?.username}
@@ -306,7 +314,15 @@ const Header = () => {
 									</span>
 								</div>
 							) : (
-								<div className="bg-[#cef9d2] p-[15px] border-2 border-[#7a7a7a] mt-8">
+								<div
+									className={`${
+										color_scheme == "Red"
+											? "bg-[lightcoral]"
+											: color_scheme == "Green"
+											? "bg-[lightgreen]"
+											: "bg-[#a1a1a1] "
+									} p-[15px] border-2 border-[#7a7a7a] mt-8`}
+								>
 									<p className="text-lg font-semibold italic text-[#7A7A7A] pb-2">
 										Select Workspace you want to connect
 									</p>

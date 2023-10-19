@@ -126,13 +126,23 @@ const Sidebar = () => {
 	useEffect(() => {
 		setIsLoading(loadingstate);
 	}, [loadingstate]);
+	const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+	);
 	return (
 		<>
 			{isLoading == false ? (
 				""
 			) : (
 				<div className="border border-black card-shadow lg:w-1/4 px-2 py-2">
-					<div className="border border-[#61CE70] pb-2 hover:bg-[#cef9d2]">
+					<div
+						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+								? "hover:bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "hover:bg-[lightgreen]"
+									: "hover:bg-[#a1a1a1] "
+							}`}
+					>
 						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
 							My Profile
 						</h2>
@@ -206,7 +216,14 @@ const Sidebar = () => {
 						</div>
 					</div>
 
-					<div className="border border-[#61CE70] mt-8 pb-2 hover:bg-[#cef9d2]">
+					<div
+						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+								? "hover:bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "hover:bg-[lightgreen]"
+									: "hover:bg-[#a1a1a1] "
+							}`}
+					>
 						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
 							Notifications
 						</h2>
@@ -262,7 +279,14 @@ const Sidebar = () => {
 						</div>
 					</div>
 
-					<div className="border border-[#61CE70] mt-8 pb-2 hover:bg-[#cef9d2]">
+					<div
+						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+								? "hover:bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "hover:bg-[lightgreen]"
+									: "hover:bg-[#a1a1a1] "
+							}`}
+					>
 						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
 							Announcements
 						</h2>
@@ -317,7 +341,14 @@ const Sidebar = () => {
 							</Accordion>
 						</div>
 					</div>
-					<div className="border border-[#61CE70] mt-8 pb-2 hover:bg-[#cef9d2]">
+					<div
+						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+								? "hover:bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "hover:bg-[lightgreen]"
+									: "hover:bg-[#a1a1a1] "
+							}`}
+					>
 						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
 							My Organization
 						</h2>
@@ -327,9 +358,9 @@ const Sidebar = () => {
 									<ul>
 										{allProducts
 											? allProducts.map((product, index) => (
-													<li className="text-[#7a7a7a] text-lg font-medium">
-														{index + 1}. {product.product_name}
-													</li>
+												<li className="text-[#7a7a7a] text-lg font-medium">
+													{index + 1}. {product.product_name}
+												</li>
 											))
 											: null}
 									</ul>
@@ -380,7 +411,14 @@ const Sidebar = () => {
 						</div>
 					</div>
 
-					<div className="button-container flex justify-between text-center border-black border p-[2px] w-full bg-[#CEF9D2]">
+					<div
+						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${color_scheme == "Red"
+								? "bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "bg-[lightgreen]"
+									: "bg-[#a1a1a1] "
+							} `}
+					>
 						<a
 							href="https://100093.pythonanywhere.com/upload"
 							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
@@ -388,7 +426,14 @@ const Sidebar = () => {
 							Upload
 						</a>
 					</div>
-					<div className="button-container flex justify-between text-center border-black border p-[2px] w-full bg-[#CEF9D2]">
+					<div
+						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${color_scheme == "Red"
+								? "bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "bg-[lightgreen]"
+									: "bg-[#a1a1a1] "
+							} `}
+					>
 						<a
 							href={`https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${localStorage.getItem(
 								"sessionId"
@@ -405,7 +450,14 @@ const Sidebar = () => {
 						</a>
 					</div>
 
-					<div className="button-container flex justify-between text-center border-black border p-[2px] w-full bg-[#CEF9D2]">
+					<div
+						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${color_scheme == "Red"
+								? "bg-[lightcoral]"
+								: color_scheme == "Green"
+									? "bg-[lightgreen]"
+									: "bg-[#a1a1a1] "
+							} `}
+					>
 						<a
 							href="#"
 							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
