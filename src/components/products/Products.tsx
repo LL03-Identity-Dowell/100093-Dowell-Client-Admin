@@ -290,7 +290,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div
-      className="relative box"
+      className="relative box hover:flex hover:justify-center"
       onMouseEnter={() => handleMouseOver(product.product_name)}
     >
       <div className="h-80 w-80">
@@ -302,7 +302,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           } `}
           alt="product logo"
           className={`w-full h-full ${
-            product.product_name === hovertitle ? "absolute" : ""
+            product.product_name === hovertitle ? "" : ""
           }`}
         />
       </div>
