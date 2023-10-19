@@ -14,6 +14,22 @@ type Product = {
   product_logo: string;
 };
 
+type Portfolio = {
+  username: string[];
+  member_type: string;
+  product: string;
+  data_type: string;
+  operations_right: string;
+  role: string;
+  security_layer: string;
+  portfolio_name: string;
+  portfolio_code: string;
+  portfolio_specification: string;
+  portfolio_uni_code: string;
+  portfolio_details: string;
+  status: string;
+};
+
 interface ProductCardProps {
   product: Product;
   hovertitle: string;
@@ -34,7 +50,7 @@ const Products: React.FC = () => {
   const userName = userData.userinfo.username;
 
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
-  const portfolioData = adminData?.portpolio;
+  const portfolioData: Portfolio[] = adminData?.portpolio || [];
   const presentOrg = adminData?.organisations[0]?.org_name;
 
   const [hovertitle, setHovertitle] = useState("");
@@ -63,7 +79,8 @@ const Products: React.FC = () => {
         .filter(
           (item) =>
             item?.product === product.product_name &&
-            item?.member_type === "owner"
+            item?.member_type === "owner" &&
+            item?.username?.includes("owner")
         )
         .map((item) => ({
           value: item?.portfolio_code,
@@ -250,16 +267,20 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isLoading,
 }) => {
   const title = product.product_name;
-  const portfolioData = useSelector(
-    (state: RootState) => state.adminData.data[0]?.portpolio
-  );
+  const adminData = useSelector((state: RootState) => state.adminData.data[0]);
+  const portfolioData: Portfolio[] = adminData?.portpolio || [];
 
   const filterDataByProduct = portfolioData?.filter(
     (item) => item?.product === hovertitle
   );
 
   const options = filterDataByProduct
-    .filter((item) => item?.product === title && item?.member_type === "owner")
+    .filter(
+      (item) =>
+        item?.product === title &&
+        item?.member_type === "owner" &&
+        item?.username?.includes("owner")
+    )
     .map((item) => ({
       value: item?.portfolio_code,
       label: `${item?.portfolio_name}, ${item?.role}, ${item?.data_type}`,
