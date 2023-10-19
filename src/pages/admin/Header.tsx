@@ -96,7 +96,6 @@ const Header = () => {
 
 		const ownerObj = { orgname: ownerorg, type: "owner" };
 		fetchedOrganizations.push(ownerObj);
-		console.log(fetchedOrganizations);
 
 		dispatch(getorgs(fetchedOrganizations));
 
