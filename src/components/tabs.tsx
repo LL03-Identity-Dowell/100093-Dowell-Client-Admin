@@ -88,17 +88,16 @@ const AdminTabs = () => {
           dispatch(getAdminData(response.data));
           dispatch(getproducts(productResponse.data));
 
-					dispatch(getloaderstate(true));
-				}
-			} catch (error) {
-				console.error(error);
-			}
-			finally {
-				dispatch(getloaderstate(true));
-			}
-		};
-		fetchData();
-	}, [adminusername]);
+          dispatch(getloaderstate(true));
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        dispatch(getloaderstate(true));
+      }
+    };
+    fetchData();
+  }, [adminusername]);
 
   return (
     <div>
@@ -113,7 +112,7 @@ const AdminTabs = () => {
             return (
               <Tab
                 key={tabs.title}
-                className="w-full card-shadow h-12 flex items-center px-8 text-[#7a7a7a] gap-x-20 border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70] hover:text-white cursor-pointer outline-none"
+                className="w-[90%] card-shadow h-12 flex items-center px-8 text-[#7a7a7a] gap-x-20 border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70] hover:text-white cursor-pointer outline-none"
               >
                 <i className="text-[#4CAF50] text-xl font-black">{tabs.icon}</i>
                 <p className="font-roboto text-lg">{tabs.title}</p>
