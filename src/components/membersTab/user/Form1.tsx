@@ -89,7 +89,15 @@ const Form1 = () => {
 			<ToastContainer position="top-right" />
 
 			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
-				<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+				<span
+					className={`${
+						color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+							? "bg-[#14A44D]"
+							: "bg-[#7A7A7A]"
+					} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+				>
 					<p>Users</p>
 
 					<p>{`<${user_member_length}>`}</p>
@@ -182,7 +190,15 @@ const Form1 = () => {
 				</form>
 
 				<div className="px-[30px]">
-					<span className="bg-[#cef9d2] font-roboto text-lg text-[#7a7a7a] p-6 my-8 font-semibold flex flex-col items-center">
+					<span
+						className={`${
+							color_scheme == "Red"
+								? "bg-[lightcoral]"
+								: color_scheme == "Green"
+								? "bg-[lightgreen]"
+								: "bg-[#a1a1a1] "
+						} font-roboto text-lg text-white p-6 my-8 font-semibold flex flex-col items-center`}
+					>
 						<p>User Invitation Link</p>
 						<p className="w-full px-6 text-sm truncate">{link}</p>
 					</span>

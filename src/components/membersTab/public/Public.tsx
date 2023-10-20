@@ -17,26 +17,38 @@ function Public() {
 			} else {
 				setIsLoading(false);
 			}
-		}, [currentadmindata]);
+    }, [currentadmindata]);
+  
+   const color_scheme = useSelector(
+			(state: RootState) => state.setting?.data?.color_scheme
+		);
   return (
-    <>
-      {
-        isLoading==false?( <div className="lg:flex w-full  h-full mt-8">
-        <Form1 />
-        <Form2 />
+		<>
+			{isLoading == false ? (
+				<div className="lg:flex w-full  h-full mt-8">
+					<Form1 />
+					<Form2 />
 
-        <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-          <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
-            <p>Public</p>
-            <p>{"<Total public links used>"}</p>
-          </span>
-        </div>
-        </div>) : (
-            <Loader></Loader>
-      )
-     }
-    </>
-  );
+					<div className="lg:w-1/3 border border-[#54595F] card-shadow">
+						<span
+							className={`${
+								color_scheme == "Red"
+									? "bg-[#DC4C64]"
+									: color_scheme == "Green"
+									? "bg-[#14A44D]"
+									: "bg-[#7A7A7A]"
+							} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+						>
+							<p>Public</p>
+							<p>{"<Total public links used>"}</p>
+						</span>
+					</div>
+				</div>
+			) : (
+				<Loader></Loader>
+			)}
+		</>
+	);
 }
 
 export default Public;

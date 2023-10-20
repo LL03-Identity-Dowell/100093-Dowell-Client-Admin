@@ -67,7 +67,15 @@ const Form1 = () => {
 			<ToastContainer position="top-right" />
 
 			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
-				<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+				<span
+					className={`${
+						color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+							? "bg-[#14A44D]"
+							: "bg-[#7A7A7A]"
+					} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+				>
 					<p>{`Level 2 – <${getLevelName}>,`}</p>
 					<p>{`${getLevelItemLength} – <total enabled items in level 2>`}</p>
 				</span>

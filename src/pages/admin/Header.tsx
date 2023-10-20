@@ -302,7 +302,7 @@ const Header = () => {
 											: color_scheme == "Green"
 											? "bg-[lightgreen]"
 											: "bg-[#a1a1a1] "
-									}  text-center  p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg`}
+									}  text-center text-white p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg`}
 								>
 									Settings for
 									<span className="text-[red]">
@@ -323,7 +323,7 @@ const Header = () => {
 											: "bg-[#a1a1a1] "
 									} p-[15px] border-2 border-[#7a7a7a] mt-8`}
 								>
-									<p className="text-lg font-semibold italic text-[#7A7A7A] pb-2">
+									<p className="text-lg font-semibold italic text-white pb-2">
 										Select Workspace you want to connect
 									</p>
 									<select

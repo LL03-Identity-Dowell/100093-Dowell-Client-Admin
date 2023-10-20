@@ -23,7 +23,7 @@ import Passwordstrenght from "./form/Passwordstrenght";
 import Idverifystatus from "./form/Idverifystatus";
 
 const Layers = () => {
-   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const adminusername = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
@@ -182,7 +182,7 @@ const Layers = () => {
 
   useEffect(() => {
     // Function to call the API
-setIsLoading(true);
+    setIsLoading(true);
     const fetchData = async () => {
       try {
         const os = {
@@ -268,8 +268,7 @@ setIsLoading(true);
         );
 
         usedispatch(getlayerverifyid(verifyresponse.data));
-setIsLoading(false)
-       
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -281,15 +280,22 @@ setIsLoading(false)
     }
   }, [adminusername]);
 
-   const color_scheme = useSelector(
-		(state: RootState) => state.setting?.data?.color_scheme
-	);
+  const color_scheme = useSelector(
+    (state: RootState) => state.setting?.data?.color_scheme
+  );
   return (
     <>
       {isLoading == false ? (
         <div className="mt-8 w-full lg:flex gap-8">
           <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
-            <span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+            <span
+              className={`${color_scheme == "Red"
+                  ? "bg-[#DC4C64]"
+                  : color_scheme == "Green"
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+            >
               <p>Security Layers created in my workspace </p>
             </span>
             <div className="p-[30px]  my-12">
@@ -391,10 +397,10 @@ setIsLoading(false)
                 >
                   {devicesKeys
                     ? devicesKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -408,10 +414,10 @@ setIsLoading(false)
                 >
                   {operatingKeys
                     ? operatingKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -425,10 +431,10 @@ setIsLoading(false)
                 >
                   {browserKeys
                     ? browserKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -442,10 +448,10 @@ setIsLoading(false)
                 >
                   {connectionKeys
                     ? connectionKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -459,10 +465,10 @@ setIsLoading(false)
                 >
                   {loginKeys
                     ? loginKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -493,10 +499,10 @@ setIsLoading(false)
                 >
                   {passwordStrengthKeys
                     ? passwordStrengthKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -510,10 +516,10 @@ setIsLoading(false)
                 >
                   {verificationKeys
                     ? verificationKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -546,13 +552,14 @@ setIsLoading(false)
                 </select>
               </div>
 
-              <button className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}>
+              <button
+                className={`w-full ${color_scheme == "Red"
+                    ? "bg-[#DC4C64]"
+                    : color_scheme == "Green"
+                      ? "bg-[#14A44D]"
+                      : "bg-[#7A7A7A]"
+                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+              >
                 Refresh Search
               </button>
             </form>
@@ -709,13 +716,14 @@ setIsLoading(false)
                   </div>
                 </li>
               </ol>
-              <button className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}>
+              <button
+                className={`w-full ${color_scheme == "Red"
+                    ? "bg-[#DC4C64]"
+                    : color_scheme == "Green"
+                      ? "bg-[#14A44D]"
+                      : "bg-[#7A7A7A]"
+                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+              >
                 Save Geographic Settings
               </button>
             </form>
@@ -748,13 +756,14 @@ setIsLoading(false)
                   );
                 })}
               </ol>
-              <button className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}>
+              <button
+                className={`w-full ${color_scheme == "Red"
+                    ? "bg-[#DC4C64]"
+                    : color_scheme == "Green"
+                      ? "bg-[#14A44D]"
+                      : "bg-[#7A7A7A]"
+                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+              >
                 Save Language Settings
               </button>
             </form>

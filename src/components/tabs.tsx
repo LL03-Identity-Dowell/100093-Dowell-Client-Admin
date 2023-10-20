@@ -131,7 +131,7 @@ const AdminTabs = () => {
 										: "hover:bg-[#7A7A7A]"
 								} hover:text-white cursor-pointer outline-none`}
 							>
-								<i className="text-[#4CAF50] text-xl font-black">{tabs.icon}</i>
+								<i className=" text-xl font-black">{tabs.icon}</i>
 								<p className="font-roboto text-lg">{tabs.title}</p>
 							</Tab>
 						);

@@ -141,9 +141,9 @@ const Sidebar = () => {
 								: color_scheme == "Green"
 									? "hover:bg-[lightgreen]"
 									: "hover:bg-[#a1a1a1] "
-							}`}
+							} text-[#61CE70] hover:text-white`}
 					>
-						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
+						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							My Profile
 						</h2>
 						<div className="card-shadow mx-4">
@@ -222,9 +222,9 @@ const Sidebar = () => {
 								: color_scheme == "Green"
 									? "hover:bg-[lightgreen]"
 									: "hover:bg-[#a1a1a1] "
-							}`}
+							} text-[#61CE70] hover:text-white`}
 					>
-						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
+						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							Notifications
 						</h2>
 						<div className="card-shadow mx-4">
@@ -285,9 +285,9 @@ const Sidebar = () => {
 								: color_scheme == "Green"
 									? "hover:bg-[lightgreen]"
 									: "hover:bg-[#a1a1a1] "
-							}`}
+							}text-[#61CE70] hover:text-white`}
 					>
-						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
+						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							Announcements
 						</h2>
 						<div className="card-shadow mx-4">
@@ -347,9 +347,9 @@ const Sidebar = () => {
 								: color_scheme == "Green"
 									? "hover:bg-[lightgreen]"
 									: "hover:bg-[#a1a1a1] "
-							}`}
+							} text-[#61CE70] hover:text-white`}
 					>
-						<h2 className="text-[19px] font-semibold text-[#61CE70] px-4 mt-2 mb-4">
+						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							My Organization
 						</h2>
 						<div className="card-shadow mx-4">

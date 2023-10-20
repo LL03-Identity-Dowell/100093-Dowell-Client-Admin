@@ -248,7 +248,15 @@ const Form1 = () => {
 			<ToastContainer position="top-right" />
 
 			<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow px-[30px] pb-4">
-				<span className="bg-[#61ce70] font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center">
+				<span
+					className={`${
+						color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+							? "bg-[#14A44D]"
+							: "bg-[#7A7A7A]"
+					} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+				>
 					<p>PORTFOLIO</p>
 					<p>{`<${portfolioLength}>`}</p>
 				</span>
@@ -324,7 +332,6 @@ const Form1 = () => {
 						</div>
 						<select
 							multiple
-							
 							id="member"
 							className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
 						>
@@ -487,7 +494,7 @@ const Form1 = () => {
 					<button
 						disabled={isLoading}
 						className={`w-full h-12  ${
-						isLoading== true
+							isLoading == true
 								? "bg-[#b8b8b8]"
 								: color_scheme == "Red"
 								? "bg-[#DC4C64]"
