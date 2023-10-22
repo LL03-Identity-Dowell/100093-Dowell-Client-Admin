@@ -78,9 +78,9 @@ const Products: React.FC = () => {
       const optionsForProduct = filterDataByProduct
         .filter(
           (item) =>
-            item?.product === product.product_name &&
-            item?.member_type === "owner" &&
-            item?.username?.includes("owner")
+            (item?.product === product.product_name &&
+              item?.username?.includes("owner")) ||
+            item?.member_type === "owner"
         )
         .map((item) => ({
           value: item?.portfolio_code,
@@ -277,9 +277,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const options = filterDataByProduct
     .filter(
       (item) =>
-        item?.product === title &&
-        item?.member_type === "owner" &&
-        item?.username?.includes("owner")
+        (item?.product === title && item?.username?.includes("owner")) ||
+        item?.member_type === "owner"
     )
     .map((item) => ({
       value: item?.portfolio_code,
@@ -287,6 +286,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }));
 
   const selectedOption = selectedOptions[title] || defaultOptions[title];
+
+  const style = {
+    control: (base: any) => ({
+      ...base,
+      border: 0,
+      boxShadow: "none",
+    }),
+  };
 
   return (
     <div
@@ -326,6 +333,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <div className="w-full px-6 ">
                 {filterDataByProduct.length > 0 && (
                   <Select
+                    styles={style}
                     id="productSelect"
                     options={options}
                     onChange={(selectedOption) =>
