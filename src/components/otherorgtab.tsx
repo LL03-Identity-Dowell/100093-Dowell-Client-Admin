@@ -54,39 +54,55 @@ const Otherorgtab = () => {
       fetchData();
     }
   }, [adminusername, selectedname]);
+
+    const color_scheme = useSelector(
+			(state: RootState) => state.setting?.data?.color_scheme
+		);
   return (
-    <div>
-      {isLoading == false ? (
-        <Tabs
-          className=""
-          selectedTabClassName="bg-[#61CE70] text-white"
-          selectedIndex={tabIndex}
-          onSelect={(index) => setTabIndex(index)}
-        >
-          <TabList className="grid lg:grid-cols-3 grid-cols-1 gap-4">
-            {tabTitle.map((tabs) => {
-              return (
-                <Tab
-                  key={tabs.title}
-                  className="w-full card-shadow h-12 flex items-center px-8 text-[#7a7a7a] gap-x-20 border border-[#7a7a7a] rounded-lg hover:bg-[#61CE70] hover:text-white cursor-pointer outline-none"
-                >
-                  <i className="text-[#4CAF50] text-xl font-black">
-                    {tabs.icon}
-                  </i>
-                  <p className="font-roboto text-lg">{tabs.title}</p>
-                </Tab>
-              );
-            })}
-          </TabList>
-          <TabPanel>
-            <Products />
-          </TabPanel>
-        </Tabs>
-      ) : (
-        <Loader></Loader>
-      )}
-    </div>
-  );
+		<div>
+			{isLoading == false ? (
+				<Tabs
+					className=""
+					selectedTabClassName={` ${
+						color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+							? "bg-[#14A44D]"
+							: "bg-[#7A7A7A]"
+					} text-white`}
+					selectedIndex={tabIndex}
+					onSelect={(index) => setTabIndex(index)}
+				>
+					<TabList className="grid lg:grid-cols-3 grid-cols-1 gap-4">
+						{tabTitle.map((tabs) => {
+							return (
+								<Tab
+									key={tabs.title}
+									className={`xl:w-[90%] card-shadow h-12 flex items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-20 border border-[#7a7a7a] rounded-lg ${
+										color_scheme == "Red"
+											? "hover:bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "hover:bg-[#14A44D]"
+											: "hover:bg-[#7A7A7A]"
+									} hover:text-white cursor-pointer outline-none`}
+								>
+									<i className=" text-xl font-black">
+										{tabs.icon}
+									</i>
+									<p className="font-roboto text-lg">{tabs.title}</p>
+								</Tab>
+							);
+						})}
+					</TabList>
+					<TabPanel>
+						<Products />
+					</TabPanel>
+				</Tabs>
+			) : (
+				<Loader></Loader>
+			)}
+		</div>
+	);
 };
 
 export default Otherorgtab;
