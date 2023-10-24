@@ -15,17 +15,17 @@ const Navbar = () => {
       {isLoading == false ? (
         ""
       ) : (
-        <div className="lg:flex items-center shadow-xl ring-1 ring-slate-900/5 lg:justify-around">
-          <div className="lg:flex-col flex justify-center">
+        <div className="lg:flex items-center shadow-xl ring-1 ring-slate-900/5">
+          <h2 className="w-[60%] font-semibold text-black text-3xl lg:pb-0 pb-8 uppercase text-right">
+            Living Lab Admin
+          </h2>
+          <div className="w-[35%] flex justify-end">
             <img
               src={images.admin_logo}
               alt=""
               className="w-[112.5px] h-[112.5px]"
             />
           </div>
-          <h2 className="font-semibold text-black text-3xl text-center lg:pb-0 pb-8 uppercase">
-            LivingLab Admin
-          </h2>
         </div>
       )}
     </>

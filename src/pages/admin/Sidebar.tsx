@@ -136,12 +136,13 @@ const Sidebar = () => {
 			) : (
 				<div className="border border-black card-shadow lg:w-1/4 px-2 py-2">
 					<div
-						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+						className={`border border-[#61CE70] pb-2 ${
+							color_scheme == "Red"
 								? "hover:bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "hover:bg-[lightgreen]"
-									: "hover:bg-[#a1a1a1] "
-							} text-[#61CE70] hover:text-white`}
+								? "hover:bg-[lightgreen]"
+								: "hover:bg-[#a1a1a1] "
+						} text-[#61CE70] hover:text-white`}
 					>
 						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							My Profile
@@ -217,12 +218,13 @@ const Sidebar = () => {
 					</div>
 
 					<div
-						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+						className={`border border-[#61CE70] pb-2 ${
+							color_scheme == "Red"
 								? "hover:bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "hover:bg-[lightgreen]"
-									: "hover:bg-[#a1a1a1] "
-							} text-[#61CE70] hover:text-white`}
+								? "hover:bg-[lightgreen]"
+								: "hover:bg-[#a1a1a1] "
+						} text-[#61CE70] hover:text-white`}
 					>
 						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							Notifications
@@ -280,12 +282,13 @@ const Sidebar = () => {
 					</div>
 
 					<div
-						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+						className={`border border-[#61CE70] pb-2 ${
+							color_scheme == "Red"
 								? "hover:bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "hover:bg-[lightgreen]"
-									: "hover:bg-[#a1a1a1] "
-							}text-[#61CE70] hover:text-white`}
+								? "hover:bg-[lightgreen]"
+								: "hover:bg-[#a1a1a1] "
+						} text-[#61CE70] hover:text-white`}
 					>
 						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							Announcements
@@ -342,12 +345,13 @@ const Sidebar = () => {
 						</div>
 					</div>
 					<div
-						className={`border border-[#61CE70] pb-2 ${color_scheme == "Red"
+						className={`border border-[#61CE70] pb-2 ${
+							color_scheme == "Red"
 								? "hover:bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "hover:bg-[lightgreen]"
-									: "hover:bg-[#a1a1a1] "
-							} text-[#61CE70] hover:text-white`}
+								? "hover:bg-[lightgreen]"
+								: "hover:bg-[#a1a1a1] "
+						} text-[#61CE70] hover:text-white`}
 					>
 						<h2 className="text-[19px] font-semibold  px-4 mt-2 mb-4">
 							My Organization
@@ -358,9 +362,9 @@ const Sidebar = () => {
 									<ul>
 										{allProducts
 											? allProducts.map((product, index) => (
-												<li className="text-[#7a7a7a] text-lg font-medium">
-													{index + 1}. {product.product_name}
-												</li>
+													<li className="text-[#7a7a7a] text-lg font-medium">
+														{index + 1}. {product.product_name}
+													</li>
 											))
 											: null}
 									</ul>
@@ -412,12 +416,13 @@ const Sidebar = () => {
 					</div>
 
 					<div
-						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${color_scheme == "Red"
+						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${
+							color_scheme == "Red"
 								? "bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "bg-[lightgreen]"
-									: "bg-[#a1a1a1] "
-							} `}
+								? "bg-[lightgreen]"
+								: "bg-[#a1a1a1] "
+						} `}
 					>
 						<a
 							href="https://100093.pythonanywhere.com/upload"
@@ -427,12 +432,13 @@ const Sidebar = () => {
 						</a>
 					</div>
 					<div
-						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${color_scheme == "Red"
+						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${
+							color_scheme == "Red"
 								? "bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "bg-[lightgreen]"
-									: "bg-[#a1a1a1] "
-							} `}
+								? "bg-[lightgreen]"
+								: "bg-[#a1a1a1] "
+						} `}
 					>
 						<a
 							href={`https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${localStorage.getItem(
@@ -451,12 +457,13 @@ const Sidebar = () => {
 					</div>
 
 					<div
-						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${color_scheme == "Red"
+						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${
+							color_scheme == "Red"
 								? "bg-[lightcoral]"
 								: color_scheme == "Green"
-									? "bg-[lightgreen]"
-									: "bg-[#a1a1a1] "
-							} `}
+								? "bg-[lightgreen]"
+								: "bg-[#a1a1a1] "
+						} `}
 					>
 						<a
 							href="#"
