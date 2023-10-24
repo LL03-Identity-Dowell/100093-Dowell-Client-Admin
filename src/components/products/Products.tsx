@@ -40,12 +40,10 @@ interface ProductCardProps {
   handleSelectChange: (selectedOption: any, title: string) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>, title: string) => void;
   handleRequestPortfolio: (e: React.FormEvent<HTMLFormElement>) => void;
-  isLoading: boolean;
 }
 
 const Products: React.FC = () => {
   const productData = useSelector((state: RootState) => state.products);
-  const showLoader = useSelector((state: RootState) => state.loaderslice);
   const userData = useSelector((state: RootState) => state.userinfo);
   const userName = userData.userinfo.username;
 
@@ -184,7 +182,7 @@ const Products: React.FC = () => {
 
   return (
     <>
-      {showLoader ? (
+      {!isLoading ? (
         <div className="mt-8">
           <div className="pl-8">
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
@@ -217,7 +215,6 @@ const Products: React.FC = () => {
                     handleSelectChange={handleSelectChange}
                     handleSubmit={handleSubmit}
                     handleRequestPortfolio={handleRequestPortfolio}
-                    isLoading={isLoading}
                   />
                 ))}
                 <>
@@ -264,7 +261,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   handleSelectChange,
   handleSubmit,
   handleRequestPortfolio,
-  isLoading,
 }) => {
   const title = product.product_name;
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
@@ -361,7 +357,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
                 {filterDataByProduct.length > 0 ||
                 selectedProduct === "Dowell Services" ? (
-                  <p>{isLoading ? "Loading..." : "Connect"}</p>
+                  <p>Connect</p>
                 ) : (
                   "Request For Connect"
                 )}

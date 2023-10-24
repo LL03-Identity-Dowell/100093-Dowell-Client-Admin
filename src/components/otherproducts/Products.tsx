@@ -162,7 +162,7 @@ const Products = () => {
                                     </select>
                                   </div>
                                   <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                                    {isLoading ? "Loading..." : "Connect"}
+                                    Connect
                                   </button>
                                 </div>
                               </form>
