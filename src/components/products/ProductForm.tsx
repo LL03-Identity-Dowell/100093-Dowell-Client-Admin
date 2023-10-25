@@ -70,6 +70,7 @@ const ProductForm = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+ 
   return (
     <>
       <form
@@ -126,7 +127,7 @@ const ProductForm = () => {
           <textarea
             rows={4}
             readOnly
-            value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
+            value={selectedItemData && JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
             className="outline-none border border-[#7a7a7a] resize-none p-4 rounded-md text-[#7a7a7a]"
           />
         </div>
