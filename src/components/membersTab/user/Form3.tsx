@@ -253,318 +253,330 @@ const Form3 = () => {
   }
   const [selectedItems, setSelectedItems] = useState<memberobj>();
   const [selectedvalue, setSelectedvalue] = useState<any>();
-  const query: Option[] = guest_member?.pending_members.map((option) => ({
+
+  const query = guest_member?.pending_members.map((option) => ({
     value: option.member_code,
     label: option.name,
   }));
 
-  const handleSearchInputChange = (query: any) => {
-    console.log(query.value);
+  const handleSearchInputChange = (query: Option | null) => {
+    if (query) {
+      const filtermmember = guest_member?.pending_members.find(
+        (item) => item.member_code == query.value
+      );
 
+      setSelectedItems(filtermmember);
+    }
+  };
+
+  const handleSelectOnChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const selectedItemName = event.target.value;
     const filtermmember = guest_member?.pending_members.find(
-      (item) => item.member_code == query.value
+      (item) => item.member_code == selectedItemName
     );
 
     setSelectedItems(filtermmember);
   };
- const color_scheme = useSelector(
-		(state: RootState) => state.setting?.data?.color_scheme
- );
+  const color_scheme = useSelector(
+    (state: RootState) => state.setting?.data?.color_scheme
+  );
   return (
-		<>
-			<ToastContainer position="top-right" />
-			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
-				<form className="px-4" onSubmit={handleSubmit}>
-					<div className="mb-4 mt-8">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Invited Users
-						</label>
-						<select
-							multiple
-							id="invited_team_members"
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							placeholder="Select Product"
-						>
-							{guest_member?.pending_members.map((members, index) => (
-								<option key={index} value={members.member_code}>
-									{members?.name}
-								</option>
-							))}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Search Invited Users
-						</label>
-						<Select
-							classNames={{
-								control: () => "border border-none shadow-none rounded-md",
-							}}
-							className="w-full outline-none  border-red-50 shadow-none"
-							options={query}
-							value={selectedvalue}
-							placeholder="Search member..."
-							onChange={handleSearchInputChange}
-							styles={{
-								control: (baseStyles, state) => ({
-									...baseStyles,
-									borderColor: state.isFocused ? "#82827A" : "#82827A",
-									outline: "none",
-								}),
-							}}
-						/>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Details of Invited User
-						</label>
-						<textarea
-							rows={4}
-							placeholder="Member details"
-							readOnly
-							value={
-								selectedItems?.name != ""
-									? JSON.stringify(selectedItems, null, 1)?.slice(1, -1)
-									: ""
-							}
-							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-						/>
-					</div>
-					<button
-						disabled={isLoading}
-						className={`w-full h-12  ${
-							isLoading == true
-								? "bg-[#b8b8b8]"
-								: color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						} mb-8 hover:bg-[#61CE70] mb-8 rounded-[4px] text-white font-roboto`}
-					>
-						{isLoading ? "Loading..." : "Cancel Selected User Invitation"}
-					</button>
-				</form>
-				<div className="px-4">
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white mb-8  py-2 px-4 rounded-md`}
-					>
-						Duplicate selected User invitation to create new
-					</button>
-				</div>
+    <>
+      <ToastContainer position="top-right" />
+      <div className="lg:w-1/3 border border-[#54595F] card-shadow">
+        <form className="px-4" onSubmit={handleSubmit}>
+          <div className="mb-4 mt-8">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Invited Users
+            </label>
+            <select
+              multiple
+              id="invited_team_members"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              onChange={handleSelectOnChange}
+            >
+              {guest_member?.pending_members.map((members, index) => (
+                <option key={index} value={members.member_code}>
+                  {members?.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Search Invited Users
+            </label>
+            <Select
+              classNames={{
+                control: () => "border border-none shadow-none rounded-md",
+              }}
+              className="w-full outline-none  border-red-50 shadow-none"
+              options={query}
+              value={selectedvalue}
+              placeholder="Search member..."
+              onChange={handleSearchInputChange}
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  borderColor: state.isFocused ? "#82827A" : "#82827A",
+                  outline: "none",
+                }),
+              }}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Details of Invited User
+            </label>
+            <textarea
+              rows={4}
+              placeholder="Member details"
+              readOnly
+              value={
+                selectedItems?.name != ""
+                  ? JSON.stringify(selectedItems, null, 1)?.slice(1, -1)
+                  : ""
+              }
+              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+            />
+          </div>
+          <button
+            disabled={isLoading}
+            className={`w-full h-12  ${
+              isLoading == true
+                ? "bg-[#b8b8b8]"
+                : color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            } hover:bg-[#61CE70] mb-8 rounded-[4px] text-white font-roboto`}
+          >
+            {isLoading ? "Loading..." : "Cancel Selected User Invitation"}
+          </button>
+        </form>
+        <div className="px-4">
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  hover:bg-[#61CE70] text-white mb-8  py-2 px-4 rounded-md`}
+          >
+            Duplicate selected User invitation to create new
+          </button>
+        </div>
 
-				<hr className="border-2 border-[#FF0000] mb-8" />
+        <hr className="border-2 border-[#FF0000] mb-8" />
 
-				<p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
-					Common Invitation to join as USER to my organisation
-					<span>
-						If you don't have any link,{" "}
-						<button
-							type="button"
-							onClick={openUploadLinkModal}
-							className="text-black font-normal hover:opacity-70"
-						>
-							click here
-						</button>{" "}
-						to upload.
-					</span>
-				</p>
+        <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
+          Common Invitation to join as USER to my organisation
+          <span>
+            If you don't have any link,{" "}
+            <button
+              type="button"
+              onClick={openUploadLinkModal}
+              className="text-black font-normal hover:opacity-70"
+            >
+              click here
+            </button>{" "}
+            to upload.
+          </span>
+        </p>
 
-				<form className="px-4">
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Link to Data
-						</label>
-						<textarea
-							rows={4}
-							placeholder="Paste link to database to connect"
-							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-						/>
-					</div>
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-					>
-						Import Users
-					</button>
-				</form>
-				<form className="px-4 my-8">
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Common invitation link
-						</label>
-						<textarea
-							rows={4}
-							placeholder="Paste invitation link"
-							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-						/>
-					</div>
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-					>
-						Save common invitation link & create QR code
-					</button>
-				</form>
-				<form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
-					<div className="mb-4">
-						<img src={images.placeholder} alt="" />
-						<p className="text-center">QR code for link</p>
-					</div>
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-					>
-						Download common invitation link QR code
-					</button>
-				</form>
-			</div>
+        <form className="px-4">
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Link to Data
+            </label>
+            <textarea
+              rows={4}
+              placeholder="Paste link to database to connect"
+              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+            />
+          </div>
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+          >
+            Import Users
+          </button>
+        </form>
+        <form className="px-4 my-8">
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Common invitation link
+            </label>
+            <textarea
+              rows={4}
+              placeholder="Paste invitation link"
+              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+            />
+          </div>
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+          >
+            Save common invitation link & create QR code
+          </button>
+        </form>
+        <form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
+          <div className="mb-4">
+            <img src={images.placeholder} alt="" />
+            <p className="text-center">QR code for link</p>
+          </div>
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+          >
+            Download common invitation link QR code
+          </button>
+        </form>
+      </div>
 
-			<Modal
-				style={{
-					overlay: {
-						position: "fixed",
-						top: "0%",
-						left: "0%",
-						right: "0%",
-						bottom: "0%",
-						backgroundColor: "rgba(119, 119, 119, 0.589)",
-						zIndex: 50,
-					},
-				}}
-				className="absolute lg:mt-36 left-0 right-0 md:w-4/5 mx-auto md:h-auto h-screen lg:max-h-[80%] pb-4 overflow-y-auto overflow-auto bg-[#FFFDFD] z-50 lg:rounded-[10px] outline-none border-0 md:flex flex-col justify-between shadow-[5px_5px_30px_0px_#00000040]"
-				isOpen={uploadLinkModal}
-				onRequestClose={closeUploadLinkModal}
-				ariaHideApp={false}
-			>
-				<div className="flex justify-end px-6 pt-6">
-					<button
-						className="bg-black text-white text-sm px-2 py-1 rounded-sm"
-						onClick={closeUploadLinkModal}
-					>
-						X
-					</button>
-				</div>
-				<form
-					className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md"
-					onSubmit={handlesavdata}
-				>
-					<h2 className="text-2xl font-semibold text-center pt-4 text-black">
-						Excel or CSV Details
-					</h2>
-					<a
-						href="https://www.pythonanywhere.com/user/100093/files/home/100093/clientadmin/media/sample.csv"
-						className="underline text-xl text-black font-roboto"
-					>
-						Download Sample file
-					</a>
-					<div className="flex items-center justify-between py-4">
-						<label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
-							Excel / CSV File
-						</label>
-						<input
-							type="file"
-							accept=".csv"
-							className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
-							onChange={(e) => handleFileChange(e)}
-							required
-						/>
-					</div>
-					<div className="flex items-center justify-between pb-4">
-						<label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
-							Name of Sheet
-						</label>
-						<input
-							type="text"
-							className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
-						/>
-					</div>
-					{elements.map((element, index) => (
-						<div className="pb-4" key={index}>
-							{element}
-						</div>
-					))}
-					<p className="text-[#ff0000] font-roboto leading-normal">
-						If you want to upload all fields of sheet give text "all" or give
-						specific field name one by one
-					</p>
-					<div className="flex items-center gap-x-4 justify-end">
-						<button
-							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
-							onClick={handleAddElement}
-							type="button"
-						>
-							Add
-						</button>
-						<button
-							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
-							onClick={handleDeleteElement}
-							disabled={elements.length === 1}
-							type="button"
-						>
-							Remove
-						</button>
-					</div>
+      <Modal
+        style={{
+          overlay: {
+            position: "fixed",
+            top: "0%",
+            left: "0%",
+            right: "0%",
+            bottom: "0%",
+            backgroundColor: "rgba(119, 119, 119, 0.589)",
+            zIndex: 50,
+          },
+        }}
+        className="absolute lg:mt-36 left-0 right-0 md:w-4/5 mx-auto md:h-auto h-screen lg:max-h-[80%] pb-4 overflow-y-auto overflow-auto bg-[#FFFDFD] z-50 lg:rounded-[10px] outline-none border-0 md:flex flex-col justify-between shadow-[5px_5px_30px_0px_#00000040]"
+        isOpen={uploadLinkModal}
+        onRequestClose={closeUploadLinkModal}
+        ariaHideApp={false}
+      >
+        <div className="flex justify-end px-6 pt-6">
+          <button
+            className="bg-black text-white text-sm px-2 py-1 rounded-sm"
+            onClick={closeUploadLinkModal}
+          >
+            X
+          </button>
+        </div>
+        <form
+          className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md"
+          onSubmit={handlesavdata}
+        >
+          <h2 className="text-2xl font-semibold text-center pt-4 text-black">
+            Excel or CSV Details
+          </h2>
+          <a
+            href="https://www.pythonanywhere.com/user/100093/files/home/100093/clientadmin/media/sample.csv"
+            className="underline text-xl text-black font-roboto"
+          >
+            Download Sample file
+          </a>
+          <div className="flex items-center justify-between py-4">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Excel / CSV File
+            </label>
+            <input
+              type="file"
+              accept=".csv"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+              onChange={(e) => handleFileChange(e)}
+              required
+            />
+          </div>
+          <div className="flex items-center justify-between pb-4">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Name of Sheet
+            </label>
+            <input
+              type="text"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+            />
+          </div>
+          {elements.map((element, index) => (
+            <div className="pb-4" key={index}>
+              {element}
+            </div>
+          ))}
+          <p className="text-[#ff0000] font-roboto leading-normal">
+            If you want to upload all fields of sheet give text "all" or give
+            specific field name one by one
+          </p>
+          <div className="flex items-center gap-x-4 justify-end">
+            <button
+              className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
+              onClick={handleAddElement}
+              type="button"
+            >
+              Add
+            </button>
+            <button
+              className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
+              onClick={handleDeleteElement}
+              disabled={elements.length === 1}
+              type="button"
+            >
+              Remove
+            </button>
+          </div>
 
-					<div className="lg:flex items-center justify-between py-8">
-						<label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
-							Number of rows you want to Delete
-						</label>
-						<input
-							type="number"
-							className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
-						/>
-					</div>
-					<div className="text-center">
-						<button
-							className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
-							type="submit"
-						>
-							Save to Database
-						</button>
-					</div>
-					{fileuplaodresponse.datalink !== "" ? (
-						<div className="flex justify-between items-center mt-3">
-							<span className="text-[#61ce70]">
-								{fileuplaodresponse.datalink}
-							</span>
-							<button
-								className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
-								type="button"
-								onClick={uploadlinkcopy}
-							>
-								Copy
-							</button>
-						</div>
-					) : (
-						""
-					)}
-					<div
-						className="mt-5"
-						dangerouslySetInnerHTML={{ __html: fileuplaodresponse.table_html }}
-					/>
-					{/* <div className="mt-5">
+          <div className="lg:flex items-center justify-between py-8">
+            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+              Number of rows you want to Delete
+            </label>
+            <input
+              type="number"
+              className="rounded-lg border border-[#7a7a7a] px-5 py-2 text-sm"
+            />
+          </div>
+          <div className="text-center">
+            <button
+              className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
+              type="submit"
+            >
+              Save to Database
+            </button>
+          </div>
+          {fileuplaodresponse.datalink !== "" ? (
+            <div className="flex justify-between items-center mt-3">
+              <span className="text-[#61ce70]">
+                {fileuplaodresponse.datalink}
+              </span>
+              <button
+                className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
+                type="button"
+                onClick={uploadlinkcopy}
+              >
+                Copy
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+          <div
+            className="mt-5"
+            dangerouslySetInnerHTML={{ __html: fileuplaodresponse.table_html }}
+          />
+          {/* <div className="mt-5">
 						<table className="w-full  border-collapse border border-gray-800 table-auto text-center">
 							<thead>
 								<tr className="">
@@ -592,10 +604,10 @@ const Form3 = () => {
 							</tbody>
 						</table>
 					</div> */}
-				</form>
-			</Modal>
-		</>
-	);
+        </form>
+      </Modal>
+    </>
+  );
 };
 
 export default Form3;

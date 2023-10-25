@@ -60,7 +60,7 @@ const Otherorgtab = () => {
 		);
   return (
 		<div>
-			{isLoading == false ? (
+			{isLoading == false ? ( 
 				<Tabs
 					className=""
 					selectedTabClassName={` ${

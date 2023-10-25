@@ -124,13 +124,6 @@ const Products: React.FC = () => {
       present_org: presentOrg,
       session_id: sessionId,
     };
-    console.log(
-      data,
-      "data",
-      selectedOptions[title]?.value,
-      defaultOptions[title]?.value,
-      title
-    );
 
     try {
       const response = await axios.post(
@@ -142,8 +135,10 @@ const Products: React.FC = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error);
+        toast.error(error.response?.data);
       } else {
         console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -290,6 +285,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
       boxShadow: "none",
     }),
   };
+  const requestOption = [
+    {
+      value: "Waiting for portfolio from owner",
+      label: "Waiting for portfolio from owner",
+    },
+  ];
 
   return (
     <div
@@ -327,7 +328,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 {product.product_name}
               </h2>
               <div className="w-full px-6 ">
-                {filterDataByProduct.length > 0 && (
+                {options.length > 0 && (
                   <Select
                     styles={style}
                     id="productSelect"
@@ -340,23 +341,26 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   />
                 )}
 
-                {filterDataByProduct.length === 0 &&
+                {options.length === 0 &&
                   selectedProduct !== "Dowell Services" && (
-                    <select>
-                      <option>Waiting for portfolio from owner</option>
-                    </select>
+                    <Select
+                      styles={style}
+                      options={requestOption}
+                      placeholder="Waiting for portfolio from owner"
+                    />
                   )}
 
-                {filterDataByProduct.length === 0 &&
+                {options.length === 0 &&
                   selectedProduct === "Dowell Services" && (
-                    <select>
-                      <option>Waiting for portfolio from owner</option>
-                    </select>
+                    <Select
+                      styles={style}
+                      options={requestOption}
+                      placeholder="Waiting for portfolio from owner"
+                    />
                   )}
               </div>
               <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                {filterDataByProduct.length > 0 ||
-                selectedProduct === "Dowell Services" ? (
+                {options.length > 0 || selectedProduct === "Dowell Services" ? (
                   <p>Connect</p>
                 ) : (
                   "Request For Connect"
