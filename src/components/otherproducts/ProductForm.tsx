@@ -130,6 +130,7 @@ const ProductForm = () => {
           </label>
           <textarea
             rows={4}
+            readOnly
             value={selectedItemData ? `${formatObject(selectedItemData)}` : ""}
             className="outline-none border border-[#7a7a7a] resize-none p-4 rounded-md text-[#7a7a7a]"
           />
