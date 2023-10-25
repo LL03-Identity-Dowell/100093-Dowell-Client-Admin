@@ -416,7 +416,7 @@ const Sidebar = () => {
 					</div>
 
 					<div
-						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${
+						className={`button-container flex justify-between text-center border-lightgreen border p-[2px] w-full ${
 							color_scheme == "Red"
 								? "bg-[lightcoral]"
 								: color_scheme == "Green"
@@ -426,13 +426,13 @@ const Sidebar = () => {
 					>
 						<a
 							href="https://100093.pythonanywhere.com/upload"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
+							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
 						>
 							Upload
 						</a>
 					</div>
 					<div
-						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${
+						className={`button-container flex justify-between text-center border-lightgreen border p-[2px] w-full ${
 							color_scheme == "Red"
 								? "bg-[lightcoral]"
 								: color_scheme == "Green"
@@ -444,20 +444,20 @@ const Sidebar = () => {
 							href={`https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${localStorage.getItem(
 								"sessionId"
 							)}`}
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
+							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
 						>
 							Customer Support
 						</a>
 						<a
 							href="#"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
+							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
 						>
 							Error Reporting
 						</a>
 					</div>
 
 					<div
-						className={`button-container flex justify-between text-center border-black border p-[2px] w-full ${
+						className={`button-container flex justify-between text-center border-lightgreen border p-[2px] w-full ${
 							color_scheme == "Red"
 								? "bg-[lightcoral]"
 								: color_scheme == "Green"
@@ -467,13 +467,13 @@ const Sidebar = () => {
 					>
 						<a
 							href="#"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
+							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
 						>
 							Buy/Redeem Credits
 						</a>
 						<a
 							href="https://chrome.google.com/webstore/detail/dowell-ux-living-lab/acnnapiadbgagcnidgnclaohnpmbpebl?utm_source=ext_app_menu"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-[red] text-[red] w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
+							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
 						>
 							Chrome Extension
 						</a>

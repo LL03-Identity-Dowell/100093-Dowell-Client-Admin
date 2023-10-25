@@ -175,11 +175,17 @@ const Form1 = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
+    const selected: HTMLSelectElement | null = document.getElementById(
+      "member"
+    ) as HTMLSelectElement;
+    const selectedOptions: string[] = [];
+    Array.from(selected.selectedOptions).forEach((option) => {
+      selectedOptions.push(option.value);
+    });
     const data = {
       username: userName,
       member_type: formInputs.member_type,
-      member: JSON.stringify(selectedItems),
+      member: JSON.stringify(selectedOptions),
       product: formInputs.product,
       data_type: formInputs.data_type,
       op_rights: formInputs.op_rights,
