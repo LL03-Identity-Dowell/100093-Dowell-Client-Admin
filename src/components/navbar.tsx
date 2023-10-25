@@ -15,7 +15,7 @@ const Navbar = () => {
       {isLoading == false ? (
         ""
       ) : (
-        <div className="lg:flex items-center shadow-xl ring-1 ring-slate-900/5">
+        <div className="lg:flex items-center card-shadow border border-b-[#7a7a7a]">
           <h2 className="w-[60%] font-semibold text-black text-3xl lg:pb-0 pb-8 uppercase text-right">
             Living Lab Admin
           </h2>
