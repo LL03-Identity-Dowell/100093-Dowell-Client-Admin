@@ -185,7 +185,7 @@ const Form1 = () => {
     const data = {
       username: userName,
       member_type: formInputs.member_type,
-      member: selectedOptions,
+      member: JSON.stringify(selectedOptions),
       product: formInputs.product,
       data_type: formInputs.data_type,
       op_rights: formInputs.op_rights,
