@@ -108,7 +108,6 @@ const Products = () => {
                         key={product.org_id}
                         className="relative box "
                         onMouseEnter={() => handleMouseOver(product.product)}
-                        onChange={() => setSelectedProduct(product.product)}
                       >
                         <div className="h-80 w-80 ">
                           <img
