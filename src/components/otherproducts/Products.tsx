@@ -32,6 +32,7 @@ const Products = () => {
   const handleMouseOver = (title: string) => {
     setIsHovering(true);
     setHovertitle(title);
+    setSelectedProduct(title);
   };
 
   const sessionId = localStorage.getItem("sessionId");
@@ -52,7 +53,7 @@ const Products = () => {
       present_org: selectedOrgName,
       session_id: sessionId,
     };
-
+    console.log(data);
     try {
       const response = await axios.post(
         "https://100093.pythonanywhere.com/api/connect_portfolio/",
