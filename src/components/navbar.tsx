@@ -15,11 +15,11 @@ const Navbar = () => {
       {isLoading == false ? (
         ""
       ) : (
-        <div className="lg:flex items-center card-shadow border border-b-[#7a7a7a]">
-          <h2 className="w-[60%] font-semibold text-black text-3xl lg:pb-0 pb-8 uppercase text-right">
+        <div className="flex flex-col max-sm:py-4 md:flex-row items-center card-shadow border border-b-[#7a7a7a]">
+          <h2 className="md:w-[60%] font-semibold text-black text-3xl uppercase text-right">
             Living Lab Admin
           </h2>
-          <div className="w-[35%] flex justify-end">
+          <div className="md:w-[35%] flex justify-end">
             <img
               src={images.admin_logo}
               alt=""
