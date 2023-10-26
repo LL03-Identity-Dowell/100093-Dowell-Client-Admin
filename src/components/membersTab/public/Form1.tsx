@@ -36,6 +36,7 @@ const Form1 = () => {
         .then((res) => {
           console.log(res.data);
           toast.success("success");
+          window.location.reload();
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

@@ -57,6 +57,7 @@ const Form2 = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+	
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">

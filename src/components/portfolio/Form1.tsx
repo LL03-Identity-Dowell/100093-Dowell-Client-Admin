@@ -206,8 +206,12 @@ const Form1 = () => {
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
           }
-          toast.success(res.data.success);
-          toast.error(res.data.resp);
+          if (res.data.success) {
+            toast.success(res.data.success);
+            window.location.reload();
+          } else {
+            toast.error(res.data.resp);
+          }
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
