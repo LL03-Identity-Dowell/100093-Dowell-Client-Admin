@@ -196,7 +196,6 @@ const Form1 = () => {
       portfolio_u_code: formInputs.portfolio_u_code,
       portfolio_det: formInputs.portfolio_det,
     };
-
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
