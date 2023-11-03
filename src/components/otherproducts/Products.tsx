@@ -61,7 +61,6 @@ const Products = () => {
       );
       if (data.product === "Living Lab Admin") {
         const username = response.data.split("?")[1].split("=")[1];
-        console.log(username);
         try {
           const responseAdmin = await axios.post(
             "https://100093.pythonanywhere.com/api/get_data/",
@@ -71,7 +70,7 @@ const Products = () => {
           dispatch(isNewOwner(username));
           dispatch(setAdminData(responseAdmin.data.data[0]));
           dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
-          console.log(responseAdmin.data.data[0]);
+          localStorage;
         } catch (error: unknown) {
           console.error(error);
         }

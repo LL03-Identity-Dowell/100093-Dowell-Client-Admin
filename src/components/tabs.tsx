@@ -59,7 +59,28 @@ const AdminTabs = () => {
       icon: <FaToriiGate />,
     },
   ];
-
+  const isnewOwner = useSelector(
+    (state: RootState) => state.adminData.data[0]?.isNewOwner
+  );
+  useEffect(() => {
+    try {
+      if (isnewOwner) {
+        const fetchProduct = async () => {
+          console.log("Hello");
+          const productResponse = await axios.post(
+            "https://100093.pythonanywhere.com/api/getproducts/",
+            {
+              username: "uxliveadmin",
+            }
+          );
+          dispatch(getproducts(productResponse.data));
+        };
+        fetchProduct();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }, [isnewOwner]);
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   useEffect(() => {
