@@ -80,6 +80,7 @@ const AdminTabs = () => {
             "https://100093.pythonanywhere.com/api/get_data/",
             data
           );
+          console.log("response", response.data.data[0]);
           const productResponse = await axios.post(
             "https://100093.pythonanywhere.com/api/getproducts/",
             productData

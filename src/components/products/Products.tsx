@@ -50,7 +50,7 @@ const Products: React.FC = () => {
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
   const portfolioData: Portfolio[] = adminData?.portpolio || [];
   const presentOrg = adminData?.organisations[0]?.org_name;
-
+  console.log({ adminData });
   const [hovertitle, setHovertitle] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -183,7 +183,7 @@ const Products: React.FC = () => {
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
               Products of{" "}
               <span className="text-[#FF0000]">
-                {userData.userinfo.username}
+                {adminData.Username || userData.userinfo.username}
               </span>
               , Owner{" "}
               <span className="text-[#FF0000]">

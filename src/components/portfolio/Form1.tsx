@@ -37,10 +37,17 @@ const Form1 = () => {
   );
   const productData = useSelector((state: RootState) => state.products);
 
-  const userName = useSelector(
+  let userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
-
+  const isnewOwner = useSelector(
+    (state: RootState) => state.adminData.data[0]?.isNewOwner
+  );
+  if (isnewOwner) {
+    userName = useSelector(
+      (state: RootState) => state.adminData.data[0]?.Username
+    );
+  }
   const getMembers = useSelector(
     (state: RootState) => state.adminData.data[0]?.members
   );
@@ -55,7 +62,6 @@ const Form1 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
-
   const sessionId = localStorage.getItem("sessionId");
 
   const query: Option[] = getAllMemberOptions().map((option) => ({
@@ -98,16 +104,6 @@ const Form1 = () => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
-  // const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedOptions = Array.from(
-  //     e.target.selectedOptions,
-  //     (option) => option.value
-  //   );
-  //   setSelectedItems((prevSelectedItems) => [
-  //     ...prevSelectedItems,
-  //     ...selectedOptions,
-  //   ]);
-  // };
 
   const handleSelectAll = () => {
     let allOptions: string[] = [];
@@ -208,7 +204,11 @@ const Form1 = () => {
           }
           if (res.data.success) {
             toast.success(res.data.success);
-            window.location.reload();
+            if (isnewOwner) {
+              return;
+            } else {
+              window.location.reload();
+            }
           } else {
             toast.error(res.data.resp);
           }

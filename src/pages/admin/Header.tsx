@@ -108,6 +108,7 @@ const Header = () => {
     const org = organizations.find(
       (org) => `${org.orgname}${org.type}` === selectedOrgname
     );
+    console.log({ org });
     if (org) {
       dispatch(getselectedorgs(org));
     }
