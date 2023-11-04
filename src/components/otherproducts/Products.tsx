@@ -68,9 +68,9 @@ const Products = () => {
           );
           toast.success("Success");
           dispatch(isNewOwner(username));
+          localStorage.setItem("username", username);
           dispatch(setAdminData(responseAdmin.data.data[0]));
           dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
-          localStorage;
         } catch (error: unknown) {
           console.error(error);
         }

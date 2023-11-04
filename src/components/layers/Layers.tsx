@@ -26,16 +26,108 @@ const Layers = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   let adminusername = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
+    (state: RootState) => state.adminData.data[0]?.Username
   );
-  const isnewOwner = useSelector(
-    (state: RootState) => state.adminData.data[0]?.isNewOwner
-  );
-  if (isnewOwner) {
-    adminusername = useSelector(
-      (state: RootState) => state.adminData.data[0]?.Username
-    );
-  }
+  useEffect(() => {
+    // Function to call the API
+    setIsLoading(true);
+    const fetchData = async () => {
+      console.log("hello");
+      try {
+        const os = {
+          username: adminusername,
+          category: "os",
+        };
+
+        const osresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          os
+        );
+        usedispatch(getlayeros(osresponse.data));
+
+        const devicesdata = {
+          username: adminusername,
+          category: "devices",
+        };
+
+        const deviceresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          devicesdata
+        );
+
+        usedispatch(getlayerdevices(deviceresponse.data));
+
+        const browserdata = {
+          username: adminusername,
+          category: "browsers",
+        };
+
+        const bresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          browserdata
+        );
+
+        usedispatch(getlayerbrowsers(bresponse.data));
+
+        const condata = {
+          username: adminusername,
+          category: "connection_type",
+        };
+
+        const conresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          condata
+        );
+
+        usedispatch(getlayercontype(conresponse.data));
+
+        const logdata = {
+          username: adminusername,
+          category: "login_type",
+        };
+
+        const logresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          logdata
+        );
+
+        usedispatch(getlayerlogintype(logresponse.data));
+
+        const psdata = {
+          username: adminusername,
+          category: "password_strength",
+        };
+
+        const psresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          psdata
+        );
+
+        usedispatch(getlayerpasswordstrength(psresponse.data));
+
+        const verifydata = {
+          username: adminusername,
+          category: "id_verification",
+        };
+
+        const verifyresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          verifydata
+        );
+
+        usedispatch(getlayerverifyid(verifyresponse.data));
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Call the API when the component mounts
+    if (adminusername != "") {
+      fetchData();
+    }
+  }, [adminusername]);
+
   type devices = {
     "Laptop/Desk top": string;
     "Others not listed above": string;
@@ -186,106 +278,6 @@ const Layers = () => {
     setVerificationKeys(verificationKeys);
     setPasswordStrengthKeys(passwordStrengthKeys);
   };
-
-  useEffect(() => {
-    // Function to call the API
-    setIsLoading(true);
-    const fetchData = async () => {
-      try {
-        const os = {
-          username: adminusername,
-          category: "os",
-        };
-
-        const osresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          os
-        );
-
-        usedispatch(getlayeros(osresponse.data));
-
-        const devicesdata = {
-          username: adminusername,
-          category: "devices",
-        };
-
-        const deviceresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          devicesdata
-        );
-
-        usedispatch(getlayerdevices(deviceresponse.data));
-
-        const browserdata = {
-          username: adminusername,
-          category: "browsers",
-        };
-
-        const bresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          browserdata
-        );
-
-        usedispatch(getlayerbrowsers(bresponse.data));
-
-        const condata = {
-          username: adminusername,
-          category: "connection_type",
-        };
-
-        const conresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          condata
-        );
-
-        usedispatch(getlayercontype(conresponse.data));
-
-        const logdata = {
-          username: adminusername,
-          category: "login_type",
-        };
-
-        const logresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          logdata
-        );
-
-        usedispatch(getlayerlogintype(logresponse.data));
-
-        const psdata = {
-          username: adminusername,
-          category: "password_strength",
-        };
-
-        const psresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          psdata
-        );
-
-        usedispatch(getlayerpasswordstrength(psresponse.data));
-
-        const verifydata = {
-          username: adminusername,
-          category: "id_verification",
-        };
-
-        const verifyresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          verifydata
-        );
-
-        usedispatch(getlayerverifyid(verifyresponse.data));
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    // Call the API when the component mounts
-    if (adminusername != "") {
-      fetchData();
-    }
-  }, [adminusername]);
 
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme

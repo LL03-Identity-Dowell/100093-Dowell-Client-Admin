@@ -314,11 +314,9 @@ const adminDataSlice = createSlice({
       state.data[0].profile_info = action.payload.profile_info;
       state.data[0].organisations[1] = action.payload.organisations[0];
       state.data[0].members = action.payload.members;
-      localStorage.setItem("adminData", JSON.stringify(state.data[0]));
     },
     isNewOwner: (state, action) => {
       state.data[0].isNewOwner = action.payload;
-       localStorage.setItem("adminData", JSON.stringify(state.data[0]));
     },
     setItemData: (state, action) => {
       if (action.payload.type === "level1") {
@@ -332,17 +330,12 @@ const adminDataSlice = createSlice({
       } else if (action.payload.type === "level5") {
         state.data[0].organisations[1].level5.items = action.payload.data;
       }
-       localStorage.setItem("adminData", JSON.stringify(state.data[0]));
     },
-    setState: (state, _action) => {
-      if (localStorage.getItem("adminData")) {
-        state.data[0] = JSON.parse(localStorage.getItem("adminData") || "");
-      }
-    },
+  
   },
 });
 
 export default adminDataSlice.reducer;
 
-export const { getAdminData, setAdminData, isNewOwner, setItemData, setState } =
+export const { getAdminData, setAdminData, isNewOwner, setItemData } =
   adminDataSlice.actions;
