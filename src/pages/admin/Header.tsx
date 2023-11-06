@@ -16,7 +16,6 @@ import { getloaderstate } from "../../store/slice/loaderstate";
 const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
-
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
 

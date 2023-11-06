@@ -34,10 +34,12 @@ const ClientAdmin = () => {
         dispatch(isNewOwner(username));
         dispatch(setAdminData(responseAdmin.data.data[0]));
         dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
+      } else {
+        dispatch(isNewOwner(null));
       }
     };
     fetchIsOwnerData();
-  }, []);
+  }, [isnewOwner]);
 
   return (
     <>
@@ -67,7 +69,15 @@ const ClientAdmin = () => {
                     </button>
                   </div>
                 )}
-                {selectedOrg.type === "owner" ? <AdminTabs /> : <Otherorgtab />}
+                {isnewOwner !== undefined ? (
+                  selectedOrg.type === "owner" ? (
+                    <AdminTabs />
+                  ) : (
+                    <Otherorgtab />
+                  )
+                ) : (
+                  <Loader></Loader>
+                )}
               </div>
             ) : (
               <Loader></Loader>
