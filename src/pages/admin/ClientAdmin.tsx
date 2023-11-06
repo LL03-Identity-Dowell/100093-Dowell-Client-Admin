@@ -1,7 +1,5 @@
 import Layout from "../../components/layout";
-
 import AdminTabs from "../../components/tabs";
-
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,21 +9,20 @@ import Loader from "../whiteloader";
 import { isNewOwner, setAdminData } from "../../store/slice/adminData";
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import axios from "axios";
-import { useEffect } from "react";
 
 const ClientAdmin = () => {
   const selectedOrg = useSelector((state: RootState) => state.selectedorg);
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
   const isnewOwner = useSelector(
-    (state: RootState) => state.adminData.data[0]?.isNewOwner
+    (state: RootState) => state.adminData.data[0].isNewOwner
   );
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchIsOwnerData = async () => {
-      if (localStorage.getItem("username")) {
+  const fetchIsOwnerData = async () => {
+    if (localStorage.getItem("username")) {
+      if (!isnewOwner) {
         const username = localStorage.getItem("username");
         const responseAdmin = await axios.post(
           "https://100093.pythonanywhere.com/api/get_data/",
@@ -34,13 +31,13 @@ const ClientAdmin = () => {
         dispatch(isNewOwner(username));
         dispatch(setAdminData(responseAdmin.data.data[0]));
         dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
-      } else {
-        dispatch(isNewOwner(null));
       }
-    };
-    fetchIsOwnerData();
-  }, [isnewOwner]);
-
+    } else {
+      dispatch(isNewOwner(null));
+    }
+  };
+  fetchIsOwnerData();
+  console.log({ isnewOwner });
   return (
     <>
       <Layout>

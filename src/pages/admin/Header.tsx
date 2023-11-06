@@ -94,7 +94,6 @@ const Header = () => {
     fetchedOrganizations.push(ownerObj);
 
     dispatch(getorgs(fetchedOrganizations));
-
     // Find the default organization (type 'owner') and set it as the selected organization
     const defaultOrg = fetchedOrganizations.find((org) => org.type === "owner");
     if (defaultOrg) {
