@@ -331,7 +331,6 @@ const adminDataSlice = createSlice({
         state.data[0].organisations[1].level5.items = action.payload.data;
       }
     },
-  
   },
 });
 
