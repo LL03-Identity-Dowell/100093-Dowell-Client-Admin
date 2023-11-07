@@ -48,6 +48,7 @@ const Form1 = () => {
       (state: RootState) => state.adminData.data[0]?.Username
     );
   }
+  console.log({ userName });
   const getMembers = useSelector(
     (state: RootState) => state.adminData.data[0]?.members
   );
@@ -192,6 +193,7 @@ const Form1 = () => {
       portfolio_u_code: formInputs.portfolio_u_code,
       portfolio_det: formInputs.portfolio_det,
     };
+    console.log({ data });
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
@@ -340,6 +342,7 @@ const Form1 = () => {
               />
             </div>
             <select
+              required
               multiple
               id="member"
               className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -363,6 +366,7 @@ const Form1 = () => {
               Select Product <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
+              required
               onChange={handleSelectStatus}
               id="product"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"

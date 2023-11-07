@@ -37,7 +37,6 @@ const ClientAdmin = () => {
     }
   };
   fetchIsOwnerData();
-  console.log({ isnewOwner });
   return (
     <>
       <Layout>
