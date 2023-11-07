@@ -59,11 +59,7 @@ const Form1 = () => {
           console.log(res.data);
           setErrMsg("");
           toast.success("success");
-          if (isnewOwner) {
-            return;
-          } else {
-            window.location.reload();
-          }
+          window.location.reload();
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

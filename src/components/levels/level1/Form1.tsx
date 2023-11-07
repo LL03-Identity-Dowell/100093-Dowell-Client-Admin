@@ -52,7 +52,6 @@ const Form1 = () => {
       level_name: levelName,
       level: "level1",
     };
-    console.log({ data });
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/update_level_name/", data)
@@ -60,11 +59,7 @@ const Form1 = () => {
           console.log(res.data);
           setErrMsg("");
           toast.success("success");
-          if (isnewOwner) {
-            return;
-          } else {
-            window.location.reload();
-          }
+          window.location.reload();
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
