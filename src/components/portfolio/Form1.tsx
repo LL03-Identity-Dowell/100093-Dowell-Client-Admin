@@ -72,6 +72,14 @@ const Form1 = () => {
   const handleSearchInputChange = (query: any) => {
     if (query) {
       const selectedOptions = (query as Option[]).map((option) => option.value);
+      const selected: HTMLSelectElement | null = document.getElementById(
+        "member"
+      ) as HTMLSelectElement;
+      Array.from(selected.options).forEach((option) => {
+        if (selectedOptions.includes(option.textContent || "")) {
+          option.selected = true;
+        }
+      });
       setSelectedItems([...selectedOptions]);
     } else {
       setSelectedItems([]);
