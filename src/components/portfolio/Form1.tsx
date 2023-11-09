@@ -48,7 +48,6 @@ const Form1 = () => {
       (state: RootState) => state.adminData.data[0]?.Username
     );
   }
-  console.log({ userName });
   const getMembers = useSelector(
     (state: RootState) => state.adminData.data[0]?.members
   );
@@ -120,7 +119,14 @@ const Form1 = () => {
     } else if (formInputs.member_type === "owner") {
       allOptions = [userName];
     }
-
+    const selected: HTMLSelectElement | null = document.getElementById(
+      "member"
+    ) as HTMLSelectElement;
+    Array.from(selected.options).forEach((option) => {
+      if (allOptions.includes(option.textContent || "")) {
+        option.selected = true;
+      }
+    });
     setSelectedItems(allOptions);
   };
 
