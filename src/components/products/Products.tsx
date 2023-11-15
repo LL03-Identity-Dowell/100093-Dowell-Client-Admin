@@ -50,7 +50,6 @@ const Products: React.FC = () => {
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
   const portfolioData: Portfolio[] = adminData?.portpolio || [];
   const presentOrg = adminData?.organisations[0]?.org_name;
-
   const [hovertitle, setHovertitle] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +68,6 @@ const Products: React.FC = () => {
       : productData?.products?.filter(
           (product) => product.product_name !== "Living Lab Monitoring"
         );
-
   const defaultOptions = useMemo(() => {
     const initialDefaultOptions: Record<string, any> = {};
     filteredProducts.forEach((product) => {
@@ -183,11 +181,14 @@ const Products: React.FC = () => {
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
               Products of{" "}
               <span className="text-[#FF0000]">
-                {userData.userinfo.username}
+                {adminData.Username || userData.userinfo.username}
               </span>
               , Owner{" "}
               <span className="text-[#FF0000]">
-                {userData.userinfo.first_name} {userData.userinfo.last_name}
+                {adminData.profile_info.first_name ||
+                  userData.userinfo.first_name}{" "}
+                {adminData.profile_info.last_name ||
+                  userData.userinfo.last_name}
               </span>
             </p>
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import { RootState } from "../../store/Store";
 import { Option } from "../portfolio/types";
+import { isNewOwner, setAdminData } from "../../store/slice/adminData";
+import { getselectedorgs } from "../../store/slice/selectedorg";
 
 const Products = () => {
   const productData = useSelector(
@@ -18,13 +20,12 @@ const Products = () => {
   );
   const userData = useSelector((state: RootState) => state.userinfo);
   const userName = userData.userinfo.username;
-
   const [isHovering, setIsHovering] = useState(false);
   const [hovertitle, setHovertitle] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<Option | null>(null);
   const [isLoading, setIsLoading] = useState(!productData);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     setIsLoading(!productData);
   }, [productData]);
@@ -32,6 +33,7 @@ const Products = () => {
   const handleMouseOver = (title: string) => {
     setIsHovering(true);
     setHovertitle(title);
+    setSelectedProduct(title);
   };
 
   const sessionId = localStorage.getItem("sessionId");
@@ -52,14 +54,30 @@ const Products = () => {
       present_org: selectedOrgName,
       session_id: sessionId,
     };
-
     try {
       const response = await axios.post(
         "https://100093.pythonanywhere.com/api/connect_portfolio/",
         data
       );
-      toast.success("Success");
-      window.location.href = response.data;
+      if (data.product === "Living Lab Admin") {
+        const username = response.data.split("?")[1].split("=")[1];
+        try {
+          const responseAdmin = await axios.post(
+            "https://100093.pythonanywhere.com/api/get_data/",
+            { username: username }
+          );
+          toast.success("Success");
+          dispatch(isNewOwner(username));
+          localStorage.setItem("username", username);
+          dispatch(setAdminData(responseAdmin.data.data[0]));
+          dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
+        } catch (error: unknown) {
+          console.error(error);
+        }
+      } else {
+        toast.success("Success");
+        window.location.href = response.data;
+      }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
@@ -107,7 +125,6 @@ const Products = () => {
                         key={product.org_id}
                         className="relative box "
                         onMouseEnter={() => handleMouseOver(product.product)}
-                        onChange={() => setSelectedProduct(product.product)}
                       >
                         <div className="h-80 w-80 ">
                           <img

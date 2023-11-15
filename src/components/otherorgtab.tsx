@@ -11,56 +11,67 @@ import { RootState } from "../store/Store";
 import Loader from "../pages/whiteloader";
 
 const Otherorgtab = () => {
-  const [tabIndex, setTabIndex] = useState(-1);
+	const [tabIndex, setTabIndex] = useState(-1);
 
-  const tabTitle = [
-    {
-      title: "Products",
-      icon: <FaRegGem />,
-    },
-  ];
+	// tab data
+	const tabTitle = [
+		{
+			title: "Products",
+			icon: <FaRegGem />,
+		},
+	];
 
-  const [isLoading, setIsLoading] = useState(false);
-  const adminusername = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
-  );
-  const selectedname = useSelector(
-    (state: RootState) => state.selectedorg.orgname
-  );
-  const selecteddata = useSelector((state: RootState) => state.selectedorg);
-  const dispatch = useDispatch();
+	const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (selecteddata.type !== "owner") {
-      const fetchData = async () => {
-        setIsLoading(true);
-        try {
-          const data = {
-            username: adminusername,
-            org_name: selectedname,
-          };
-          const response = await axios.post(
-            "https://100093.pythonanywhere.com/api/otherorg/",
-            data
-          );
+	// select username from redux
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
 
-          dispatch(getotherorgdata(response.data));
-          console.log(response.data, "other org data");
-          setIsLoading(false);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-      fetchData();
-    }
-  }, [adminusername, selectedname]);
+	//select selected name from redux
+	const selectedname = useSelector(
+		(state: RootState) => state.selectedorg.orgname
+	);
 
-    const color_scheme = useSelector(
-			(state: RootState) => state.setting?.data?.color_scheme
-		);
-  return (
+	//select selected orname data from redux
+	const selecteddata = useSelector((state: RootState) => state.selectedorg);
+	const dispatch = useDispatch();
+
+	// call data for selected organization
+
+	useEffect(() => {
+		if (selecteddata.type !== "owner") {
+			const fetchData = async () => {
+				setIsLoading(true);
+				try {
+					const data = {
+						username: adminusername,
+						org_name: selectedname,
+					};
+					const response = await axios.post(
+						"https://100093.pythonanywhere.com/api/otherorg/",
+						data
+					);
+
+					dispatch(getotherorgdata(response.data));
+					console.log(response.data, "other org data");
+					setIsLoading(false);
+				} catch (error) {
+					console.error(error);
+				}
+			};
+			fetchData();
+		}
+	}, [adminusername, selectedname]);
+
+
+	// select scheme from redux
+	const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+	);
+	return (
 		<div>
-			{isLoading == false ? ( 
+			{isLoading == false ? (
 				<Tabs
 					className=""
 					selectedTabClassName={` ${
@@ -86,9 +97,7 @@ const Otherorgtab = () => {
 											: "hover:bg-[#7A7A7A]"
 									} hover:text-white cursor-pointer outline-none`}
 								>
-									<i className=" text-xl font-black">
-										{tabs.icon}
-									</i>
+									<i className=" text-xl font-black">{tabs.icon}</i>
 									<p className="font-roboto text-lg">{tabs.title}</p>
 								</Tab>
 							);

@@ -25,9 +25,108 @@ import Idverifystatus from "./form/Idverifystatus";
 const Layers = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const adminusername = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
+  let adminusername = useSelector(
+    (state: RootState) => state.adminData.data[0]?.Username
   );
+  useEffect(() => {
+    // Function to call the API
+    setIsLoading(true);
+    const fetchData = async () => {
+      console.log("hello");
+      try {
+        const os = {
+          username: adminusername,
+          category: "os",
+        };
+
+        const osresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          os
+        );
+        usedispatch(getlayeros(osresponse.data));
+
+        const devicesdata = {
+          username: adminusername,
+          category: "devices",
+        };
+
+        const deviceresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          devicesdata
+        );
+
+        usedispatch(getlayerdevices(deviceresponse.data));
+
+        const browserdata = {
+          username: adminusername,
+          category: "browsers",
+        };
+
+        const bresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          browserdata
+        );
+
+        usedispatch(getlayerbrowsers(bresponse.data));
+
+        const condata = {
+          username: adminusername,
+          category: "connection_type",
+        };
+
+        const conresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          condata
+        );
+
+        usedispatch(getlayercontype(conresponse.data));
+
+        const logdata = {
+          username: adminusername,
+          category: "login_type",
+        };
+
+        const logresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          logdata
+        );
+
+        usedispatch(getlayerlogintype(logresponse.data));
+
+        const psdata = {
+          username: adminusername,
+          category: "password_strength",
+        };
+
+        const psresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          psdata
+        );
+
+        usedispatch(getlayerpasswordstrength(psresponse.data));
+
+        const verifydata = {
+          username: adminusername,
+          category: "id_verification",
+        };
+
+        const verifyresponse = await axios.post(
+          "https://100093.pythonanywhere.com/api/get_layer_data/",
+          verifydata
+        );
+
+        usedispatch(getlayerverifyid(verifyresponse.data));
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Call the API when the component mounts
+    if (adminusername != "") {
+      fetchData();
+    }
+  }, [adminusername]);
 
   type devices = {
     "Laptop/Desk top": string;
@@ -180,106 +279,6 @@ const Layers = () => {
     setPasswordStrengthKeys(passwordStrengthKeys);
   };
 
-  useEffect(() => {
-    // Function to call the API
-    setIsLoading(true);
-    const fetchData = async () => {
-      try {
-        const os = {
-          username: adminusername,
-          category: "os",
-        };
-
-        const osresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          os
-        );
-
-        usedispatch(getlayeros(osresponse.data));
-
-        const devicesdata = {
-          username: adminusername,
-          category: "devices",
-        };
-
-        const deviceresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          devicesdata
-        );
-
-        usedispatch(getlayerdevices(deviceresponse.data));
-
-        const browserdata = {
-          username: adminusername,
-          category: "browsers",
-        };
-
-        const bresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          browserdata
-        );
-
-        usedispatch(getlayerbrowsers(bresponse.data));
-
-        const condata = {
-          username: adminusername,
-          category: "connection_type",
-        };
-
-        const conresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          condata
-        );
-
-        usedispatch(getlayercontype(conresponse.data));
-
-        const logdata = {
-          username: adminusername,
-          category: "login_type",
-        };
-
-        const logresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          logdata
-        );
-
-        usedispatch(getlayerlogintype(logresponse.data));
-
-        const psdata = {
-          username: adminusername,
-          category: "password_strength",
-        };
-
-        const psresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          psdata
-        );
-
-        usedispatch(getlayerpasswordstrength(psresponse.data));
-
-        const verifydata = {
-          username: adminusername,
-          category: "id_verification",
-        };
-
-        const verifyresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_layer_data/",
-          verifydata
-        );
-
-        usedispatch(getlayerverifyid(verifyresponse.data));
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    // Call the API when the component mounts
-    if (adminusername != "") {
-      fetchData();
-    }
-  }, [adminusername]);
-
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
@@ -289,12 +288,13 @@ const Layers = () => {
         <div className="mt-8 w-full lg:flex gap-8">
           <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
             <span
-              className={`${color_scheme == "Red"
+              className={`${
+                color_scheme == "Red"
                   ? "bg-[#DC4C64]"
                   : color_scheme == "Green"
-                    ? "bg-[#14A44D]"
-                    : "bg-[#7A7A7A]"
-                } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+                  ? "bg-[#14A44D]"
+                  : "bg-[#7A7A7A]"
+              } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
             >
               <p>Security Layers created in my workspace </p>
             </span>
@@ -397,10 +397,10 @@ const Layers = () => {
                 >
                   {devicesKeys
                     ? devicesKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -414,10 +414,10 @@ const Layers = () => {
                 >
                   {operatingKeys
                     ? operatingKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -431,10 +431,10 @@ const Layers = () => {
                 >
                   {browserKeys
                     ? browserKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -448,10 +448,10 @@ const Layers = () => {
                 >
                   {connectionKeys
                     ? connectionKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -465,10 +465,10 @@ const Layers = () => {
                 >
                   {loginKeys
                     ? loginKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -499,10 +499,10 @@ const Layers = () => {
                 >
                   {passwordStrengthKeys
                     ? passwordStrengthKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -516,10 +516,10 @@ const Layers = () => {
                 >
                   {verificationKeys
                     ? verificationKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -553,12 +553,13 @@ const Layers = () => {
               </div>
 
               <button
-                className={`w-full ${color_scheme == "Red"
+                className={`w-full ${
+                  color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Refresh Search
               </button>
@@ -717,12 +718,13 @@ const Layers = () => {
                 </li>
               </ol>
               <button
-                className={`w-full ${color_scheme == "Red"
+                className={`w-full ${
+                  color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Save Geographic Settings
               </button>
@@ -757,12 +759,13 @@ const Layers = () => {
                 })}
               </ol>
               <button
-                className={`w-full ${color_scheme == "Red"
+                className={`w-full ${
+                  color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Save Language Settings
               </button>
