@@ -17,7 +17,6 @@ import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
-
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
 
@@ -96,7 +95,6 @@ const Header = () => {
     fetchedOrganizations.push(ownerObj);
 
     dispatch(getorgs(fetchedOrganizations));
-
     // Find the default organization (type 'owner') and set it as the selected organization
     const defaultOrg = fetchedOrganizations.find((org) => org.type === "owner");
     if (defaultOrg) {
@@ -109,6 +107,7 @@ const Header = () => {
     const org = organizations.find(
       (org) => `${org.orgname}${org.type}` === selectedOrgname
     );
+    console.log({ org });
     if (org) {
       dispatch(getselectedorgs(org));
     }

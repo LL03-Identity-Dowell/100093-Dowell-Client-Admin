@@ -37,10 +37,17 @@ const Form1 = () => {
   );
   const productData = useSelector((state: RootState) => state.products);
 
-  const userName = useSelector(
+  let userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
-
+  const isnewOwner = useSelector(
+    (state: RootState) => state.adminData.data[0]?.isNewOwner
+  );
+  if (isnewOwner) {
+    userName = useSelector(
+      (state: RootState) => state.adminData.data[0]?.Username
+    );
+  }
   const getMembers = useSelector(
     (state: RootState) => state.adminData.data[0]?.members
   );
@@ -55,7 +62,6 @@ const Form1 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
-
   const sessionId = localStorage.getItem("sessionId");
 
   const query: Option[] = getAllMemberOptions().map((option) => ({
@@ -66,6 +72,14 @@ const Form1 = () => {
   const handleSearchInputChange = (query: any) => {
     if (query) {
       const selectedOptions = (query as Option[]).map((option) => option.value);
+      const selected: HTMLSelectElement | null = document.getElementById(
+        "member"
+      ) as HTMLSelectElement;
+      Array.from(selected.options).forEach((option) => {
+        if (selectedOptions.includes(option.textContent || "")) {
+          option.selected = true;
+        }
+      });
       setSelectedItems([...selectedOptions]);
     } else {
       setSelectedItems([]);
@@ -98,16 +112,6 @@ const Form1 = () => {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
-  // const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedOptions = Array.from(
-  //     e.target.selectedOptions,
-  //     (option) => option.value
-  //   );
-  //   setSelectedItems((prevSelectedItems) => [
-  //     ...prevSelectedItems,
-  //     ...selectedOptions,
-  //   ]);
-  // };
 
   const handleSelectAll = () => {
     let allOptions: string[] = [];
@@ -123,7 +127,14 @@ const Form1 = () => {
     } else if (formInputs.member_type === "owner") {
       allOptions = [userName];
     }
-
+    const selected: HTMLSelectElement | null = document.getElementById(
+      "member"
+    ) as HTMLSelectElement;
+    Array.from(selected.options).forEach((option) => {
+      if (allOptions.includes(option.textContent || "")) {
+        option.selected = true;
+      }
+    });
     setSelectedItems(allOptions);
   };
 
@@ -175,11 +186,17 @@ const Form1 = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
+    const selected: HTMLSelectElement | null = document.getElementById(
+      "member"
+    ) as HTMLSelectElement;
+    const selectedOptions: string[] = [];
+    Array.from(selected.selectedOptions).forEach((option) => {
+      selectedOptions.push(option.value);
+    });
     const data = {
       username: userName,
       member_type: formInputs.member_type,
-      member: JSON.stringify(selectedItems),
+      member: JSON.stringify(selectedOptions),
       product: formInputs.product,
       data_type: formInputs.data_type,
       op_rights: formInputs.op_rights,
@@ -190,7 +207,6 @@ const Form1 = () => {
       portfolio_u_code: formInputs.portfolio_u_code,
       portfolio_det: formInputs.portfolio_det,
     };
-
     try {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
@@ -200,8 +216,16 @@ const Form1 = () => {
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
           }
-          toast.success(res.data.success);
-          toast.error(res.data.resp);
+          if (res.data.success) {
+            toast.success(res.data.success);
+            if (isnewOwner) {
+              return;
+            } else {
+              window.location.reload();
+            }
+          } else {
+            toast.error(res.data.resp);
+          }
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -331,6 +355,7 @@ const Form1 = () => {
               />
             </div>
             <select
+              required
               multiple
               id="member"
               className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -354,6 +379,7 @@ const Form1 = () => {
               Select Product <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
+              required
               onChange={handleSelectStatus}
               id="product"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
@@ -409,6 +435,7 @@ const Form1 = () => {
               Select Roles <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
+              required
               onChange={handleSelectStatus}
               id="role"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"

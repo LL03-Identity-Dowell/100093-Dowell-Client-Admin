@@ -100,245 +100,246 @@ const Form2 = () => {
     (item) => item.product === formInputs?.product
   );
 
-
   const color_scheme = useSelector(
-		(state: RootState) => state.setting?.data?.color_scheme
-	);
+    (state: RootState) => state.setting?.data?.color_scheme
+  );
   return (
-		<>
-			<ToastContainer position="top-right" />
+    <>
+      <ToastContainer position="top-right" />
 
-			<div className="lg:w-1/2 px-5">
-				<h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
-					Show Assigned Portfolios, Search in Portfolios
-				</h2>
+      <div className="lg:w-1/2 px-5">
+        <h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
+          Show Assigned Portfolios, Search in Portfolios
+        </h2>
 
-				<div className=" mb-8 mt-12">
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Member Type
-						</label>
-						<select
-							multiple
-							onChange={handleSelectStatus}
-							id="member_type"
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							<option value="owner">Owner </option>
-							<option value={"team_member"}> Team Member </option>
-							<option value="user">User </option>
-							<option value="public"> Public</option>
-						</select>
-					</div>
+        <div className=" mb-8 mt-12">
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Member Type
+            </label>
+            <select
+              multiple
+              onChange={handleSelectStatus}
+              id="member_type"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              <option value="owner">Owner </option>
+              <option value={"team_member"}> Team Member </option>
+              <option value="user">User </option>
+              <option value="public"> Public</option>
+            </select>
+          </div>
 
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Select Member <span className="text-[#ff0000] text-xs">*</span>
-						</label>
-						<select
-							multiple
-							// onChange={handleSelectChange}
-							id="member"
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							{formInputs.member_type === "user" &&
-								filterUserMember?.map((member, key) => (
-									<option key={key}> {member.name}</option>
-								))}
-							{formInputs.member_type === "team_member" &&
-								filterTeamMember?.map((member, key) => (
-									<option key={key}>
-										{" "}
-										{member.name === "owner" ? userName : member?.name}
-									</option>
-								))}
-							{formInputs.member_type === "owner" && (
-								<option> {userName}</option>
-							)}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Product
-						</label>
-						<select
-							multiple
-							id="product"
-							onChange={handleSelectStatus}
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							placeholder="Select Product"
-						>
-							{productData?.products?.map((product) => (
-								<option key={product._id}> {product.product_name} </option>
-							))}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Data Type{" "}
-						</label>
-						<select
-							multiple
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							<option>Real Data</option>
-							<option>Learning Data</option>
-							<option>Testing Data</option>
-							<option>Archived Data</option>{" "}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Operational Rights{" "}
-						</label>
-						<select
-							multiple
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							<option>View</option>
-							<option>Add/Edit</option>
-							<option>Delete</option>
-							<option>Admin</option>
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							Roles
-						</label>
-						<select
-							multiple
-							className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							{rolesdata?.map((roles, key) =>
-								roles.status === "enable" ? (
-									<option key={key}>{roles.role_name}</option>
-								) : null
-							)}
-						</select>
-					</div>
-					<form onSubmit={handleSubmitStatus}>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Enabled Portfolios
-							</label>
-							<select
-								required
-								onChange={handleSelectStatus}
-								id="portfolio_code"
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							>
-								<option>...select...</option>
-								{filterDataByProduct?.map((products, key) =>
-									products.status === "enable" &&
-									products.member_type === formInputs.member_type ? (
-										<option key={key} value={products.portfolio_code}>
-											{" "}
-											{products.portfolio_name}
-										</option>
-									) : null
-								)}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Disabled Portfolios
-							</label>
-							<select
-								required
-								onChange={handleSelectStatus}
-								id="portfolio_code"
-								className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							>
-								<option>...select...</option>
-								{filterDataByProduct?.map((products, key) =>
-									products.status === "disable" &&
-									products.member_type === formInputs.member_type ? (
-										<option key={key} value={products.portfolio_code}>
-											{" "}
-											{products.portfolio_name}
-										</option>
-									) : null
-								)}
-							</select>
-						</div>
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Details of selected Portfolio
-							</label>
-							<textarea
-								rows={4}
-								readOnly
-								placeholder="Portfolio details"
-								value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
-								className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-							/>
-						</div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Select Member <span className="text-[#ff0000] text-xs">*</span>
+            </label>
+            <select
+              required
+              multiple
+              // onChange={handleSelectChange}
+              id="member"
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              {formInputs.member_type === "user" &&
+                filterUserMember?.map((member, key) => (
+                  <option key={key}> {member.name}</option>
+                ))}
+              {formInputs.member_type === "team_member" &&
+                filterTeamMember?.map((member, key) => (
+                  <option key={key}>
+                    {" "}
+                    {member.name === "owner" ? userName : member?.name}
+                  </option>
+                ))}
+              {formInputs.member_type === "owner" && (
+                <option> {userName}</option>
+              )}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Product
+            </label>
+            <select
+              multiple
+              id="product"
+              onChange={handleSelectStatus}
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              placeholder="Select Product"
+            >
+              {productData?.products?.map((product) => (
+                <option key={product._id}> {product.product_name} </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Data Type{" "}
+            </label>
+            <select
+              multiple
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              <option>Real Data</option>
+              <option>Learning Data</option>
+              <option>Testing Data</option>
+              <option>Archived Data</option>{" "}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Operational Rights{" "}
+            </label>
+            <select
+              multiple
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              <option>View</option>
+              <option>Add/Edit</option>
+              <option>Delete</option>
+              <option>Admin</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              Roles
+            </label>
+            <select
+              multiple
+              className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              {rolesdata?.map((roles, key) =>
+                roles.status === "enable" ? (
+                  <option key={key}>{roles.role_name}</option>
+                ) : null
+              )}
+            </select>
+          </div>
+          <form onSubmit={handleSubmitStatus}>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Enabled Portfolios
+              </label>
+              <select
+                required
+                onChange={handleSelectStatus}
+                id="portfolio_code"
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                <option>...select...</option>
+                {filterDataByProduct?.map((products, key) =>
+                  products.status === "enable" &&
+                  products.member_type === formInputs.member_type ? (
+                    <option key={key} value={products.portfolio_code}>
+                      {" "}
+                      {products.portfolio_name}
+                    </option>
+                  ) : null
+                )}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Disabled Portfolios
+              </label>
+              <select
+                required
+                onChange={handleSelectStatus}
+                id="portfolio_code"
+                className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                <option>...select...</option>
+                {filterDataByProduct?.map((products, key) =>
+                  products.status === "disable" &&
+                  products.member_type === formInputs.member_type ? (
+                    <option key={key} value={products.portfolio_code}>
+                      {" "}
+                      {products.portfolio_name}
+                    </option>
+                  ) : null
+                )}
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Details of selected Portfolio
+              </label>
+              <textarea
+                rows={4}
+                readOnly
+                placeholder="Portfolio details"
+                value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
+                className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+              />
+            </div>
 
-						<div className="mb-4">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								Enable / Disable Selected Portfolio
-							</label>
-							<select
-								required
-								onChange={handleSelectStatus}
-								id="portfolio_status"
-								className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							>
-								<option value=""> ...Select... </option>
-								<option> Enable </option>
-								<option> Disable </option>
-							</select>
-						</div>
-						<button
-							disabled={isLoadingStatus}
-							className={`w-full h-12  ${
-								isLoadingStatus == true
-									? "bg-[#b8b8b8]"
-									: color_scheme == "Red"
-									? "bg-[#DC4C64]"
-									: color_scheme == "Green"
-									? "bg-[#14A44D]"
-									: "bg-[#7A7A7A]"
-							} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-						>
-							{isLoadingStatus
-								? "Loading..."
-								: "Enable / Disable selected Portfolio"}
-						</button>
-						{statusErrMsg && (
-							<p className="text-xs text-[#FF0000] text-center pt-2 truncate">
-								{statusErrMsg}
-							</p>
-						)}
-					</form>
+            <div className="mb-4">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                Enable / Disable Selected Portfolio
+                <span className="text-[#ff0000] text-xs"> *</span>
+              </label>
+              <select
+                required
+                onChange={handleSelectStatus}
+                id="portfolio_status"
+                className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              >
+                <option value=""> ...Select... </option>
+                <option> Enable </option>
+                <option> Disable </option>
+              </select>
+            </div>
+            <button
+              disabled={isLoadingStatus}
+              className={`w-full h-12  ${
+                isLoadingStatus == true
+                  ? "bg-[#b8b8b8]"
+                  : color_scheme == "Red"
+                  ? "bg-[#DC4C64]"
+                  : color_scheme == "Green"
+                  ? "bg-[#14A44D]"
+                  : "bg-[#7A7A7A]"
+              } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+            >
+              {isLoadingStatus
+                ? "Loading..."
+                : "Enable / Disable selected Portfolio"}
+            </button>
+            {statusErrMsg && (
+              <p className="text-xs text-[#FF0000] text-center pt-2 truncate">
+                {statusErrMsg}
+              </p>
+            )}
+          </form>
 
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  mb-8 hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-					>
-						Duplicate selected Portfolio to create new
-					</button>
-					<button
-						className={`w-full ${
-							color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-						onClick={refreshSearch}
-					>
-						Refresh Search
-					</button>
-				</div>
-			</div>
-		</>
-	);
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  mb-8 hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+          >
+            Duplicate selected Portfolio to create new
+          </button>
+          <button
+            className={`w-full ${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+            onClick={refreshSearch}
+          >
+            Refresh Search
+          </button>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Form2;
