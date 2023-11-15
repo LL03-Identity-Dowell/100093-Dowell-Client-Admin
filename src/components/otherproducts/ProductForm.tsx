@@ -5,6 +5,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
 const ProductForm = () => {
+
+  // select product data ,user name, and selected orgname from org
   const productData = useSelector(
     (state: RootState) => state.otherorgdata.data
   );
@@ -14,6 +16,8 @@ const ProductForm = () => {
   const selectedorgname = useSelector(
     (state: RootState) => state.selectedorg.orgname
   );
+
+  //
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +32,8 @@ const ProductForm = () => {
   );
   const sessionId = localStorage.getItem("sessionId");
 
+
+  // handle connect button
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);

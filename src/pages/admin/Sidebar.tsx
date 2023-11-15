@@ -9,6 +9,8 @@ import {
 import { RootState } from "../../store/Store";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
+import { FaTimes } from "react-icons/fa";
+import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 
 const Sidebar = () => {
 	const adminusername = useSelector(
@@ -129,12 +131,18 @@ const Sidebar = () => {
 	const color_scheme = useSelector(
 		(state: RootState) => state.setting?.data?.color_scheme
 	);
+
+	const dispatch = useDispatch()
+	const handleiconClick = () => {
+			dispatch(getoverlaysidebar(false));
+		};
 	return (
 		<>
 			{isLoading == false ? (
 				""
 			) : (
-				<div className="border border-black card-shadow lg:w-1/4 px-2 py-2">
+				<div className="border bg-white border-black card-shadow lg:w-1/4 px-2 py-2">
+					<FaTimes  onClick={handleiconClick} className="ml-auto m-2  text-[20px]"></FaTimes>
 					<div
 						className={`border border-[#61CE70] pb-2 ${
 							color_scheme == "Red"
@@ -415,69 +423,7 @@ const Sidebar = () => {
 						</div>
 					</div>
 
-					<div
-						className={`button-container flex justify-between text-center border-lightgreen border p-[2px] w-full ${
-							color_scheme == "Red"
-								? "bg-[lightcoral]"
-								: color_scheme == "Green"
-								? "bg-[lightgreen]"
-								: "bg-[#a1a1a1] "
-						} `}
-					>
-						<a
-							href="https://100093.pythonanywhere.com/upload"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
-						>
-							Upload
-						</a>
-					</div>
-					<div
-						className={`button-container flex justify-between text-center border-lightgreen border p-[2px] w-full ${
-							color_scheme == "Red"
-								? "bg-[lightcoral]"
-								: color_scheme == "Green"
-								? "bg-[lightgreen]"
-								: "bg-[#a1a1a1] "
-						} `}
-					>
-						<a
-							href={`https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${localStorage.getItem(
-								"sessionId"
-							)}`}
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
-						>
-							Customer Support
-						</a>
-						<a
-							href="#"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
-						>
-							Error Reporting
-						</a>
-					</div>
-
-					<div
-						className={`button-container flex justify-between text-center border-lightgreen border p-[2px] w-full ${
-							color_scheme == "Red"
-								? "bg-[lightcoral]"
-								: color_scheme == "Green"
-								? "bg-[lightgreen]"
-								: "bg-[#a1a1a1] "
-						} `}
-					>
-						<a
-							href="#"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
-						>
-							Buy/Redeem Credits
-						</a>
-						<a
-							href="https://chrome.google.com/webstore/detail/dowell-ux-living-lab/acnnapiadbgagcnidgnclaohnpmbpebl?utm_source=ext_app_menu"
-							className="m-[5px] px-[20px] py-[10px] bg-transparent border-white text-white w-[45%] text-center leading-[15px] text-[12px] font-semibold rounded no-underline border"
-						>
-							Chrome Extension
-						</a>
-					</div>
+					
 				</div>
 			)}
 		</>
