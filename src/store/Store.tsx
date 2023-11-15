@@ -10,11 +10,13 @@ import organization from "./slice/organization";
 import selectedorg from "./slice/selectedorg";
 import otherorgdata from "./slice/otherorgdata";
 import portfolioNotificationSlice from './slice/portfolioNotifications';
+import overlaysidebarslice from './slice/overlaysidebar';
 
 const store = configureStore({
   reducer: {
     setting: settingSlice,
     loaderslice: loaderslice,
+    overlaysidebar:overlaysidebarslice,
     userinfo: userinfoSlice,
     products: productSlice,
     adminData: adminDataSlice,

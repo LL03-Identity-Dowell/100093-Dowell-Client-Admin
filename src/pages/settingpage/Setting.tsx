@@ -26,54 +26,64 @@ import Loader from "../whiteloader";
 const ClientAdmin = () => {
    const loadingstate = useSelector((state: RootState) => state.loaderslice);
 		console.log(loadingstate);
-
+const overlaysidebarstate = useSelector(
+	(state: RootState) => state.overlaysidebar
+);
   return (
 		<>
-			<Layout>
-				<main className="container mx-auto mb-20 lg:px-0 px-4">
-					<Header></Header>
+			<div className="relative">
+				<Layout>
+					<main className="container mx-auto mb-20 lg:px-0 px-4">
+						<Header></Header>
 
-					<section className="mt-4 flex lg:flex-row flex-col-reverse gap-4">
-						<Sidebar></Sidebar>
-						{loadingstate == false ? (
-							<Loader></Loader>
-						) : (
-							<div className="lg:w-3/4">
-								<div className="py-[40px] px-[30px] w-full lg:flex gap-8">
-									<div className="lg:w-1/2">
-										<Settingform1></Settingform1>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+						<section className="mt-4 flex lg:flex-row flex-col-reverse gap-4 justify-end">
+							{loadingstate == false ? (
+								<Loader></Loader>
+							) : (
+								<div className="lg:w-3/4">
+									<div className="py-[40px] px-[30px] w-full lg:flex gap-8">
+										<div className="lg:w-1/2">
+											<Settingform1></Settingform1>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform2></Settingform2>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform2></Settingform2>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform3></Settingform3>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform3></Settingform3>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform4></Settingform4>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform4></Settingform4>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
 
-										<Settingform5></Settingform5>
-									</div>
-									<div className="lg:w-1/2">
-										<Settingform6></Settingform6>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform7></Settingform7>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform8></Settingform8>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform9></Settingform9>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform10></Settingform10>
-										<div className="w-100 bg-[red] h-[2px] my-8"></div>
-										<Settingform11></Settingform11>
+											<Settingform5></Settingform5>
+										</div>
+										<div className="lg:w-1/2">
+											<Settingform6></Settingform6>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform7></Settingform7>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform8></Settingform8>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform9></Settingform9>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform10></Settingform10>
+											<div className="w-100 bg-[red] h-[2px] my-8"></div>
+											<Settingform11></Settingform11>
+										</div>
 									</div>
 								</div>
-							</div>
-						)}
-					</section>
-				</main>
-			</Layout>
+							)}
+						</section>
+					</main>
+				</Layout>
+				<div
+					className={`absolute transition  duration-500 ease-in-out top-0 left-0  w-full  bg-black bg-opacity-50 ${
+						overlaysidebarstate ? "translate-x-0" : "-translate-x-full"
+					}`}
+				>
+					<Sidebar />
+				</div>
+			</div>
 		</>
 	);
 };
