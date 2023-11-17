@@ -306,7 +306,8 @@ const adminDataSlice = createSlice({
       return action.payload;
     },
     setAdminData: (state, action) => {
-      state.data[0].Username = action.payload.Username;
+      state.data[0].Username =
+        action.payload.Username || action.payload.document_name;
       state.data[0].portpolio = action.payload.portpolio;
       state.data[0].products = action.payload.products;
       state.data[0].members = action.payload.members;
