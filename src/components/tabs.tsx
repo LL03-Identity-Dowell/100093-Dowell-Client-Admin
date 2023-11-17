@@ -25,6 +25,7 @@ import { RootState } from "../store/Store";
 import { getproducts } from "../store/slice/products";
 
 const AdminTabs = () => {
+	const sessionId = localStorage.getItem("sessionId");
 	const [tabIndex, setTabIndex] = useState(-1);
 
 	const adminusername = useSelector(
@@ -52,7 +53,7 @@ const AdminTabs = () => {
 	const tabTitle = [
 		{
 			title: "Customer Support",
-			link: "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=x4qyyvyqunur0hexq8jnxdq5o8oap4yc",
+			link: `https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${sessionId}`,
 			icon: <FaHeadset />,
 		},
 
@@ -70,7 +71,7 @@ const AdminTabs = () => {
 		},
 		{
 			title: "Buy Credit",
-			link: "http://localhost:5173/#",
+			link: `https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/#?session_id=${sessionId}`,
 			icon: <FaCreditCard />,
 		},
 		{
@@ -115,19 +116,19 @@ const AdminTabs = () => {
 		},
 		{
 			title: "Customer Support",
-			link: "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=x4qyyvyqunur0hexq8jnxdq5o8oap4yc",
+			link: `https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id=${sessionId}`,
 			icon: <FaHeadset />,
 		},
 		{
 			title: "Buy Credit",
-			link: "http://localhost:5173/#",
+			link: `https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/#?session_id=${sessionId}`,
 			icon: <FaCreditCard />,
 		},
 	];
 
 
 	const dispatch = useDispatch();
-	const sessionId = localStorage.getItem("sessionId");
+	
 	useEffect(() => {
 		dispatch(getloaderstate(false));
 		const fetchData = async () => {
