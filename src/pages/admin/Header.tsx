@@ -13,6 +13,7 @@ import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getsetting } from "../../store/slice/setting";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
+import { FaBars } from "react-icons/fa";
 
 const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
@@ -218,12 +219,13 @@ const Header = () => {
 												: color_scheme == "Green"
 												? "bg-[lightgreen]"
 												: "bg-[#a1a1a1] "
-										} lg:w-auto  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+										} lg:w-auto  w-full justify-center flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
 										onClick={handleiconClick}
 									>
-										<p className="text-[13px] mx-auto text-white text-center py-[10px] px-[20px]">
-											Menu
-										</p>
+										<FaBars
+											
+											className="text-[25px] text-white"
+										></FaBars>
 									</button>
 									{currentPath == "/setting" ? (
 										<NavLink
