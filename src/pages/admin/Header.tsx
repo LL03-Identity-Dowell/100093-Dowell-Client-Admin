@@ -13,6 +13,7 @@ import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getsetting } from "../../store/slice/setting";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
+import { FaBars } from "react-icons/fa";
 
 const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
@@ -190,92 +191,93 @@ const Header = () => {
               )}
             </span>
 
-            <div className="mb-8">
-              <span>
-                <h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
-                  Hi {userData?.userinfo?.first_name}{" "}
-                  {userData?.userinfo?.last_name}, you are login as{" "}
-                  {userData?.userinfo?.User_type}
-                </h2>
-                <p className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]">
-                  Session starts at {userData?.userinfo?.dowell_time},
-                  {userData?.userinfo?.user_country}
-                </p>
-                <div
-                  className={`${
-                    color_scheme == "Red"
-                      ? "bg-[#DC4C64]"
-                      : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  } grid lg:grid-cols-4 grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-3 p-[10px] border border-black justify-center`}
-                >
-                  <button
-                    className={`${
-                      color_scheme == "Red"
-                        ? "bg-[lightcoral]"
-                        : color_scheme == "Green"
-                        ? "bg-[lightgreen]"
-                        : "bg-[#a1a1a1] "
-                    } lg:w-auto  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
-                    onClick={handleiconClick}
-                  >
-                    <p className="text-[13px] mx-auto text-white text-center py-[10px] px-[20px]">
-                      Menu
-                    </p>
-                  </button>
-                  {currentPath == "/setting" ? (
-                    <NavLink
-                      to="/"
-                      className={`${
-                        color_scheme == "Red"
-                          ? "bg-[lightcoral]"
-                          : color_scheme == "Green"
-                          ? "bg-[lightgreen]"
-                          : "bg-[#a1a1a1] "
-                      } lg:w-[180px]  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
-                    >
-                      <IoSettings className="text-white" />
-                      <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
-                        Home
-                      </p>
-                    </NavLink>
-                  ) : (
-                    <>
-                      {selectedOrg.type !== "owner" ? (
-                        <div
-                          className={`${
-                            color_scheme == "Red"
-                              ? "bg-[#f3a1a1]"
-                              : color_scheme == "Green"
-                              ? "bg-[#a1e4a1]"
-                              : "bg-[#c9c5c1] "
-                          }   lg:w-auto w-full flex items-center gap-12 px-4 rounded-sm`}
-                        >
-                          <IoSettings className="text-white" />
-                          <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
-                            Settings
-                          </p>
-                        </div>
-                      ) : (
-                        <NavLink
-                          to="/setting"
-                          className={`${
-                            color_scheme == "Red"
-                              ? "bg-[lightcoral]"
-                              : color_scheme == "Green"
-                              ? "bg-[lightgreen]"
-                              : "bg-[#a1a1a1] "
-                          }  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
-                        >
-                          <IoSettings className="text-white" />
-                          <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
-                            Settings
-                          </p>
-                        </NavLink>
-                      )}
-                    </>
-                  )}
+						<div className="mb-8">
+							<span>
+								<h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
+									Hi {userData?.userinfo?.first_name}{" "}
+									{userData?.userinfo?.last_name}, you are login as{" "}
+									{userData?.userinfo?.User_type}
+								</h2>
+								<p className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]">
+									Session starts at {userData?.userinfo?.dowell_time},
+									{userData?.userinfo?.user_country}
+								</p>
+								<div
+									className={`${
+										color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									} grid lg:grid-cols-4 grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-3 p-[10px] border border-black justify-center`}
+								>
+									<button
+										className={`${
+											color_scheme == "Red"
+												? "bg-[lightcoral]"
+												: color_scheme == "Green"
+												? "bg-[lightgreen]"
+												: "bg-[#a1a1a1] "
+										} lg:w-auto  w-full justify-center flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+										onClick={handleiconClick}
+									>
+										<FaBars
+											
+											className="text-[25px] text-white"
+										></FaBars>
+									</button>
+									{currentPath == "/setting" ? (
+										<NavLink
+											to="/"
+											className={`${
+												color_scheme == "Red"
+													? "bg-[lightcoral]"
+													: color_scheme == "Green"
+													? "bg-[lightgreen]"
+													: "bg-[#a1a1a1] "
+											} lg:w-[180px]  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+										>
+											<IoSettings className="text-white" />
+											<p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+												Home
+											</p>
+										</NavLink>
+									) : (
+										<>
+											{selectedOrg.type !== "owner" ? (
+												<div
+													className={`${
+														color_scheme == "Red"
+															? "bg-[#f3a1a1]"
+															: color_scheme == "Green"
+															? "bg-[#a1e4a1]"
+															: "bg-[#c9c5c1] "
+													}   lg:w-auto w-full flex items-center gap-12 px-4 rounded-sm`}
+												>
+													<IoSettings className="text-white" />
+													<p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+														Settings
+													</p>
+												</div>
+											) : (
+												<NavLink
+													to="/setting"
+													className={`${
+														color_scheme == "Red"
+															? "bg-[lightcoral]"
+															: color_scheme == "Green"
+															? "bg-[lightgreen]"
+															: "bg-[#a1a1a1] "
+													}  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+												>
+													<IoSettings className="text-white" />
+													<p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+														Settings
+													</p>
+												</NavLink>
+											)}
+										</>
+									)}
 
                   <button
                     className={`${
