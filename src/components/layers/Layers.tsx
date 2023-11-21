@@ -21,6 +21,8 @@ import Logintype from "./form/Logintype";
 import Changepassword from "./form/Changepassword";
 import Passwordstrenght from "./form/Passwordstrenght";
 import Idverifystatus from "./form/Idverifystatus";
+import { getCountry } from "../../store/slice/country";
+import { getCities, getCountryCode } from "../../store/slice/city";
 
 const Layers = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +34,6 @@ const Layers = () => {
     // Function to call the API
     setIsLoading(true);
     const fetchData = async () => {
-      console.log("hello");
       try {
         const os = {
           username: adminusername,
@@ -116,6 +117,11 @@ const Layers = () => {
         );
 
         usedispatch(getlayerverifyid(verifyresponse.data));
+
+        const countries = await axios.get(
+          "https://100074.pythonanywhere.com/countries/johnDoe123/haikalsb1234/100074/"
+        );
+        usedispatch(getCountry(countries.data));
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -202,6 +208,44 @@ const Layers = () => {
   const passwordStrengthType = useSelector(
     (state: RootState) => state.layer.password_strength
   );
+  const countries = useSelector((state: RootState) => state.countries);
+  const cities = useSelector((state: RootState) => state.cities.cities);
+  const [citiesList, setCityList] = useState<null | typeof cities>(cities);
+  const countryCode = useSelector(
+    (state: RootState) => state.cities.country_code
+  );
+  useEffect(() => {
+    setCityList(cities);
+  }, [cities]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = countries.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(countries.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleCountryCheck = async (
+    event: ChangeEvent<HTMLInputElement>,
+    code: string
+  ) => {
+    if (event.target.checked) {
+      const cities = await axios.get(
+        "https://100074.pythonanywhere.com/region/code/" +
+          code +
+          "/johnDoe123/haikalsb1234/100074/"
+      );
+      usedispatch(getCities(cities.data));
+      usedispatch(getCountryCode(code));
+    } else {
+      if (code === countryCode) setCityList(null);
+    }
+  };
   const [devicesObj, setDevicesObj] = useState<devices>(devices);
   const [operatingObj, setOperatingObj] = useState<os>(operating);
   const [browserObj, setBrowserObj] = useState<browser>(browser);
@@ -571,76 +615,48 @@ const Layers = () => {
             <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
               Geographic Location{" "}
             </p>
-            <form className="px-6 w-full">
-              <ol className="list-decimal">
-                <li className="flex flex-col">
-                  <div className="flex flex-wrap items-center gap-x-3">
-                    1.
-                    <input type="checkbox" /> <label>India - Layer</label>
-                    {["1", "2", "3", "4", "5", "6"].map((id) => {
-                      return (
-                        <div key={id}>
-                          <input type="radio" className="px-4" />
-                          <label className="whitespace-normal">{id}</label>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <ol className="list-decimal pl-6">
-                    {[
-                      "Delhi",
-                      "Mumbai",
-                      "Chennai",
-                      "Others not listed above",
-                    ].map((city) => {
-                      return (
-                        <div key={city}>
-                          <li className="flex flex-wrap items-center gap-x-3">
-                            <input type="checkbox" />{" "}
-                            <label>{city} - Layer</label>
-                            {["1", "2", "3", "4", "5", "6"].map((id) => {
-                              return (
-                                <div key={id}>
-                                  <input type="radio" />
-                                  <label className="whitespace-normal">
-                                    {id}
-                                  </label>
-                                </div>
-                              );
-                            })}
-                          </li>
-                        </div>
-                      );
-                    })}
-                  </ol>
-                </li>
-
-                <li className="flex flex-col">
-                  <div className="flex flex-wrap items-center gap-x-3">
-                    2.
-                    <input type="checkbox" />{" "}
-                    <label className="whitespace-normal">
-                      Australia - Layer
-                    </label>
-                    {["1", "2", "3", "4", "5", "6"].map((id) => {
-                      return (
-                        <div key={id}>
-                          <input type="radio" className="px-4" />
-                          <label className="whitespace-normal">{id}</label>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <ol className="list-decimal pl-6">
-                    {["Brisbane", "Sydney", "Others not listed above"].map(
-                      (city) => {
-                        return (
-                          <div key={city}>
-                            <li className="flex flex-wrap items-center gap-x-3">
+            <div className="px-6 w-full">
+              <div className="flex flex-col gap-3">
+                {currentItems.map((country, index) => {
+                  return (
+                    <div>
+                      <div
+                        key={index}
+                        className="flex flex-wrap items-center gap-x-3"
+                      >
+                        {index + 1}
+                        <input
+                          type="checkbox"
+                          onChange={(e) =>
+                            handleCountryCheck(e, country.country_code)
+                          }
+                        />{" "}
+                        <label>{country.name} - Layer</label>
+                        {["1", "2", "3", "4", "5", "6"].map((id) => {
+                          return (
+                            <div key={id}>
+                              <input type="radio" className="px-4" />
+                              <label className="whitespace-normal">{id}</label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {citiesList &&
+                        countryCode == country.country_code &&
+                        citiesList.map((city) => {
+                          console.log(
+                            "city",
+                            countryCode,
+                            "country",
+                            country.country_code
+                          );
+                          return (
+                            <div
+                              key={city.id}
+                              className="flex flex-wrap items-center gap-x-3 ml-10"
+                            >
                               <input type="checkbox" />{" "}
-                              <label>{city} - Layer</label>
+                              <label>{city.name} - Layer</label>
                               {["1", "2", "3", "4", "5", "6"].map((id) => {
                                 return (
                                   <div key={id}>
@@ -651,55 +667,32 @@ const Layers = () => {
                                   </div>
                                 );
                               })}
-                            </li>
-                          </div>
-                        );
-                      }
-                    )}
-                  </ol>
-                </li>
-                <li className="flex flex-col">
-                  <div className="flex flex-wrap items-center gap-x-3">
-                    3.
-                    <input type="checkbox" /> <label>UK - Layer</label>
-                    {["1", "2", "3", "4", "5", "6"].map((id) => {
+                            </div>
+                          );
+                        })}
+                    </div>
+                  );
+                })}
+                <div className="flex gap-2 justify-center w-[80%] my-5">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (item) => {
                       return (
-                        <div key={id}>
-                          <input type="radio" className="px-4" />
-                          <label className="">{id}</label>
-                        </div>
+                        <button
+                          onClick={() => handlePageChange(item)}
+                          className={`px-4 text-base border rounded-sm ${
+                            item === currentPage && "bg-green-600 text-white"
+                          }`}
+                          disabled={currentPage === item}
+                        >
+                          {item}
+                        </button>
                       );
-                    })}
-                  </div>
+                    }
+                  )}
+                </div>
+              </div>
 
-                  <ol className="list-decimal pl-6">
-                    {["London", "Leeds", "Others not listed above"].map(
-                      (city) => {
-                        return (
-                          <div key={city}>
-                            <li className="flex flex-wrap items-center gap-x-3">
-                              <input type="checkbox" />{" "}
-                              <label className="whitespace-normal">
-                                {city} - Layer
-                              </label>
-                              {["1", "2", "3", "4", "5", "6"].map((id) => {
-                                return (
-                                  <div key={id}>
-                                    <input type="radio" />
-                                    <label className="whitespace-normal">
-                                      {id}
-                                    </label>
-                                  </div>
-                                );
-                              })}
-                            </li>
-                          </div>
-                        );
-                      }
-                    )}
-                  </ol>
-                </li>
-                <li className="flex ">
+              {/* <li className="flex ">
                   <div className="flex flex-wrap items-center gap-x-3">
                     4.
                     <input type="checkbox" />{" "}
@@ -715,8 +708,7 @@ const Layers = () => {
                       );
                     })}
                   </div>
-                </li>
-              </ol>
+                </li> */}
               <button
                 className={`w-full ${
                   color_scheme == "Red"
@@ -728,7 +720,7 @@ const Layers = () => {
               >
                 Save Geographic Settings
               </button>
-            </form>
+            </div>
             <hr />
             <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
               Language

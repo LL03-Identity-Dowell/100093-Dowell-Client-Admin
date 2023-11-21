@@ -93,7 +93,7 @@ export default function Deviceform() {
 
         dispatch(
           getlayerdevices({
-            "Laptop/Desktop": selectedLaptopDesktop,
+            "Laptop/Desk top": selectedLaptopDesktop,
             "Mobile Phone": selectedMobilePhone,
             "Tablet/Ipad": selectedTabletIpad,
             "Others not listed above": selectedOthers,

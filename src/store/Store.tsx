@@ -9,14 +9,16 @@ import sidebarslice from "./slice/sidebar";
 import organization from "./slice/organization";
 import selectedorg from "./slice/selectedorg";
 import otherorgdata from "./slice/otherorgdata";
-import portfolioNotificationSlice from './slice/portfolioNotifications';
-import overlaysidebarslice from './slice/overlaysidebar';
+import portfolioNotificationSlice from "./slice/portfolioNotifications";
+import overlaysidebarslice from "./slice/overlaysidebar";
+import countrySlice from "./slice/country";
+import citySlice from "./slice/city";
 
 const store = configureStore({
   reducer: {
     setting: settingSlice,
     loaderslice: loaderslice,
-    overlaysidebar:overlaysidebarslice,
+    overlaysidebar: overlaysidebarslice,
     userinfo: userinfoSlice,
     products: productSlice,
     adminData: adminDataSlice,
@@ -26,6 +28,8 @@ const store = configureStore({
     selectedorg: selectedorg,
     otherorgdata: otherorgdata,
     getportfolioNotifications: portfolioNotificationSlice,
+    countries: countrySlice,
+    cities: citySlice,
   },
 });
 

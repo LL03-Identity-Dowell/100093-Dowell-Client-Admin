@@ -9,28 +9,30 @@ import Faq from "./pages/Faq";
 import Setting from "./pages/settingpage/Setting";
 import Organization from "./pages/organizationpage/organization";
 import Exportfolio from "./pages/exportfolio";
+import PaginationExample from "./pages/Test";
 
 function App() {
-	return (
-		<>
-			<BrowserRouter>
-				<ScrollToTop />
+  return (
+    <>
+      <BrowserRouter>
+        <ScrollToTop />
 
-				<Routes>
-					{/* <Route path="/" element={<Home />} /> */}
-					<Route path="/" element={<ClientAdmin />} />
-					<Route path="/about-us" element={<AboutUs />} />
-					<Route path="/org" element={<Organization />} />
-					<Route path="/faq" element={<Faq />} />
-					<Route path="/setting" element={<Setting></Setting>} />
-					<Route path="/exportfolio" element={<Exportfolio />} />
+        <Routes>
+          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<ClientAdmin />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/org" element={<Organization />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/setting" element={<Setting></Setting>} />
+          <Route path="/exportfolio" element={<Exportfolio />} />
+          <Route path="/test" element={<PaginationExample />} />
 
-					{/* <Route path="/loader" element={} /> */}
-					{/* <Routes path="/element" element={<Example />} /> */}
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+          {/* <Route path="/loader" element={} /> */}
+          {/* <Routes path="/element" element={<Example />} /> */}
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
 export default App;

@@ -334,7 +334,6 @@ const adminDataSlice = createSlice({
     },
   },
 });
-
 export default adminDataSlice.reducer;
 
 export const { getAdminData, setAdminData, isNewOwner, setItemData } =
