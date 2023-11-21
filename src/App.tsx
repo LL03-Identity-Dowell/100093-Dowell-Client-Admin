@@ -9,7 +9,6 @@ import Faq from "./pages/Faq";
 import Setting from "./pages/settingpage/Setting";
 import Organization from "./pages/organizationpage/organization";
 import Exportfolio from "./pages/exportfolio";
-import PaginationExample from "./pages/Test";
 
 function App() {
   return (
@@ -25,7 +24,6 @@ function App() {
           <Route path="/faq" element={<Faq />} />
           <Route path="/setting" element={<Setting></Setting>} />
           <Route path="/exportfolio" element={<Exportfolio />} />
-          <Route path="/test" element={<PaginationExample />} />
 
           {/* <Route path="/loader" element={} /> */}
           {/* <Routes path="/element" element={<Example />} /> */}

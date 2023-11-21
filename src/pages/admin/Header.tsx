@@ -356,7 +356,6 @@ const Header = () => {
               )}
             </div>
           </div>
-          <NavLink to="/test">test</NavLink>
         </section>
       )}
     </>
