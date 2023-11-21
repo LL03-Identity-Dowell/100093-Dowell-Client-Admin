@@ -76,9 +76,9 @@ export default function Deviceform() {
         username: defaultusername,
         category: "devices",
         data: {
-          "Laptop/Desktop": selectedLaptopDesktop,
+          "Laptop/Desk top": selectedLaptopDesktop,
           "Mobile Phone": selectedMobilePhone,
-          "Tablet/Ipad": selectedTabletIpad,
+          "Tablet / Ipad": selectedTabletIpad,
           "Others not listed above": selectedOthers,
         },
       };
