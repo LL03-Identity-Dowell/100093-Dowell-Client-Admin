@@ -13,6 +13,7 @@ import portfolioNotificationSlice from "./slice/portfolioNotifications";
 import overlaysidebarslice from "./slice/overlaysidebar";
 import countrySlice from "./slice/country";
 import citySlice from "./slice/city";
+import languageSlice from './slice/language';
 
 const store = configureStore({
   reducer: {
@@ -30,6 +31,7 @@ const store = configureStore({
     getportfolioNotifications: portfolioNotificationSlice,
     countries: countrySlice,
     cities: citySlice,
+    language:languageSlice
   },
 });
 

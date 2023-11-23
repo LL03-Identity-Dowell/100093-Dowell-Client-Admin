@@ -23,11 +23,13 @@ import Passwordstrenght from "./form/Passwordstrenght";
 import Idverifystatus from "./form/Idverifystatus";
 import { getCountry } from "../../store/slice/country";
 import { getCities, getCountryCode } from "../../store/slice/city";
+import { getLanguage } from "../../store/slice/language";
+import Language from "./form/Language";
 
 const Layers = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  let adminusername = useSelector(
+  const adminusername = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
   useEffect(() => {
@@ -122,6 +124,12 @@ const Layers = () => {
           "https://100074.pythonanywhere.com/countries/johnDoe123/haikalsb1234/100074/"
         );
         usedispatch(getCountry(countries.data));
+
+
+        const language = await axios.get(
+          "http://100093.pythonanywhere.com/api/languages/"
+        );
+        usedispatch(getLanguage(language.data));
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -237,8 +245,8 @@ const Layers = () => {
     if (event.target.checked) {
       const cities = await axios.get(
         "https://100074.pythonanywhere.com/region/code/" +
-          code +
-          "/johnDoe123/haikalsb1234/100074/"
+        code +
+        "/johnDoe123/haikalsb1234/100074/"
       );
       usedispatch(getCities(cities.data));
       usedispatch(getCountryCode(code));
@@ -246,6 +254,10 @@ const Layers = () => {
       if (code === countryCode) setCityList(null);
     }
   };
+
+
+
+
   const [devicesObj, setDevicesObj] = useState<devices>(devices);
   const [operatingObj, setOperatingObj] = useState<os>(operating);
   const [browserObj, setBrowserObj] = useState<browser>(browser);
@@ -326,19 +338,23 @@ const Layers = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+
+
+
+
+
   return (
     <>
       {isLoading == false ? (
         <div className="mt-8 w-full lg:flex gap-8">
           <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
             <span
-              className={`${
-                color_scheme == "Red"
+              className={`${color_scheme == "Red"
                   ? "bg-[#DC4C64]"
                   : color_scheme == "Green"
-                  ? "bg-[#14A44D]"
-                  : "bg-[#7A7A7A]"
-              } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
             >
               <p>Security Layers created in my workspace </p>
             </span>
@@ -441,10 +457,10 @@ const Layers = () => {
                 >
                   {devicesKeys
                     ? devicesKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -458,10 +474,10 @@ const Layers = () => {
                 >
                   {operatingKeys
                     ? operatingKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -475,10 +491,10 @@ const Layers = () => {
                 >
                   {browserKeys
                     ? browserKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -492,10 +508,10 @@ const Layers = () => {
                 >
                   {connectionKeys
                     ? connectionKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -509,10 +525,10 @@ const Layers = () => {
                 >
                   {loginKeys
                     ? loginKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -543,10 +559,10 @@ const Layers = () => {
                 >
                   {passwordStrengthKeys
                     ? passwordStrengthKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -560,10 +576,10 @@ const Layers = () => {
                 >
                   {verificationKeys
                     ? verificationKeys.map((item) => (
-                        <option key={item} value={item}>
-                          {item}
-                        </option>
-                      ))
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))
                     : null}
                 </select>
               </div>
@@ -597,13 +613,12 @@ const Layers = () => {
               </div>
 
               <button
-                className={`w-full ${
-                  color_scheme == "Red"
+                className={`w-full ${color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                    ? "bg-[#14A44D]"
-                    : "bg-[#7A7A7A]"
-                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                      ? "bg-[#14A44D]"
+                      : "bg-[#7A7A7A]"
+                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Refresh Search
               </button>
@@ -679,9 +694,8 @@ const Layers = () => {
                       return (
                         <button
                           onClick={() => handlePageChange(item)}
-                          className={`px-4 text-base border rounded-sm ${
-                            item === currentPage && "bg-green-600 text-white"
-                          }`}
+                          className={`px-4 text-base border rounded-sm ${item === currentPage && "bg-green-600 text-white"
+                            }`}
                           disabled={currentPage === item}
                         >
                           {item}
@@ -710,58 +724,21 @@ const Layers = () => {
                   </div>
                 </li> */}
               <button
-                className={`w-full ${
-                  color_scheme == "Red"
+                className={`w-full ${color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                    ? "bg-[#14A44D]"
-                    : "bg-[#7A7A7A]"
-                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                      ? "bg-[#14A44D]"
+                      : "bg-[#7A7A7A]"
+                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Save Geographic Settings
               </button>
             </div>
+            <br />
             <hr />
-            <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
-              Language
-            </p>
-            <form className="px-6 w-full">
-              <ol className="list-decimal">
-                {[
-                  "English",
-                  "Chinese",
-                  "Korean",
-                  "Others not listed above",
-                ].map((city) => {
-                  return (
-                    <div key={city}>
-                      <li className="flex flex-wrap items-center gap-x-3 py-2">
-                        <input type="checkbox" /> <label>{city} - Layer</label>
-                        {["1", "2", "3", "4", "5", "6"].map((id) => {
-                          return (
-                            <div key={id}>
-                              <input type="radio" />
-                              <label className="whitespace-normal">{id}</label>
-                            </div>
-                          );
-                        })}
-                      </li>
-                    </div>
-                  );
-                })}
-              </ol>
-              <button
-                className={`w-full ${
-                  color_scheme == "Red"
-                    ? "bg-[#DC4C64]"
-                    : color_scheme == "Green"
-                    ? "bg-[#14A44D]"
-                    : "bg-[#7A7A7A]"
-                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-              >
-                Save Language Settings
-              </button>
-            </form>
+
+
+            <Language></Language>
           </div>
         </div>
       ) : (
