@@ -70,7 +70,7 @@ const AdminTabs = () => {
 			icon: <FaUsers />,
 		},
 		{
-			title: "Buy Credit",
+			title: "Buy Credits",
 			link: `https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/#?session_id=${sessionId}`,
 			icon: <FaCreditCard />,
 		},
@@ -120,7 +120,7 @@ const AdminTabs = () => {
 			icon: <FaHeadset />,
 		},
 		{
-			title: "Buy Credit",
+			title: "Buy Credits",
 			link: `https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/#?session_id=${sessionId}`,
 			icon: <FaCreditCard />,
 		},

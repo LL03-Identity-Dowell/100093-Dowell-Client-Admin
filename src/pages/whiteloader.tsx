@@ -22,7 +22,7 @@ export default function Loader() {
 						</div>
 					</div>
 				</div>
-				<div className="loader-text">wait please</div>
+				<div className="loader-text">Loading</div>
 			</div>
 		</>
 	);
