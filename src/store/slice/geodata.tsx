@@ -22,6 +22,10 @@ const geoSlice = createSlice({
     ],
   },
   reducers: {
+    getAllGeoData(state, action){
+      state.geodata = action.payload
+      return state;
+    },
     getGeoData(state, action) {
       let isThere = false;
       state.geodata.forEach((item, index) => {
@@ -103,4 +107,4 @@ const geoSlice = createSlice({
 
 export default geoSlice.reducer;
 
-export const { getGeoData, getGeoCityData, getGeoUsername } = geoSlice.actions;
+export const { getGeoData, getGeoCityData, getGeoUsername,getAllGeoData } = geoSlice.actions;

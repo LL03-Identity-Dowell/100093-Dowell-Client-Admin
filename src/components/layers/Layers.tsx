@@ -26,6 +26,7 @@ import { getCities } from "../../store/slice/city";
 import { getLanguage } from "../../store/slice/language";
 import Language from "./form/Language";
 import {
+  getAllGeoData,
   getGeoCityData,
   getGeoData,
   getGeoUsername,
@@ -129,8 +130,19 @@ const Layers = () => {
         const countries = await axios.get(
           "https://100074.pythonanywhere.com/countries/johnDoe123/haikalsb1234/100074/"
         );
+        console.log({ countries });
         usedispatch(getCountry(countries.data));
         usedispatch(getGeoUsername(adminusername));
+        const getLayers = await axios.post(
+          "https://100093.pythonanywhere.com/api/languages/",
+          {
+            username: adminusername,
+            action: "getgeodata",
+          }
+        );
+        // console.log(JSON.parse(getLayers.data.geodata));
+        const data = JSON.parse(getLayers.data.geodata.replace(/'/g, '"'));
+        usedispatch(getAllGeoData(data));
 
         const language = await axios.get(
           "http://100093.pythonanywhere.com/api/languages/"
@@ -244,6 +256,21 @@ const Layers = () => {
     setCurrentPage(page);
   };
 
+  const initializeSelectedLayers = (data: any): { [key: string]: string } => {
+    const initialSelectedLayers: { [key: string]: any } = {};
+    data.forEach((item: any) => {
+      console.log({ item });
+      initialSelectedLayers[item.country] = item.layer;
+    });
+    return initialSelectedLayers;
+  };
+
+  const [selectedLayers, setSelectedLayers] = useState<{
+    [key: string]: string;
+  }>(() => initializeSelectedLayers(geoData.geodata));
+  useEffect(() => {
+    setSelectedLayers(initializeSelectedLayers(geoData.geodata));
+  }, [geoData.geodata]);
   const handleCountryCheck = async (
     event: ChangeEvent<HTMLInputElement>,
     code: string
@@ -679,6 +706,7 @@ const Layers = () => {
             <div className="px-6 w-full">
               <div className="flex flex-col gap-3">
                 {currentItems.map((country, index) => {
+                  const selectedLayer = selectedLayers[country.name] || null;
                   return (
                     <div>
                       <div
@@ -698,6 +726,7 @@ const Layers = () => {
                           return (
                             <div key={id}>
                               <input
+                                checked={selectedLayer == id}
                                 type="radio"
                                 className="px-4"
                                 name={`${country.name}-layer`}
