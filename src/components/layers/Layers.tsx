@@ -145,7 +145,7 @@ const Layers = () => {
 				usedispatch(getAllGeoData(data));
 
 				const language = await axios.get(
-					"http://100093.pythonanywhere.com/api/languages/"
+					"https://100093.pythonanywhere.com/api/languages/"
 				);
 				usedispatch(getLanguage(language.data));
 				setIsLoading(false);
