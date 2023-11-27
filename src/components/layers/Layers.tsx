@@ -130,6 +130,7 @@ const Layers = () => {
         const countries = await axios.get(
           "https://100074.pythonanywhere.com/countries/johnDoe123/haikalsb1234/100074/"
         );
+
         usedispatch(getCountry(countries.data));
         usedispatch(getGeoUsername(adminusername));
         const getLayers = await axios.post(
@@ -238,7 +239,7 @@ const Layers = () => {
   const [citiesList, setCityList] = useState<null | typeof cities>(cities);
   const [countryCode, setCountryCode] = useState<string | null>(null);
   const geoData = useSelector((state: RootState) => state.geoData);
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setCityList(cities);
   }, [cities]);
@@ -255,14 +256,6 @@ const Layers = () => {
     setCurrentPage(page);
   };
 
-  // const initializeSelectedLayers = (data: any): { [key: string]: string } => {
-  //   const initialSelectedLayers: { [key: string]: any } = {};
-  //   data.forEach((item: any) => {
-  //     console.log({ item });
-  //     initialSelectedLayers[item.country] = item.layer;
-  //   });
-  //   return initialSelectedLayers;
-  // };
   const initializeSelectedLayers = (
     data: any
   ): { [key: string]: { [key: string]: string } } => {
@@ -276,15 +269,12 @@ const Layers = () => {
       });
       initialSelectedLayers[country.country] = {
         ...cityLayers,
-        layer: country.layer, // Retaining country's selected layer
+        layer: country.layer,
       };
     });
 
     return initialSelectedLayers;
   };
-  // const [selectedLayers, setSelectedLayers] = useState<{
-  //   [key: string]: string;
-  // }>(() => initializeSelectedLayers(geoData.geodata));
 
   const [selectedLayers, setSelectedLayers] = useState<{
     [key: string]: { [key: string]: string };
@@ -305,6 +295,7 @@ const Layers = () => {
         }
       });
       if (!isThere) {
+        setLoading(true);
         const getcities = await axios.get(
           "https://100074.pythonanywhere.com/region/code/" +
             code +
@@ -766,6 +757,7 @@ const Layers = () => {
                           return (
                             city.country_code == countryCode &&
                             city.cities.map((city) => {
+                              const cityName = city.name;
                               return (
                                 <div
                                   key={city.id}
@@ -778,7 +770,7 @@ const Layers = () => {
                                       <div key={id}>
                                         <input
                                           checked={
-                                            selectedLayer[city.name] == id
+                                            selectedLayer?.[cityName] == id
                                           }
                                           type="radio"
                                           className="px-4"
