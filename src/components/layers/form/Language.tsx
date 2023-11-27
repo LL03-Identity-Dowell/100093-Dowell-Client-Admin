@@ -105,7 +105,7 @@ const usedispatch = useDispatch()
 		<>
 			<ToastContainer position="top-right" />
 			<p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
-				Geographic Location{" "}
+				Language
 			</p>
 			<div className="px-6 w-full">
 				<div className="flex flex-col gap-3">
@@ -189,7 +189,7 @@ const usedispatch = useDispatch()
 							: "bg-[#7A7A7A]"
 					}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
 				>
-					Save Geographic Settings
+					Save Language Settings
 				</button>
 			</div>
 		</>
