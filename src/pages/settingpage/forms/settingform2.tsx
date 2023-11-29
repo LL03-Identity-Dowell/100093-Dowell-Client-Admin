@@ -6,94 +6,94 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Settingform2 = () => {
-  const maxtime_member = useSelector(
-    (state: RootState) => state.setting?.data?.maxtime_member
-  );
+	const maxtime_member = useSelector(
+		(state: RootState) => state.setting?.data?.maxtime_member
+	);
 
-  const currentSetting = useSelector((state: RootState) => state.setting?.data);
+	const currentSetting = useSelector((state: RootState) => state.setting?.data);
 
-  const [selectedmaxtime_member, setselectedmaxtime_member] =
-    useState(maxtime_member);
+	const [selectedmaxtime_member, setselectedmaxtime_member] =
+		useState(maxtime_member);
 
-  const maxtime_member_list = ["70", "120", "180"];
-  const [isLoading, setIsLoading] = useState(false);
-  const membertime_filterlist = maxtime_member_list.filter(
-    (item) => item !== maxtime_member
-  );
+	const maxtime_member_list = ["12", "24", "48", "72", "120", "168"];
+	const [isLoading, setIsLoading] = useState(false);
+	const membertime_filterlist = maxtime_member_list.filter(
+		(item) => item !== maxtime_member
+	);
 
-  const maxtime_user = useSelector(
-    (state: RootState) => state.setting?.data?.maxtime_user
-  );
+	const maxtime_user = useSelector(
+		(state: RootState) => state.setting?.data?.maxtime_user
+	);
 
-  const [selectedmaxtime_user, setselectedmaxtime_user] =
-    useState(maxtime_user);
-  const maxtime_user_list = ["70", "120", "180"];
+	const [selectedmaxtime_user, setselectedmaxtime_user] =
+		useState(maxtime_user);
+	const maxtime_user_list = ["12", "24", "48", "72", "120", "168"];
 
-  const usertime_filterlist = maxtime_user_list.filter(
-    (item) => item !== maxtime_user
-  );
+	const usertime_filterlist = maxtime_user_list.filter(
+		(item) => item !== maxtime_user
+	);
 
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const adminusername = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
-  );
+	const adminusername = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
 
-  const [defaultusername, setdefaultusername] = useState(adminusername);
+	const [defaultusername, setdefaultusername] = useState(adminusername);
 
-  useEffect(() => {
-    setdefaultusername(adminusername);
-  }, [adminusername]);
+	useEffect(() => {
+		setdefaultusername(adminusername);
+	}, [adminusername]);
 
-  const handleSubmit = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.preventDefault();
+	const handleSubmit = (
+		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) => {
+		event.preventDefault();
 
-    const postData = async () => {
-      try {
-		setIsLoading(true);
-        const data = {
-          username: defaultusername,
-          timelimit_member: selectedmaxtime_member,
-          timelimit_users: selectedmaxtime_user,
-        };
+		const postData = async () => {
+			try {
+				setIsLoading(true);
+				const data = {
+					username: defaultusername,
+					timelimit_member: selectedmaxtime_member,
+					timelimit_users: selectedmaxtime_user,
+				};
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
+				await axios.post(
+					"https://100093.pythonanywhere.com/api/settings/",
+					data
+				);
 
-        dispatch(
-          getsetting({
-            isSuccess: true,
-            data: {
-              ...currentSetting,
-              maxtime_member: selectedmaxtime_member,
-              maxtime_user: selectedmaxtime_user,
-            },
-          })
-        );
-		toast.success("Success");
-        setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-      setIsLoading(false);
-      // fetch product
-    };
+				dispatch(
+					getsetting({
+						isSuccess: true,
+						data: {
+							...currentSetting,
+							maxtime_member: selectedmaxtime_member,
+							maxtime_user: selectedmaxtime_user,
+						},
+					})
+				);
+				toast.success("Success");
+				setIsLoading(false);
+			} catch (error) {
+				console.error(error);
+			}
+			setIsLoading(false);
+			// fetch product
+		};
 
-    // Call the API when the component mounts
-    postData();
+		// Call the API when the component mounts
+		postData();
 
-    // Make your API call here using the selectedLanguage value
-    // For example:
-  };
+		// Make your API call here using the selectedLanguage value
+		// For example:
+	};
 
-  const color_scheme = useSelector(
-    (state: RootState) => state.setting?.data?.color_scheme
-  );
-  return (
+	const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+	);
+	return (
 		<div className="form-item">
 			<div
 				className={`${
