@@ -6,12 +6,12 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
 export default function Language() {
-	// theme
+	// Select theme and language form redux
 	const color_scheme = useSelector(
 		(state: RootState) => state.setting?.data?.color_scheme
 	);
 	const alllang = useSelector((state: RootState) => state.language);
-
+// pagination 
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 10;
 
@@ -20,7 +20,7 @@ export default function Language() {
 	const currentItems = alllang.slice(indexOfFirstItem, indexOfLastItem);
 
 	const totalPages = Math.ceil(alllang.length / itemsPerPage);
-
+//change pagination
 	const handlePageChange = (page: number) => {
 		setCurrentPage(page);
 	};
