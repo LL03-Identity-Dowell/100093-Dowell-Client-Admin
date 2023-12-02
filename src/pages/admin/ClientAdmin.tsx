@@ -11,6 +11,7 @@ import Loader from "../whiteloader";
 import { isNewOwner, setAdminData } from "../../store/slice/adminData";
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import axios from "axios";
+import { getViewAccess } from "../../store/slice/viewAccess";
 
 const ClientAdmin = () => {
   const selectedOrg = useSelector((state: RootState) => state.selectedorg);
@@ -35,9 +36,14 @@ const ClientAdmin = () => {
           "https://100093.pythonanywhere.com/api/get_data/",
           { username: username }
         );
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/settings/",
+          { username: username }
+        );
         dispatch(isNewOwner(username));
         dispatch(setAdminData(responseAdmin.data.data[0]));
         dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
+        dispatch(getViewAccess(response.data.data.processes_to_portfolio));
       }
     } else {
       dispatch(isNewOwner(null));

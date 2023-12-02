@@ -9,6 +9,7 @@ import { RootState } from "../../store/Store";
 import { Option } from "../portfolio/types";
 import { isNewOwner, setAdminData } from "../../store/slice/adminData";
 import { getselectedorgs } from "../../store/slice/selectedorg";
+import { getViewAccess } from "../../store/slice/viewAccess";
 
 const Products = () => {
   const productData = useSelector(
@@ -66,9 +67,14 @@ const Products = () => {
             "https://100093.pythonanywhere.com/api/get_data/",
             { username: username }
           );
+          const response = await axios.post(
+            "https://100093.pythonanywhere.com/api/settings/",
+            { username: username }
+          );
           toast.success("Success");
           dispatch(isNewOwner(username));
           localStorage.setItem("username", username);
+          dispatch(getViewAccess(response.data.data.processes_to_portfolio));
           dispatch(setAdminData(responseAdmin.data.data[0]));
           dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
         } catch (error: unknown) {

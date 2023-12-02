@@ -133,7 +133,6 @@ const Header = () => {
         );
         console.log("settings", response.data);
         dispatch(getsetting(response.data));
-        console.log(response.data);
         dispatch(getloaderstate(true));
       } catch (error) {
         console.error(error);

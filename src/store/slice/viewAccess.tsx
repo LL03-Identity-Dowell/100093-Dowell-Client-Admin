@@ -1,13 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+const initialState = [
+  {
+    "User Management": {
+      rights: "",
+      portfolios: [],
+    },
+  },
+  {
+    "Member Management": {
+      rights: "",
+      portfolios: [],
+    },
+  },
+  {
+    "Portfolio Management": {
+      rights: "",
+      portfolios: [],
+    },
+  },
+];
 const viewAccessSlice = createSlice({
   name: "setting",
-  initialState: false,
+  initialState,
   reducers: {
-    getViewAccess(state, action) {
-      console.log("action payload", action.payload);
-      state = action.payload;
-      return state;
+    getViewAccess(_state, action) {
+      return action.payload;
     },
   },
 });

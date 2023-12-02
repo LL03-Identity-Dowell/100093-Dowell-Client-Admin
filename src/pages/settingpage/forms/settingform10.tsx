@@ -31,19 +31,19 @@ const Settingform10 = () => {
   const initialArray: UserManagement[] = [
     {
       "User Management": {
-        rights: "View",
+        rights: "",
         portfolios: [],
       },
     },
     {
       "Member Management": {
-        rights: "View",
+        rights: "",
         portfolios: [],
       },
     },
     {
       "Portfolio Management": {
-        rights: "View",
+        rights: "",
         portfolios: [],
       },
     },
@@ -106,7 +106,6 @@ const Settingform10 = () => {
     const postData = async () => {
       try {
         setIsLoading(true);
-
         const data = {
           username: defaultusername,
           process: process,

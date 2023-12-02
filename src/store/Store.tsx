@@ -16,6 +16,7 @@ import citySlice from "./slice/city";
 import languageSlice from "./slice/language";
 import geoSlice from "./slice/geodata";
 import languagedata from "./slice/languagedata";
+import viewAccessSlice from "./slice/viewAccess";
 
 const store = configureStore({
   reducer: {
@@ -35,7 +36,8 @@ const store = configureStore({
     cities: citySlice,
     geoData: geoSlice,
     language: languageSlice,
-    langdata:languagedata
+    langdata: languagedata,
+    viewAccess: viewAccessSlice,
   },
 });
 
