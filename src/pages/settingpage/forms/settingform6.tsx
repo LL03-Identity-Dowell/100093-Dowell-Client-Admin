@@ -6,12 +6,10 @@ import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
 const Settingform6 = () => {
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
-  console.log("settings", currentSetting);
   const defaultorg = useSelector(
     (state: RootState) => state.setting?.data?.default_org
   );
   const [defaultorgValue, setdefaultorgValue] = useState(defaultorg);
-  console.log({ defaultorgValue });
   const organizations = useSelector((state: RootState) => state.org);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +24,6 @@ const Settingform6 = () => {
   const filterworkspace = workspacelist.filter(
     (item) => item.orgname !== defaultorgValue
   );
-  console.log({ filterworkspace });
   const dispatch = useDispatch();
 
   const adminusername = useSelector(

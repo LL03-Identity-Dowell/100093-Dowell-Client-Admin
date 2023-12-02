@@ -28,9 +28,22 @@ const settingSlice = createSlice({
       no_of_conn: "",
       processes_to_portfolio: [
         {
-          process: "",
-          rights: "",
-          portfolios: "",
+          "User Management": {
+            rights: "",
+            portfolios: [],
+          },
+        },
+        {
+          "Member Management": {
+            rights: "",
+            portfolios: [],
+          },
+        },
+        {
+          "Portfolio Management": {
+            rights: "",
+            portfolios: [],
+          },
         },
       ],
       uxlivinglab_method: "",
