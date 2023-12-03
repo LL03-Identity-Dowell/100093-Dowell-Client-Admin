@@ -18,14 +18,23 @@ function Public() {
 				setIsLoading(false);
 			}
     }, [currentadmindata]);
-  
+	const viewAccess = useSelector(
+		(state: RootState) => state.viewAccess[2]["Portfolio Management"]?.rights
+	  );
    const color_scheme = useSelector(
 			(state: RootState) => state.setting?.data?.color_scheme
 		);
   return (
 		<>
 			{isLoading == false ? (
+				<>
+				  {viewAccess === "View" && (
+					<span className="text-red-600 text-xl uppercase mb-10">
+					  you have only view access
+					</span>
+				  )}
 				<div className="lg:flex w-full  h-full mt-8">
+					
 					<Form1 />
 					<Form2 />
 
@@ -44,6 +53,7 @@ function Public() {
 						</span>
 					</div>
 				</div>
+				</>
 			) : (
 				<Loader></Loader>
 			)}

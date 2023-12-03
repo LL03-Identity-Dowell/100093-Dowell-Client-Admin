@@ -171,6 +171,9 @@ const Form3 = () => {
       setFile(selectedFile);
     }
   };
+  const viewAccess = useSelector(
+    (state: RootState) => state.viewAccess[0]["User Management"]?.rights
+  );
 
   // const handleSheetNameChange = (
   // 		event: React.ChangeEvent<HTMLInputElement>
@@ -343,7 +346,7 @@ const Form3 = () => {
             />
           </div>
           <button
-            disabled={isLoading}
+            disabled={isLoading || viewAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"
@@ -352,23 +355,30 @@ const Form3 = () => {
                 : color_scheme == "Green"
                 ? "bg-[#14A44D]"
                 : "bg-[#7A7A7A]"
-            } hover:bg-[#61CE70] mb-8 rounded-[4px] text-white font-roboto`}
+            } hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
           >
             {isLoading ? "Loading..." : "Cancel Selected User Invitation"}
           </button>
+          {viewAccess == "View" && (
+            <small className="text-red-600">you have only view access</small>
+          )}
         </form>
         <div className="px-4">
           <button
+            disabled={viewAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
                 : color_scheme == "Green"
                 ? "bg-[#14A44D]"
                 : "bg-[#7A7A7A]"
-            }  hover:bg-[#61CE70] text-white mb-8  py-2 px-4 rounded-md`}
+            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
           >
             Duplicate selected User invitation to create new
           </button>
+          {viewAccess == "View" && (
+            <small className="text-red-600">you have only view access</small>
+          )}
         </div>
 
         <hr className="border-2 border-[#FF0000] mb-8" />
@@ -400,6 +410,7 @@ const Form3 = () => {
             />
           </div>
           <button
+            disabled={viewAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -410,6 +421,9 @@ const Form3 = () => {
           >
             Import Users
           </button>
+          {viewAccess == "View" && (
+            <small className="text-red-600">you have only view access</small>
+          )}
         </form>
         <form className="px-4 my-8">
           <div className="mb-4">
@@ -423,6 +437,7 @@ const Form3 = () => {
             />
           </div>
           <button
+            disabled={viewAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -433,6 +448,9 @@ const Form3 = () => {
           >
             Save common invitation link & create QR code
           </button>
+          {viewAccess == "View" && (
+            <small className="text-red-600">you have only view access</small>
+          )}
         </form>
         <form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
           <div className="mb-4">
@@ -440,6 +458,7 @@ const Form3 = () => {
             <p className="text-center">QR code for link</p>
           </div>
           <button
+            disabled={viewAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -450,6 +469,9 @@ const Form3 = () => {
           >
             Download common invitation link QR code
           </button>
+          {viewAccess == "View" && (
+            <small className="text-red-600">you have only view access</small>
+          )}
         </form>
       </div>
 

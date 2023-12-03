@@ -50,6 +50,9 @@ const Form1 = () => {
       setIsLoading(false);
     }
   };
+  const viewAccess = useSelector(
+		(state: RootState) => state.viewAccess[2]["Portfolio Management"]?.rights
+	  );
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
@@ -87,7 +90,7 @@ const Form1 = () => {
             </select>
           </div>
           <button
-            disabled={isLoading}
+            disabled={isLoading || viewAccess === "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"

@@ -10,7 +10,9 @@ const Form2 = () => {
   );
   const [getUsedAndUnusedData, setUsedAndUnusedData] = useState([]);
   const [getUsedAndUnusedUnassigned, setUsedAndUnusedUnassigned] = useState([]);
-
+  const viewAccess = useSelector(
+    (state: RootState) => state.viewAccess[2]["Portfolio Management"]?.rights
+  );
   const sessionId = localStorage.getItem("sessionId");
 
   const getUsedAndUnusedLink = async () => {
@@ -57,7 +59,7 @@ const Form2 = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-	
+
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
@@ -108,6 +110,7 @@ const Form2 = () => {
             </select>
           </div>
           <button
+            disabled={viewAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"

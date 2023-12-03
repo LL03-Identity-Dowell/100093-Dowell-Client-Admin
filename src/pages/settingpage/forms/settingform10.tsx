@@ -31,19 +31,19 @@ const Settingform10 = () => {
   const initialArray: UserManagement[] = [
     {
       "User Management": {
-        rights: "",
+        rights: "View",
         portfolios: [],
       },
     },
     {
       "Member Management": {
-        rights: "",
+        rights: "View",
         portfolios: [],
       },
     },
     {
       "Portfolio Management": {
-        rights: "",
+        rights: "View",
         portfolios: [],
       },
     },
