@@ -21,6 +21,8 @@ const Header = () => {
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
 
+// get session id from local storage
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const session_id = urlParams.get("session_id");
@@ -38,6 +40,8 @@ const Header = () => {
       (location.href =
         "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
   }
+
+// get user information from user info info api
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,11 +69,14 @@ const Header = () => {
     }
   }, [dispatch, sessionId]);
 
+
+  // handle logout functionality
   const logout = () => {
     localStorage.removeItem("sessionId");
     location.href = logout_url;
   };
 
+  // select ownerorg , workspace , all org and selected org from redux state
   const ownerorg = useSelector(
     (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
   );
