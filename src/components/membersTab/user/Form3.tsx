@@ -171,9 +171,13 @@ const Form3 = () => {
       setFile(selectedFile);
     }
   };
-  const viewAccess = useSelector(
-    (state: RootState) => state.viewAccess[0]["User Management"]?.rights
-  );
+	const viewAccess = useSelector((state: RootState) => state.viewAccess);
+	const [userAccess, setUserAccess] = useState(null);
+	useEffect(() => {
+    if (viewAccess !== null) {
+      setUserAccess(viewAccess[0]["User Management"]["rights"]);
+    }
+  }, [viewAccess]);
 
   // const handleSheetNameChange = (
   // 		event: React.ChangeEvent<HTMLInputElement>
@@ -346,7 +350,7 @@ const Form3 = () => {
             />
           </div>
           <button
-            disabled={isLoading || viewAccess == "View"}
+            disabled={isLoading || userAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"
@@ -359,13 +363,13 @@ const Form3 = () => {
           >
             {isLoading ? "Loading..." : "Cancel Selected User Invitation"}
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </form>
         <div className="px-4">
           <button
-            disabled={viewAccess == "View"}
+            disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -376,7 +380,7 @@ const Form3 = () => {
           >
             Duplicate selected User invitation to create new
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </div>
@@ -410,7 +414,7 @@ const Form3 = () => {
             />
           </div>
           <button
-            disabled={viewAccess == "View"}
+            disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -421,7 +425,7 @@ const Form3 = () => {
           >
             Import Users
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </form>
@@ -437,7 +441,7 @@ const Form3 = () => {
             />
           </div>
           <button
-            disabled={viewAccess == "View"}
+            disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -448,7 +452,7 @@ const Form3 = () => {
           >
             Save common invitation link & create QR code
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </form>
@@ -458,7 +462,7 @@ const Form3 = () => {
             <p className="text-center">QR code for link</p>
           </div>
           <button
-            disabled={viewAccess == "View"}
+            disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -469,7 +473,7 @@ const Form3 = () => {
           >
             Download common invitation link QR code
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </form>

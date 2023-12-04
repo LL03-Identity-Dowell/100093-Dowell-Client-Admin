@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
@@ -50,9 +50,13 @@ const Form1 = () => {
       setIsLoading(false);
     }
   };
-  const viewAccess = useSelector(
-		(state: RootState) => state.viewAccess[2]["Portfolio Management"]?.rights
-	  );
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [publicAccess, setPublicAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setPublicAccess(viewAccess[2]["Portfolio Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
@@ -90,7 +94,7 @@ const Form1 = () => {
             </select>
           </div>
           <button
-            disabled={isLoading || viewAccess === "View"}
+            disabled={isLoading || publicAccess === "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"

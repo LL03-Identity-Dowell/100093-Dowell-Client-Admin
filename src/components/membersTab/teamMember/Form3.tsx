@@ -12,7 +12,13 @@ const Form3 = () => {
   //   const [selectedItem, setSelectedItem] = useState<string>("");
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [teamMemberAccess, setTeamMemberAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setTeamMemberAccess(viewAccess[1]["Member Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const team_member = useSelector(
     (state: RootState) => state.adminData.data[0]?.members.team_members
   );
@@ -338,6 +344,7 @@ const Form3 = () => {
             />
           </div>
           <button
+          disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -351,7 +358,7 @@ const Form3 = () => {
         </form>
         <div className="px-4">
           <button
-            disabled={isLoading}
+            disabled={isLoading || teamMemberAccess === "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"
@@ -396,6 +403,7 @@ const Form3 = () => {
             />
           </div>
           <button
+          disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -419,6 +427,7 @@ const Form3 = () => {
             />
           </div>
           <button
+          disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -436,6 +445,7 @@ const Form3 = () => {
             <p className="text-center">QR code for link</p>
           </div>
           <button
+          disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -546,6 +556,7 @@ const Form3 = () => {
           </div>
           <div className="text-center">
             <button
+            disabled={teamMemberAccess === "View"}
               className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
               type="submit"
             >
@@ -558,6 +569,8 @@ const Form3 = () => {
                 {fileuplaodresponse.datalink}
               </span>
               <button
+
+              disabled={teamMemberAccess === "View"}
                 className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
                 type="button"
                 onClick={uploadlinkcopy}

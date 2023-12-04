@@ -10,9 +10,13 @@ const Form2 = () => {
   );
   const [getUsedAndUnusedData, setUsedAndUnusedData] = useState([]);
   const [getUsedAndUnusedUnassigned, setUsedAndUnusedUnassigned] = useState([]);
-  const viewAccess = useSelector(
-    (state: RootState) => state.viewAccess[2]["Portfolio Management"]?.rights
-  );
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [publicAccess, setPublicAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setPublicAccess(viewAccess[2]["Portfolio Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const sessionId = localStorage.getItem("sessionId");
 
   const getUsedAndUnusedLink = async () => {
@@ -110,7 +114,7 @@ const Form2 = () => {
             </select>
           </div>
           <button
-            disabled={viewAccess === "View"}
+            disabled={publicAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"

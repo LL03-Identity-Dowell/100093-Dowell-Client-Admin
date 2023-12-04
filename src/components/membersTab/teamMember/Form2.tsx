@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useState } from "react";
@@ -37,6 +37,13 @@ const Form2 = () => {
     setSelectedItems(selectedItemName);
   };
 
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [teamMemberAccess, setTeamMemberAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setTeamMemberAccess(viewAccess[1]["Member Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const selectedPendingMembers = team_member?.pending_members.find(
     (item) => item?.member_code === selectedItems
   );
@@ -165,7 +172,7 @@ const Form2 = () => {
 					</div>
 
 					<button
-						disabled={isLoading}
+						disabled={isLoading || teamMemberAccess === "View"}
 						className={`w-full h-12  ${
 							isLoading == true
 								? "bg-[#b8b8b8]"

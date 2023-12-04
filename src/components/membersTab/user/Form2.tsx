@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
@@ -13,7 +13,13 @@ type Option = {
 const Form2 = () => {
   const [selectedItems, setSelectedItems] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [userAccess, setUserAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setUserAccess(viewAccess[0]["User Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const guest_member = useSelector(
     (state: RootState) => state.adminData.data[0]?.members.guest_members
   );
@@ -49,9 +55,6 @@ const Form2 = () => {
   );
   const selectedAcceptMembers = guest_member?.accept_members.find(
     (item) => item?.member_code === selectedItems
-  );
-  const viewAccess = useSelector(
-    (state: RootState) => state.viewAccess[0]["User Management"]?.rights
   );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -166,7 +169,7 @@ const Form2 = () => {
           </div>
 
           <button
-            disabled={isLoading || viewAccess == "View"}
+            disabled={isLoading || userAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"
@@ -179,7 +182,7 @@ const Form2 = () => {
           >
             {isLoading ? "Loading..." : "Remove Selected User"}
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </form>

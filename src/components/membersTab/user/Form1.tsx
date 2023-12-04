@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
@@ -9,9 +9,13 @@ const Form1 = () => {
   const [errMsg, setErrMsg] = useState("");
   const [link, setLink] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const viewAccess = useSelector(
-    (state: RootState) => state.viewAccess[0]["User Management"]?.rights
-  );
+	const viewAccess = useSelector((state: RootState) => state.viewAccess);
+	const [userAccess, setUserAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setUserAccess(viewAccess[0]["User Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const [formInputs, setFormInputs] = useState({
     user_name: "",
     user_code: "",
@@ -176,7 +180,7 @@ const Form1 = () => {
             />
           </div>
           <button
-            disabled={isLoading || viewAccess == "View"}
+            disabled={isLoading || userAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"
@@ -189,7 +193,7 @@ const Form1 = () => {
           >
             {isLoading ? "Loading..." : "Create User Invitation Link"}
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
           <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
@@ -210,7 +214,7 @@ const Form1 = () => {
           </span>
 
           <button
-            disabled={viewAccess == "View"}
+            disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -222,7 +226,7 @@ const Form1 = () => {
           >
             {isCopied ? "Copied" : "Copy invitation link"}
           </button>
-          {viewAccess == "View" && (
+          {userAccess == "View" && (
             <small className="text-red-600">you have only view access</small>
           )}
         </div>
@@ -238,7 +242,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 mb-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
             <button
-              disabled={viewAccess == "View"}
+              disabled={userAccess == "View"}
               className={`w-full ${
                 color_scheme == "Red"
                   ? "bg-[#DC4C64]"
@@ -249,7 +253,7 @@ const Form1 = () => {
             >
               Send invitation email to selected User
             </button>
-            {viewAccess == "View" && (
+            {userAccess == "View" && (
               <small className="text-red-600">you have only view access</small>
             )}
           </div>

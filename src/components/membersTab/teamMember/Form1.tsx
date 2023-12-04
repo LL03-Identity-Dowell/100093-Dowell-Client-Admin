@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import images from "../../images";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -29,6 +29,13 @@ const Form1 = () => {
     setIsPrivacyModalOpen(false);
   };
 
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [teamMemberAccess, setTeamMemberAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setTeamMemberAccess(viewAccess[1]["Member Management"]["rights"]);
+    }
+  }, [viewAccess]);
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
@@ -342,6 +349,7 @@ const Form1 = () => {
                 policies?
               </button>{" "}
             </p>
+
             <input
               type="checkbox"
               required
@@ -349,7 +357,7 @@ const Form1 = () => {
             />
           </div>
           <button
-            disabled={isLoading}
+            disabled={isLoading || teamMemberAccess === "View"}
             className={`w-full h-12  ${
               isLoading == true
                 ? "bg-[#b8b8b8]"
@@ -382,6 +390,7 @@ const Form1 = () => {
           </div>
 
           <button
+            disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -412,6 +421,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 mb-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
             <button
+              disabled={teamMemberAccess === "View"}
               className={`w-full ${
                 color_scheme == "Red"
                   ? "bg-[#DC4C64]"
@@ -591,7 +601,10 @@ const Form1 = () => {
                 />
               </div>
               <div className="flex mt-4 pl-20">
-                <button className="bg-[#008000] text-white text-sm px-4 h-12 rounded-md">
+                <button
+                  disabled={teamMemberAccess === "View"}
+                  className="bg-[#008000] text-white text-sm px-4 h-12 rounded-md"
+                >
                   Submit Consent
                 </button>
               </div>

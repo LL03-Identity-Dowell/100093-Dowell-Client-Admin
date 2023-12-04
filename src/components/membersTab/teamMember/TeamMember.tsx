@@ -10,9 +10,14 @@ import Loader from "../../../pages/whiteloader";
 const TeamMember = () => {
   const [isLoading, setIsLoading] = useState(false);
   const currentadmindata = useSelector((state: RootState) => state.adminData);
-  const viewAccess = useSelector(
-    (state: RootState) => state.viewAccess[1]["Member Management"]?.rights
-  );
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [teamMemberAccess, setTeamMemberAccess] = useState(null);
+  useEffect(() => {
+    if (viewAccess !== null) {
+      setTeamMemberAccess(viewAccess[1]["Member Management"]["rights"]);
+    }
+  }, [viewAccess]);
+  console.log(teamMemberAccess);
   useEffect(() => {
     if (currentadmindata.data[0]._id == "") {
       setIsLoading(true);
@@ -24,7 +29,7 @@ const TeamMember = () => {
     <>
       {isLoading == false ? (
         <>
-          {viewAccess === "View" && (
+          {teamMemberAccess === "View" && (
             <span className="text-red-600 text-xl uppercase mt-10">
               you have only view access
             </span>
