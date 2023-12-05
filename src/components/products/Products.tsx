@@ -347,7 +347,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     <Select
                       styles={style}
                       options={requestOption}
-                      placeholder="Waiting for portfolio from owner"
+                      placeholder="You do not have a portfolio"
                     />
                   )}
 
@@ -364,7 +364,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 {options.length > 0 || selectedProduct === "Dowell Services" ? (
                   <p>Connect</p>
                 ) : (
-                  "Request For Connect"
+                  "create a portfolio"
                 )}
               </button>
             </div>
