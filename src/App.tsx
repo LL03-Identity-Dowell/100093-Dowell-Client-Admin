@@ -10,29 +10,31 @@ import Setting from "./pages/settingpage/Setting";
 import Organization from "./pages/organizationpage/organization";
 import Exportfolio from "./pages/exportfolio";
 import CountrySelector from "./components/Test";
+import NotFound from "./pages/notfound/NotFound";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <ScrollToTop />
+		<>
+			<BrowserRouter>
+				<ScrollToTop />
 
-        <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
-          <Route path="/" element={<ClientAdmin />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/org" element={<Organization />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/setting" element={<Setting></Setting>} />
-          <Route path="/exportfolio" element={<Exportfolio />} />
-          <Route path="/test" element={<CountrySelector />} />
+				<Routes>
+					{/* <Route path="/" element={<Home />} /> */}
+					<Route path="/" element={<ClientAdmin />} />
+					<Route path="/about-us" element={<AboutUs />} />
+					<Route path="/org" element={<Organization />} />
+					<Route path="/faq" element={<Faq />} />
+					<Route path="/setting" element={<Setting></Setting>} />
+					<Route path="/exportfolio" element={<Exportfolio />} />
+					<Route path="/test" element={<CountrySelector />} />
+					<Route path="/*" element={<NotFound />} />
 
-          {/* <Route path="/loader" element={} /> */}
-          {/* <Routes path="/element" element={<Example />} /> */}
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
+					{/* <Route path="/loader" element={} /> */}
+					{/* <Routes path="/element" element={<Example />} /> */}
+				</Routes>
+			</BrowserRouter>
+		</>
+	);
 }
 
 export default App;
