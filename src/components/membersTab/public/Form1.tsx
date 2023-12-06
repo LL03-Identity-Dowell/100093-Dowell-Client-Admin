@@ -9,13 +9,22 @@ const Form1 = () => {
     public_count: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
-
+  const [value, setValue] = useState(0);
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+    if (e.target.id == "public_count") {
+      const inputValue = parseInt(e.target.value, 10);
+      // Allow positive numbers only
+      if (!isNaN(inputValue) && inputValue >= 0) {
+        setValue(inputValue);
+        setFormInputs({ ...formInputs, [e.target.id]: inputValue });
+      }
+    } else {
+      setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,9 +84,19 @@ const Form1 = () => {
               type="number"
               placeholder="Number"
               id="public_count"
+              min={1}
+              value={value}
               onChange={handleOnChange}
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
+            {/* <input
+              type="number"
+              placeholder="Number"
+              min={1}
+              id="public_count"
+              onChange={handleOnChange}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            /> */}
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
