@@ -44,57 +44,62 @@ const Products = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
+     e.preventDefault();
+    if (selectedItem != null) {
+     
+			setIsLoading(true);
 
-    const data = {
-      username: userName,
-      action: "connect_portfolio",
-      portfl: selectedItem?.value,
-      product: selectedProduct,
-      present_org: selectedOrgName,
-      session_id: sessionId,
-    };
-    try {
-      const response = await axios.post(
-        "https://100093.pythonanywhere.com/api/connect_portfolio/",
-        data
-      );
-      if (data.product === "Living Lab Admin") {
-        const username = response.data.split("?")[1].split("=")[1];
-        try {
-          const responseAdmin = await axios.post(
-            "https://100093.pythonanywhere.com/api/get_data/",
-            { username: username }
-          );
-          const response = await axios.post(
-            "https://100093.pythonanywhere.com/api/settings/",
-            { username: username }
-          );
-          toast.success("Success");
-          dispatch(isNewOwner(username));
-          localStorage.setItem("username", username);
-          dispatch(getViewAccess(response.data.data.processes_to_portfolio));
-          dispatch(setAdminData(responseAdmin.data.data[0]));
-          dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
-        } catch (error: unknown) {
-          console.error(error);
-        }
-      } else {
-        toast.success("Success");
-        window.location.href = response.data;
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-        toast.error(error.response?.data);
-      } else {
-        console.error("An unknown error occurred:", error);
-        toast.error("An unknown error occurred");
-      }
-    } finally {
-      setIsLoading(false);
-    }
+			const data = {
+				username: userName,
+				action: "connect_portfolio",
+				portfl: selectedItem?.value,
+				product: selectedProduct,
+				present_org: selectedOrgName,
+				session_id: sessionId,
+			};
+			try {
+				const response = await axios.post(
+					"https://100093.pythonanywhere.com/api/connect_portfolio/",
+					data
+				);
+				if (data.product === "Living Lab Admin") {
+					const username = response.data.split("?")[1].split("=")[1];
+					try {
+						const responseAdmin = await axios.post(
+							"https://100093.pythonanywhere.com/api/get_data/",
+							{ username: username }
+						);
+						const response = await axios.post(
+							"https://100093.pythonanywhere.com/api/settings/",
+							{ username: username }
+						);
+						toast.success("Success");
+						dispatch(isNewOwner(username));
+						localStorage.setItem("username", username);
+						dispatch(getViewAccess(response.data.data.processes_to_portfolio));
+						dispatch(setAdminData(responseAdmin.data.data[0]));
+						dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
+					} catch (error: unknown) {
+						console.error(error);
+					}
+				} else {
+					toast.success("Success");
+					window.location.href = response.data;
+				}
+			} catch (error: unknown) {
+				if (axios.isAxiosError(error)) {
+					console.error(error);
+					toast.error(error.response?.data);
+				} else {
+					console.error("An unknown error occurred:", error);
+					toast.error("An unknown error occurred");
+				}
+			} finally {
+				setIsLoading(false);
+			}
+    } else {
+      toast.error("Select Portfolio From Dropdown");
+   }
   };
 
   const options: Option[] | undefined = productData
