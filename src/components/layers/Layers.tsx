@@ -32,7 +32,10 @@ import {
   getGeoUsername,
 } from "../../store/slice/geodata";
 import { toast } from "react-toastify";
-import { getAlllangData, getlangUsername } from "../../store/slice/languagedata";
+import {
+  getAlllangData,
+  getlangUsername,
+} from "../../store/slice/languagedata";
 
 const Layers = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -134,6 +137,14 @@ const Layers = () => {
 
         usedispatch(getCountry(countries.data));
         usedispatch(getGeoUsername(adminusername));
+
+        const language = await axios.get(
+          "https://100093.pythonanywhere.com/api/languages/"
+        );
+        console.log(language);
+        usedispatch(getLanguage(language.data));
+        usedispatch(getlangUsername(adminusername));
+
         const getLayers = await axios.post(
           "https://100093.pythonanywhere.com/api/languages/",
           {
@@ -145,23 +156,18 @@ const Layers = () => {
         const data = JSON.parse(getLayers.data.geodata.replace(/'/g, '"'));
         usedispatch(getAllGeoData(data));
 
-        const language = await axios.get(
-          "https://100093.pythonanywhere.com/api/languages/"
-        );
-        usedispatch(getLanguage(language.data));
-        usedispatch(getlangUsername(adminusername));
-
         const getlangLayers = await axios.post(
-					"https://100093.pythonanywhere.com/api/languages/",
-					{
-						username: adminusername,
-						action: "getlangdata",
-					}
-				);
+          "https://100093.pythonanywhere.com/api/languages/",
+          {
+            username: adminusername,
+            action: "getlangdata",
+          }
+        );
         // console.log(JSON.parse(getLayers.data.geodata));
-        const languagedata = JSON.parse(getlangLayers.data.langdata.replace(/'/g, '"'));
+        const languagedata = JSON.parse(
+          getlangLayers.data.langdata.replace(/'/g, '"')
+        );
         usedispatch(getAlllangData(languagedata));
-
 
         setIsLoading(false);
       } catch (error) {
