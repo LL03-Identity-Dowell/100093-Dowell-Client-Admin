@@ -152,12 +152,12 @@ const Layers = () => {
         usedispatch(getlangUsername(adminusername));
 
         const getlangLayers = await axios.post(
-          "https://100093.pythonanywhere.com/api/languages/",
-          {
-            username: adminusername,
-            action: "getlangdata",
-          }
-        );
+					"https://100093.pythonanywhere.com/api/languages/",
+					{
+						username: adminusername,
+						action: "getlangdata",
+					}
+				);
         // console.log(JSON.parse(getLayers.data.geodata));
         const languagedata = JSON.parse(getlangLayers.data.langdata.replace(/'/g, '"'));
         usedispatch(getAlllangData(languagedata));
@@ -166,6 +166,7 @@ const Layers = () => {
         setIsLoading(false);
       } catch (error) {
         console.error(error);
+        setIsLoading(false);
       }
     };
 
