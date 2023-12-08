@@ -12,9 +12,11 @@ import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
 
 const Products = () => {
-  const productData = useSelector(
+  const defaultproductData = useSelector(
     (state: RootState) => state.otherorgdata.data
   );
+
+   const productData = defaultproductData.filter((e)=>e.product!="")
   const showLoader = useSelector((state: RootState) => state?.loaderslice);
   const selectedOrgName = useSelector(
     (state: RootState) => state.selectedorg.orgname
