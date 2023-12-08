@@ -89,14 +89,6 @@ const Form1 = () => {
               onChange={handleOnChange}
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
-            {/* <input
-              type="number"
-              placeholder="Number"
-              min={1}
-              id="public_count"
-              onChange={handleOnChange}
-              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            /> */}
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">

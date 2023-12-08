@@ -46,31 +46,39 @@ const ProductForm = () => {
       present_org: userName,
       session_id: sessionId,
     };
-
-    try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/connect_portfolio/", data)
-        .then((res) => {
-          console.log(res.data);
-          toast.success("success");
-          window.location.href = res.data;
-        });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-        toast.error(error.response?.data);
-      } else {
-        console.error("An unknown error occurred:", error);
-        toast.error("An unknown error occurred");
+    console.log({ data });
+    if (data.portfl && data.product) {
+      try {
+        await axios
+          .post(
+            "https://100093.pythonanywhere.com/api/connect_portfolio/",
+            data
+          )
+          .then((res) => {
+            console.log(res.data);
+            toast.success("success");
+            window.location.href = res.data;
+          });
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          console.error(error);
+          toast.error(error.response?.data);
+        } else {
+          console.error("An unknown error occurred:", error);
+          toast.error("An unknown error occurred");
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } finally {
+    } else {
+      toast.error("Please select a portfolio and product");
       setIsLoading(false);
     }
   };
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
- 
+
   return (
     <>
       <form
@@ -127,7 +135,10 @@ const ProductForm = () => {
           <textarea
             rows={4}
             readOnly
-            value={selectedItemData && JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
+            value={
+              selectedItemData &&
+              JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)
+            }
             className="outline-none border border-[#7a7a7a] resize-none p-4 rounded-md text-[#7a7a7a]"
           />
         </div>

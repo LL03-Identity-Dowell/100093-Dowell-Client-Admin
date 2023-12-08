@@ -33,6 +33,7 @@ type Portfolio = {
 interface ProductCardProps {
   product: Product;
   hovertitle: string;
+  handleTabSwitch: (arg1: number) => void;
   handleMouseOver: (title: string) => void;
   selectedProduct: string;
   defaultOptions: Record<string, any>;
@@ -41,8 +42,10 @@ interface ProductCardProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>, title: string) => void;
   handleRequestPortfolio: (e: React.FormEvent<HTMLFormElement>) => void;
 }
-
-const Products: React.FC = () => {
+interface ChildProps {
+  handleTabSwitch: (arg1: number) => void;
+}
+const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   const productData = useSelector((state: RootState) => state.products);
   const userData = useSelector((state: RootState) => state.userinfo);
   const userName = userData.userinfo.username;
@@ -201,6 +204,7 @@ const Products: React.FC = () => {
               <div className="flex flex-wrap w-full justify-between">
                 {filteredProducts.map((product) => (
                   <ProductCard
+                    handleTabSwitch={handleTabSwitch}
                     key={product._id}
                     product={product}
                     hovertitle={hovertitle}
@@ -250,6 +254,7 @@ export default Products;
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   hovertitle,
+  handleTabSwitch,
   handleMouseOver,
   selectedProduct,
   defaultOptions,
@@ -262,6 +267,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
   const portfolioData: Portfolio[] = adminData?.portpolio || [];
 
+  const handleTabClick = (arg1: number) => {
+    handleTabSwitch(arg1);
+  };
   const filterDataByProduct = portfolioData?.filter(
     (item) => item?.product === hovertitle
   );
@@ -364,7 +372,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 {options.length > 0 || selectedProduct === "Dowell Services" ? (
                   <p>Connect</p>
                 ) : (
-                  "create a portfolio"
+                  <span onClick={() => handleTabClick(2)}>
+                    create a portfolio
+                  </span>
                 )}
               </button>
             </div>

@@ -32,7 +32,10 @@ import {
   getGeoUsername,
 } from "../../store/slice/geodata";
 import { toast } from "react-toastify";
-import { getAlllangData, getlangUsername } from "../../store/slice/languagedata";
+import {
+  getAlllangData,
+  getlangUsername,
+} from "../../store/slice/languagedata";
 
 const Layers = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -131,9 +134,9 @@ const Layers = () => {
         const countries = await axios.get(
           "https://100074.pythonanywhere.com/countries/johnDoe123/haikalsb1234/100074/"
         );
-
         usedispatch(getCountry(countries.data));
         usedispatch(getGeoUsername(adminusername));
+
         const getLayers = await axios.post(
           "https://100093.pythonanywhere.com/api/languages/",
           {
@@ -141,13 +144,13 @@ const Layers = () => {
             action: "getgeodata",
           }
         );
-        // console.log(JSON.parse(getLayers.data.geodata));
         const data = JSON.parse(getLayers.data.geodata.replace(/'/g, '"'));
         usedispatch(getAllGeoData(data));
 
         const language = await axios.get(
           "https://100093.pythonanywhere.com/api/languages/"
         );
+        console.log("languages", language.data);
         usedispatch(getLanguage(language.data));
         usedispatch(getlangUsername(adminusername));
 
@@ -158,10 +161,12 @@ const Layers = () => {
             action: "getlangdata",
           }
         );
-        // console.log(JSON.parse(getLayers.data.geodata));
-        const languagedata = JSON.parse(getlangLayers.data.langdata.replace(/'/g, '"'));
-        usedispatch(getAlllangData(languagedata));
+        console.log("languages layers", getlangLayers.data);
 
+        const languagedata = JSON.parse(
+          getlangLayers.data.langdata.replace(/'/g, '"')
+        );
+        usedispatch(getAlllangData(languagedata));
 
         setIsLoading(false);
       } catch (error) {
@@ -313,8 +318,8 @@ const Layers = () => {
         setLoading(true);
         const getcities = await axios.get(
           "https://100074.pythonanywhere.chandleGeoDatagetGeoDataom/region/code/" +
-          code +
-          "/johnDoe123/haikalsb1234/100074/"
+            code +
+            "/johnDoe123/haikalsb1234/100074/"
         );
         usedispatch(getCities({ country_code: code, cities: getcities.data }));
       }
@@ -447,12 +452,13 @@ const Layers = () => {
         <div className="mt-8 w-full lg:flex gap-8">
           <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
             <span
-              className={`${color_scheme == "Red"
+              className={`${
+                color_scheme == "Red"
                   ? "bg-[#DC4C64]"
                   : color_scheme == "Green"
-                    ? "bg-[#14A44D]"
-                    : "bg-[#7A7A7A]"
-                } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+                  ? "bg-[#14A44D]"
+                  : "bg-[#7A7A7A]"
+              } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
             >
               <p>Security Layers created in my workspace </p>
             </span>
@@ -555,10 +561,10 @@ const Layers = () => {
                 >
                   {devicesKeys
                     ? devicesKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -572,10 +578,10 @@ const Layers = () => {
                 >
                   {operatingKeys
                     ? operatingKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -589,10 +595,10 @@ const Layers = () => {
                 >
                   {browserKeys
                     ? browserKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -606,10 +612,10 @@ const Layers = () => {
                 >
                   {connectionKeys
                     ? connectionKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -623,10 +629,10 @@ const Layers = () => {
                 >
                   {loginKeys
                     ? loginKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -657,10 +663,10 @@ const Layers = () => {
                 >
                   {passwordStrengthKeys
                     ? passwordStrengthKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -674,10 +680,10 @@ const Layers = () => {
                 >
                   {verificationKeys
                     ? verificationKeys.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))
                     : null}
                 </select>
               </div>
@@ -711,12 +717,13 @@ const Layers = () => {
               </div>
 
               <button
-                className={`w-full ${color_scheme == "Red"
+                className={`w-full ${
+                  color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Refresh Search
               </button>
@@ -817,8 +824,9 @@ const Layers = () => {
                       return (
                         <button
                           onClick={() => handlePageChange(item)}
-                          className={`px-4 text-base border rounded-sm ${item === currentPage && "bg-green-600 text-white"
-                            }`}
+                          className={`px-4 text-base border rounded-sm ${
+                            item === currentPage && "bg-green-600 text-white"
+                          }`}
                           disabled={currentPage === item}
                         >
                           {item}
@@ -848,12 +856,13 @@ const Layers = () => {
                 </li> */}
               <button
                 onClick={handleGeoDataSubmit}
-                className={`w-full ${color_scheme == "Red"
+                className={`w-full ${
+                  color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+                    ? "bg-[#14A44D]"
+                    : "bg-[#7A7A7A]"
+                }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
               >
                 Save Geographic Settings
               </button>
