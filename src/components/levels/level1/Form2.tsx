@@ -16,11 +16,9 @@ const Form2 = () => {
     item_name: "",
     item_code: "",
     item_details: "",
-    item_universal_code: "",
-    item_specification: "",
-    item_barcode: "",
-    item_image1: "",
-    item_image2: "",
+    item_unicode: "",
+    item_spec: "",
+   
   });
   const [isLoading, setIsLoading] = useState(false);
   const [_errMsg, setErrMsg] = useState("");
@@ -44,84 +42,90 @@ const Form2 = () => {
     await axios
       .post("https://100093.pythonanywhere.com/api/create_item/", formInputs)
       .then((res) => {
-        console.log(res.data);
-        setErrMsg("");
-        toast.success(res.data);
-        const newdata = {
-          item_name: formInputs.item_name,
-          item_code: formInputs.item_code,
-          item_details: formInputs.item_details,
-          item_universal_code: formInputs.item_universal_code,
-          item_specification: formInputs.item_specification,
-          item_barcode: formInputs.item_barcode,
-          item_image1: formInputs.item_image1,
-          item_image2: formInputs.item_image2,
-          status: "enable",
-        };
-        if (isnewOwner) {
-          dispatch(
-            setItemData({
-              data: [
-                ...currentadmindata.data[0].organisations[1].level1.items,
-                newdata,
-              ],
-              type: "level1",
-            })
-            // getAdminData({
-            //   ...currentadmindata,
-            //   data: [
-            //     {
-            //       ...currentadmindata.data[0],
-            //       organisations: [
-            //         {
-            //           ...currentadmindata.data[0].organisations[1],
-            //           level1: {
-            //             ...currentadmindata.data[0].organisations[1].level1,
-            //             items: [
-            //               ...currentadmindata.data[0].organisations[1].level1
-            //                 .items,
-            //               newdata,
-            //             ],
-            //           },
-            //         },
-            //       ],
-            //     },
-            //   ],
-            // })
-          );
-        } else {
-          dispatch(
-            getAdminData({
-              ...currentadmindata,
-              data: [
-                {
-                  ...currentadmindata.data[0],
-                  organisations: [
-                    {
-                      ...currentadmindata.data[0].organisations[0],
-                      level1: {
-                        ...currentadmindata.data[0].organisations[0].level1,
-                        items: [
-                          ...currentadmindata.data[0].organisations[0].level1
-                            .items,
-                          newdata,
-                        ],
+        // console.log(res.data);
+        if (res.status === 201) {
+          setErrMsg("");
+          toast.success(res.data.message);
+          const newdata = {
+            item_name: formInputs.item_name,
+            item_code: formInputs.item_code,
+            item_details: formInputs.item_details,
+            item_unicode: formInputs.item_unicode,
+            item_spec: formInputs.item_spec,
+            status: "enable",
+          };
+          if (isnewOwner) {
+            dispatch(
+              setItemData({
+                data: [
+                  ...currentadmindata.data[0].organisations[1].level1.items,
+                  newdata,
+                ],
+                type: "level1",
+              })
+              // getAdminData({
+              //   ...currentadmindata,
+              //   data: [
+              //     {
+              //       ...currentadmindata.data[0],
+              //       organisations: [
+              //         {
+              //           ...currentadmindata.data[0].organisations[1],
+              //           level1: {
+              //             ...currentadmindata.data[0].organisations[1].level1,
+              //             items: [
+              //               ...currentadmindata.data[0].organisations[1].level1
+              //                 .items,
+              //               newdata,
+              //             ],
+              //           },
+              //         },
+              //       ],
+              //     },
+              //   ],
+              // })
+            );
+          } else {
+            dispatch(
+              getAdminData({
+                ...currentadmindata,
+                data: [
+                  {
+                    ...currentadmindata.data[0],
+                    organisations: [
+                      {
+                        ...currentadmindata.data[0].organisations[0],
+                        level1: {
+                          ...currentadmindata.data[0].organisations[0].level1,
+                          items: [
+                            ...currentadmindata.data[0].organisations[0].level1
+                              .items,
+                            newdata,
+                          ],
+                        },
                       },
-                    },
-                  ],
-                },
-              ],
-            })
-          );
+                    ],
+                  },
+                ],
+              })
+            );
+          }
         }
-      })
+      }
+      )
       .catch((error) => {
-        if (error.response) {
-          toast.error(error.response?.data);
-        } else {
-          console.log("Error", error.message);
-          toast.error(error.message);
-        }
+         if (error.response) {
+						if (error.response.status === 400) {
+							toast.error(error.response?.data.message);
+						} else if (error.response.status === 404) {
+							toast.error(error.response?.data.message);
+						} else if (error.response.status === 500) {
+							toast.error(error.response?.data.message);
+						}
+					} else {
+						console.log("Error", error.message);
+						toast.error("An unexpected error occurred");
+					}
       });
     if (!isnewOwner) {
       setIsLoading(false);
@@ -173,7 +177,7 @@ const Form2 = () => {
               type="text"
               placeholder="Item specification"
               onChange={handleOnChange}
-              id="item_specification"
+              id="item_spec"
               className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
@@ -185,7 +189,7 @@ const Form2 = () => {
               type="text"
               placeholder=" Item universal code"
               onChange={handleOnChange}
-              id="item_universal_code"
+              id="item_unicode"
               className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
