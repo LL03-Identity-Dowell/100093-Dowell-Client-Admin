@@ -46,7 +46,7 @@ const Form2 = () => {
         if (res.status === 201) {
 					setErrMsg("");
 
-					toast.success(res.data.message);
+					toast.success(res.data);
 					const newdata = {
 						item_name: formInputs.item_name,
 						item_code: formInputs.item_code,
@@ -97,13 +97,13 @@ const Form2 = () => {
       .catch((error) => {
         if (error.response) {
           if (error.response.status === 400) {
-            toast.error(error.response?.data.message);
+            toast.error(error.response?.data);
           }
          else if (error.response.status === 404) {
-            toast.error(error.response?.data.message);
+            toast.error(error.response?.data);
           }
          else if (error.response.status === 500) {
-            toast.error(error.response?.data.message);
+            toast.error(error.response?.data);
           }
         } else {
           console.log("Error", error.message);
