@@ -97,6 +97,7 @@ const Form1 = () => {
           "https://100093.pythonanywhere.com/api/public_user/",
           data
         );
+        console.log("public data", response.data);
         setPublicData(response.data);
       } catch (error) {
         console.error(error);
