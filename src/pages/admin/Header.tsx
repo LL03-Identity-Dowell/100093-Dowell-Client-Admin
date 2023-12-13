@@ -21,7 +21,7 @@ const Header = () => {
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
 
-// get session id from local storage
+  // get session id from local storage
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,35 +40,40 @@ const Header = () => {
       (location.href =
         "https://100014.pythonanywhere.com/?redirect_url=https://100093.pythonanywhere.com");
   }
+  // get user information from user info info api
 
-// get user information from user info info api
-
-  useEffect(() => {
+  https: useEffect(() => {
     const fetchData = async () => {
       dispatch(getloaderstate(false));
       if (sessionId) {
-        const url = "https://100014.pythonanywhere.com/api/logininfo/";
-        axios
-          .post(url, { session_id: sessionId })
-          .then((response) => {
-            try {
-              dispatch(getuserinfo(response.data));
-            } catch (e) {
-              console.log("Failed to parse response");
-            } finally {
-              dispatch(getloaderstate(true));
-            }
-          })
-          .catch((error) => {
-            console.log("Request failed", error);
-          });
+        try {
+          const url = "https://100014.pythonanywhere.com/api/logininfo/";
+          await axios
+            .post(url, { session_id: sessionId })
+            .then((response) => {
+              try {
+                if (response.data.message) {
+                  location.href = "https://100014.pythonanywhere.com/";
+                }
+                dispatch(getuserinfo(response.data));
+              } catch (e) {
+                console.log("Failed to parse response");
+              } finally {
+                dispatch(getloaderstate(true));
+              }
+            })
+            .catch(() => {
+              console.log("Request failed");
+            });
+        } catch (err) {
+          console.log("error");
+        }
       }
     };
     if (userData.userinfo.username == "") {
       fetchData();
     }
   }, [dispatch, sessionId]);
-
 
   // handle logout functionality
   const logout = () => {
