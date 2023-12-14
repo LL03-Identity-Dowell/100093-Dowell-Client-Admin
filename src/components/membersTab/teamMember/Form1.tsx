@@ -121,6 +121,8 @@ const Form1 = () => {
             } else if (error.response.status === 500) {
               toast.error(error.response?.data.error);
             }
+          } else if (error.message) {
+            toast.error(error.message);
           } else {
             toast.error("An unexpected error occurred");
           }
