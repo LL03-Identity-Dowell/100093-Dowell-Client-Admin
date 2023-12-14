@@ -4,7 +4,7 @@ import images from "../../images";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const Form1 = () => {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
@@ -103,18 +103,30 @@ const Form1 = () => {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_team_member/", data)
         .then((res) => {
-          console.log(res.data);
-          setLink(res.data.link);
-          setErrMsg("");
-          toast.success("success");
+          if (res.status === 201) {
+            setErrMsg("");
+            toast.success(res.data);
+            setLink(res.data.link);
+          }
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response?.status === 400) {
+              toast.error(error.response?.data);
+            } else if (error.response.status === 404) {
+              toast.error(error.response?.data);
+            } else if (error.response.status === 500) {
+              toast.error(error.response?.data);
+            }
+          } else {
+            toast.error("An unexpected error occurred");
+          }
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error(error);
-        setErrMsg(error.response?.data.error);
+        toast.error(error.response?.data.error);
       } else {
-        console.error("An unknown error occurred:", error);
-        setErrMsg("An unknown error occurred");
+        toast.error("An unknown error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -244,7 +256,6 @@ const Form1 = () => {
         `https://100087.pythonanywhere.com/api/legalpolicies/${sessionId}/iagreestatus/`
       );
       console.log(response);
-      console.log(response.request.responseURL);
     } catch (err) {
       console.error(err);
     }
@@ -254,7 +265,6 @@ const Form1 = () => {
   );
   return (
     <>
-      <ToastContainer position="top-right" />
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
         <span
           className={`${
