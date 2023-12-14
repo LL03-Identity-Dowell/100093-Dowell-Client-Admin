@@ -103,20 +103,23 @@ const Form1 = () => {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_team_member/", data)
         .then((res) => {
+          console.log(res);
           if (res.status === 201) {
             setErrMsg("");
-            toast.success(res.data);
+            toast.success(res.statusText);
             setLink(res.data.link);
           }
         })
         .catch((error) => {
+          console.log(error);
+
           if (error.response) {
             if (error.response?.status === 400) {
-              toast.error(error.response?.data);
+              toast.error(error.response?.data.error);
             } else if (error.response.status === 404) {
-              toast.error(error.response?.data);
+              toast.error(error.response?.data.error);
             } else if (error.response.status === 500) {
-              toast.error(error.response?.data);
+              toast.error(error.response?.data.error);
             }
           } else {
             toast.error("An unexpected error occurred");
