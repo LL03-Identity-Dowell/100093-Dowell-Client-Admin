@@ -103,7 +103,6 @@ const Form1 = () => {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_team_member/", data)
         .then((res) => {
-          console.log(res);
           if (res.status === 201) {
             setErrMsg("");
             toast.success(res.statusText);

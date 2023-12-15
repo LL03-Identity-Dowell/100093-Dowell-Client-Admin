@@ -9,8 +9,8 @@ const Form1 = () => {
   const [errMsg, setErrMsg] = useState("");
   const [link, setLink] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-	const viewAccess = useSelector((state: RootState) => state.viewAccess);
-	const [userAccess, setUserAccess] = useState(null);
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [userAccess, setUserAccess] = useState(null);
   useEffect(() => {
     if (viewAccess !== null) {
       setUserAccess(viewAccess[0]["User Management"]["rights"]);
@@ -71,18 +71,34 @@ const Form1 = () => {
       await axios
         .post("https://100093.pythonanywhere.com/api/create_user_member/", data)
         .then((res) => {
-          console.log(res.data);
-          setLink(res.data.link);
-          setErrMsg("");
-          toast.success("success");
+          if (res.status === 201) {
+            setErrMsg("");
+            toast.success(res.statusText);
+            setLink(res.data.link);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+
+          if (error.response) {
+            if (error.response?.status === 400) {
+              toast.error(error.response?.data.error);
+            } else if (error.response.status === 404) {
+              toast.error(error.response?.data.error);
+            } else if (error.response.status === 500) {
+              toast.error(error.response?.data.error);
+            }
+          } else if (error.message) {
+            toast.error(error.message);
+          } else {
+            toast.error("An unexpected error occurred");
+          }
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error(error);
-        setErrMsg(error.response?.data);
+        toast.error(error.response?.data.error);
       } else {
-        console.error("An unknown error occurred:", error);
-        setErrMsg("An unknown error occurred");
+        toast.error("An unknown error occurred");
       }
     } finally {
       setIsLoading(false);
