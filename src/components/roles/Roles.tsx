@@ -310,7 +310,7 @@ function isAxiosError(error: unknown): error is AxiosError {
         toast.success("success");
       } catch (error) {
         // console.error(error); // Handle the error appropriately
-        console.error("Response Status Code:", error.response.status);
+        console.error("Response Status Code:", error);
       }
     }
     setloading({
