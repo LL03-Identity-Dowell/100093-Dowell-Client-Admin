@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { getAdminData } from "../../store/slice/adminData";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
@@ -155,6 +155,9 @@ const Roles = () => {
     role_det: "",
     status: "enable",
   });
+function isAxiosError(error: unknown): error is AxiosError {
+	return (error as AxiosError).isAxiosError !== undefined;
+}
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -167,52 +170,67 @@ const Roles = () => {
         "https://100093.pythonanywhere.com/api/create_role/",
         formData
       );
-      console.log(response.data);
+      if (response.status === 201) {
+        console.log(response);
 
-      const statedata = {
-        level1_item: formData.level1_item,
-        level2_item: formData.level2_item,
-        level3_item: formData.level3_item,
-        level4_item: formData.level4_item,
-        level5_item: formData.level5_item,
-        security_layer: formData.security_layer,
-        role_name: formData.role_name,
-        role_code: formData.role_code,
-        role_details: formData.role_det,
-        role_uni_code: formData.roleucode,
-        role_specification: formData.role_spec,
-        status: formData.status,
-      };
-      const updatedAdminData = {
-        ...currentadmindata,
-        data: [
-          {
-            ...currentadmindata.data[0],
-            roles: [...currentadmindata.data[0].roles, statedata],
-          },
-        ],
-      };
-      dispatch(getAdminData(updatedAdminData));
-      toast.success("success");
-      // Handle the response as needed
-      // Reset the form
-      setFormData({
-        username: defaultusername,
-        level1_item: "",
-        level2_item: "",
-        level3_item: "",
-        level4_item: "",
-        level5_item: "",
-        security_layer: "Layer 01",
-        role_name: "",
-        role_code: "",
-        role_spec: "",
-        roleucode: "",
-        role_det: "",
-        status: "enable",
-      });
+        const statedata = {
+          level1_item: formData.level1_item,
+          level2_item: formData.level2_item,
+          level3_item: formData.level3_item,
+          level4_item: formData.level4_item,
+          level5_item: formData.level5_item,
+          security_layer: formData.security_layer,
+          role_name: formData.role_name,
+          role_code: formData.role_code,
+          role_details: formData.role_det,
+          role_uni_code: formData.roleucode,
+          role_specification: formData.role_spec,
+          status: formData.status,
+        };
+        const updatedAdminData = {
+          ...currentadmindata,
+          data: [
+            {
+              ...currentadmindata.data[0],
+              roles: [...currentadmindata.data[0].roles, statedata],
+            },
+          ],
+        };
+        dispatch(getAdminData(updatedAdminData));
+        toast.success(response.data);
+        // Handle the response as needed
+        // Reset the form
+        setFormData({
+          username: defaultusername,
+          level1_item: "",
+          level2_item: "",
+          level3_item: "",
+          level4_item: "",
+          level5_item: "",
+          security_layer: "Layer 01",
+          role_name: "",
+          role_code: "",
+          role_spec: "",
+          roleucode: "",
+          role_det: "",
+          status: "enable",
+        });
+      }
     } catch (error) {
-      console.error(error);
+      if (isAxiosError(error)) {
+        if (error.response) {
+          if (
+            error.response.status === 400 ||
+            error.response.status === 404 ||
+            error.response.status === 500
+          ) {
+            toast.error(error.response.data as string);
+          }
+        } else {
+          console.log("Error", error.message);
+          toast.error("An unexpected error occurred");
+        }
+      }
       // Handle the error appropriately
     } finally {
       setloading({
@@ -221,6 +239,8 @@ const Roles = () => {
       });
     }
   };
+
+
 
   const handleChange = (
     e: ChangeEvent<HTMLSelectElement | HTMLInputElement>
@@ -289,7 +309,8 @@ const Roles = () => {
 
         toast.success("success");
       } catch (error) {
-        console.error(error); // Handle the error appropriately
+        // console.error(error); // Handle the error appropriately
+        console.error("Response Status Code:", error);
       }
     }
     setloading({
@@ -376,33 +397,33 @@ const Roles = () => {
         (selectionrulestate.selectlevel1_item.length == 0
           ? true
           : selectionrulestate.selectlevel1_item.includes(
-              `${item.level1_item}`
-            )) &&
+            `${item.level1_item}`
+          )) &&
         (selectionrulestate.selectlevel2_item.length == 0
           ? true
           : selectionrulestate.selectlevel2_item.includes(
-              `${item.level2_item}`
-            )) &&
+            `${item.level2_item}`
+          )) &&
         (selectionrulestate.selectlevel3_item.length == 0
           ? true
           : selectionrulestate.selectlevel3_item.includes(
-              `${item.level3_item}`
-            )) &&
+            `${item.level3_item}`
+          )) &&
         (selectionrulestate.selectlevel4_item.length == 0
           ? true
           : selectionrulestate.selectlevel4_item.includes(
-              `${item.level4_item}`
-            )) &&
+            `${item.level4_item}`
+          )) &&
         (selectionrulestate.selectlevel5_item.length == 0
           ? true
           : selectionrulestate.selectlevel5_item.includes(
-              `${item.level5_item}`
-            )) &&
+            `${item.level5_item}`
+          )) &&
         (selectionrulestate.selectsecurity_layer.length == 0
           ? true
           : selectionrulestate.selectsecurity_layer.includes(
-              `${item.security_layer}`
-            ))
+            `${item.security_layer}`
+          ))
       );
     });
     setenablerulesitem(filteredData.filter((r) => r.status == "enable"));
@@ -423,13 +444,12 @@ const Roles = () => {
           <div className="mt-8 w-full lg:flex gap-8">
             <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
               <span
-                className={`${
-                  color_scheme == "Red"
+                className={`${color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
-                    ? "bg-[#14A44D]"
-                    : "bg-[#7A7A7A]"
-                } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+                      ? "bg-[#14A44D]"
+                      : "bg-[#7A7A7A]"
+                  } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
               >
                 <p>ROLE</p>
                 <p>{`  <${enablerules.length}>`} </p>
@@ -631,15 +651,14 @@ const Roles = () => {
                   />
                 </div>
                 <button
-                  className={`w-full h-12  ${
-                    loading.createrole == true
+                  className={`w-full h-12  ${loading.createrole == true
                       ? "bg-[#b8b8b8]"
                       : color_scheme == "Red"
-                      ? "bg-[#DC4C64]"
-                      : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+                        ? "bg-[#DC4C64]"
+                        : color_scheme == "Green"
+                          ? "bg-[#14A44D]"
+                          : "bg-[#7A7A7A]"
+                    }  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
                   type="submit"
                 >
                   {loading.createrole == true ? "Creating..." : "Create Role"}
@@ -838,15 +857,14 @@ const Roles = () => {
                   </select>
                 </div>
                 <button
-                  className={`w-full h-12  ${
-                    loading.enabledisable == true
+                  className={`w-full h-12  ${loading.enabledisable == true
                       ? "bg-[#b8b8b8]"
                       : color_scheme == "Red"
-                      ? "bg-[#DC4C64]"
-                      : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+                        ? "bg-[#DC4C64]"
+                        : color_scheme == "Green"
+                          ? "bg-[#14A44D]"
+                          : "bg-[#7A7A7A]"
+                    } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
                   type="button"
                   onClick={updateselectedrulestatus}
                 >
@@ -858,26 +876,24 @@ const Roles = () => {
                 </button>
 
                 <button
-                  className={`w-full h-12  ${
-                    color_scheme == "Red"
+                  className={`w-full h-12  ${color_scheme == "Red"
                       ? "bg-[#DC4C64]"
                       : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+                        ? "bg-[#14A44D]"
+                        : "bg-[#7A7A7A]"
+                    } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
                 >
                   Duplicate selected Role to create new
                 </button>
                 <button
-                  className={`w-full h-12  ${
-                    loading.refreshsearch == true
+                  className={`w-full h-12  ${loading.refreshsearch == true
                       ? "bg-[#b8b8b8]"
                       : color_scheme == "Red"
-                      ? "bg-[#DC4C64]"
-                      : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  }  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+                        ? "bg-[#DC4C64]"
+                        : color_scheme == "Green"
+                          ? "bg-[#14A44D]"
+                          : "bg-[#7A7A7A]"
+                    }  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
                   type="button"
                   onClick={clearselection}
                 >
