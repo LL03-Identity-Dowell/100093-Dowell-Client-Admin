@@ -43,16 +43,32 @@ const Form1 = () => {
           data
         )
         .then((res) => {
-          console.log(res.data);
-          toast.success("success");
-          window.location.reload();
+          if (res.status === 201) {
+            toast.success(res.statusText);
+            window.location.reload();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+
+          if (error.response) {
+            if (error.response?.status === 400) {
+              toast.error(error.response?.data.error);
+            } else if (error.response.status === 404) {
+              toast.error(error.response?.data.error);
+            } else if (error.response.status === 500) {
+              toast.error(error.response?.data.error);
+            }
+          } else if (error.message) {
+            toast.error(error.message);
+          } else {
+            toast.error("An unexpected error occurred");
+          }
         });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error(error);
-        toast.error(error.message);
+        toast.error(error.response?.data.error);
       } else {
-        console.error("An unknown error occurred:", error);
         toast.error("An unknown error occurred");
       }
     } finally {
