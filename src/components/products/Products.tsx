@@ -7,7 +7,7 @@ import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
-
+ //defining interfaces for product , portfolio,ChildPropsProductCardProps
 type Product = {
 	_id: string;
 	product_name: string;
@@ -46,6 +46,8 @@ interface ChildProps {
 	handleTabSwitch: (arg1: number) => void;
 }
 const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
+
+	// getting require data from redux state
 	const productData = useSelector((state: RootState) => state.products);
 	const userData = useSelector((state: RootState) => state.userinfo);
 	const userName = userData.userinfo.username;
@@ -106,6 +108,8 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 	};
 
 	const sessionId = localStorage.getItem("sessionId");
+
+// connect to selected profolio
 
 	const handleSubmit = async (
 		e: React.FormEvent<HTMLFormElement>,
