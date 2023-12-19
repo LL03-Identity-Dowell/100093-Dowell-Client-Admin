@@ -120,6 +120,10 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 
 		const selectedOption = selectedOptions[title] || defaultOptions[title];
 
+const selectedporfolio = portfolioData?.find(
+	(item) => item?.portfolio_code === selectedOption?.value
+)
+
 		const data = {
 			username: userName,
 			action: "connect_portfolio",
@@ -128,7 +132,19 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 			product: selectedProduct,
 			present_org: presentOrg,
 			session_id: sessionId,
+		} as {
+			username: string;
+			action: string;
+			portfl: string;
+			product: string;
+			present_org: string;
+			session_id: string;
+			portfolio_name?: string;
 		};
+
+if (selectedporfolio?.product === "all") {
+	data.portfolio_name = "default";
+}
 
 		try {
 			const response = await axios.post(
