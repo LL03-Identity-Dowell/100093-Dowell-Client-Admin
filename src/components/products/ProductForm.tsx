@@ -28,27 +28,43 @@ const ProductForm = () => {
         );
 
   const filterDataByProduct = portfolioData?.filter(
-    (item) => item.product === selectedProduct
-  );
+		(item) => item.product === selectedProduct || item?.product === "all"
+	);
 
   const selectedItemData = portfolioData?.find(
-    (item) => item?.portfolio_code === selectedItem
-  );
+		(item) => item?.portfolio_code === selectedItem 
+	);
   const sessionId = localStorage.getItem("sessionId");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+const selectedporfolio = portfolioData?.find(
+	(item) => item?.portfolio_code === selectedItem
+);
 
     const data = {
-      username: userName,
-      action: "connect_portfolio",
-      portfl: selectedItem,
-      product: selectedProduct,
-      present_org: userName,
-      session_id: sessionId,
-    };
-    console.log({ data });
+			username: userName,
+			action: "connect_portfolio",
+			portfl: selectedItem,
+			product: selectedProduct,
+			present_org: userName,
+			session_id: sessionId,
+		} as {
+			username: string;
+			action: string;
+			portfl: string;
+			product: string;
+			present_org: string;
+			session_id: string;
+			portfolio_name?: string;
+      };
+    
+     if (selectedporfolio?.product === "all") {
+				data.portfolio_name = "default";
+			}
+
+    console.log(data);
     if (data.portfl && data.product) {
       try {
         await axios
