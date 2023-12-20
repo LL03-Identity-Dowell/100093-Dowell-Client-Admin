@@ -27,7 +27,7 @@ export default function Deviceform() {
   const LaptopDesktop = useSelector(
     (state: RootState) => state.layer.devices?.["Laptop/Desk top"]
   );
- 
+
   const [selectedLaptopDesktop, setselectedLaptopDesktop] =
     useState(LaptopDesktop);
   const LaptopDesktopfilterlist = layerlist.filter(
@@ -114,102 +114,122 @@ export default function Deviceform() {
     // Make your API call here using the selectedLanguage value
     // For example:
   };
- const color_scheme = useSelector(
-		(state: RootState) => state.setting?.data?.color_scheme
- );
+  const color_scheme = useSelector(
+    (state: RootState) => state.setting?.data?.color_scheme
+  );
   return (
-		<>
-			<ToastContainer position="top-right" />
-			<form className="px-[30px] mb-8">
-				<div className="mb-4">
-					<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-						Laptop/Desk top
-					</label>
-					<select
-						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						onChange={(e) => setselectedLaptopDesktop(e.target.value)}
-						value={selectedLaptopDesktop}
-					>
-						<option selected value={LaptopDesktop}>
-							{LaptopDesktop}
-						</option>
-						{LaptopDesktopfilterlist.map((item, index) => (
-							<option key={index} value={item}>
-								{item}
-							</option>
-						))}
-					</select>
-				</div>
-				<div className="mb-4">
-					<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-						Mobile Phone
-					</label>
-					<select
-						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						onChange={(e) => setselectedMobilePhone(e.target.value)}
-						value={selectedMobilePhone}
-					>
-						<option selected value={MobilePhone}>
-							{MobilePhone}
-						</option>
-						{MobilePhonefilterlist.map((item, index) => (
-							<option key={index} value={item}>
-								{item}
-							</option>
-						))}
-					</select>
-				</div>
-				<div className="mb-4">
-					<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-						Tablet / Ipad
-					</label>
-					<select
-						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						onChange={(e) => setselectedTabletIpad(e.target.value)}
-						value={selectedTabletIpad}
-					>
-						<option selected value={TabletIpad}>
-							{TabletIpad}
-						</option>
-						{TabletIpadfilterlist.map((item, index) => (
-							<option key={index} value={item}>
-								{item}
-							</option>
-						))}
-					</select>
-				</div>
-				<div className="mb-4">
-					<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-						Others not listed above
-					</label>
-					<select
-						className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						onChange={(e) => setselectedOthers(e.target.value)}
-						value={selectedOthers}
-					>
-						<option selected value={Others}>
-							{Others}
-						</option>
-						{Othersfilterlist.map((item, index) => (
-							<option key={index} value={item}>
-								{item}
-							</option>
-						))}
-					</select>
-				</div>
-				<button
-					className={`w-full ${
-						color_scheme == "Red"
-							? "bg-[#DC4C64]"
-							: color_scheme == "Green"
-							? "bg-[#14A44D]"
-							: "bg-[#7A7A7A]"
-					}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-					onClick={handleSubmit}
-				>
-					Save Device Settings
-				</button>
-			</form>
-		</>
-	);
+    <>
+      <ToastContainer position="top-right" />
+      <form className="px-[30px] mb-8">
+        <div className="mb-4">
+          <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            Laptop/Desk top
+          </label>
+          <select
+            className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            onChange={(e) => setselectedLaptopDesktop(e.target.value)}
+            value={selectedLaptopDesktop}
+          >
+            <option disabled={Boolean(LaptopDesktop)} selected>
+              …select security layer…
+            </option>
+            {LaptopDesktop && (
+              <option selected value={LaptopDesktop}>
+                {LaptopDesktop}
+              </option>
+            )}
+            {LaptopDesktopfilterlist.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            Mobile Phone
+          </label>
+          <select
+            className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            onChange={(e) => setselectedMobilePhone(e.target.value)}
+            value={selectedMobilePhone}
+          >
+            <option disabled={Boolean(MobilePhone)} selected>
+              …select security layer…
+            </option>
+            {MobilePhone && (
+              <option selected value={MobilePhone}>
+                {MobilePhone}
+              </option>
+            )}
+            {MobilePhonefilterlist.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            Tablet / Ipad
+          </label>
+          <select
+            className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            onChange={(e) => setselectedTabletIpad(e.target.value)}
+            value={selectedTabletIpad}
+          >
+            <option disabled={Boolean(TabletIpad)} selected>
+              …select security layer…
+            </option>
+            {TabletIpad && (
+              <option selected value={TabletIpad}>
+                {TabletIpad}
+              </option>
+            )}
+            {TabletIpadfilterlist.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            Others not listed above
+          </label>
+          <select
+            className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            onChange={(e) => setselectedOthers(e.target.value)}
+            value={selectedOthers}
+          >
+           <option disabled={Boolean(Others)} selected>
+              …select security layer…
+            </option>
+            {Others && (
+              <option selected value={Others}>
+                {Others}
+              </option>
+            )}
+            {Othersfilterlist.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          className={`w-full ${
+            color_scheme == "Red"
+              ? "bg-[#DC4C64]"
+              : color_scheme == "Green"
+              ? "bg-[#14A44D]"
+              : "bg-[#7A7A7A]"
+          }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+          onClick={handleSubmit}
+        >
+          Save Device Settings
+        </button>
+      </form>
+    </>
+  );
 }
