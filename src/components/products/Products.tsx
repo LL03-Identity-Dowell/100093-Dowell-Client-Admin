@@ -69,7 +69,9 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
     userName === "uxliveadmin"
       ? productData?.products
       : productData?.products?.filter(
-          (product) => product.product_name !== "Living Lab Monitoring"
+          (product) =>
+            product.product_name !== "Living Lab Monitoring" &&
+            product.product_name !== "Dowell Wallet"
         );
   const defaultOptions = useMemo(() => {
     const initialDefaultOptions: Record<string, any> = {};

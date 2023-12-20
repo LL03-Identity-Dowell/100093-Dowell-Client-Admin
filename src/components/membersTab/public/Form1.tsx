@@ -37,6 +37,7 @@ const Form1 = () => {
     };
 
     try {
+      console.log(data);
       await axios
         .post(
           "https://100093.pythonanywhere.com/api/create_public_member/",
@@ -45,7 +46,7 @@ const Form1 = () => {
         .then((res) => {
           if (res.status === 201) {
             toast.success(res.statusText);
-            window.location.reload();
+            // window.location.reload();
           }
         })
         .catch((error) => {
