@@ -22,7 +22,9 @@ const ProductForm = () => {
     userName === "uxliveadmin"
       ? productData?.products
       : productData?.products?.filter(
-          (product) => product.product_name !== "Living Lab Monitoring"
+          (product) =>
+            product.product_name !== "Living Lab Monitoring" &&
+            product.product_name !== "Dowell Wallet"
         );
 
   const filterDataByProduct = portfolioData?.filter(
