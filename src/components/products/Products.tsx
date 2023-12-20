@@ -7,7 +7,7 @@ import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
-
+//defining interfaces for product , portfolio,ChildPropsProductCardProps
 type Product = {
   _id: string;
   product_name: string;
@@ -46,6 +46,7 @@ interface ChildProps {
   handleTabSwitch: (arg1: number) => void;
 }
 const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
+  // getting require data from redux state
   const productData = useSelector((state: RootState) => state.products);
   const userData = useSelector((state: RootState) => state.userinfo);
   const userName = userData.userinfo.username;
@@ -109,6 +110,8 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 
   const sessionId = localStorage.getItem("sessionId");
 
+  // connect to selected profolio
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     title: string
@@ -118,6 +121,10 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 
     const selectedOption = selectedOptions[title] || defaultOptions[title];
 
+    const selectedporfolio = portfolioData?.find(
+      (item) => item?.portfolio_code === selectedOption?.value
+    );
+
     const data = {
       username: userName,
       action: "connect_portfolio",
@@ -126,7 +133,19 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       product: selectedProduct,
       present_org: presentOrg,
       session_id: sessionId,
+    } as {
+      username: string;
+      action: string;
+      portfl: string;
+      product: string;
+      present_org: string;
+      session_id: string;
+      portfolio_name?: string;
     };
+
+    if (selectedporfolio?.product === "all") {
+      data.portfolio_name = "default";
+    }
 
     try {
       const response = await axios.post(
@@ -273,13 +292,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
     handleTabSwitch(arg1);
   };
   const filterDataByProduct = portfolioData?.filter(
-    (item) => item?.product === hovertitle
+    (item) => item?.product === hovertitle || item?.product === "all"
   );
 
   const options = filterDataByProduct
     .filter(
       (item) =>
-        (item?.product === title && item?.username?.includes("owner")) ||
+        ((item?.product === title || item?.product === "all") &&
+          item?.username?.includes("owner")) ||
         item?.member_type === "owner"
     )
     .map((item) => ({
