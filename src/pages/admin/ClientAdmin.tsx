@@ -19,7 +19,6 @@ const ClientAdmin = () => {
   const overlaysidebarstate = useSelector(
     (state: RootState) => state.overlaysidebar
   );
-  console.log(loadingstate);
 
   const isnewOwner = useSelector(
     (state: RootState) => state.adminData.data[0].isNewOwner

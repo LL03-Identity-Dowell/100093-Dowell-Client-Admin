@@ -32,13 +32,13 @@ const Form2 = () => {
   const userName = useSelector(
     (state: RootState) => state.adminData.data[0]?.Username
   );
+
   const productData = useSelector((state: RootState) => state.products);
   const rolesdata = useSelector(
     (state: RootState) => state.adminData.data[0]?.roles
   );
 
   const [formInputs, setFormInputs] = useState(initialFormInputs);
-
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
@@ -87,7 +87,6 @@ const Form2 = () => {
   const filterTeamMember = getMembers?.team_members?.accept_members.filter(
     (item) => item
   );
-
   const selectedItemData = portfolio.find(
     (item) => item.portfolio_code === formInputs.portfolio_code
   );
