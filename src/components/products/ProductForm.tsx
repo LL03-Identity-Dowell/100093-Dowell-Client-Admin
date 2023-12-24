@@ -5,6 +5,9 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const ProductForm = () => {
+
+
+  // get data from redux state
   const productData = useSelector((state: RootState) => state.products);
 
   const portfolioData = useSelector(
@@ -35,6 +38,9 @@ const ProductForm = () => {
 		(item) => item?.portfolio_code === selectedItem 
 	);
   const sessionId = localStorage.getItem("sessionId");
+
+
+// connect with portfolio on submit button
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

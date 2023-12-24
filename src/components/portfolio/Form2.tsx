@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { useState, ChangeEvent } from "react";
@@ -97,12 +97,44 @@ const Form2 = () => {
   };
 
   const filterDataByProduct = portfolio?.filter(
-    (item) => item.product === formInputs?.product
-  );
+    (item) =>
+      item.product === formInputs?.product ||
+			item.product === "all"
+	);
 
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+
+  interface PublicResponse {
+  id: string;
+  }
+  
+    const [publicData, setPublicData] = useState<PublicResponse[]>([]);
+  const sessionId = localStorage.getItem("sessionId");
+
+    useEffect(() => {
+			const fetchData = async () => {
+				const data = {
+					session_id: sessionId,
+				};
+
+				try {
+					const response = await axios.post(
+						"https://100093.pythonanywhere.com/api/public_user/",
+						data
+					);
+					console.log("public data", response.data);
+					setPublicData(response.data);
+				} catch (error) {
+					console.error(error);
+				}
+			};
+			fetchData();
+		}, []);
+
+  
+ 
   return (
     <>
       <ToastContainer position="top-right" />
@@ -150,6 +182,14 @@ const Form2 = () => {
                   <option key={key}>
                     {" "}
                     {member.name === "owner" ? userName : member?.name}
+                  </option>
+                ))}
+              {formInputs.member_type === "public" &&
+                publicData?.map((member, key) => (
+                  <option key={key}>
+                    {/* {" "}
+                    {member.name === "owner" ? userName : member?.name} */}
+                    { member.id}
                   </option>
                 ))}
               {formInputs.member_type === "owner" && (
