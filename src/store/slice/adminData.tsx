@@ -303,6 +303,7 @@ const adminDataSlice = createSlice({
   },
   reducers: {
     getAdminData(_state, action) {
+      action.payload.data[0].Username = action.payload.data[0].document_name;
       return action.payload;
     },
     setAdminData: (state, action) => {
