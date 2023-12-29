@@ -52,6 +52,7 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   const userName = userData.userinfo.username;
 
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
+  const getallproducts = useSelector((state: RootState) => state.adminData.data[0].products);
   const portfolioData: Portfolio[] = adminData?.portpolio || [];
   const presentOrg = adminData?.organisations[0]?.org_name;
   const [hovertitle, setHovertitle] = useState("");
@@ -198,76 +199,96 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   };
 
   return (
-    <>
-      {!isLoading ? (
-        <div className="mt-8">
-          <div className="pl-8">
-            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
-              Products of{" "}
-              <span className="text-[#FF0000]">
-                {adminData.Username || userData.userinfo.username}
-              </span>
-              , Owner{" "}
-              <span className="text-[#FF0000]">
-                {adminData.profile_info.first_name ||
-                  userData.userinfo.first_name}{" "}
-                {adminData.profile_info.last_name ||
-                  userData.userinfo.last_name}
-              </span>
-            </p>
-            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
-              Select product & Portfolio to connect
-            </p>
-          </div>
+		<>
+			{!isLoading ? (
+				<div className="mt-8">
+					<div className="pl-8">
+						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
+							Products of{" "}
+							<span className="text-[#FF0000]">
+								{adminData.Username || userData.userinfo.username}
+							</span>
+							, Owner{" "}
+							<span className="text-[#FF0000]">
+								{adminData.profile_info.first_name ||
+									userData.userinfo.first_name}{" "}
+								{adminData.profile_info.last_name ||
+									userData.userinfo.last_name}
+							</span>
+						</p>
+						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
+							Select product & Portfolio to connect
+						</p>
+					</div>
 
-          <section className="relative">
-            <main className="flex flex-col w-full">
-              <div className="flex flex-wrap w-full justify-between">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    handleTabSwitch={handleTabSwitch}
-                    key={product._id}
-                    product={product}
-                    hovertitle={hovertitle}
-                    handleMouseOver={handleMouseOver}
-                    selectedProduct={selectedProduct}
-                    defaultOptions={defaultOptions}
-                    selectedOptions={selectedOptions}
-                    handleSelectChange={handleSelectChange}
-                    handleSubmit={handleSubmit}
-                    handleRequestPortfolio={handleRequestPortfolio}
-                  />
-                ))}
-                <>
-                  {filteredProducts?.length % 3 == 2 ? (
-                    <>
-                      <div className="relative box-placer"></div>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  {filteredProducts?.length % 3 == 1 ? (
-                    <>
-                      <div className="relative box-placer"></div>
-                      <div className="relative box-placer"></div>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </>
-              </div>
-            </main>
-          </section>
+					<section className="relative">
+						<main className="flex flex-col w-full">
+							<div className="flex flex-wrap w-full justify-between">
+								{filteredProducts
+									.filter((product) => {
+										// Find the corresponding product in getallproduct array
+										if (typeof getallproducts[0] === "object") {
+											const matchingProduct = getallproducts.find(
+												(getProduct) =>
+													getProduct.product_name === product.product_name
+											);
 
-          <ProductForm />
-        </div>
-      ) : (
-        <div className="mt-4">
-          <Loader />
-        </div>
-      )}
-    </>
-  );
+											// Check if the product status is "enable" in getallproduct array
+											return (
+												matchingProduct &&
+												matchingProduct.product_status === "enable"
+											);
+										}
+										else
+										{
+											return product
+											}
+									})
+									.map((product) => (
+										<ProductCard
+											handleTabSwitch={handleTabSwitch}
+											key={product._id}
+											product={product}
+											hovertitle={hovertitle}
+											handleMouseOver={handleMouseOver}
+											selectedProduct={selectedProduct}
+											defaultOptions={defaultOptions}
+											selectedOptions={selectedOptions}
+											handleSelectChange={handleSelectChange}
+											handleSubmit={handleSubmit}
+											handleRequestPortfolio={handleRequestPortfolio}
+										/>
+									))}
+								<>
+									{filteredProducts?.length % 3 == 2 ? (
+										<>
+											<div className="relative box-placer"></div>
+										</>
+									) : (
+										""
+									)}
+									{filteredProducts?.length % 3 == 1 ? (
+										<>
+											<div className="relative box-placer"></div>
+											<div className="relative box-placer"></div>
+										</>
+									) : (
+										""
+									)}
+								</>
+							</div>
+						</main>
+					</section>
+
+					<ProductForm />
+				</div>
+			) : (
+				<div className="mt-4">
+					<Loader />
+				</div>
+			)}
+		</>
+	);
 };
 
 export default Products;
