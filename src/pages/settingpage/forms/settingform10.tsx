@@ -204,6 +204,7 @@ const Settingform10 = () => {
   return (
     <div className="form-item">
       <div
+        id="settingForm10text1"
         className={`${
           color_scheme == "Red"
             ? "bg-[lightcoral]"
@@ -232,12 +233,14 @@ const Settingform10 = () => {
       >
         <div className="w-full mb-3">
           <label
+            id="settingForm10text2"
             htmlFor=""
             className="text-[18px] font-semibold text-[#7A7A7A]"
           >
             Process
           </label>
           <select
+            id="settingForm10Select1"
             className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
             aria-label="Default select example"
             value={processValue}
@@ -253,12 +256,14 @@ const Settingform10 = () => {
 
         <div className="w-full mb-3">
           <label
+            id="settingForm10text3"
             htmlFor=""
             className="text-[18px] font-semibold text-[#7A7A7A]"
           >
             Right
           </label>
           <select
+            id="settingForm10Select2"
             className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
             aria-label="Default select example"
             value={rightValue}
@@ -271,12 +276,14 @@ const Settingform10 = () => {
 
         <div className="w-full mb-3">
           <label
+            id="settingForm10text1"
             htmlFor=""
             className="text-[18px] font-semibold text-[#7A7A7A]"
           >
             Portfolios
           </label>
           <select
+            id="settingForm10Select3"
             className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
             aria-label="Default select example"
             multiple
@@ -296,6 +303,7 @@ const Settingform10 = () => {
         <div className="w-full mb-1">
           <button
             onClick={handleSubmit}
+            id="settingForm10text5"
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
