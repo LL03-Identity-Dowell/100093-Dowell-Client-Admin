@@ -43,10 +43,11 @@ const Form1 = () => {
   const isnewOwner = useSelector(
     (state: RootState) => state.adminData.data[0]?.isNewOwner
   );
+  const userName2 = useSelector(
+    (state: RootState) => state.adminData.data[0]?.Username
+  );
   if (isnewOwner) {
-    userName = useSelector(
-      (state: RootState) => state.adminData.data[0]?.Username
-    );
+    userName = userName2;
   }
   const getMembers = useSelector(
     (state: RootState) => state.adminData.data[0]?.members
@@ -181,7 +182,7 @@ const Form1 = () => {
   };
 
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
-    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -282,11 +283,14 @@ const Form1 = () => {
               : "bg-[#7A7A7A]"
           } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
         >
-          <p>PORTFOLIO</p>
+          <p id="portfolioForm1Text1">PORTFOLIO</p>
           <p>{`<${portfolioLength}>`}</p>
         </span>
         <div className="my-20">
-          <p className="text-[#FF0000] text-lg font-roboto font-semibold">
+          <p
+            id="portfolioForm1Text2"
+            className="text-[#FF0000] text-lg font-roboto font-semibold"
+          >
             Assign Portfolio – Products, Data types, Operational Rights and
             Roles to Members
           </p>
@@ -294,12 +298,13 @@ const Form1 = () => {
         <form className="" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
-              Select Member Type{" "}
+              <span id="portfolioForm1Text3">Select Member Type </span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
-              id="member_type"
+              id="portfolioForm1Select1"
+              name="member_type"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
@@ -313,11 +318,11 @@ const Form1 = () => {
           <div className="mb-4">
             <div className="flex items-center gap-3">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Select Member{" "}
+                <span id="portfolioForm1Text4">Select Member </span>
                 <span className="text-[#ff0000] text-base">*</span>
               </label>
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
-                Select All
+                <span id="portfolioForm1Text5"> Select All</span>
                 <input
                   type="checkbox"
                   onChange={handleSelectAllChange}
@@ -340,7 +345,7 @@ const Form1 = () => {
             </div>
 
             <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
-              <span className="font-roboto text-base">
+              <span id="portfolioForm1Text6" className="font-roboto text-base">
                 Select with username: (Total members:{" "}
                 {getAllMemberOptions().length})
               </span>
@@ -358,7 +363,8 @@ const Form1 = () => {
             <select
               required
               multiple
-              id="member"
+              name="member"
+              id="portfolioForm1Select2"
               className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {getAllMemberOptions().map((option, key) => (
@@ -377,12 +383,14 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
-              Select Product <span className="text-[#ff0000] text-base">*</span>
+              <span id="portfolioForm1Text7">Select Product </span>
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               required
               onChange={handleSelectStatus}
-              id="product"
+              id="portfolioForm1Select3"
+              name="product"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
             >
@@ -397,12 +405,13 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Data Type{" "}
+              <span id="portfolioForm1Text8">Select Data Type </span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
-              id="data_type"
+              name="data_type"
+              id="portfolioForm1Select4"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
@@ -415,12 +424,13 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Operational Rights{" "}
+              <span id="portfolioForm1Text9"> Select Operational Rights </span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               onChange={handleSelectStatus}
-              id="op_rights"
+              id="portfolioForm1Select5"
+              name="op_rights"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
@@ -433,12 +443,14 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Roles <span className="text-[#ff0000] text-base">*</span>
+              <span id="portfolioForm1Text10"> Select Roles</span>{" "}
+              <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
               required
               onChange={handleSelectStatus}
-              id="role"
+              name="role"
+              id="portfolioForm1Select6"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               <option value="">...select...</option>
@@ -453,10 +465,13 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Name{" "}
+              <span id="portfolioForm1Text11">Portfolio Name </span>
               <span className="text-xs text-[#FF0000]">
                 {" "}
-                (Don't use & symbol in portfolio name){" "}
+                <span id="portfolioForm1Text12">
+                  {" "}
+                  (Don't use & symbol in portfolio name){" "}
+                </span>
                 <span className="text-[#ff0000] text-base">*</span>
               </span>
             </label>
@@ -471,7 +486,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Code (Unique){" "}
+              <span id="portfolioForm1Text13">Portfolio Code (Unique) </span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <input
@@ -485,7 +500,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Specification{" "}
+              <span id="portfolioForm1Text14">Portfolio Specification </span>
             </label>
             <input
               type="text"
@@ -497,7 +512,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Universal Code{" "}
+              <span id="portfolioForm1Text15"> Portfolio Universal Code </span>
             </label>
             <input
               type="text"
@@ -509,7 +524,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Portfolio Details{" "}
+              <span id="portfolioForm1Text16"> Portfolio Details </span>
             </label>
             <textarea
               rows={4}
@@ -520,6 +535,7 @@ const Form1 = () => {
             />
           </div>
           <button
+            id="portfolioForm1Text17"
             disabled={isLoading}
             className={`w-full h-12  ${
               isLoading == true
@@ -537,6 +553,7 @@ const Form1 = () => {
 
         {link && (
           <button
+            id="portfolioForm1Text18"
             className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
             onClick={handleCopyToClipBoard}
           >

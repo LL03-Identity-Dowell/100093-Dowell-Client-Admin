@@ -14,14 +14,80 @@ import { getsetting } from "../../store/slice/setting";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 import { FaBars } from "react-icons/fa";
+import { HeaderSelectIds, HeaderTextIds } from "../../Ids";
 
 const Header = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
+  const defaultlang = useSelector(
+    (state: RootState) => state.setting?.data?.default_language
+  );
+  useEffect(() => {
+    const FetchLanguage = () => {
+      HeaderSelectIds.forEach((id: string) => {
+        const select = document.getElementById(id) as HTMLSelectElement | null;
+        // Accessing individual options
+        if (select) {
+          const options = select.options;
+          for (let i = 0; i < options.length; i++) {
+            const translate = async () => {
+              try {
+                const data = {
+                  text: options[i].text,
+                  target_language: defaultlang,
+                };
+                const response = await axios.post(
+                  `https://100093.pythonanywhere.com/api/translate/`,
+                  data
+                );
 
-  // get session id from local storage
+                const translationData = await response.data;
+                if (id === "settingForm2text1") {
+                  console.log(translationData);
+                }
+                options[i].text =
+                  translationData.data.translations[0].translatedText;
+              } catch (error) {
+                console.error("Translation error:", error);
+                return options[i].text;
+              }
+            };
+            translate();
+          }
+        }
+      });
+      HeaderTextIds.forEach((id: string) => {
+        const text = document.getElementById(id);
+        if (text) {
+          const translate = async () => {
+            try {
+              const data = {
+                text: text.innerText,
+                target_language: defaultlang,
+              };
+              const response = await axios.post(
+                `https://100093.pythonanywhere.com/api/translate/`,
+                data
+              );
+
+              const translationData = await response.data;
+              text.innerText =
+                translationData.data.translations[0].translatedText;
+            } catch (error) {
+              console.error("Translation error:", error);
+              return text;
+            }
+          };
+          translate();
+        }
+      });
+    };
+    if (defaultlang) {
+      FetchLanguage();
+    }
+  }, [defaultlang, dispatch]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -369,10 +435,14 @@ const Header = () => {
                       : "bg-[#a1a1a1] "
                   } p-[15px] border-2 border-[#7a7a7a] mt-8`}
                 >
-                  <p className="text-lg font-semibold italic text-white pb-2">
+                  <p
+                    id="headertext10"
+                    className="text-lg font-semibold italic text-white pb-2"
+                  >
                     Select Workspace you want to connect
                   </p>
                   <select
+                    id="headerSelect1"
                     className="w-full rounded-md outline-none py-1 text-center"
                     value={`${selectedOrg?.orgname}${selectedOrg?.type}` || ""}
                     onChange={handleOrgChange}

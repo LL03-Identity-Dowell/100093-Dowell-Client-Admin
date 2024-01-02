@@ -5,8 +5,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const ProductForm = () => {
-
-
   // get data from redux state
   const productData = useSelector((state: RootState) => state.products);
 
@@ -20,6 +18,9 @@ const ProductForm = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const selectedItemData = portfolioData?.find(
+    (item) => item?.portfolio_code === selectedItem
+  );
 
   const filteredProducts =
     userName === "uxliveadmin"
@@ -31,44 +32,40 @@ const ProductForm = () => {
         );
 
   const filterDataByProduct = portfolioData?.filter(
-		(item) => item.product === selectedProduct || item?.product === "all"
-	);
+    (item) => item.product === selectedProduct || item?.product === "all"
+  );
 
-  const selectedItemData = portfolioData?.find(
-		(item) => item?.portfolio_code === selectedItem 
-	);
   const sessionId = localStorage.getItem("sessionId");
 
-
-// connect with portfolio on submit button
+  // connect with portfolio on submit button
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-const selectedporfolio = portfolioData?.find(
-	(item) => item?.portfolio_code === selectedItem
-);
+    const selectedporfolio = portfolioData?.find(
+      (item) => item?.portfolio_code === selectedItem
+    );
 
     const data = {
-			username: userName,
-			action: "connect_portfolio",
-			portfl: selectedItem,
-			product: selectedProduct,
-			present_org: userName,
-			session_id: sessionId,
-		} as {
-			username: string;
-			action: string;
-			portfl: string;
-			product: string;
-			present_org: string;
-			session_id: string;
-			portfolio_name?: string;
-      };
-    
-     if (selectedporfolio?.product === "all") {
-				data.portfolio_name = "default";
-			}
+      username: userName,
+      action: "connect_portfolio",
+      portfl: selectedItem,
+      product: selectedProduct,
+      present_org: userName,
+      session_id: sessionId,
+    } as {
+      username: string;
+      action: string;
+      portfl: string;
+      product: string;
+      present_org: string;
+      session_id: string;
+      portfolio_name?: string;
+    };
+
+    if (selectedporfolio?.product === "all") {
+      data.portfolio_name = "default";
+    }
 
     console.log(data);
     if (data.portfl && data.product) {
@@ -110,11 +107,15 @@ const selectedporfolio = portfolioData?.find(
         onSubmit={handleSubmit}
       >
         <div className="mb-4">
-          <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+          <label
+            id="productText6"
+            className="text-[#7A7A7A] text-lg font-roboto font-bold "
+          >
             Select Product
           </label>
           <select
             value={selectedProduct}
+            id="productSelect1"
             onChange={(e) => setSelectedProduct(e.target.value)}
             className="outline-none w-full h-12 p-1 text-[17px] font-medium px-4 rounded-md border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             placeholder="Select Product"
@@ -131,11 +132,15 @@ const selectedporfolio = portfolioData?.find(
         </div>
 
         <div className="mb-4">
-          <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+          <label
+            id="productText7"
+            className="text-[#7A7A7A] text-lg font-roboto font-bold "
+          >
             Select Portfolio
           </label>
           <select
             value={selectedItem}
+            id="productSelect2"
             onChange={(e) => setSelectedItem(e.target.value)}
             className="outline-none w-full h-12 p-1 text-[17px] font-medium px-4 rounded-md border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             placeholder="Select Portfolio"
@@ -153,10 +158,14 @@ const selectedporfolio = portfolioData?.find(
           </select>
         </div>
         <div className="mb-4 flex flex-col">
-          <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+          <label
+            id="productText8"
+            className="text-[#7A7A7A] text-lg font-roboto font-bold"
+          >
             Details of selected Portfolio
           </label>
           <textarea
+            id="productText9"
             rows={4}
             readOnly
             value={
@@ -167,6 +176,7 @@ const selectedporfolio = portfolioData?.find(
           />
         </div>
         <button
+          id="productText10"
           disabled={isLoading}
           className={`w-full h-12  ${
             isLoading == true
