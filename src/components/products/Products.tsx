@@ -54,7 +54,9 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 
   const adminData = useSelector((state: RootState) => state.adminData.data[0]);
   const getallproducts = useSelector(
+    
     (state: RootState) => state.adminData.data[0].products
+  
   );
   const portfolioData: Portfolio[] = adminData?.portpolio || [];
   const presentOrg = adminData?.organisations[0]?.org_name;
@@ -65,6 +67,8 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   const [selectedOptions, setSelectedOptions] = useState<Record<string, any>>(
     {}
   );
+
+  //filter portfolio from get api data
 
   //LANGUAGE SETTING START
   const defaultlang = useSelector(
@@ -140,14 +144,16 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
     (item) => item?.product === hovertitle
   );
 
+  //added filter for uxliveadmin
+
   const filteredProducts =
     userName === "uxliveadmin"
       ? productData?.products
       : productData?.products?.filter(
-          (product) =>
-            product.product_name !== "Living Lab Monitoring" &&
-            product.product_name !== "Dowell Wallet"
-        );
+        (product) =>
+          product.product_name !== "Living Lab Monitoring" &&
+          product.product_name !== "Dowell Wallet"
+      );
   const defaultOptions = useMemo(() => {
     const initialDefaultOptions: Record<string, any> = {};
     filteredProducts.forEach((product) => {
@@ -169,6 +175,8 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
     });
     return initialDefaultOptions;
   }, [filteredProducts]);
+
+  //  defination of handleSelectChange,handleMouseOver function to update state
 
   const handleMouseOver = (title: string) => {
     setHovertitle(title);
@@ -272,30 +280,27 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   };
 
   return (
-    <>
-      {!isLoading ? (
-        <div className="mt-8">
-          <div className="pl-8">
-            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
-              <span id="productText1"> Products of </span>
-              <span className="text-[#FF0000]">
-                {adminData.Username || userData.userinfo.username}
-              </span>
-              , <span id="productText2">Owner </span>
-              <span className="text-[#FF0000]">
-                {adminData.profile_info.first_name ||
-                  userData.userinfo.first_name}{" "}
-                {adminData.profile_info.last_name ||
-                  userData.userinfo.last_name}
-              </span>
-            </p>
-            <p
-              id="productText3"
-              className="font-roboto text-lg text-[#7a7a7a] font-semibold"
-            >
-              Select product & Portfolio to connect
-            </p>
-          </div>
+		<>
+			{!isLoading ? (
+				<div className="mt-8">
+					<div className="pl-8">
+						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
+							Products of{" "}
+							<span className="text-[#FF0000]">
+								{adminData.Username || userData.userinfo.username}
+							</span>
+							, Owner{" "}
+							<span className="text-[#FF0000]">
+								{adminData.profile_info.first_name ||
+									userData.userinfo.first_name}{" "}
+								{adminData.profile_info.last_name ||
+									userData.userinfo.last_name}
+							</span>
+						</p>
+						<p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
+							Select product & Portfolio to connect
+						</p>
+					</div>
 
           <section className="relative">
             <main className="flex flex-col w-full">
@@ -425,15 +430,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
     >
       <div className="h-80 w-80">
         <img
-          src={`${
-            product.product_logo?.includes("https://100093.pythonanywhere.com")
+          src={`${product.product_logo?.includes("https://100093.pythonanywhere.com")
               ? product.product_logo
               : `https://100093.pythonanywhere.com${product.product_logo}`
-          } `}
+            } `}
           alt="product logo"
-          className={`w-full h-full ${
-            product.product_name === hovertitle ? "" : ""
-          }`}
+          className={`w-full h-full ${product.product_name === hovertitle ? "" : ""
+            }`}
         />
       </div>
 
@@ -443,7 +446,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             className="relative w-full h-full"
             onSubmit={
               filterDataByProduct.length > 0 ||
-              selectedProduct === "Dowell Services"
+                selectedProduct === "Dowell Services"
                 ? (e) => handleSubmit(e, title)
                 : handleRequestPortfolio
             }
