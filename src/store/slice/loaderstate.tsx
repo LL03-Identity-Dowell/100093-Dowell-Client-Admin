@@ -3,8 +3,7 @@ const loaderslice = createSlice({
 	name: "loader",
 	initialState: false,
 	reducers: {
-		getloaderstate(_state, action) {
-			
+		getloaderstate(_state, action) {	
 			return action.payload;
 		},
 	},

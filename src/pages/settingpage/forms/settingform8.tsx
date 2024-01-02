@@ -79,6 +79,7 @@ const Settingform8 = () => {
   return (
     <div className="form-item">
       <div
+        id="settingForm8text1"
         className={`${
           color_scheme == "Red"
             ? "bg-[lightcoral]"
@@ -107,6 +108,7 @@ const Settingform8 = () => {
       >
         <div className="w-full mb-3">
           <label
+            id="settingForm8text2"
             htmlFor=""
             className="text-[18px] font-semibold text-[#7A7A7A]"
           >
@@ -129,6 +131,7 @@ const Settingform8 = () => {
 
         <div className="w-full mb-3">
           <label
+            id="settingForm8text3"
             htmlFor=""
             className="text-[18px] font-semibold text-[#7A7A7A]"
           >
@@ -138,12 +141,17 @@ const Settingform8 = () => {
             className="w-full p-1 text-[17px] font-medium text-[#7A7A7A] border-[1px] border-[#7A7A7A] border-solid bg-[#F5F5F5] focus:outline-none rounded-md"
             aria-label="Default select example"
           >
-            <option>No Speed Test</option>
-            <option>1 test per day</option>
+            <option id="settingForm8text4" value={"No Speed Test"}>
+              No Speed Test
+            </option>
+            <option id="settingForm8text5" value={"1 test per day"}>
+              1 test per day
+            </option>
           </select>
         </div>
         <div className="w-full mb-1">
           <button
+            id="settingForm8text6"
             onClick={handleSubmit}
             className={`w-full ${
               color_scheme == "Red"

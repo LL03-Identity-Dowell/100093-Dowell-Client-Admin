@@ -111,7 +111,6 @@ const usedispatch = useDispatch()
 				<div className="flex flex-col gap-3">
 					{currentItems.map((country, index) => {
 						const selectedLayer = selectedLayers[country.language] || null;
-						console.log(selectedLayer);
 						return (
 							<div>
 								<div

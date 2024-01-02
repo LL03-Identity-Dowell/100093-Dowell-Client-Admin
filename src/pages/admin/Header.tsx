@@ -42,7 +42,7 @@ const Header = () => {
   }
   // get user information from user info info api
 
-  https: useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       dispatch(getloaderstate(false));
       if (sessionId) {
@@ -204,12 +204,18 @@ const Header = () => {
 
             <div className="mb-8">
               <span>
-                <h2 className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]">
+                <h2
+                  id="headertext1"
+                  className="text-[#7A7A7A] font-semibold mt-8 font-roboto text-[15px]"
+                >
                   Hi {userData?.userinfo?.first_name}{" "}
                   {userData?.userinfo?.last_name}, you are login as{" "}
                   {userData?.userinfo?.User_type}
                 </h2>
-                <p className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]">
+                <p
+                  id="headertext2"
+                  className="text-[#FF0000] font-semibold pt-8 font-roboto text-[15px]"
+                >
                   Session starts at {userData?.userinfo?.dowell_time},
                   {userData?.userinfo?.user_country}
                 </p>
@@ -246,7 +252,10 @@ const Header = () => {
                       } lg:w-[180px]  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
                     >
                       <IoSettings className="text-white" />
-                      <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+                      <p
+                        id="headertext3"
+                        className="text-[13px] text-white text-center py-[10px] px-[20px]"
+                      >
                         Home
                       </p>
                     </NavLink>
@@ -263,7 +272,10 @@ const Header = () => {
                           }   lg:w-auto w-full flex items-center gap-12 px-4 rounded-sm`}
                         >
                           <IoSettings className="text-white" />
-                          <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+                          <p
+                            id="headertext4"
+                            className="text-[13px] text-white text-center py-[10px] px-[20px]"
+                          >
                             Settings
                           </p>
                         </div>
@@ -279,7 +291,10 @@ const Header = () => {
                           }  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
                         >
                           <IoSettings className="text-white" />
-                          <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+                          <p
+                            id="headertext5"
+                            className="text-[13px] text-white text-center py-[10px] px-[20px]"
+                          >
                             Settings
                           </p>
                         </NavLink>
@@ -298,7 +313,10 @@ const Header = () => {
                     onClick={() => window.location.reload()}
                   >
                     <IoMdRefresh className="text-white transform-icon" />
-                    <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+                    <p
+                      id="headertext6"
+                      className="text-[13px] text-white text-center py-[10px] px-[20px]"
+                    >
                       Refresh
                     </p>
                   </button>
@@ -313,7 +331,10 @@ const Header = () => {
                     onClick={logout}
                   >
                     <FaPowerOff className="text-white" />
-                    <p className="text-[13px] text-white text-center py-[10px] px-[20px]">
+                    <p
+                      id="headertext7"
+                      className="text-[13px] text-white text-center py-[10px] px-[20px]"
+                    >
                       Logout
                     </p>
                   </button>
@@ -329,11 +350,11 @@ const Header = () => {
                       : "bg-[#a1a1a1] "
                   }  text-center text-white p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg`}
                 >
-                  Settings for
+                  <span id="headertext8">Settings for</span>
                   <span className="text-[red]">
                     {userData?.userinfo?.username}
                   </span>
-                  , Owner
+                  , <span id="headertext9">Owner</span>
                   <span className="text-[red]">
                     {userData?.userinfo?.username}
                   </span>
