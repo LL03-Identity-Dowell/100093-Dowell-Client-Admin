@@ -40,7 +40,7 @@ const Form2 = () => {
 
   const [formInputs, setFormInputs] = useState(initialFormInputs);
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
-    setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   };
 
   const handleSubmitStatus = async (e: React.FormEvent) => {
@@ -96,62 +96,65 @@ const Form2 = () => {
   };
 
   const filterDataByProduct = portfolio?.filter(
-    (item) =>
-      item.product === formInputs?.product ||
-			item.product === "all"
-	);
+    (item) => item.product === formInputs?.product || item.product === "all"
+  );
 
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
 
   interface PublicResponse {
-  id: string;
+    id: string;
   }
-  
-    const [publicData, setPublicData] = useState<PublicResponse[]>([]);
+
+  const [publicData, setPublicData] = useState<PublicResponse[]>([]);
   const sessionId = localStorage.getItem("sessionId");
 
-    useEffect(() => {
-			const fetchData = async () => {
-				const data = {
-					session_id: sessionId,
-				};
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = {
+        session_id: sessionId,
+      };
 
-				try {
-					const response = await axios.post(
-						"https://100093.pythonanywhere.com/api/public_user/",
-						data
-					);
-					console.log("public data", response.data);
-					setPublicData(response.data);
-				} catch (error) {
-					console.error(error);
-				}
-			};
-			fetchData();
-		}, []);
+      try {
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/public_user/",
+          data
+        );
+        console.log("public data", response.data);
+        setPublicData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
 
-  
- 
   return (
     <>
       <ToastContainer position="top-right" />
 
       <div className="lg:w-1/2 px-5">
-        <h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
+        <h2
+          id="portfolioForm2Text1"
+          className="text-[#7A7A7A] text-lg font-roboto font-bold my-8"
+        >
           Show Assigned Portfolios, Search in Portfolios
         </h2>
 
         <div className=" mb-8 mt-12">
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="portfolioForm2Text2"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Member Type
             </label>
             <select
               multiple
               onChange={handleSelectStatus}
-              id="member_type"
+              id="portfolioForm2Select1"
+              name="member_type"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               <option value="owner">Owner </option>
@@ -163,13 +166,15 @@ const Form2 = () => {
 
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Select Member <span className="text-[#ff0000] text-xs">*</span>
+              <span id="portfolioForm2Text3">Select Member</span>{" "}
+              <span className="text-[#ff0000] text-xs">*</span>
             </label>
             <select
               required
               multiple
-              // onChange={handleSelectChange}
-              id="member"
+              onChange={handleSelectStatus}
+              id="portfolioForm2Select1"
+              name="member"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {formInputs.member_type === "user" &&
@@ -188,7 +193,7 @@ const Form2 = () => {
                   <option key={key}>
                     {/* {" "}
                     {member.name === "owner" ? userName : member?.name} */}
-                    { member.id}
+                    {member.id}
                   </option>
                 ))}
               {formInputs.member_type === "owner" && (
@@ -197,12 +202,16 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="portfolioForm2Text4"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Product
             </label>
             <select
               multiple
-              id="product"
+              id="portfolioForm2Select3"
+              name="product"
               onChange={handleSelectStatus}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               placeholder="Select Product"
@@ -213,10 +222,14 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="portfolioForm2Text5"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Data Type{" "}
             </label>
             <select
+              id="portfolioForm2Select4"
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
@@ -227,10 +240,14 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="portfolioForm2Text6"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Operational Rights{" "}
             </label>
             <select
+              id="portfolioForm2Select5"
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
@@ -241,10 +258,14 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="portfolioForm2Text7"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Roles
             </label>
             <select
+              id="portfolioForm2Select6"
               multiple
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
@@ -257,13 +278,17 @@ const Form2 = () => {
           </div>
           <form onSubmit={handleSubmitStatus}>
             <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <label
+                id="portfolioForm2Text8"
+                className="text-[#7A7A7A] text-lg font-roboto font-bold "
+              >
                 Enabled Portfolios
               </label>
               <select
                 required
                 onChange={handleSelectStatus}
-                id="portfolio_code"
+                id="portfolioForm2Select7"
+                name="portfolio_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
@@ -279,13 +304,17 @@ const Form2 = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <label
+                id="portfolioForm2Text9"
+                className="text-[#7A7A7A] text-lg font-roboto font-bold "
+              >
                 Disabled Portfolios
               </label>
               <select
                 required
                 onChange={handleSelectStatus}
-                id="portfolio_code"
+                id="portfolioForm2Select8"
+                name="portfolio_code"
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
@@ -301,7 +330,10 @@ const Form2 = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <label
+                id="portfolioForm2Text10"
+                className="text-[#7A7A7A] text-lg font-roboto font-bold "
+              >
                 Details of selected Portfolio
               </label>
               <textarea
@@ -314,14 +346,18 @@ const Form2 = () => {
             </div>
 
             <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <label
+                id="portfolioForm2Text11"
+                className="text-[#7A7A7A] text-lg font-roboto font-bold"
+              >
                 Enable / Disable Selected Portfolio
                 <span className="text-[#ff0000] text-xs"> *</span>
               </label>
               <select
                 required
                 onChange={handleSelectStatus}
-                id="portfolio_status"
+                id="portfolioForm2Select9"
+                name="portfolio_status"
                 className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option value=""> ...Select... </option>
@@ -330,6 +366,7 @@ const Form2 = () => {
               </select>
             </div>
             <button
+              id="portfolioForm2Text12"
               disabled={isLoadingStatus}
               className={`w-full h-12  ${
                 isLoadingStatus == true
@@ -346,13 +383,17 @@ const Form2 = () => {
                 : "Enable / Disable selected Portfolio"}
             </button>
             {statusErrMsg && (
-              <p className="text-xs text-[#FF0000] text-center pt-2 truncate">
+              <p
+                id="portfolioForm2Text13"
+                className="text-xs text-[#FF0000] text-center pt-2 truncate"
+              >
                 {statusErrMsg}
               </p>
             )}
           </form>
 
           <button
+            id="portfolioForm2Text14"
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -364,6 +405,7 @@ const Form2 = () => {
             Duplicate selected Portfolio to create new
           </button>
           <button
+            id="portfolioForm2Text15"
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"

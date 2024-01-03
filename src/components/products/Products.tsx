@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -7,6 +7,7 @@ import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
+import { ProductSelectIds, ProductTextIds } from "../../Ids";
 //defining interfaces for product , portfolio,ChildPropsProductCardProps
 type Product = {
   _id: string;
@@ -65,6 +66,76 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
     {}
   );
 
+  //LANGUAGE SETTING START
+  const defaultlang = useSelector(
+    (state: RootState) => state.setting?.data?.default_language
+  );
+  useEffect(() => {
+    const FetchLanguage = () => {
+      ProductSelectIds.forEach((id: string) => {
+        const select = document.getElementById(id) as HTMLSelectElement | null;
+        // Accessing individual options
+        if (select) {
+          const options = select.options;
+          for (let i = 0; i < options.length; i++) {
+            const translate = async () => {
+              try {
+                const data = {
+                  text: options[i].text,
+                  target_language: defaultlang,
+                };
+                const response = await axios.post(
+                  `https://100093.pythonanywhere.com/api/translate/`,
+                  data
+                );
+
+                const translationData = await response.data;
+                if (id === "settingForm2text1") {
+                  console.log(translationData);
+                }
+                options[i].text =
+                  translationData.data.translations[0].translatedText;
+              } catch (error) {
+                console.error("Translation error:", error);
+                return options[i].text;
+              }
+            };
+            translate();
+          }
+        }
+      });
+      ProductTextIds.forEach((id: string) => {
+        const text = document.getElementById(id);
+        if (text) {
+          const translate = async () => {
+            try {
+              const data = {
+                text: text.innerText,
+                target_language: defaultlang,
+              };
+              const response = await axios.post(
+                `https://100093.pythonanywhere.com/api/translate/`,
+                data
+              );
+
+              const translationData = await response.data;
+              text.innerText =
+                translationData.data.translations[0].translatedText;
+            } catch (error) {
+              console.error("Translation error:", error);
+              return text;
+            }
+          };
+          translate();
+        }
+      });
+    };
+
+    if (defaultlang) {
+      FetchLanguage();
+    }
+  }, [defaultlang, hovertitle]);
+  //LANGUAGE SETTING END
   //filter portfolio from get api data
 
   const filterDataByProduct = portfolioData?.filter(
@@ -212,11 +283,11 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
         <div className="mt-8">
           <div className="pl-8">
             <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
-              Products of{" "}
+              <span id="productText1"> Products of </span>
               <span className="text-[#FF0000]">
                 {adminData.Username || userData.userinfo.username}
               </span>
-              , Owner{" "}
+              , <span id="productText2">Owner </span>
               <span className="text-[#FF0000]">
                 {adminData.profile_info.first_name ||
                   userData.userinfo.first_name}{" "}
@@ -224,7 +295,10 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
                   userData.userinfo.last_name}
               </span>
             </p>
-            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold">
+            <p
+              id="productText3"
+              className="font-roboto text-lg text-[#7a7a7a] font-semibold"
+            >
               Select product & Portfolio to connect
             </p>
           </div>
@@ -380,7 +454,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           >
             <div className="bg-[#a2a2a2] opacity-50 w-full h-full rounded-md"></div>
             <div className="bg-transparent absolute w-full h-full top-0 text-center flex flex-col justify-around items-center">
-              <h2 className="text-white text-[1.78rem] font-semibold">
+              <h2
+                id="productText4"
+                className="text-white text-[1.78rem] font-semibold"
+              >
                 {product.product_name}
               </h2>
               <div className="w-full px-6 ">
@@ -417,9 +494,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </div>
               <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
                 {options.length > 0 || selectedProduct === "Dowell Services" ? (
-                  <p>Connect</p>
+                  <p id="productText5">Connect</p>
                 ) : (
-                  <span onClick={() => handleTabClick(2)}>
+                  <span id="productText5" onClick={() => handleTabClick(2)}>
                     create a portfolio
                   </span>
                 )}

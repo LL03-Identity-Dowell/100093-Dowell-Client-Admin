@@ -171,7 +171,6 @@ const AdminTabs = () => {
     setTabIndex(index);
   };
   const handleTabClick = (index: number, url: string) => {
-    console.log("hello");
     // Check if the tab is a link, if yes, redirect to the specified URL
     // Assuming index 0 and 1 are link tabs
     if (ismobile == true) {
@@ -225,7 +224,12 @@ const AdminTabs = () => {
                     }}
                   >
                     <i className=" text-xl font-black">{tabs.icon}</i>
-                    <p className="font-roboto text-lg">{tabs.title}</p>
+                    <p
+                      id={`adminTabText${index}`}
+                      className="font-roboto text-lg"
+                    >
+                      {tabs.title}
+                    </p>
                   </Tab>
                 </>
               );
@@ -286,8 +290,13 @@ const AdminTabs = () => {
                         : null;
                     }}
                   >
-                    <i className=" text-xl font-black">{tabs.icon}</i>
-                    <p className="font-roboto text-lg">{tabs.title}</p>
+                    <i className="text-xl font-black">{tabs.icon}</i>
+                    <p
+                      id={`adminTabText${index}`}
+                      className="font-roboto text-lg"
+                    >
+                      {tabs.title}
+                    </p>
                   </Tab>
                 </>
               );

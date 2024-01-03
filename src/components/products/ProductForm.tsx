@@ -5,53 +5,50 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const ProductForm = () => {
-
-
-  // get data from redux state
-  const productData = useSelector((state: RootState) => state.products);
- const getallproducts = useSelector(
+	// get data from redux state
+	const productData = useSelector((state: RootState) => state.products);
+	const getallproducts = useSelector(
 		(state: RootState) => state.adminData.data[0].products
- );
-  const portfolioData = useSelector(
-    (state: RootState) => state.adminData.data[0]?.portpolio
-  );
-  const userName = useSelector(
-    (state: RootState) => state.userinfo?.userinfo?.username
-  );
+	);
+	const portfolioData = useSelector(
+		(state: RootState) => state.adminData.data[0]?.portpolio
+	);
+	const userName = useSelector(
+		(state: RootState) => state.userinfo?.userinfo?.username
+	);
 
-  const [selectedProduct, setSelectedProduct] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [selectedProduct, setSelectedProduct] = useState<string>("");
+	const [selectedItem, setSelectedItem] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const selectedItemData = portfolioData?.find(
+		(item) => item?.portfolio_code === selectedItem
+	);
 
-  const filteredProducts =
-    userName === "uxliveadmin"
-      ? productData?.products
-      : productData?.products?.filter(
-          (product) =>
-            product.product_name !== "Living Lab Monitoring" &&
-            product.product_name !== "Dowell Wallet"
-        );
+	const filteredProducts =
+		userName === "uxliveadmin"
+			? productData?.products
+			: productData?.products?.filter(
+					(product) =>
+						product.product_name !== "Living Lab Monitoring" &&
+						product.product_name !== "Dowell Wallet"
+			  );
 
-  const filterDataByProduct = portfolioData?.filter(
+	const filterDataByProduct = portfolioData?.filter(
 		(item) => item.product === selectedProduct || item?.product === "all"
 	);
 
-  const selectedItemData = portfolioData?.find(
-		(item) => item?.portfolio_code === selectedItem 
-	);
-  const sessionId = localStorage.getItem("sessionId");
+	const sessionId = localStorage.getItem("sessionId");
 
+	// connect with portfolio on submit button
 
-// connect with portfolio on submit button
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsLoading(true);
+		const selectedporfolio = portfolioData?.find(
+			(item) => item?.portfolio_code === selectedItem
+		);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-const selectedporfolio = portfolioData?.find(
-	(item) => item?.portfolio_code === selectedItem
-);
-
-    const data = {
+		const data = {
 			username: userName,
 			action: "connect_portfolio",
 			portfl: selectedItem,
@@ -66,46 +63,46 @@ const selectedporfolio = portfolioData?.find(
 			present_org: string;
 			session_id: string;
 			portfolio_name?: string;
-      };
-    
-     if (selectedporfolio?.product === "all") {
-				data.portfolio_name = "default";
+		};
+
+		if (selectedporfolio?.product === "all") {
+			data.portfolio_name = "default";
+		}
+
+		console.log(data);
+		if (data.portfl && data.product) {
+			try {
+				await axios
+					.post(
+						"https://100093.pythonanywhere.com/api/connect_portfolio/",
+						data
+					)
+					.then((res) => {
+						console.log(res.data);
+						toast.success("success");
+						window.location.href = res.data;
+					});
+			} catch (error: unknown) {
+				if (axios.isAxiosError(error)) {
+					console.error(error);
+					toast.error(error.response?.data);
+				} else {
+					console.error("An unknown error occurred:", error);
+					toast.error("An unknown error occurred");
+				}
+			} finally {
+				setIsLoading(false);
 			}
+		} else {
+			toast.error("Please select a portfolio and product");
+			setIsLoading(false);
+		}
+	};
+	const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+	);
 
-    console.log(data);
-    if (data.portfl && data.product) {
-      try {
-        await axios
-          .post(
-            "https://100093.pythonanywhere.com/api/connect_portfolio/",
-            data
-          )
-          .then((res) => {
-            console.log(res.data);
-            toast.success("success");
-            window.location.href = res.data;
-          });
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          console.error(error);
-          toast.error(error.response?.data);
-        } else {
-          console.error("An unknown error occurred:", error);
-          toast.error("An unknown error occurred");
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      toast.error("Please select a portfolio and product");
-      setIsLoading(false);
-    }
-  };
-  const color_scheme = useSelector(
-    (state: RootState) => state.setting?.data?.color_scheme
-  );
-
-  return (
+	return (
 		<>
 			<form
 				className="border border-[#54595f] h-full mt-20 p-[50px]"

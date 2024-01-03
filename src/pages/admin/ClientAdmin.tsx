@@ -63,12 +63,13 @@ const ClientAdmin = () => {
                   <div className="lg:w-[90%] ">
                     {isnewOwner && (
                       <div className="flex flex-col md:flex-row items-center justify-center gap-10 mb-5">
-                        <h2 className="md:w-[55%] text-center  font-medium text-xl text-[#61CE70]">
-                          You are connected to{" "}
+                        <h2  className="md:w-[55%] text-center  font-medium text-xl text-[#61CE70]">
+                         <span id="clientAdminText1">You are connected to{" "}</span>
                           <span className="text-[#FF0000]">{isnewOwner}</span>{" "}
-                          Workspace
+                         <span id="clientAdminText2">Workspace</span>
                         </h2>
                         <button
+                        id="clientAdminText3" 
                           className="md:w-[20%] px-4 py-2 bg-[#61CE70] text-white rounded-md hover:bg-[#2ea53e]"
                           onClick={() => {
                             localStorage.removeItem("username");
