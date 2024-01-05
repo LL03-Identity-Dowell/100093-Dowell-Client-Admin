@@ -81,9 +81,24 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    #     'OPTIONS': {
+    #         'timeout': 20,  # in seconds
+    #         # see also
+    #         # https://docs.python.org/3.7/library/sqlite3.html#sqlite3.connect
+    #     }
+    # }
+
+        'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '100093$dowell_db',
+        'USER': '100093',
+        'PASSWORD': 'Dowell@93',
+        'HOST': '100093.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+
     }
 }
 
@@ -123,6 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'assets/'
+# STATIC_URL = 'static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, '/static')
 STATICFILES_DIRS = (
     # os.path.join(BASE_DIR, 'static'),
@@ -133,3 +149,39 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'uxlivinglab@dowellresearch.sg' #sender's email-id
+EMAIL_HOST_PASSWORD = 'March2023@*' #password associated with above email-id
+
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# default static files settings for PythonAnywhere.
+# see https://help.pythonanywhere.com/pages/DjangoStaticFiles for more info
+MEDIA_ROOT = '/home/100093/clientadmin/media'
+MEDIA_URL = '/media/'
+# STATIC_ROOT = '/home/100093/clientadmin/static'
+# STATIC_URL = '/static/'
+# EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST='smtp.gmail.com'
+# EMAIL_PORT=587
+# EMAIL_USE_TLS=True
+# EMAIL_HOST_USER="dowelllogintest@gmail.com"
+# EMAIL_HOST_PASSWORD= "March2023@*" #"DipsapE2RzNcjT"
+# CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+# CORS_ALLOW_CREDENTIALS = True
+
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_ALL_ORIGINS= True
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = ['https://ll04-finance-dowell.github.io/']
