@@ -122,12 +122,18 @@ const Form2 = () => {
 			<ToastContainer position="top-right" />
 
 			<div className="lg:w-1/2 border border-[#54595F] card-shadow">
-				<p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
+				<p
+					id="level5_subheading_4"
+					className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col "
+				>
 					Create Level 5 Items
 				</p>
 				<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_5"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Item Name <span className="text-[#ff0000] text-xs">*</span>
 						</label>
 						<input
@@ -140,7 +146,10 @@ const Form2 = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_6"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Item Code (Unique){" "}
 							<span className="text-[#ff0000] text-xs">*</span>
 						</label>
@@ -154,7 +163,10 @@ const Form2 = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_7"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Item Specification
 						</label>
 						<input
@@ -166,7 +178,10 @@ const Form2 = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_8"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Item Universal Code
 						</label>
 						<input
@@ -178,7 +193,10 @@ const Form2 = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_9"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Items Details
 						</label>
 						<textarea
@@ -190,25 +208,35 @@ const Form2 = () => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_10"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Barcode
 						</label>
 						<input type="file" />
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_11"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Image 1
 						</label>
 						<input type="file" />
 					</div>
 					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+						<label
+							id="level5_subheading_12"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
 							Image 2
 						</label>
 						<input type="file" />
 					</div>
 
 					<button
+						id="level5_subheading_13"
 						disabled={isLoading}
 						className={`w-full h-12  ${
 							isLoading == true

@@ -77,58 +77,67 @@ const Form1 = () => {
     (state: RootState) => state.setting?.data?.color_scheme
   );
   return (
-    <>
-      <ToastContainer position="top-right" />
+		<>
+			<ToastContainer position="top-right" />
 
-      <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <span
-          className={`${
-            color_scheme == "Red"
-              ? "bg-[#DC4C64]"
-              : color_scheme == "Green"
-              ? "bg-[#14A44D]"
-              : "bg-[#7A7A7A]"
-          } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
-        >
-          <p>{`Level 3 – <${getLevelName}>,`}</p>
-          <p>{`${getLevelItemLength} – <total enabled items in level 3>`}</p>
-        </span>
+			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
+				<span
+					className={`${
+						color_scheme == "Red"
+							? "bg-[#DC4C64]"
+							: color_scheme == "Green"
+							? "bg-[#14A44D]"
+							: "bg-[#7A7A7A]"
+					} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+				>
+					<p id="level3headingtext">{`Level 3 – <${getLevelName}>,`}</p>
+					<p id="level3headingtext_counter">{`${getLevelItemLength} – <total enabled items in level 3>`}</p>
+				</span>
 
-        <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Name for Level 3
-            </label>
-            <input
-              type="text"
-              placeholder="Name"
-              defaultValue={getLevelName}
-              required
-              onChange={handleOnChange}
-              id="level_name"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
+				<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+					<div className="mb-4">
+						<label
+							id="level3_subheading_1"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Name for Level 3
+						</label>
+						<input
+							type="text"
+							placeholder="Name"
+							defaultValue={getLevelName}
+							required
+							onChange={handleOnChange}
+							id="level_name"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
 
-          <button
-            disabled={isLoading}
-            className={`w-full h-12  ${
-              isLoading == true
-                ? "bg-[#b8b8b8]"
-                : color_scheme == "Red"
-                ? "bg-[#DC4C64]"
-                : color_scheme == "Green"
-                ? "bg-[#14A44D]"
-                : "bg-[#7A7A7A]"
-            } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-          >
-            Save Name
-          </button>
-          <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
-        </form>
-      </div>
-    </>
-  );
+					<button
+						id="level3_subheading_2"
+						disabled={isLoading}
+						className={`w-full h-12  ${
+							isLoading == true
+								? "bg-[#b8b8b8]"
+								: color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+					>
+						Save Name
+					</button>
+					<p
+						id="level3_subheading_3"
+						className="text-xs text-[#FF0000] text-center pt-2"
+					>
+						{errMsg}
+					</p>
+				</form>
+			</div>
+		</>
+	);
 };
 
 export default Form1;

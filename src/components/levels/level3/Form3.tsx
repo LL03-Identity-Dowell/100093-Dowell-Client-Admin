@@ -143,116 +143,133 @@ const Form3 = () => {
     (state: RootState) => state.setting?.data?.color_scheme
   );
   return (
-    <>
-      <ToastContainer position="top-right" />
-      <div className="lg:w-1/2 border border-[#54595F] card-shadow">
-        <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
-          Items created in Level 3
-        </p>
-        <div className="px-[30px] mb-8">
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Enabled Items
-            </label>
-            <select
-              onChange={handleSelectChange}
-              value={selectedItem}
-              id="enable_item"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            >
-              <option> ...Select... </option>
-              {level3Items.map((item, index) =>
-                item.status === "enable" ? (
-                  <option key={index} value={item?.item_code}>
-                    {item?.item_name}
-                  </option>
-                ) : null
-              )}
-            </select>
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Disabled Items
-            </label>
-            <select
-              onChange={handleSelectChange}
-              id="disable_item"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            >
-              <option> ...Select... </option>
-              {level3Items.map((item, index) =>
-                item?.status === "disable" ? (
-                  <option value={item?.item_code} key={index}>
-                    {item?.item_name}
-                  </option>
-                ) : null
-              )}
-            </select>
-          </div>
+		<>
+			<ToastContainer position="top-right" />
+			<div className="lg:w-1/2 border border-[#54595F] card-shadow">
+				<p
+					id="level3_subheading_14"
+					className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col "
+				>
+					Items created in Level 3
+				</p>
+				<div className="px-[30px] mb-8">
+					<div className="mb-4">
+						<label
+							id="level3_subheading_15"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Enabled Items
+						</label>
+						<select
+							onChange={handleSelectChange}
+							value={selectedItem}
+							id="level3_select_1"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						>
+							<option> ...Select... </option>
+							{level3Items.map((item, index) =>
+								item.status === "enable" ? (
+									<option key={index} value={item?.item_code}>
+										{item?.item_name}
+									</option>
+								) : null
+							)}
+						</select>
+					</div>
+					<div className="mb-4">
+						<label
+							id="level3_subheading_16"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Disabled Items
+						</label>
+						<select
+							onChange={handleSelectChange}
+							id="level3_select_2"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						>
+							<option> ...Select... </option>
+							{level3Items.map((item, index) =>
+								item?.status === "disable" ? (
+									<option value={item?.item_code} key={index}>
+										{item?.item_name}
+									</option>
+								) : null
+							)}
+						</select>
+					</div>
 
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Details of selected Item
-            </label>
-            <textarea
-              rows={4}
-              placeholder=""
-              readOnly
-              value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
-              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-            />
-          </div>
+					<div className="mb-4">
+						<label
+							id="level3_subheading_17"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Details of selected Item
+						</label>
+						<textarea
+							rows={4}
+							placeholder=""
+							readOnly
+							value={JSON.stringify(selectedItemData, null, 1)?.slice(1, -1)}
+							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+						/>
+					</div>
 
-          <form onSubmit={handleSubmitStatus}>
-            <div className="mb-4">
-              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                Enable / Disable selected Item
-              </label>
-              <select
-                onChange={handleSelectStatus}
-                id="status"
-                className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-              >
-                <option> ...Select... </option>
-                <option value="enable"> Enable </option>
-                <option value="disable"> Disable </option>
-              </select>
-            </div>
+					<form onSubmit={handleSubmitStatus}>
+						<div className="mb-4">
+							<label
+								id="level3_subheading_18"
+								className="text-[#7A7A7A] text-lg font-roboto font-bold "
+							>
+								Enable / Disable selected Item
+							</label>
+							<select
+								onChange={handleSelectStatus}
+								id="level3_select_3"
+								className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+							>
+								<option> ...Select... </option>
+								<option value="enable"> Enable </option>
+								<option value="disable"> Disable </option>
+							</select>
+						</div>
 
-            <button
-              className={`w-full h-12  ${
-                isLoadingStatus == true
-                  ? "bg-[#b8b8b8]"
-                  : color_scheme == "Red"
-                  ? "bg-[#DC4C64]"
-                  : color_scheme == "Green"
-                  ? "bg-[#14A44D]"
-                  : "bg-[#7A7A7A]"
-              } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-            >
-              {isLoadingStatus
-                ? status === "enable"
-                  ? "Enabling..."
-                  : "Disabling..."
-                : "Enable / Disable selected item"}
-            </button>
-          </form>
+						<button
+							id="level3_subheading_19"
+							className={`w-full h-12  ${
+								isLoadingStatus == true
+									? "bg-[#b8b8b8]"
+									: color_scheme == "Red"
+									? "bg-[#DC4C64]"
+									: color_scheme == "Green"
+									? "bg-[#14A44D]"
+									: "bg-[#7A7A7A]"
+							} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+						>
+							{isLoadingStatus
+								? status === "enable"
+									? "Enabling..."
+									: "Disabling..."
+								: "Enable / Disable selected item"}
+						</button>
+					</form>
 
-          <button
-            className={`w-full ${
-              color_scheme == "Red"
-                ? "bg-[#DC4C64]"
-                : color_scheme == "Green"
-                ? "bg-[#14A44D]"
-                : "bg-[#7A7A7A]"
-            }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-          >
-            Duplicate selected Item to create new
-          </button>
-        </div>
-      </div>
-    </>
-  );
+					<button
+						id="level3_subheading_20"
+						className={`w-full ${
+							color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+					>
+						Duplicate selected Item to create new
+					</button>
+				</div>
+			</div>
+		</>
+	);
 };
 
 export default Form3;

@@ -5,6 +5,8 @@ import axios, { AxiosError } from "axios";
 import { getAdminData } from "../../store/slice/adminData";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
+import { roleselectid, roletextid } from "./Roleid";
+
 
 const Roles = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -436,478 +438,646 @@ function isAxiosError(error: unknown): error is AxiosError {
     (state: RootState) => state.setting?.data?.color_scheme
   );
 
+ const defaultlang = useSelector(
+		(state: RootState) => state.setting?.data?.default_language
+ );
+
+  useEffect(() => {
+		const FetchLanguage = () => {
+			roleselectid.forEach((id: string) => {
+				const select = document.getElementById(id) as HTMLSelectElement | null;
+				// Accessing individual options
+				if (select) {
+					const options = select.options;
+					for (let i = 0; i < options.length; i++) {
+						const translate = async () => {
+							try {
+								const data = {
+									text: options[i].text,
+									target_language: defaultlang,
+								};
+								const response = await axios.post(
+									`https://100093.pythonanywhere.com/api/translate/`,
+									data
+								);
+
+								const translationData = await response.data;
+								if (id === "settingForm2text1") {
+									console.log(translationData);
+								}
+								options[i].text =
+									translationData.data.translations[0].translatedText;
+							} catch (error) {
+								console.error("Translation error:", error);
+								return options[i].text;
+							}
+						};
+						translate();
+					}
+				}
+			});
+			roletextid.forEach((id: string) => {
+				const text = document.getElementById(id);
+				if (text) {
+					const translate = async () => {
+						try {
+							const data = {
+								text: text.innerText,
+								target_language: defaultlang,
+							};
+							const response = await axios.post(
+								`https://100093.pythonanywhere.com/api/translate/`,
+								data
+							);
+
+							const translationData = await response.data;
+							text.innerText =
+								translationData.data.translations[0].translatedText;
+						} catch (error) {
+							console.error("Translation error:", error);
+							return text;
+						}
+					};
+					translate();
+				}
+			});
+		};
+
+		if (defaultlang) {
+			FetchLanguage();
+		}
+	}, [defaultlang, dispatch]);
+
+
+
+
   return (
-    <>
-      {isLoading == false ? (
-        <div>
-          <ToastContainer position="top-right" />
-          <div className="mt-8 w-full lg:flex gap-8">
-            <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
-              <span
-                className={`${color_scheme == "Red"
-                    ? "bg-[#DC4C64]"
-                    : color_scheme == "Green"
-                      ? "bg-[#14A44D]"
-                      : "bg-[#7A7A7A]"
-                  } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
-              >
-                <p>ROLE</p>
-                <p>{`  <${enablerules.length}>`} </p>
-              </span>
-              <div className="p-[30px]  my-20">
-                <p className="text-[#FF0000] text-lg font-roboto font-semibold">
-                  Create Roles – Define Roles in my Workspace
-                </p>
-              </div>
-              <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Select Item in Level 1 - Departments
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    required
-                    name="level1_item"
-                    onChange={handleChange}
-                    value={formData.level1_item}
-                  >
-                    <option>..select</option>
-                    {currentadmindata.data[0].organisations[0].level1.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Select Item in Level 2 - products
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    onChange={handleChange}
-                    name="level2_item"
-                    value={formData.level2_item}
-                  >
-                    <option>..select</option>
-                    {currentadmindata.data[0].organisations[0].level2.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Select Item in Level 3 - sub departments
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    placeholder="Select Product"
-                    onChange={handleChange}
-                    name="level3_item"
-                    value={formData.level3_item}
-                  >
-                    <option>..select</option>
-                    {currentadmindata.data[0].organisations[0].level3.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Select Item in Level 4 - Task
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    onChange={handleChange}
-                    name="level4_item"
-                    value={formData.level4_item}
-                  >
-                    <option>..select</option>
-                    {currentadmindata.data[0].organisations[0].level4.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Select Item in Level 5 - sub task
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    onChange={handleChange}
-                    name="level5_item"
-                    value={formData.level5_item}
-                  >
-                    <option>..select</option>
-                    {currentadmindata.data[0].organisations[0].level5.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Select Security Layer
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    required
-                    onChange={handleChange}
-                    name="security_layer"
-                    value={formData.security_layer}
-                  >
-                    <option value="Layer 01">Layer 01</option>
-                    <option value="Layer 02">Layer 02</option>
-                    <option value="Layer 03">Layer 03</option>
-                    <option value="Layer 04">Layer 04</option>
-                    <option value="Layer 05">Layer 05</option>
-                  </select>
-                </div>
+		<>
+			{isLoading == false ? (
+				<div>
+					<ToastContainer position="top-right" />
+					<div className="mt-8 w-full lg:flex gap-8">
+						<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow">
+							<span
+								className={`${
+									color_scheme == "Red"
+										? "bg-[#DC4C64]"
+										: color_scheme == "Green"
+										? "bg-[#14A44D]"
+										: "bg-[#7A7A7A]"
+								} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+							>
+								<p id="roleheadingtext">ROLE</p>
+								<p id="roleheadingtext_counter">
+									{`  <${enablerules.length}>`}{" "}
+								</p>
+							</span>
+							<div className="p-[30px]  my-20">
+								<p
+									id="role_subheading_1"
+									className="text-[#FF0000] text-lg font-roboto font-semibold"
+								>
+									Create Roles – Define Roles in my Workspace
+								</p>
+							</div>
+							<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+								<div className="mb-4">
+									<label
+										id="role_subheading_2"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Select Item in Level 1 - Departments
+									</label>
+									<select
+										id="roleselect_1"
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										required
+										name="level1_item"
+										onChange={handleChange}
+										value={formData.level1_item}
+									>
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level1.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_3"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Select Item in Level 2 - products
+									</label>
+									<select
+										id="roleselect_2"
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleChange}
+										name="level2_item"
+										value={formData.level2_item}
+									>
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level2.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_4"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Select Item in Level 3 - sub departments
+									</label>
+									<select
+										id="roleselect_3"
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										placeholder="Select Product"
+										onChange={handleChange}
+										name="level3_item"
+										value={formData.level3_item}
+									>
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level3.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_5"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Select Item in Level 4 - Task
+									</label>
+									<select
+										id="roleselect_4"
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleChange}
+										name="level4_item"
+										value={formData.level4_item}
+									>
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level4.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_6"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Select Item in Level 5 - sub task
+									</label>
+									<select
+										id="roleselect_5"
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleChange}
+										name="level5_item"
+										value={formData.level5_item}
+									>
+										<option>..select</option>
+										{currentadmindata.data[0].organisations[0].level5.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_7"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Select Security Layer
+									</label>
+									<select
+										id="roleselect_6"
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										required
+										onChange={handleChange}
+										name="security_layer"
+										value={formData.security_layer}
+									>
+										<option value="Layer 01">Layer 01</option>
+										<option value="Layer 02">Layer 02</option>
+										<option value="Layer 03">Layer 03</option>
+										<option value="Layer 04">Layer 04</option>
+										<option value="Layer 05">Layer 05</option>
+									</select>
+								</div>
 
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Role Name
-                    <span className="text-[#ff0000] text-base">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Role name"
-                    required
-                    onChange={handleChange}
-                    name="role_name"
-                    value={formData.role_name}
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Role Code (Unique){" "}
-                    <span className="text-[#ff0000] text-base">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Role code"
-                    required
-                    name="role_code"
-                    value={formData.role_code}
-                    onChange={handleChange}
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Role Specification{" "}
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Role specification"
-                    onChange={handleChange}
-                    name="role_spec"
-                    value={formData.role_spec}
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Role Universal Code{" "}
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Role universal code"
-                    onChange={handleChange}
-                    name="roleucode"
-                    value={formData.roleucode}
-                    className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Role Details{" "}
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Role details"
-                    onChange={handleTextareaChange}
-                    name="role_det"
-                    value={formData.role_det}
-                    className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-                  />
-                </div>
-                <button
-                  className={`w-full h-12  ${loading.createrole == true
-                      ? "bg-[#b8b8b8]"
-                      : color_scheme == "Red"
-                        ? "bg-[#DC4C64]"
-                        : color_scheme == "Green"
-                          ? "bg-[#14A44D]"
-                          : "bg-[#7A7A7A]"
-                    }  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-                  type="submit"
-                >
-                  {loading.createrole == true ? "Creating..." : "Create Role"}
-                </button>
-              </form>
-            </div>
-            <div className="lg:w-1/2 ">
-              <h2 className="text-[#7A7A7A] text-lg font-roboto font-bold my-8">
-                Roles created in my organisation
-              </h2>
+								<div className="mb-4">
+									<label
+										id="role_subheading_8"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Role Name
+										<span className="text-[#ff0000] text-base">*</span>
+									</label>
+									<input
+										type="text"
+										placeholder="Role name"
+										required
+										onChange={handleChange}
+										name="role_name"
+										value={formData.role_name}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_9"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Role Code (Unique){" "}
+										<span className="text-[#ff0000] text-base">*</span>
+									</label>
+									<input
+										type="text"
+										placeholder="Role code"
+										required
+										name="role_code"
+										value={formData.role_code}
+										onChange={handleChange}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_10"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Role Specification{" "}
+									</label>
+									<input
+										type="text"
+										placeholder="Role specification"
+										onChange={handleChange}
+										name="role_spec"
+										value={formData.role_spec}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_11"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Role Universal Code{" "}
+									</label>
+									<input
+										type="text"
+										placeholder="Role universal code"
+										onChange={handleChange}
+										name="roleucode"
+										value={formData.roleucode}
+										className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+									/>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_12"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Role Details{" "}
+									</label>
+									<textarea
+										rows={4}
+										placeholder="Role details"
+										onChange={handleTextareaChange}
+										name="role_det"
+										value={formData.role_det}
+										className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+									/>
+								</div>
+								<button
+									id="role_subheading_13"
+									className={`w-full h-12  ${
+										loading.createrole == true
+											? "bg-[#b8b8b8]"
+											: color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+									type="submit"
+								>
+									{loading.createrole == true ? "Creating..." : "Create Role"}
+								</button>
+							</form>
+						</div>
+						<div className="lg:w-1/2 ">
+							<h2
+								id="role_subheading_14"
+								className="text-[#7A7A7A] text-lg font-roboto font-bold my-8"
+							>
+								Roles created in my organisation
+							</h2>
 
-              <form className=" mb-8 mt-12">
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Level 1
-                  </label>
-                  <select
-                    className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    multiple
-                    name="selectlevel1_item"
-                    onChange={handleSelectChangelevels}
-                    value={selectionrulestate.selectlevel1_item}
-                  >
-                    {currentadmindata.data[0].organisations[0].level1.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Level 2
-                  </label>
-                  <select
-                    className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    multiple
-                    name="selectlevel2_item"
-                    onChange={handleSelectChangelevels}
-                    value={selectionrulestate.selectlevel2_item}
-                  >
-                    {currentadmindata.data[0].organisations[0].level2.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Level 3
-                  </label>
-                  <select
-                    className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    multiple
-                    name="selectlevel3_item"
-                    onChange={handleSelectChangelevels}
-                    value={selectionrulestate.selectlevel3_item}
-                  >
-                    {currentadmindata.data[0].organisations[0].level3.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Level 4
-                  </label>
-                  <select
-                    className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    multiple
-                    name="selectlevel4_item"
-                    onChange={handleSelectChangelevels}
-                    value={selectionrulestate.selectlevel4_item}
-                  >
-                    {currentadmindata.data[0].organisations[0].level4.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Level 5
-                  </label>
-                  <select
-                    className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    multiple
-                    name="selectlevel5_item"
-                    onChange={handleSelectChangelevels}
-                    value={selectionrulestate.selectlevel5_item}
-                  >
-                    {currentadmindata.data[0].organisations[0].level5.items.map(
-                      (item, index) => (
-                        <option key={index} value={item.item_name}>
-                          {item.item_name}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Security Layer
-                  </label>
-                  <select
-                    className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    multiple
-                    name="selectsecurity_layer"
-                    onChange={handleSelectChangelevels}
-                    value={selectionrulestate.selectsecurity_layer}
-                  >
-                    <option value="Layer 01">Layer 01</option>
-                    <option value="Layer 02">Layer 02</option>
-                    <option value="Layer 03">Layer 03</option>
-                    <option value="Layer 04">Layer 04</option>
-                    <option value="Layer 05">Layer 05</option>
-                  </select>
-                </div>
+							<form className=" mb-8 mt-12">
+								<div className="mb-4">
+									<label
+										id="role_subheading_15"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Level 1
+									</label>
+									<select
+										id="roleselect_7"
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+										name="selectlevel1_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel1_item}
+									>
+										{currentadmindata.data[0].organisations[0].level1.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_16"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Level 2
+									</label>
+									<select
+										id="roleselect_8"
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+										name="selectlevel2_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel2_item}
+									>
+										{currentadmindata.data[0].organisations[0].level2.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_17"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Level 3
+									</label>
+									<select
+										id="roleselect_9"
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+										name="selectlevel3_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel3_item}
+									>
+										{currentadmindata.data[0].organisations[0].level3.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_18"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Level 4
+									</label>
+									<select
+										id="roleselect_10"
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+										name="selectlevel4_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel4_item}
+									>
+										{currentadmindata.data[0].organisations[0].level4.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_19"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Level 5
+									</label>
+									<select
+										id="roleselect_11"
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+										name="selectlevel5_item"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectlevel5_item}
+									>
+										{currentadmindata.data[0].organisations[0].level5.items.map(
+											(item, index) => (
+												<option key={index} value={item.item_name}>
+													{item.item_name}
+												</option>
+											)
+										)}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_20"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Security Layer
+									</label>
+									<select
+										id="roleselect_12"
+										className="outline-none w-full h-100 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										multiple
+										name="selectsecurity_layer"
+										onChange={handleSelectChangelevels}
+										value={selectionrulestate.selectsecurity_layer}
+									>
+										<option value="Layer 01">Layer 01</option>
+										<option value="Layer 02">Layer 02</option>
+										<option value="Layer 03">Layer 03</option>
+										<option value="Layer 04">Layer 04</option>
+										<option value="Layer 05">Layer 05</option>
+									</select>
+								</div>
 
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Enabled Roles
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    onChange={handleenablerule}
-                    name="enablestatus"
-                    value={rulestatus.enablestatus}
-                  >
-                    <option value="..select">..select</option>
-                    {enablerulesitem.map((item, index) => (
-                      <option key={index} value={item.role_name}>
-                        {item.role_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Disabled Roles
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    onChange={handledisablerule}
-                    name="disablestatus"
-                    value={rulestatus.disablestatus}
-                  >
-                    <option value="..select">..select</option>
-                    {disablerulesitem.map((item, index) => (
-                      <option key={index} value={item.role_name}>
-                        {item.role_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_21"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Enabled Roles
+									</label>
+									<select
+										id="roleselect_13"
+										className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handleenablerule}
+										name="enablestatus"
+										value={rulestatus.enablestatus}
+									>
+										<option value="..select">..select</option>
+										{enablerulesitem.map((item, index) => (
+											<option key={index} value={item.role_name}>
+												{item.role_name}
+											</option>
+										))}
+									</select>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_22"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Disabled Roles
+									</label>
+									<select
+										id="roleselect_14"
+										className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										onChange={handledisablerule}
+										name="disablestatus"
+										value={rulestatus.disablestatus}
+									>
+										<option value="..select">..select</option>
+										{disablerulesitem.map((item, index) => (
+											<option key={index} value={item.role_name}>
+												{item.role_name}
+											</option>
+										))}
+									</select>
+								</div>
 
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Details of selected Role
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder=""
-                    className="outline-none w-full px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-                    value={
-                      selectedrule.role_name == ""
-                        ? ""
-                        : `${formatObject(selectedrule)}`
-                    }
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                    Enable / Disable Selected Role
-                  </label>
-                  <select
-                    className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-                    value={selectedrulestatus}
-                    onChange={changeselectedrulestatus}
-                  >
-                    <option value="..select">...select</option>
-                    <option value="enable"> Enable </option>
-                    <option value="disable"> Disable </option>
-                  </select>
-                </div>
-                <button
-                  className={`w-full h-12  ${loading.enabledisable == true
-                      ? "bg-[#b8b8b8]"
-                      : color_scheme == "Red"
-                        ? "bg-[#DC4C64]"
-                        : color_scheme == "Green"
-                          ? "bg-[#14A44D]"
-                          : "bg-[#7A7A7A]"
-                    } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-                  type="button"
-                  onClick={updateselectedrulestatus}
-                >
-                  {loading.enabledisable
-                    ? selectedrulestatus === "enable"
-                      ? "Enabling..."
-                      : "Disabling..."
-                    : "Enable / Disable selected Role"}
-                </button>
+								<div className="mb-4">
+									<label
+										id="role_subheading_23"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Details of selected Role
+									</label>
+									<textarea
+										rows={4}
+										placeholder=""
+										className="outline-none w-full px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+										value={
+											selectedrule.role_name == ""
+												? ""
+												: `${formatObject(selectedrule)}`
+										}
+									/>
+								</div>
+								<div className="mb-4">
+									<label
+										id="role_subheading_24"
+										className="text-[#7A7A7A] text-lg font-roboto font-bold "
+									>
+										Enable / Disable Selected Role
+									</label>
+									<select
+										id="roleselect_15"
+										className="outline-none w-full h-12 px-4 py-2 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+										value={selectedrulestatus}
+										onChange={changeselectedrulestatus}
+									>
+										<option value="..select">...select</option>
+										<option value="enable"> Enable </option>
+										<option value="disable"> Disable </option>
+									</select>
+								</div>
+								<button
+									id="role_subheading_25"
+									className={`w-full h-12  ${
+										loading.enabledisable == true
+											? "bg-[#b8b8b8]"
+											: color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+									type="button"
+									onClick={updateselectedrulestatus}
+								>
+									{loading.enabledisable
+										? selectedrulestatus === "enable"
+											? "Enabling..."
+											: "Disabling..."
+										: "Enable / Disable selected Role"}
+								</button>
 
-                <button
-                  className={`w-full h-12  ${color_scheme == "Red"
-                      ? "bg-[#DC4C64]"
-                      : color_scheme == "Green"
-                        ? "bg-[#14A44D]"
-                        : "bg-[#7A7A7A]"
-                    } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-                >
-                  Duplicate selected Role to create new
-                </button>
-                <button
-                  className={`w-full h-12  ${loading.refreshsearch == true
-                      ? "bg-[#b8b8b8]"
-                      : color_scheme == "Red"
-                        ? "bg-[#DC4C64]"
-                        : color_scheme == "Green"
-                          ? "bg-[#14A44D]"
-                          : "bg-[#7A7A7A]"
-                    }  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-                  type="button"
-                  onClick={clearselection}
-                >
-                  {loading.refreshsearch ? "Refreshing..." : "Refresh Search"}
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <Loader></Loader>
-      )}
-    </>
-  );
+								<button
+									id="role_subheading_26"
+									className={`w-full h-12  ${
+										color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+								>
+									Duplicate selected Role to create new
+								</button>
+								<button
+									id="role_subheading_27"
+									className={`w-full h-12  ${
+										loading.refreshsearch == true
+											? "bg-[#b8b8b8]"
+											: color_scheme == "Red"
+											? "bg-[#DC4C64]"
+											: color_scheme == "Green"
+											? "bg-[#14A44D]"
+											: "bg-[#7A7A7A]"
+									}  hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+									type="button"
+									onClick={clearselection}
+								>
+									{loading.refreshsearch ? "Refreshing..." : "Refresh Search"}
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			) : (
+				<Loader></Loader>
+			)}
+		</>
+	);
 };
 
 export default Roles;

@@ -134,113 +134,141 @@ const Form2 = () => {
     (state: RootState) => state.setting?.data?.color_scheme
   );
   return (
-    <>
-      <ToastContainer position="top-right" />
-      <div className="lg:w-1/2 border border-[#54595F] card-shadow">
-        <p className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col ">
-          Create Level 1 Items
-        </p>
-        <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Item Name <span className="text-[#ff0000] text-xs">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Item Name"
-              required
-              onChange={handleOnChange}
-              id="item_name"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Item Code (Unique){" "}
-              <span className="text-[#ff0000] text-xs">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Item code"
-              required
-              onChange={handleOnChange}
-              id="item_code"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Item Specification
-            </label>
-            <input
-              type="text"
-              placeholder="Item specification"
-              onChange={handleOnChange}
-              id="item_spec"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Item Universal Code
-            </label>
-            <input
-              type="text"
-              placeholder=" Item universal code"
-              onChange={handleOnChange}
-              id="item_unicode"
-              className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Items Details
-            </label>
-            <textarea
-              rows={4}
-              placeholder="Item details"
-              onChange={handleOnChangeTextArea}
-              id="item_details"
-              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Barcode
-            </label>
-            <input type="file" />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Image 1
-            </label>
-            <input type="file" />
-          </div>
-          <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              Image 2
-            </label>
-            <input type="file" />
-          </div>
+		<>
+			<ToastContainer position="top-right" />
+			<div className="lg:w-1/2 border border-[#54595F] card-shadow">
+				<p
+					id="level1_subheading_4"
+					className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] flex flex-col "
+				>
+					Create Level 1 Items
+				</p>
+				<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_5"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Item Name <span className="text-[#ff0000] text-xs">*</span>
+						</label>
+						<input
+							type="text"
+							placeholder="Item Name"
+							required
+							onChange={handleOnChange}
+							id="item_name"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_6"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Item Code (Unique){" "}
+							<span className="text-[#ff0000] text-xs">*</span>
+						</label>
+						<input
+							type="text"
+							placeholder="Item code"
+							required
+							onChange={handleOnChange}
+							id="item_code"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_7"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Item Specification
+						</label>
+						<input
+							type="text"
+							placeholder="Item specification"
+							onChange={handleOnChange}
+							id="item_spec"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_8"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Item Universal Code
+						</label>
+						<input
+							type="text"
+							placeholder=" Item universal code"
+							onChange={handleOnChange}
+							id="item_unicode"
+							className="outline-none w-full h-10 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+						/>
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_9"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Items Details
+						</label>
+						<textarea
+							rows={4}
+							placeholder="Item details"
+							onChange={handleOnChangeTextArea}
+							id="item_details"
+							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+						/>
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_10"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Barcode
+						</label>
+						<input type="file" />
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_11"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Image 1
+						</label>
+						<input type="file" />
+					</div>
+					<div className="mb-4">
+						<label
+							id="level1_subheading_12"
+							className="text-[#7A7A7A] text-lg font-roboto font-bold "
+						>
+							Image 2
+						</label>
+						<input type="file" />
+					</div>
 
-          <button
-            disabled={isLoading}
-            className={`w-full h-12  ${
-              isLoading == true
-                ? "bg-[#b8b8b8]"
-                : color_scheme == "Red"
-                ? "bg-[#DC4C64]"
-                : color_scheme == "Green"
-                ? "bg-[#14A44D]"
-                : "bg-[#7A7A7A]"
-            } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-          >
-            {isLoading ? "Creating.." : "Create Item"}
-          </button>
-        </form>
-      </div>
-    </>
-  );
+					<button
+						id="level1_subheading_13"
+						disabled={isLoading}
+						className={`w-full h-12  ${
+							isLoading == true
+								? "bg-[#b8b8b8]"
+								: color_scheme == "Red"
+								? "bg-[#DC4C64]"
+								: color_scheme == "Green"
+								? "bg-[#14A44D]"
+								: "bg-[#7A7A7A]"
+						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+					>
+						{isLoading ? "Creating.." : "Create Item"}
+					</button>
+				</form>
+			</div>
+		</>
+	);
 };
 
 export default Form2;

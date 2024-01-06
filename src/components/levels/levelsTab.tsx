@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaLevelDownAlt } from "react-icons/fa";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
@@ -7,14 +7,90 @@ import Level3 from "./level3/Level3";
 import Level4 from "./level4/Level4";
 import Level5 from "./level5/Level5";
 import Level2 from "./level2/Level2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
+import { Levelselectid, Leveltextid } from "./Levelid";
+import axios from "axios";
 
 const LevelsTab = () => {
   const [tabIndex, setTabIndex] = useState(-1);
  const color_scheme = useSelector(
 		(state: RootState) => state.setting?.data?.color_scheme
- );
+	);
+	
+  const dispatch = useDispatch();
+	const defaultlang = useSelector(
+		(state: RootState) => state.setting?.data?.default_language
+	);
+
+	useEffect(() => {
+		const FetchLanguage = () => {
+			Levelselectid.forEach((id: string) => {
+				const select = document.getElementById(id) as HTMLSelectElement | null;
+				// Accessing individual options
+				if (select) {
+					const options = select.options;
+					for (let i = 0; i < options.length; i++) {
+						const translate = async () => {
+							try {
+								const data = {
+									text: options[i].text,
+									target_language: defaultlang,
+								};
+								const response = await axios.post(
+									`https://100093.pythonanywhere.com/api/translate/`,
+									data
+								);
+
+								const translationData = await response.data;
+								if (id === "settingForm2text1") {
+									console.log(translationData);
+								}
+								options[i].text =
+									translationData.data.translations[0].translatedText;
+							} catch (error) {
+								console.error("Translation error:", error);
+								return options[i].text;
+							}
+						};
+						translate();
+					}
+				}
+			});
+			Leveltextid.forEach((id: string) => {
+				const text = document.getElementById(id);
+				if (text) {
+					const translate = async () => {
+						try {
+							const data = {
+								text: text.innerText,
+								target_language: defaultlang,
+							};
+							const response = await axios.post(
+								`https://100093.pythonanywhere.com/api/translate/`,
+								data
+							);
+
+							const translationData = await response.data;
+							text.innerText =
+								translationData.data.translations[0].translatedText;
+						} catch (error) {
+							console.error("Translation error:", error);
+							return text;
+						}
+					};
+					translate();
+				}
+			});
+		};
+
+		if (defaultlang) {
+			FetchLanguage();
+		}
+	}, [defaultlang, dispatch]);
+
+
+
   return (
 		<div>
 			<Tabs
