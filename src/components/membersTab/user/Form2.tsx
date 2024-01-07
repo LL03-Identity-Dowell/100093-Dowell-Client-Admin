@@ -94,17 +94,23 @@ const Form2 = () => {
     <>
       <ToastContainer position="top-right" />
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
+        <i
+          id="usertext17"
+          className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center"
+        >
           Search Users in my Workspace
         </i>
         <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext18"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Users not having Portfolio
             </label>
             <select
+              id="userselect1"
               multiple
-              id="no_portfolio"
               onChange={handleSelectOnChange}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
@@ -120,13 +126,16 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext19"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Users having assigned Portfolio
             </label>
             <select
+              id="userselect2"
               multiple
               onChange={handleSelectOnChange}
-              id="have_portfolio"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {guest_member?.accept_members.map(
@@ -141,7 +150,10 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext20"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Search Users
             </label>
             <Select
@@ -152,10 +164,14 @@ const Form2 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext21"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Details of selected User
             </label>
             <textarea
+              id="usertext22"
               rows={4}
               placeholder="Member details"
               readOnly
@@ -169,6 +185,7 @@ const Form2 = () => {
           </div>
 
           <button
+            id="usertext23"
             disabled={isLoading || userAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
@@ -183,7 +200,9 @@ const Form2 = () => {
             {isLoading ? "Loading..." : "Remove Selected User"}
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext24" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </form>
       </div>

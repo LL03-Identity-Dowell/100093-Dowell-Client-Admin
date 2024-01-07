@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Form1 from "./Form1";
 import Form2 from "./Form2";
 import Form3 from "./Form3";
@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { RootState } from "../../../store/Store";
 import Loader from "../../../pages/whiteloader";
+import { TeamSelectIds, TeamTextIds } from "./TeamIds";
+import axios from "axios";
 
 const TeamMember = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +19,6 @@ const TeamMember = () => {
       setTeamMemberAccess(viewAccess[1]["Member Management"]["rights"]);
     }
   }, [viewAccess]);
-  console.log(teamMemberAccess);
   useEffect(() => {
     if (currentadmindata.data[0]._id == "") {
       setIsLoading(true);
@@ -25,6 +26,74 @@ const TeamMember = () => {
       setIsLoading(false);
     }
   }, [currentadmindata]);
+  const dispatch = useDispatch();
+  const defaultlang = useSelector(
+    (state: RootState) => state.setting?.data?.default_language
+  );
+  useEffect(() => {
+    const FetchLanguage = () => {
+      TeamSelectIds.forEach((id: string) => {
+        const select = document.getElementById(id) as HTMLSelectElement | null;
+        // Accessing individual options
+        if (select) {
+          const options = select.options;
+          for (let i = 0; i < options.length; i++) {
+            const translate = async () => {
+              try {
+                const data = {
+                  text: options[i].text,
+                  target_language: defaultlang,
+                };
+                const response = await axios.post(
+                  `https://100093.pythonanywhere.com/api/translate/`,
+                  data
+                );
+
+                const translationData = await response.data;
+                if (id === "settingForm2text1") {
+                  console.log(translationData);
+                }
+                options[i].text =
+                  translationData.data.translations[0].translatedText;
+              } catch (error) {
+                console.error("Translation error:", error);
+                return options[i].text;
+              }
+            };
+            translate();
+          }
+        }
+      });
+      TeamTextIds.forEach((id: string) => {
+        const text = document.getElementById(id);
+        if (text) {
+          const translate = async () => {
+            try {
+              const data = {
+                text: text.innerText,
+                target_language: defaultlang,
+              };
+              const response = await axios.post(
+                `https://100093.pythonanywhere.com/api/translate/`,
+                data
+              );
+
+              const translationData = await response.data;
+              text.innerText =
+                translationData.data.translations[0].translatedText;
+            } catch (error) {
+              console.error("Translation error:", error);
+              return text;
+            }
+          };
+          translate();
+        }
+      });
+    };
+    if (defaultlang) {
+      FetchLanguage();
+    }
+  }, [defaultlang, dispatch]);
   return (
     <>
       {isLoading == false ? (

@@ -67,15 +67,24 @@ const Form2 = () => {
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
+        <i
+          id="publictext8"
+          className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center"
+        >
           Public in my organisation
         </i>
         <form className="px-[30px] mb-8">
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="publictext9"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Unused Public Links not having Portfolio
             </label>
-            <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+            <select
+              id="publicselect2"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
               <option>...Select...</option>
               {getUsedAndUnusedData?.map((members, index) => (
                 <option key={index} value={members}>
@@ -85,10 +94,16 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="publictext10"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Unused Public Links with assigned Portfolio
             </label>
-            <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+            <select
+              id="publicselect3"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
               <option>...Select...</option>
 
               {getUsedAndUnusedUnassigned?.map((members, index) => (
@@ -99,10 +114,16 @@ const Form2 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="publictext11"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Used Public Links
             </label>
-            <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+            <select
+              id="publicselect4"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
               <option>...Select...</option>
               {public_member?.pending_members.map((members, index) =>
                 members.status === "used" ? (
@@ -114,6 +135,7 @@ const Form2 = () => {
             </select>
           </div>
           <button
+            id="publictext12"
             disabled={publicAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"

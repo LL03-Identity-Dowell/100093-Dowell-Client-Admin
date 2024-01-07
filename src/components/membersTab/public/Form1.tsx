@@ -89,12 +89,18 @@ const Form1 = () => {
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
-        <i className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center">
+        <i
+          id="publictext4"
+          className="text-[#FF0000] text-lg font-roboto font-semibold p-[30px] m-5 flex flex-col items-center"
+        >
           Invite PUBLIC to my organisation
         </i>
         <form className="px-[30px] mb-8" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="publictext5"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Number of Public Links needed now
             </label>
             <input
@@ -108,10 +114,16 @@ const Form1 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="publictext6"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Create automatically if less than
             </label>
-            <select className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto">
+            <select
+              id="publicselect1"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
               <option>5 </option>
               <option> 10 </option>
               <option>25 </option>
@@ -122,6 +134,7 @@ const Form1 = () => {
             </select>
           </div>
           <button
+            id="publictext7"
             disabled={isLoading || publicAccess === "View"}
             className={`w-full h-12  ${
               isLoading == true

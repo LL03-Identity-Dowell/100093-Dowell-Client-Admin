@@ -171,9 +171,9 @@ const Form3 = () => {
       setFile(selectedFile);
     }
   };
-	const viewAccess = useSelector((state: RootState) => state.viewAccess);
-	const [userAccess, setUserAccess] = useState(null);
-	useEffect(() => {
+  const viewAccess = useSelector((state: RootState) => state.viewAccess);
+  const [userAccess, setUserAccess] = useState(null);
+  useEffect(() => {
     if (viewAccess !== null) {
       setUserAccess(viewAccess[0]["User Management"]["rights"]);
     }
@@ -295,12 +295,15 @@ const Form3 = () => {
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
         <form className="px-4" onSubmit={handleSubmit}>
           <div className="mb-4 mt-8">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext25"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Invited Users
             </label>
             <select
+              id="userselect3"
               multiple
-              id="invited_team_members"
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               onChange={handleSelectOnChange}
             >
@@ -312,7 +315,10 @@ const Form3 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext26"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Search Invited Users
             </label>
             <Select
@@ -334,10 +340,14 @@ const Form3 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext27"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Details of Invited User
             </label>
             <textarea
+              id="usertext28"
               rows={4}
               placeholder="Member details"
               readOnly
@@ -350,6 +360,7 @@ const Form3 = () => {
             />
           </div>
           <button
+            id="usertext29"
             disabled={isLoading || userAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
@@ -364,11 +375,14 @@ const Form3 = () => {
             {isLoading ? "Loading..." : "Cancel Selected User Invitation"}
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext30" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </form>
         <div className="px-4">
           <button
+            id="usertext31"
             disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
@@ -381,30 +395,38 @@ const Form3 = () => {
             Duplicate selected User invitation to create new
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext32" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </div>
 
         <hr className="border-2 border-[#FF0000] mb-8" />
 
         <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
-          Common Invitation to join as USER to my organisation
+          <span id="usertext33">
+            Common Invitation to join as USER to my organisation
+          </span>
           <span>
-            If you don't have any link,{" "}
+            <span id="usertext34">If you don't have any link, </span>
             <button
+              id="usertext35"
               type="button"
               onClick={openUploadLinkModal}
               className="text-black font-normal hover:opacity-70"
             >
               click here
             </button>{" "}
-            to upload.
+            <span id="usertext36">to upload.</span>
           </span>
         </p>
 
         <form className="px-4">
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext37"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Link to Data
             </label>
             <textarea
@@ -414,6 +436,7 @@ const Form3 = () => {
             />
           </div>
           <button
+            id="usertext38"
             disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
@@ -426,12 +449,17 @@ const Form3 = () => {
             Import Users
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext39" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </form>
         <form className="px-4 my-8">
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext40"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Common invitation link
             </label>
             <textarea
@@ -441,6 +469,7 @@ const Form3 = () => {
             />
           </div>
           <button
+            id="usertext41"
             disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
@@ -453,15 +482,20 @@ const Form3 = () => {
             Save common invitation link & create QR code
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext42" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </form>
         <form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
           <div className="mb-4">
             <img src={images.placeholder} alt="" />
-            <p className="text-center">QR code for link</p>
+            <p id="usertext43" className="text-center">
+              QR code for link
+            </p>
           </div>
           <button
+            id="usertext44"
             disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
@@ -474,7 +508,9 @@ const Form3 = () => {
             Download common invitation link QR code
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext45" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </form>
       </div>
@@ -508,17 +544,24 @@ const Form3 = () => {
           className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md"
           onSubmit={handlesavdata}
         >
-          <h2 className="text-2xl font-semibold text-center pt-4 text-black">
+          <h2
+            id="usertext46"
+            className="text-2xl font-semibold text-center pt-4 text-black"
+          >
             Excel or CSV Details
           </h2>
           <a
+            id="usertext47"
             href="https://www.pythonanywhere.com/user/100093/files/home/100093/clientadmin/media/sample.csv"
             className="underline text-xl text-black font-roboto"
           >
             Download Sample file
           </a>
           <div className="flex items-center justify-between py-4">
-            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+            <label
+              id="usertext48"
+              className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+            >
               Excel / CSV File
             </label>
             <input
@@ -530,7 +573,10 @@ const Form3 = () => {
             />
           </div>
           <div className="flex items-center justify-between pb-4">
-            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+            <label
+              id="usertext49"
+              className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+            >
               Name of Sheet
             </label>
             <input
@@ -543,12 +589,16 @@ const Form3 = () => {
               {element}
             </div>
           ))}
-          <p className="text-[#ff0000] font-roboto leading-normal">
+          <p
+            id="usertext50"
+            className="text-[#ff0000] font-roboto leading-normal"
+          >
             If you want to upload all fields of sheet give text "all" or give
             specific field name one by one
           </p>
           <div className="flex items-center gap-x-4 justify-end">
             <button
+              id="usertext51"
               className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
               onClick={handleAddElement}
               type="button"
@@ -556,6 +606,7 @@ const Form3 = () => {
               Add
             </button>
             <button
+              id="usertext52"
               className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
               onClick={handleDeleteElement}
               disabled={elements.length === 1}
@@ -566,7 +617,10 @@ const Form3 = () => {
           </div>
 
           <div className="lg:flex items-center justify-between py-8">
-            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+            <label
+              id="usertext53"
+              className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+            >
               Number of rows you want to Delete
             </label>
             <input
@@ -576,6 +630,7 @@ const Form3 = () => {
           </div>
           <div className="text-center">
             <button
+              id="usertext54"
               className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
               type="submit"
             >
@@ -588,6 +643,7 @@ const Form3 = () => {
                 {fileuplaodresponse.datalink}
               </span>
               <button
+                id="usertext55"
                 className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
                 type="button"
                 onClick={uploadlinkcopy}

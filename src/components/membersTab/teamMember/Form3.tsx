@@ -120,7 +120,10 @@ const Form3 = () => {
 
     const newElement = (
       <div className="flex items-center justify-between" key={newElementCount}>
-        <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+        <label
+          id="teamtext47"
+          className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+        >
           Field Name {elements.length !== 0 ? newElementCount : ""}
         </label>
         <input
@@ -292,7 +295,10 @@ const Form3 = () => {
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
         <form className="px-4" onSubmit={handleSubmit}>
           <div className="mb-4 mt-8">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+            <label
+              id="teamtext48"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold"
+            >
               Invited Team Members
             </label>
             <select
@@ -309,7 +315,10 @@ const Form3 = () => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="teamtext49"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Search Invited Team Members
             </label>
             <Select
@@ -328,7 +337,10 @@ const Form3 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="teamtext50"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Details of Inivited Team member
             </label>
             <textarea
@@ -344,7 +356,8 @@ const Form3 = () => {
             />
           </div>
           <button
-          disabled={teamMemberAccess === "View"}
+            id="teamtext51"
+            disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -358,6 +371,7 @@ const Form3 = () => {
         </form>
         <div className="px-4">
           <button
+            id="teamtext52"
             disabled={isLoading || teamMemberAccess === "View"}
             className={`w-full h-12  ${
               isLoading == true
@@ -377,23 +391,30 @@ const Form3 = () => {
 
         <hr className="border-2 border-[#FF0000] mb-8" />
         <p className="text-[#FF0000] text-lg font-roboto font-semibold mb-12 px-4 flex flex-col">
-          Common Invitation to join as TEAM MEMBER to my organisation
+          <span id="teamtext53">
+            {" "}
+            Common Invitation to join as TEAM MEMBER to my organisation
+          </span>
           <span>
-            If you don't have any link,{" "}
+            <span id="teamtext54">If you don't have any link, </span>
             <button
+              id="teamtext55"
               type="button"
               onClick={openUploadLinkModal}
               className="text-black font-normal hover:opacity-70"
             >
               click here
             </button>{" "}
-            to upload.
+            <span id="teamtext56"> to upload.</span>
           </span>
         </p>
 
         <form className="px-4">
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="teamtext57"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Link to Data
             </label>
             <textarea
@@ -403,7 +424,8 @@ const Form3 = () => {
             />
           </div>
           <button
-          disabled={teamMemberAccess === "View"}
+            id="teamtext58"
+            disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -417,7 +439,10 @@ const Form3 = () => {
         </form>
         <form className="px-4 my-8">
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="teamtext59"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Common invitation link
             </label>
             <textarea
@@ -427,7 +452,8 @@ const Form3 = () => {
             />
           </div>
           <button
-          disabled={teamMemberAccess === "View"}
+            id="teamtext60"
+            disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -442,10 +468,13 @@ const Form3 = () => {
         <form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
           <div className="mb-4">
             <img src={images.placeholder} alt="" />
-            <p className="text-center">QR code for link</p>
+            <p id="teamtext61" className="text-center">
+              QR code for link
+            </p>
           </div>
           <button
-          disabled={teamMemberAccess === "View"}
+            id="teamtext62"
+            disabled={teamMemberAccess === "View"}
             className={`w-full ${
               color_scheme == "Red"
                 ? "bg-[#DC4C64]"
@@ -488,17 +517,24 @@ const Form3 = () => {
           className="bg-[#f5f5f5] lg:w-[45%] mx-auto my-12 px-8 pb-24 rounded-md"
           onSubmit={handlesavdata}
         >
-          <h2 className="text-2xl font-semibold text-center pt-4 text-black">
+          <h2
+            id="teamtext63"
+            className="text-2xl font-semibold text-center pt-4 text-black"
+          >
             Excel or CSV Details
           </h2>
           <a
+            id="teamtext64"
             href="https://www.pythonanywhere.com/user/100093/files/home/100093/clientadmin/media/sample.csv"
             className="underline text-xl text-black font-roboto"
           >
             Download Sample file
           </a>
           <div className="flex items-center justify-between py-4">
-            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+            <label
+              id="teamtext65"
+              className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+            >
               Excel / CSV File
             </label>
             <input
@@ -510,7 +546,10 @@ const Form3 = () => {
             />
           </div>
           <div className="flex items-center justify-between pb-4">
-            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+            <label
+              id="teamtext66"
+              className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+            >
               Name of Sheet
             </label>
             <input
@@ -523,7 +562,10 @@ const Form3 = () => {
               {element}
             </div>
           ))}
-          <p className="text-[#ff0000] font-roboto leading-normal">
+          <p
+            id="teamtext67"
+            className="text-[#ff0000] font-roboto leading-normal"
+          >
             If you want to upload all fields of sheet give text "all" or give
             specific field name one by one
           </p>
@@ -532,6 +574,7 @@ const Form3 = () => {
               className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
               onClick={handleAddElement}
               type="button"
+              id="teamtext68"
             >
               Add
             </button>
@@ -540,13 +583,17 @@ const Form3 = () => {
               onClick={handleDeleteElement}
               disabled={elements.length === 1}
               type="button"
+              id="teamtext69"
             >
               Remove
             </button>
           </div>
 
           <div className="lg:flex items-center justify-between py-8">
-            <label className="text-[#7a7a7a] font-bold text-lg lg:w-1/2">
+            <label
+              id="teamtext70"
+              className="text-[#7a7a7a] font-bold text-lg lg:w-1/2"
+            >
               Number of rows you want to Delete
             </label>
             <input
@@ -556,7 +603,8 @@ const Form3 = () => {
           </div>
           <div className="text-center">
             <button
-            disabled={teamMemberAccess === "View"}
+              id="teamtext71"
+              disabled={teamMemberAccess === "View"}
               className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70]"
               type="submit"
             >
@@ -569,11 +617,11 @@ const Form3 = () => {
                 {fileuplaodresponse.datalink}
               </span>
               <button
-
-              disabled={teamMemberAccess === "View"}
+                disabled={teamMemberAccess === "View"}
                 className="text-white bg-[#7a7a7a] px-3 py-2 rounded-md hover:bg-[#61ce70] "
                 type="button"
                 onClick={uploadlinkcopy}
+                id="teamtext72"
               >
                 Copy
               </button>

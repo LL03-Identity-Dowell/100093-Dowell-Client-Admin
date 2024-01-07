@@ -121,18 +121,24 @@ const Form1 = () => {
               : "bg-[#7A7A7A]"
           } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
         >
-          <p>Users</p>
+          <p id="usertext1">Users</p>
 
           <p>{`<${user_member_length}>`}</p>
         </span>
         <div className="p-[30px]  my-20">
-          <i className="text-[#FF0000] text-lg font-roboto font-semibold">
+          <i
+            id="usertext2"
+            className="text-[#FF0000] text-lg font-roboto font-semibold"
+          >
             Invite USER to my Workspace
           </i>
         </div>
         <form className="px-[30px]" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
+            <label
+              id="usertext3"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1"
+            >
               User Name
               <span className="text-[#ff0000] text-base">*</span>
             </label>
@@ -147,7 +153,7 @@ const Form1 = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
-              User Code (Unique)
+              <span id="usertext4">User Code (Unique)</span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <input
@@ -160,7 +166,10 @@ const Form1 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext5"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               User Specifications
             </label>
             <input
@@ -172,7 +181,10 @@ const Form1 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext6"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               User Universal Code
             </label>
             <input
@@ -184,7 +196,10 @@ const Form1 = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext7"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               User Details
             </label>
             <textarea
@@ -196,6 +211,7 @@ const Form1 = () => {
             />
           </div>
           <button
+            id="usertext8"
             disabled={isLoading || userAccess == "View"}
             className={`w-full h-12  ${
               isLoading == true
@@ -210,9 +226,16 @@ const Form1 = () => {
             {isLoading ? "Loading..." : "Create User Invitation Link"}
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext9" className="text-red-600">
+              you have only view access
+            </small>
           )}
-          <p className="text-xs text-[#FF0000] text-center pt-2">{errMsg}</p>
+          <p
+            id="usertext10"
+            className="text-xs text-[#FF0000] text-center pt-2"
+          >
+            {errMsg}
+          </p>
         </form>
 
         <div className="px-[30px]">
@@ -225,11 +248,12 @@ const Form1 = () => {
                 : "bg-[#a1a1a1] "
             } font-roboto text-lg text-white p-6 my-8 font-semibold flex flex-col items-center`}
           >
-            <p>User Invitation Link</p>
+            <p id="usertext11">User Invitation Link</p>
             <p className="w-full px-6 text-sm truncate">{link}</p>
           </span>
 
           <button
+            id="usertext12"
             disabled={userAccess == "View"}
             className={`w-full ${
               color_scheme == "Red"
@@ -243,12 +267,17 @@ const Form1 = () => {
             {isCopied ? "Copied" : "Copy invitation link"}
           </button>
           {userAccess == "View" && (
-            <small className="text-red-600">you have only view access</small>
+            <small id="usertext13" className="text-red-600">
+              you have only view access
+            </small>
           )}
         </div>
         <form className="border-t border-[#FF0000] my-8">
           <div className="px-4 mt-8">
-            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+            <label
+              id="usertext14"
+              className="text-[#7A7A7A] text-lg font-roboto font-bold "
+            >
               Email
             </label>
             <input
@@ -258,6 +287,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 mb-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
             <button
+              id="usertext15"
               disabled={userAccess == "View"}
               className={`w-full ${
                 color_scheme == "Red"
@@ -270,7 +300,9 @@ const Form1 = () => {
               Send invitation email to selected User
             </button>
             {userAccess == "View" && (
-              <small className="text-red-600">you have only view access</small>
+              <small id="usertext16" className="text-red-600">
+                you have only view access
+              </small>
             )}
           </div>
         </form>
