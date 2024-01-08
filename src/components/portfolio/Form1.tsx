@@ -74,7 +74,7 @@ const Form1 = () => {
     if (query) {
       const selectedOptions = (query as Option[]).map((option) => option.value);
       const selected: HTMLSelectElement | null = document.getElementById(
-        "member"
+        "portfolioForm1Select2"
       ) as HTMLSelectElement;
       Array.from(selected.options).forEach((option) => {
         if (selectedOptions.includes(option.textContent || "")) {
@@ -130,7 +130,7 @@ const Form1 = () => {
       allOptions = [userName];
     }
     const selected: HTMLSelectElement | null = document.getElementById(
-      "member"
+      "portfolioForm1Select2"
     ) as HTMLSelectElement;
     Array.from(selected.options).forEach((option) => {
       if (allOptions.includes(option.textContent || "")) {
@@ -189,7 +189,7 @@ const Form1 = () => {
     e.preventDefault();
     setIsLoading(true);
     const selected: HTMLSelectElement | null = document.getElementById(
-      "member"
+      "portfolioForm1Select2"
     ) as HTMLSelectElement;
     const selectedOptions: string[] = [];
     Array.from(selected.selectedOptions).forEach((option) => {
@@ -363,7 +363,7 @@ const Form1 = () => {
             <select
               required
               multiple
-              name="member"
+              name="portfolioForm1Select2"
               id="portfolioForm1Select2"
               className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
