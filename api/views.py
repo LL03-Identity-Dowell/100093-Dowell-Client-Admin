@@ -23,6 +23,29 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from rest_framework.views import APIView
 from django.views.decorators.csrf import ensure_csrf_cookie
+from cryptography.fernet import Fernet
+import base64
+import os
+
+# Function to generate a key from a password
+def generate_key(password: str) -> bytes:
+    # Use a password-based key derivation function
+    return base64.urlsafe_b64encode(password.encode())
+
+# Encrypt a message
+def encrypt_message(message: str, password: str) -> bytes:
+    key = generate_key(password)
+    fernet = Fernet(key)
+    return fernet.encrypt(message.encode())
+
+# Decrypt a message
+def decrypt_message(encrypted_message: bytes, password: str) -> str:
+    key = generate_key(password)
+    fernet = Fernet(key)
+    return fernet.decrypt(encrypted_message).decode()
+
+# Usage
+crpassword = "uxliveadmin"
 
 @api_view(["GET"])
 def ProductsView(request):
@@ -1247,7 +1270,9 @@ def create_portfolio(request):
                         {"name": mem, "portfolio_name": portfolio_name, "product": product, "status": "unused",
                          "link": f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
 
-                master_link = f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
+                link_string= f"?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
+                encrypted = encrypt_message(link_string, crpassword)
+                master_link = f"https://100014.pythonanywhere.com/{encrypted}"
                 memberpublic = odata["members"]
                 obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
                 odata_port = odata["portpolio"]
