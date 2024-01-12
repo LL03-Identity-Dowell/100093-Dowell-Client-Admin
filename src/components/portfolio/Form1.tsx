@@ -63,6 +63,8 @@ const Form1 = () => {
 	const filterTeamMember = getMembers?.team_members?.accept_members.filter(
 		(item) => item
 	);
+	const filterpublicemembers =
+		getMembers?.public_members?.accept_members.filter((item) => item);
 	const sessionId = localStorage.getItem("sessionId");
 
 	const query: Option[] = getAllMemberOptions().map((option) => ({
@@ -125,7 +127,7 @@ const Form1 = () => {
 					member.name === "owner" ? userName : member?.name
 				) || [];
 		} else if (formInputs.member_type === "public") {
-			allOptions = publicData?.map((member) => member?.id) || [];
+			allOptions = filterpublicemembers?.map((member) => member?.name) || [];
 		} else if (formInputs.member_type === "owner") {
 			allOptions = [userName];
 		}
@@ -158,7 +160,7 @@ const Form1 = () => {
 				) || []
 			);
 		} else if (formInputs.member_type === "public") {
-			return publicData?.map((member) => member?.id) || [];
+			return filterpublicemembers?.map((member) => member?.name) || [];
 		} else if (formInputs.member_type === "owner") {
 			return [userName];
 		}
