@@ -5,88 +5,109 @@ import { RootState } from "../../../store/Store";
 import { toast } from "react-toastify";
 import images from "../../images";
 const Form1 = () => {
-  const [formInputs, setFormInputs] = useState({
-    public_count: 0,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [value, setValue] = useState(0);
-  const userName = useSelector(
-    (state: RootState) => state.userinfo.userinfo.username
-  );
+	const [formInputs, setFormInputs] = useState({
+		public_count: 0,
+	});
+	const [isLoading, setIsLoading] = useState(false);
+	const [value, setValue] = useState(0);
+	const [link, setLink] = useState("");
+	const [isCopied, setIsCopied] = useState(false);
+	const userName = useSelector(
+		(state: RootState) => state.userinfo.userinfo.username
+	);
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.id == "public_count") {
-      const inputValue = parseInt(e.target.value, 10);
-      // Allow positive numbers only
-      if (!isNaN(inputValue) && inputValue >= 0) {
-        setValue(inputValue);
-        setFormInputs({ ...formInputs, [e.target.id]: inputValue });
-      }
-    } else {
-      setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
-    }
-  };
+	const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+		if (e.target.id == "public_count") {
+			const inputValue = parseInt(e.target.value, 10);
+			// Allow positive numbers only
+			if (!isNaN(inputValue) && inputValue >= 0) {
+				setValue(inputValue);
+				setFormInputs({ ...formInputs, [e.target.id]: inputValue });
+			}
+		} else {
+			setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+		}
+	};
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const data = {
-      username: userName,
-      present_org: userName,
-      public_count: formInputs.public_count,
-    };
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsLoading(true);
+		const data = {
+			username: userName,
+			present_org: userName,
+			public_count: formInputs.public_count,
+		};
 
-    try {
-      console.log(data);
-      await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/create_public_member/",
-          data
-        )
-        .then((res) => {
-          if (res.status === 201) {
-            toast.success(res.statusText);
-            // window.location.reload();
-          }
-        })
-        .catch((error) => {
-          console.log(error);
+		try {
+			console.log(data);
+			await axios
+				.post(
+					"https://100093.pythonanywhere.com/api/create_public_member/",
+					data
+				)
+				.then((res) => {
+					if (res.status === 201) {
+						toast.success(res.statusText);
+						setLink(res.data.link);
+						// window.location.reload();
+					}
+				})
+				.catch((error) => {
+					console.log(error);
 
-          if (error.response) {
-            if (error.response?.status === 400) {
-              toast.error(error.response?.data.error);
-            } else if (error.response.status === 404) {
-              toast.error(error.response?.data.error);
-            } else if (error.response.status === 500) {
-              toast.error(error.response?.data.error);
-            }
-          } else if (error.message) {
-            toast.error(error.message);
-          } else {
-            toast.error("An unexpected error occurred");
-          }
-        });
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        toast.error(error.response?.data.error);
-      } else {
-        toast.error("An unknown error occurred");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  const viewAccess = useSelector((state: RootState) => state.viewAccess);
-  const [publicAccess, setPublicAccess] = useState(null);
-  useEffect(() => {
-    if (viewAccess !== null) {
-      setPublicAccess(viewAccess[2]["Portfolio Management"]["rights"]);
-    }
-  }, [viewAccess]);
-  const color_scheme = useSelector(
-    (state: RootState) => state.setting?.data?.color_scheme
-  );
-  return (
+					if (error.response) {
+						if (error.response?.status === 400) {
+							toast.error(error.response?.data.error);
+						} else if (error.response.status === 404) {
+							toast.error(error.response?.data.error);
+						} else if (error.response.status === 500) {
+							toast.error(error.response?.data.error);
+						}
+					} else if (error.message) {
+						toast.error(error.message);
+					} else {
+						toast.error("An unexpected error occurred");
+					}
+				});
+		} catch (error: unknown) {
+			if (axios.isAxiosError(error)) {
+				toast.error(error.response?.data.error);
+			} else {
+				toast.error("An unknown error occurred");
+			}
+		} finally {
+			setIsLoading(false);
+		}
+	};
+	const viewAccess = useSelector((state: RootState) => state.viewAccess);
+	const [publicAccess, setPublicAccess] = useState(null);
+	useEffect(() => {
+		if (viewAccess !== null) {
+			setPublicAccess(viewAccess[2]["Portfolio Management"]["rights"]);
+		}
+	}, [viewAccess]);
+	const color_scheme = useSelector(
+		(state: RootState) => state.setting?.data?.color_scheme
+	);
+
+	const handleCopyToClipBoard = () => {
+		if (link === "") {
+			toast.error("Unable to copy link");
+		} else {
+			const linkRegex = /https:\/\/\S+/;
+			const extractedLink = link.match(linkRegex);
+			if (extractedLink) {
+				navigator.clipboard
+					.writeText(extractedLink[0])
+					.then(() => {
+						setIsCopied(true);
+						toast.success("copied");
+					})
+					.catch((error) => console.error("Error copying link", error));
+			}
+		}
+	};
+	return (
 		<>
 			<div className="lg:w-1/3 border border-[#54595F] card-shadow">
 				<i
@@ -95,7 +116,7 @@ const Form1 = () => {
 				>
 					Invite PUBLIC to my organisation
 				</i>
-				<form className="px-[30px] mb-8" onSubmit={handleSubmit}>
+				<form className="px-[30px] " onSubmit={handleSubmit}>
 					<div className="mb-4">
 						<label
 							id="publictext5"
@@ -147,10 +168,20 @@ const Form1 = () => {
 						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
 					>
 						{" "}
-						{isLoading ? "loading..." : "Create Public Invitation Link"}
+						{isLoading ? "Creating..." : "Create Public Invitation Link"}
 					</button>
 				</form>
-
+				{link && (
+					<div className="px-[30px] mb-8">
+						<button
+							id="portfolioForm1Text18"
+							className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+							onClick={handleCopyToClipBoard}
+						>
+							{isCopied ? "Copied" : "Copy masterlink"}
+						</button>
+					</div>
+				)}
 				<form className=" px-4 flex flex-col items-center justify-center bg-[#f1f3f5] pb-4">
 					<div className="mb-4">
 						<img src={images.placeholder} alt="" />
@@ -169,7 +200,7 @@ const Form1 = () => {
 								: "bg-[#7A7A7A]"
 						}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
 					>
-						Download common invitation link QR code
+						Download Master link QR code
 					</button>
 				</form>
 			</div>
