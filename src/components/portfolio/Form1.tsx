@@ -30,6 +30,7 @@ const Form1 = () => {
 	const [rangeInput, setRangeInput] = useState<string>("");
 	const [publicData, setPublicData] = useState<PublicResponse[]>([]);
 	const [link, setLink] = useState("");
+	const [imagelink, setimageLink] = useState("");
 	const [isCopied, setIsCopied] = useState(false);
 
 	const portfolioLength = useSelector(
@@ -99,8 +100,7 @@ const Form1 = () => {
 					data
 				);
 				console.log("public data", response.data);
-				response.data[0].id!=undefined?setPublicData(response.data):""
-				
+				response.data[0].id != undefined ? setPublicData(response.data) : "";
 			} catch (error) {
 				console.error(error);
 			}
@@ -221,7 +221,7 @@ const Form1 = () => {
 					}
 					if (res.data.success) {
 						toast.success(res.data.success);
-						setLink(res.data.link);
+						res.data.qrcode != undefined ? setimageLink(res.data.qrcode) : "";
 						// if (isnewOwner) {
 						//   return;
 						// } else {
@@ -268,17 +268,18 @@ const Form1 = () => {
 	};
 
 	const handleCopyToClipBoard = () => {
-		if (link === "") {
+		console.log(link)
+		if (!link) {
 			toast.error("Unable to copy link");
 		} else {
-			const linkRegex = /https:\/\/\S+/;
+			const linkRegex = /(https?:\/\/\S+)/;
 			const extractedLink = link.match(linkRegex);
 			if (extractedLink) {
 				navigator.clipboard
 					.writeText(extractedLink[0])
 					.then(() => {
 						setIsCopied(true);
-						toast.success("copied");
+						toast.success("Copied");
 					})
 					.catch((error) => console.error("Error copying link", error));
 			}
@@ -288,6 +289,26 @@ const Form1 = () => {
 	const color_scheme = useSelector(
 		(state: RootState) => state.setting?.data?.color_scheme
 	);
+const handleDownloadClick = async () => {
+	try {
+		const response = await fetch(imagelink);
+		const blob = await response.blob();
+		const url = window.URL.createObjectURL(blob);
+
+		// Create a temporary link element
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = "QRCode.png"; // Set the desired filename for the downloaded image
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+
+		// Release the object URL
+		window.URL.revokeObjectURL(url);
+	} catch (error) {
+		console.error("Error downloading image:", error);
+	}
+};
 	return (
 		<>
 			<ToastContainer position="top-right" />
@@ -580,14 +601,45 @@ const Form1 = () => {
 					</button>
 				</form>
 
-				{link && (
+				{link != "" ? (
 					<button
 						id="portfolioForm1Text18"
 						className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
 						onClick={handleCopyToClipBoard}
 					>
-						{isCopied ? "Copied" : "Copy masterlink"}
+						{isCopied ? "Copied" : "Copy master link"}
 					</button>
+				) : (
+					""
+				)}
+
+				{imagelink != "" ? (
+					<>
+						<div className=" p-4 flex flex-col items-center justify-center bg-[#f1f3f5] ">
+							<div className="mb-4">
+								<img src={imagelink} className="w-[280px]" alt="" />
+								<p id="portfoliotext42" className="text-center mt-1">
+									QR code for link
+								</p>
+							</div>
+							<button
+								id="portfoliotext43"
+								onClick={ handleDownloadClick}
+								// disabled={teamMemberAccess === "View"}
+								className={`w-full ${
+									color_scheme == "Red"
+										? "bg-[#DC4C64]"
+										: color_scheme == "Green"
+										? "bg-[#14A44D]"
+										: "bg-[#7A7A7A]"
+								}  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+							>
+								Download Master link QR code
+							</button>
+						</div>
+					</>
+				) : (
+					""
 				)}
 			</div>
 		</>
