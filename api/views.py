@@ -26,26 +26,38 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from cryptography.fernet import Fernet
 import base64
 import os
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.backends import default_backend
+from clientadminapp import qrcodegen
 
-# Function to generate a key from a password
-def generate_key(password: str) -> bytes:
-    # Use a password-based key derivation function
-    return base64.urlsafe_b64encode(password.encode())
+def generate_key(password: str, salt: bytes) -> bytes:
+    password_bytes = password.encode()
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt,
+        iterations=100000,
+        backend=default_backend()
+    )
 
+
+    key = base64.urlsafe_b64encode(kdf.derive(password_bytes))
+    return key
+
+saved_salt = b'\xc1\x12\xc4\xef\xd9\xbf\xac\xc5\xdc\x8e\x02BC\xa6f\xa4'
+crpassword = "uxliveadmin"
 # Encrypt a message
-def encrypt_message(message: str, password: str) -> bytes:
-    key = generate_key(password)
+def encrypt_message(message: str, password: str, salt: bytes) -> bytes:
+    key = generate_key(password, salt)
     fernet = Fernet(key)
     return fernet.encrypt(message.encode())
 
 # Decrypt a message
-def decrypt_message(encrypted_message: bytes, password: str) -> str:
-    key = generate_key(password)
+def decrypt_message(encrypted_message: bytes, password: str, salt: bytes) -> str:
+    key = generate_key(password, salt)
     fernet = Fernet(key)
     return fernet.decrypt(encrypted_message).decode()
-
-# Usage
-crpassword = "uxliveadmin"
 
 @api_view(["GET"])
 def ProductsView(request):
@@ -1271,8 +1283,11 @@ def create_portfolio(request):
                          "link": f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
 
                 link_string= f"?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
-                encrypted = encrypt_message(link_string, crpassword)
-                master_link = f"https://100014.pythonanywhere.com/{encrypted}"
+                encrypted = encrypt_message(link_string, crpassword,saved_salt)
+                master_link = f"https://100014.pythonanywhere.com/linklogin?data={encrypted}"
+                user = passgen.generate_random_password1(12)
+                linkcode = passgen.generate_random_password1(16)
+                qrcodegen.qrgen1(master_link, user, f"clientadmin/media/userqrcodes/{user}.png")
                 memberpublic = odata["members"]
                 obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(odata)})
                 odata_port = odata["portpolio"]
@@ -1287,12 +1302,12 @@ def create_portfolio(request):
                 login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                          "update", field, update)
                 # return JsonResponse({"resp":f"{memberpublic}"})
-
+                obj, created = AllPubPortfolio.objects.update_or_create(masterlink=master_link,qrcode=f"https://100093.pythonanywhere.com/media/userqrcodes/{user}.png",defaults={'username': username})
                 return Response(
                     {"success": f'{portfolio_name} successfully created',
-                     "masterlink": f"your masterlink is {master_link}"}, status=HTTP_200_OK)
-            except:
-                return Response({"error": "Error while creating public members"})
+                     "masterlink": f"your masterlink is {master_link}","qrcode": f"https://100093.pythonanywhere.com/media/userqrcodes/{user}.png"}, status=HTTP_200_OK)
+            except Exception as e:
+                return Response({"error": f"Error while creating public members {e}"})
 
         for imem in odata["members"][typemem]["accept_members"]:
             if imem["name"] in lsmem:
@@ -2751,8 +2766,9 @@ def public_user(request):
             # print(most_recent_item.link)
 
             if most_recent_item:
-                links = json.loads(most_recent_item.link.replace("'", "\""))
-                # links = most_recent_item.link
+                # print("problem public",most_recent_item)
+                # links = json.loads(most_recent_item.link.replace("'", "\""))
+                links = json.loads(most_recent_item.link)
 
                 qrcodeids = [{"id": link["qrcodeid"]} for link in links]
 
@@ -2760,6 +2776,31 @@ def public_user(request):
             else:
                 return JsonResponse([], safe=False)
         else:
+            return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["POST"])
+def public_org(request):
+    if request.method == 'POST':
+        org = request.data.get("org")
+        allpub = publiclink.objects.all().filter(username=org)
+        try:
+            most_recent_item = allpub.order_by('-id').first()
+            if most_recent_item:
+                links = json.loads(most_recent_item.link)
+
+                qrcodeids = [link["qrcodeid"] for link in links]
+                # Construct the response with 'qrcodeids' and 'org' keys
+                response_data = {
+                    "public_links": qrcodeids,
+                    "org": org  # Add the username
+                }
+
+                return JsonResponse(response_data, safe=False)
+            else:
+                return JsonResponse({"qrcodeids": [], "org": org}, safe=False)
+        except Exception as e:
+            # It's a good practice to log the exception in case of an error
+            # print(e)
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
@@ -2850,7 +2891,9 @@ def create_public_member(request):
                 user = passgen.generate_random_password1(12)
                 linkcode = passgen.generate_random_password1(16)
                 # path = f'https://100093.pythonanywhere.com/masterlink?next={org}&type={pmembers}&code={user}'
-                path = f'https://100014.pythonanywhere.com/masterlink?next={org}&type={pmembers}&code={user}'
+                link_string = f"?next={org}&type={pmembers}&code={user}"
+                encrpted = encrypt_message(link_string, crpassword)
+                path = f'https://100014.pythonanywhere.com/masterlink?data={encrpted}'
                 test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user,
                              "linkcode": linkcode}
                 test_list.append(test_dict)
@@ -2860,7 +2903,7 @@ def create_public_member(request):
                 publiclink.objects.create(dateof=datetime.datetime.now(), org=present_org,
                                           username=username, link=json.dumps(test_list))
             # response_data = {"success": "Link created successfully"}
-            return Response({"success": "Link created successfully"}, status=status.HTTP_201_CREATED)
+            return Response({"success": "Link created successfully","link":path}, status=status.HTTP_201_CREATED)
         else:
             return Response({"error": "Please provide the number of required links"})
 

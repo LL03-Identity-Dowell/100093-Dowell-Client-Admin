@@ -1,30 +1,27 @@
 from django.urls import path
-from .views import sessionView, OrgView, OrgsView, ProductsView, PublicLinkUpdate, updateOrg, portfolioview, getProduct, \
-    GetDocumentProducts, update_products_client_admin, product_control_platform_admin, MemberControl, filter_portfolio, \
-    settings, workspace_name, item_name, create_item, get_data, create_portfolio, create_role, get_layer_data, \
-    update_role_status, update_portfolio_status, update_item_status, save_device_layers, get_all_details, \
-    create_team_member, create_user_member, get_workspaces, get_last_login, connect_portfolio, otherorg, \
-    update_level_name, MemEnDis, create_test_team_member, request_portfolio, fetch_notifications, dismiss_notifications, \
-    settings_data, public_user, file_upload, create_public_member, get_used_unused_links, invite_team_member
-
+from .views import *
 urlpatterns = [
-    path('userinfo/', sessionView, name="userinfo"),
-    path('members/', OrgView, name="members"),
-    path('orgs/', OrgsView, name="orgs"),
-    path('public/', PublicLinkUpdate, name="public"),
-    path('products/', ProductsView, name="products"),
-    path('updateorg/', updateOrg, name="updateorg"),
-    path('mobileapi/', portfolioview, name="mobileapi"),
-    path('getproducts/', getProduct, name="getproducts"),
-    path('getdocumentproducts/', GetDocumentProducts, name="getdocumentproducts"),
-    path('clientadmin-products/', MemberControl, name="clientadmin-products"),
-    path('update-products-platform/', product_control_platform_admin, name="update-products-platform"),
+    path('userinfo/', sessionView,name="userinfo"),
+    path('members/', OrgView,name="members"),
+    path('orgs/', OrgsView,name="orgs"),
+    path('public/', PublicLinkUpdate,name="public"),
+    path('products/', ProductsView,name="products"),
+    path('updateorg/',updateOrg,name="updateorg"),
+    path('mobileapi/',portfolioview,name="mobileapi"),
+    path('getproducts/',getProduct,name="getproducts"),
+    path('listproducts/', ProductListView.as_view(), name='product-list'),
+    path('getdocumentproducts/',GetDocumentProducts,name="getdocumentproducts"),
+    path('clientadmin-products/',MemberControl,name="clientadmin-products"),
+    path('update-products-platform/',product_control_platform_admin,name="update-products-platform"),
     path('get-portfolio/', filter_portfolio, name='get-portfolio'),
+    path('product_landing/', productlanding, name='product_landing'),
     path('settings/', settings, name='settings'),
+    path('settings/<int:admin_id>/', settings, name='settings_with_admin_id'),
     path('workspace_name/', workspace_name, name='workspace_name'),
     path('item_name/', item_name, name='item_name'),
     path('create_item/', create_item, name='create_item'),
     path('get_data/', get_data, name='get_data'),
+    path('get_data_id/', get_data_id, name='get_data'),
     path('create_portfolio/', create_portfolio, name='create_portfolio'),
     path('create_role/', create_role, name='role'),
     path('get_layer_data/', get_layer_data, name='get_layer_data'),
@@ -48,7 +45,15 @@ urlpatterns = [
     path('dismiss_notifications/', dismiss_notifications, name='dismiss_notifications'),
     path('settings_data/', settings_data, name='settings_data'),
     path('public_user/', public_user, name='public_user'),
+    path('get_public_from_org/', public_org, name='public_org'),
     path('file_upload/', file_upload, name='file_upload'),
     path('get_used_unused_links/', get_used_unused_links, name='get_used_unused_links'),
     path('invite_team_member/', invite_team_member, name='invite_team_member'),
+    path('get_roles/<str:client_id>', get_roles, name='get_roles'),
+    path('exportfolio', portfolioUrl, name='exportfolio'),
+    path('languages/', LanguageListView.as_view(), name='language-list'),
+    path('update_org_name/', update_org_name, name='update_org_name'),
+    path('translate/', GoogleTranslateAPIView.as_view(), name='translate_api'),
+
+
 ]
