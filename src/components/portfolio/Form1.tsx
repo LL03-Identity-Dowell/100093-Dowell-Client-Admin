@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useState, ChangeEvent, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import { FormInputs, Option, PublicResponse } from "./types";
+import { setAdminData } from "../../store/slice/adminData";
 
 const initialFormInputs: FormInputs = {
   username: "",
@@ -105,7 +106,7 @@ const Form1 = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [sessionId]);
 
   const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormInputs({ ...formInputs, portfolio_det: e.target.value });
@@ -185,6 +186,8 @@ const Form1 = () => {
     setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
   };
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -214,38 +217,38 @@ const Form1 = () => {
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
         .then((res) => {
           console.log(res.data);
-         
+
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
           }
           if (res.data.success) {
             toast.success(res.data.success);
-            // if (isnewOwner) {
-            //   return;
-            // } else {
-            //   window.location.reload();
-            // }
           } else {
             toast.error(res.data.resp);
           }
 
-           setFormInputs({
-							username: "",
-							member_type: "",
-							member: [],
-							product: "",
-							data_type: "",
-							op_rights: "",
-							role: "",
-							portfolio_name: "",
-							portfolio_code: "",
-							portfolio_status: "",
-							portfolio_spec: "",
-							portfolio_u_code: "",
-							portfolio_det: "",
-           });
-          console.log(formInputs);
+          setFormInputs({
+            username: "",
+            member_type: "",
+            member: [],
+            product: "",
+            data_type: "",
+            op_rights: "",
+            role: "",
+            portfolio_name: "",
+            portfolio_code: "",
+            portfolio_status: "",
+            portfolio_spec: "",
+            portfolio_u_code: "",
+            portfolio_det: "",
+          });
         });
+
+      const responseAdmin = await axios.post(
+        "https://100093.pythonanywhere.com/api/get_data/",
+        { username: userName }
+      );
+      dispatch(setAdminData(responseAdmin.data.data[0]));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);
@@ -287,310 +290,309 @@ const Form1 = () => {
     (state: RootState) => state.setting?.data?.color_scheme
   );
   return (
-		<>
-			<ToastContainer position="top-right" />
+    <>
+      <ToastContainer position="top-right" />
 
-			<div className="lg:w-1/2 h-full border border-[#54595F] card-shadow px-[30px] pb-4">
-				<span
-					className={`${
-						color_scheme == "Red"
-							? "bg-[#DC4C64]"
-							: color_scheme == "Green"
-							? "bg-[#14A44D]"
-							: "bg-[#7A7A7A]"
-					} font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
-				>
-					<p id="portfolioForm1Text1">PORTFOLIO</p>
-					<p>{`<${portfolioLength}>`}</p>
-				</span>
-				<div className="my-20">
-					<p
-						id="portfolioForm1Text2"
-						className="text-[#FF0000] text-lg font-roboto font-semibold"
-					>
-						Assign Portfolio – Products, Data types, Operational Rights and
-						Roles to Members
-					</p>
-				</div>
-				<form className="" onSubmit={handleSubmit}>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
-							<span id="portfolioForm1Text3">Select Member Type </span>
-							<span className="text-[#ff0000] text-base">*</span>
-						</label>
-						<select
-							onChange={handleSelectStatus}
-							id="portfolioForm1Select1"
-							name="member_type"
-							value={formInputs.member_type}
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							required
-						>
-							<option value="">...select...</option>
-							<option value="owner">Owner </option>
-							<option value="team_member"> Team Member </option>
-							<option value="user">User </option>
-							<option value="public"> Public</option>
-						</select>
-					</div>
-					<div className="mb-4">
-						<div className="flex items-center gap-3">
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-								<span id="portfolioForm1Text4">Select Member </span>
-								<span className="text-[#ff0000] text-base">*</span>
-							</label>
-							<label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
-								<span id="portfolioForm1Text5"> Select All</span>
-								<input
-									type="checkbox"
-									onChange={handleSelectAllChange}
-									checked={
-										selectedItems.length > 0 &&
-										selectedItems.length === getAllMemberOptions().length
-									}
-								/>
-							</label>
-						</div>
-						<div className="w-full">
-							<input
-								type="text"
-								placeholder="separate numbers with '-'e.g 1-10"
-								onChange={(e) => setRangeInput(e.target.value)}
-								className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-								onBlur={handleRangeInput}
-								onKeyDown={handleKeyPress}
-							/>
-						</div>
+      <div className="lg:w-1/2 h-full border border-[#54595F] card-shadow px-[30px] pb-4">
+        <span
+          className={`${
+            color_scheme == "Red"
+              ? "bg-[#DC4C64]"
+              : color_scheme == "Green"
+              ? "bg-[#14A44D]"
+              : "bg-[#7A7A7A]"
+          } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+        >
+          <p id="portfolioForm1Text1">PORTFOLIO</p>
+          <p>{`<${portfolioLength}>`}</p>
+        </span>
+        <div className="my-20">
+          <p
+            id="portfolioForm1Text2"
+            className="text-[#FF0000] text-lg font-roboto font-semibold"
+          >
+            Assign Portfolio – Products, Data types, Operational Rights and
+            Roles to Members
+          </p>
+        </div>
+        <form className="" onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
+              <span id="portfolioForm1Text3">Select Member Type </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              onChange={handleSelectStatus}
+              id="portfolioForm1Select1"
+              name="member_type"
+              value={formInputs.member_type}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              required
+            >
+              <option value="">...select...</option>
+              <option value="owner">Owner </option>
+              <option value="team_member"> Team Member </option>
+              <option value="user">User </option>
+              <option value="public"> Public</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <div className="flex items-center gap-3">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                <span id="portfolioForm1Text4">Select Member </span>
+                <span className="text-[#ff0000] text-base">*</span>
+              </label>
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
+                <span id="portfolioForm1Text5"> Select All</span>
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAllChange}
+                  checked={
+                    selectedItems.length > 0 &&
+                    selectedItems.length === getAllMemberOptions().length
+                  }
+                />
+              </label>
+            </div>
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="separate numbers with '-'e.g 1-10"
+                onChange={(e) => setRangeInput(e.target.value)}
+                className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
+                onBlur={handleRangeInput}
+                onKeyDown={handleKeyPress}
+              />
+            </div>
 
-						<div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
-							<span id="portfolioForm1Text6" className="font-roboto text-base">
-								Select with username: (Total members:{" "}
-								{getAllMemberOptions().length})
-							</span>
-							<Select
-								classNames={{
-									control: () => "border border-none shadow-none rounded-md",
-								}}
-								className="w-full outline-none shadow-none"
-								isMulti
-								options={query}
-								placeholder="Search..."
-								onChange={handleSearchInputChange}
-							/>
-						</div>
-						<select
-							required
-							multiple
-							
-							name="portfolioForm1Select2"
-							id="portfolioForm1Select2"
-							className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							{getAllMemberOptions().map((option, key) => (
-								<option
-									key={key}
-									className={
-										selectedItems.includes(option)
-											? "bg-[#007BFF] text-white"
-											: ""
-									}
-								>
-									{option}
-								</option>
-							))}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold">
-							<span id="portfolioForm1Text7">Select Product </span>
-							<span className="text-[#ff0000] text-base">*</span>
-						</label>
-						<select
-							required
+            <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
+              <span id="portfolioForm1Text6" className="font-roboto text-base">
+                Select with username: (Total members:{" "}
+                {getAllMemberOptions().length})
+              </span>
+              <Select
+                classNames={{
+                  control: () => "border border-none shadow-none rounded-md",
+                }}
+                className="w-full outline-none shadow-none"
+                isMulti
+                options={query}
+                placeholder="Search..."
+                onChange={handleSearchInputChange}
+              />
+            </div>
+            <select
+              required
+              multiple
+              name="portfolioForm1Select2"
+              id="portfolioForm1Select2"
+              className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              {getAllMemberOptions().map((option, key) => (
+                <option
+                  key={key}
+                  className={
+                    selectedItems.includes(option)
+                      ? "bg-[#007BFF] text-white"
+                      : ""
+                  }
+                >
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+              <span id="portfolioForm1Text7">Select Product </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              required
               onChange={handleSelectStatus}
               value={formInputs.product}
-							id="portfolioForm1Select3"
-							name="product"
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							placeholder="Select Product"
-						>
-							<option value="">...select...</option>
-							{productData?.products?.map((product) => (
-								<option key={product._id} value={product.product_name}>
-									{" "}
-									{product.product_name}{" "}
-								</option>
-							))}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text8">Select Data Type </span>
-							<span className="text-[#ff0000] text-base">*</span>
-						</label>
-						<select
-							onChange={handleSelectStatus}
+              id="portfolioForm1Select3"
+              name="product"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              placeholder="Select Product"
+            >
+              <option value="">...select...</option>
+              {productData?.products?.map((product) => (
+                <option key={product._id} value={product.product_name}>
+                  {" "}
+                  {product.product_name}{" "}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text8">Select Data Type </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              onChange={handleSelectStatus}
               name="data_type"
               value={formInputs.data_type}
-							id="portfolioForm1Select4"
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							required
-						>
-							<option value="">...select...</option>
-							<option value="real_data">Real Data</option>
-							<option value="learning_data">Learning Data</option>
-							<option value="testing_data">Testing Data</option>
-							<option value="archived_data">Archived Data</option>{" "}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text9"> Select Operational Rights </span>
-							<span className="text-[#ff0000] text-base">*</span>
-						</label>
-						<select
-							onChange={handleSelectStatus}
-							id="portfolioForm1Select5"
+              id="portfolioForm1Select4"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              required
+            >
+              <option value="">...select...</option>
+              <option value="real_data">Real Data</option>
+              <option value="learning_data">Learning Data</option>
+              <option value="testing_data">Testing Data</option>
+              <option value="archived_data">Archived Data</option>{" "}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text9"> Select Operational Rights </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              onChange={handleSelectStatus}
+              id="portfolioForm1Select5"
               name="op_rights"
               value={formInputs.op_rights}
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-							required
-						>
-							<option value="">...select...</option>
-							<option value="view">View</option>
-							<option value="add/edit">Add/Edit</option>
-							<option value="delete">Delete</option>
-							<option value="admin">Admin</option>
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text10"> Select Roles</span>{" "}
-							<span className="text-[#ff0000] text-base">*</span>
-						</label>
-						<select
-							required
-							onChange={handleSelectStatus}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              required
+            >
+              <option value="">...select...</option>
+              <option value="view">View</option>
+              <option value="add/edit">Add/Edit</option>
+              <option value="delete">Delete</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text10"> Select Roles</span>{" "}
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              required
+              onChange={handleSelectStatus}
               name="role"
               value={formInputs.role}
-							id="portfolioForm1Select6"
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						>
-							<option value="">...select...</option>
-							{rolesdata?.map((roles, key) =>
-								roles.status === "enable" ? (
-									<option key={key} value={roles.role_code}>
-										{roles.role_name}
-									</option>
-								) : null
-							)}
-						</select>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text11">Portfolio Name </span>
-							<span className="text-xs text-[#FF0000]">
-								{" "}
-								<span id="portfolioForm1Text12">
-									{" "}
-									(Don't use & symbol in portfolio name){" "}
-								</span>
-								<span className="text-[#ff0000] text-base">*</span>
-							</span>
-						</label>
-						<input
-							type="text"
-							placeholder="Portfolio name"
+              id="portfolioForm1Select6"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              <option value="">...select...</option>
+              {rolesdata?.map((roles, key) =>
+                roles.status === "enable" ? (
+                  <option key={key} value={roles.role_code}>
+                    {roles.role_name}
+                  </option>
+                ) : null
+              )}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text11">Portfolio Name </span>
+              <span className="text-xs text-[#FF0000]">
+                {" "}
+                <span id="portfolioForm1Text12">
+                  {" "}
+                  (Don't use & symbol in portfolio name){" "}
+                </span>
+                <span className="text-[#ff0000] text-base">*</span>
+              </span>
+            </label>
+            <input
+              type="text"
+              placeholder="Portfolio name"
               required
               value={formInputs.portfolio_name}
-							onChange={handleOnChange}
-							id="portfolio_name"
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						/>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text13">Portfolio Code (Unique) </span>
-							<span className="text-[#ff0000] text-base">*</span>
-						</label>
-						<input
-							type="text"
-							placeholder="Portfolio code"
-							required
-							onChange={handleOnChange}
+              onChange={handleOnChange}
+              id="portfolio_name"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text13">Portfolio Code (Unique) </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Portfolio code"
+              required
+              onChange={handleOnChange}
               id="portfolio_code"
               value={formInputs.portfolio_code}
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						/>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text14">Portfolio Specification </span>
-						</label>
-						<input
-							type="text"
-							placeholder="Portfolio specification"
-							onChange={handleOnChange}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text14">Portfolio Specification </span>
+            </label>
+            <input
+              type="text"
+              placeholder="Portfolio specification"
+              onChange={handleOnChange}
               id="portfolio_spec"
               value={formInputs.portfolio_spec}
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						/>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text15"> Portfolio Universal Code </span>
-						</label>
-						<input
-							type="text"
-							placeholder="Portfolio universal code"
-							onChange={handleOnChange}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text15"> Portfolio Universal Code </span>
+            </label>
+            <input
+              type="text"
+              placeholder="Portfolio universal code"
+              onChange={handleOnChange}
               id="portfolio_u_code"
               value={formInputs.portfolio_u_code}
-							className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
-						/>
-					</div>
-					<div className="mb-4">
-						<label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-							<span id="portfolioForm1Text16"> Portfolio Details </span>
-						</label>
-						<textarea
-							rows={4}
-							placeholder="Portfolio details"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text16"> Portfolio Details </span>
+            </label>
+            <textarea
+              rows={4}
+              placeholder="Portfolio details"
               onChange={handleOnChangeTextArea}
               value={formInputs.portfolio_det}
-							id="portfolio_det"
-							className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
-						/>
-					</div>
-					<button
-						id="portfolioForm1Text17"
-						disabled={isLoading}
-						className={`w-full h-12  ${
-							isLoading == true
-								? "bg-[#b8b8b8]"
-								: color_scheme == "Red"
-								? "bg-[#DC4C64]"
-								: color_scheme == "Green"
-								? "bg-[#14A44D]"
-								: "bg-[#7A7A7A]"
-						} mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
-					>
-						{isLoading ? "Creating..." : "Create Portfolio"}
-					</button>
-				</form>
+              id="portfolio_det"
+              className="outline-none w-full px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto resize-none"
+            />
+          </div>
+          <button
+            id="portfolioForm1Text17"
+            disabled={isLoading}
+            className={`w-full h-12  ${
+              isLoading == true
+                ? "bg-[#b8b8b8]"
+                : color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+          >
+            {isLoading ? "Creating..." : "Create Portfolio"}
+          </button>
+        </form>
 
-				{link && (
-					<button
-						id="portfolioForm1Text18"
-						className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
-						onClick={handleCopyToClipBoard}
-					>
-						{isCopied ? "Copied" : "Copy masterlink"}
-					</button>
-				)}
-			</div>
-		</>
-	);
+        {link && (
+          <button
+            id="portfolioForm1Text18"
+            className="w-full h-12 bg-[#7a7a7a] hover:bg-[#61CE70] rounded-[4px] text-white font-roboto"
+            onClick={handleCopyToClipBoard}
+          >
+            {isCopied ? "Copied" : "Copy masterlink"}
+          </button>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default Form1;
