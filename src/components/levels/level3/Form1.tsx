@@ -1,14 +1,16 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import axios from "axios";
 import { useState, ChangeEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { getAdminData } from "../../../store/slice/adminData";
 
 const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [levelName, setLevelName] = useState("");
-
+  const dispatch = useDispatch();
+	const currentadmindata = useSelector((state: RootState) => state.adminData);
   let userName = useSelector(
     (state: RootState) => state.userinfo?.userinfo?.username
   );
@@ -58,7 +60,25 @@ const Form1 = () => {
         .then((res) => {
           console.log(res.data);
           setErrMsg("");
-          window.location.reload();
+            dispatch(
+							getAdminData({
+								...currentadmindata,
+								data: [
+									{
+										...currentadmindata.data[0],
+										organisations: [
+											{
+												...currentadmindata.data[0].organisations[0],
+												level3: {
+													...currentadmindata.data[0].organisations[0].level3,
+													level_name: levelName,
+												},
+											},
+										],
+									},
+								],
+							})
+						);
           toast.success("success");
         });
     } catch (error: unknown) {
@@ -128,12 +148,7 @@ const Form1 = () => {
 					>
 						Save Name
 					</button>
-					<p
-						id="level3_subheading_3"
-						className="text-xs text-[#FF0000] text-center pt-2"
-					>
-						{errMsg}
-					</p>
+					
 				</form>
 			</div>
 		</>
