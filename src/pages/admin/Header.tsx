@@ -139,7 +139,7 @@ const Header = () => {
     if (userData.userinfo.username == "") {
       fetchData();
     }
-  }, [dispatch, sessionId]);
+  }, [dispatch, sessionId, userData.userinfo.username]);
 
   // handle logout functionality
   const logout = () => {

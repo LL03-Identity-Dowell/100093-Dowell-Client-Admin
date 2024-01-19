@@ -1,8 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
+import { setAdminData } from "../../../store/slice/adminData";
 
 const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +54,7 @@ const Form1 = () => {
   const handleOnChangeTextArea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setFormInputs({ ...formInputs, user_det: e.target.value });
   };
-
+  const dispatch = useDispatch();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -94,6 +95,11 @@ const Form1 = () => {
             toast.error("An unexpected error occurred");
           }
         });
+      const responseAdmin = await axios.post(
+        "https://100093.pythonanywhere.com/api/get_data/",
+        { username: userName }
+      );
+      dispatch(setAdminData(responseAdmin.data.data[0]));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.error);
