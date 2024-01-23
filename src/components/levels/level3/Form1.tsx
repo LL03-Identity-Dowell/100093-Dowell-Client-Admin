@@ -7,7 +7,7 @@ import { getAdminData } from "../../../store/slice/adminData";
 
 const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
+  const [_errMsg, setErrMsg] = useState("");
   const [levelName, setLevelName] = useState("");
   const dispatch = useDispatch();
 	const currentadmindata = useSelector((state: RootState) => state.adminData);
