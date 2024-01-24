@@ -137,14 +137,14 @@ const AdminTabs = () => {
 
       try {
         if (adminusername !== "" && present_org == "") {
-          const data = {
-            username: adminusername,
-            session_id: sessionId,
-          };
+          // const data = {
+          //   username: adminusername,
+          //   session_id: sessionId,
+          // };
 
           const response = await axios.post(
             "https://100093.pythonanywhere.com/api/get_data/",
-            data
+            { username: adminusername }
           );
           const productResponse = await axios.post(
             "https://100093.pythonanywhere.com/api/getproducts/",
