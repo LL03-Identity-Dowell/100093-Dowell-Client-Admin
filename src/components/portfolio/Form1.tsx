@@ -29,6 +29,8 @@ const Form1 = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [rangeInput, setRangeInput] = useState<string>("");
+  const [showModal, setShowModal] = useState(false);
+  const [shouldContinue, setShouldContinue] = useState(false);
   const [publicData, setPublicData] = useState<PublicResponse[]>([]);
   const [link, setLink] = useState("");
   const [imagelink, setimageLink] = useState("");
@@ -100,7 +102,6 @@ const Form1 = () => {
           "https://100093.pythonanywhere.com/api/public_user/",
           data
         );
-        console.log("public data", response.data);
         response.data[0].id != undefined ? setPublicData(response.data) : "";
       } catch (error) {
         console.error(error);
@@ -190,7 +191,6 @@ const Form1 = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     const selected: HTMLSelectElement | null = document.getElementById(
       "portfolioForm1Select2"
     ) as HTMLSelectElement;
@@ -198,6 +198,13 @@ const Form1 = () => {
     Array.from(selected.selectedOptions).forEach((option) => {
       selectedOptions.push(option.value);
     });
+    if (!shouldContinue) {
+      if (selectedOptions.length > 500) {
+        setShowModal(true);
+        return;
+      }
+      return;
+    }
     const data = {
       username: userName,
       member_type: formInputs.member_type,
@@ -213,6 +220,7 @@ const Form1 = () => {
       portfolio_det: formInputs.portfolio_det,
     };
     try {
+      setIsLoading(true);
       await axios
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
         .then((res) => {
@@ -649,6 +657,32 @@ const Form1 = () => {
           ""
         )}
       </div>
+      {showModal && (
+        <div className="fixed bg-[#00000099] top-0 left-0 right-0 bottom-0 flex items-center justify-center">
+          <div className="h-40 w-96 bg-white rounded-md p-5 flex flex-col items-center justify-between">
+            <p className="text-xl text-center">
+              Are you sure you need more than "500" public links now?
+            </p>
+            <div className="flex gap-5">
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-[#FF0000] text-white py-1 px-4 rounded-md"
+              >
+                NO
+              </button>
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setShouldContinue(true);
+                }}
+                className="bg-[#2c9b2c] text-white py-1 px-4 rounded-md"
+              >
+                YES
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
