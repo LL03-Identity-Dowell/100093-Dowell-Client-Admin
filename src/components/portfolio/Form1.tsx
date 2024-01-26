@@ -661,7 +661,7 @@ const Form1 = () => {
         <div className="fixed bg-[#00000099] top-0 left-0 right-0 bottom-0 flex items-center justify-center">
           <div className="h-40 w-96 bg-white rounded-md p-5 flex flex-col items-center justify-between">
             <p className="text-xl text-center">
-              Are you sure you need more than "500" public links now?
+              Are you sure you need more than "500" public portfolio now?
             </p>
             <div className="flex gap-5">
               <button
