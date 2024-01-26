@@ -22,10 +22,8 @@ const Form1 = () => {
     if (e.target.id == "public_count") {
       const inputValue = parseInt(e.target.value, 10);
       // Allow positive numbers only
-      if (!isNaN(inputValue) && inputValue >= 0) {
-        setValue(inputValue);
-        setFormInputs({ ...formInputs, [e.target.id]: inputValue });
-      }
+      setValue(inputValue);
+      setFormInputs({ ...formInputs, [e.target.id]: inputValue });
     } else {
       setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
     }
@@ -136,7 +134,6 @@ const Form1 = () => {
               type="number"
               placeholder="Number"
               id="public_count"
-              min={1}
               value={value}
               onChange={handleOnChange}
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
