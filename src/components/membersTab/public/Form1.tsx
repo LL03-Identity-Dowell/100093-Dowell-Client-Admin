@@ -44,7 +44,6 @@ const Form1 = () => {
         setShowModal(true);
         return;
       }
-      return;
     }
     try {
       setIsLoading(true);

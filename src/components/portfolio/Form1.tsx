@@ -203,7 +203,6 @@ const Form1 = () => {
         setShowModal(true);
         return;
       }
-      return;
     }
     const data = {
       username: userName,
