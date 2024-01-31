@@ -1065,6 +1065,102 @@ def workspace_name(request):
             "workspace_name": workspace_name,
             "other_workspace_names": other_workspace_names
         }, status=HTTP_200_OK)
+
+@api_view(['POST'])
+def find_public(request):
+    if request.method == 'POST':
+        id = request.data.get("org_id")
+        product = request.data.get("product")
+        field_c = {"_id": id}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data']
+
+        # Organization name
+        portfolio = data[0]['portpolio']
+        usernames = []
+
+        for item in portfolio:
+            # Check if the item has the required product and member_type
+            if item.get('product') == product and item.get('member_type') == "public":
+                # Add the usernames to the list, ensuring it's a list
+                if isinstance(item.get('username'), list):
+                    usernames.extend(item.get('username'))
+
+        return Response({
+            "usernames": usernames        }, status=HTTP_200_OK)
+
+
+
+@api_view(['POST'])
+def remove_public(request):
+    if request.method == 'POST':
+        id = request.data.get("org_id")
+        username = request.data.get("username")
+        sessionid = request.data.get("session_id")
+        usernames_to_remove = request.data.get('usernames')
+        product = request.data.get('product')
+        portfolio_code = request.data.get('portfolio_code')
+        # fetch = UserData.objects.filter(username=username,sessionid=sessionid)
+
+        # for rd in fetch:
+        #     lo1=rd.alldata
+        #     lrf=json.loads(lo1)
+
+        # for entry in lrf["selected_product"]["userportfolio"]:
+        #     if entry['member_type'] == 'public' and entry['product'] == product and entry['portfolio_code']==portfolio_code:
+        #         entry['username'] = [username for username in entry['username'] if username not in usernames_to_remove]
+
+        # return Response(lrf["selected_product"]["userportfolio"])
+
+
+
+
+        if not usernames_to_remove or not isinstance(usernames_to_remove, list):
+            return Response({"error": "Invalid 'usernames' format. Expected a list."}, status=400)
+
+        if not product or not isinstance(product, str):
+            return Response({"error": "Invalid 'product' format. Expected a string."}, status=400)
+
+        field_c = {"_id": id}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data']
+
+        # Organization name
+        portfolio = data[0]['portpolio']
+        usernames = []
+        for entry in portfolio:
+            if entry['member_type'] == 'public' and entry['product'] == product and entry['portfolio_code']==portfolio_code:
+                entry['username'] = [username for username in entry['username'] if username not in usernames_to_remove]
+
+
+        updated_portfolio = {"portpolio":portfolio}
+        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update",
+                         field_c, updated_portfolio)
+
+        fetch = UserData.objects.filter(username=username,sessionid=sessionid)
+
+        for rd in fetch:
+            lo1=rd.alldata
+            lrf=json.loads(lo1)
+
+        for entry in lrf["selected_product"]["userportfolio"]:
+            if entry['member_type'] == 'public' and entry['product'] == product and entry['portfolio_code']==portfolio_code:
+                entry['username'] = [username for username in entry['username'] if username not in usernames_to_remove]
+        # return Response({"msg":json.dumps(lrf)})
+        obj, created = UserData.objects.update_or_create(username=username,sessionid=sessionid,defaults={'alldata': json.dumps(lrf)})
+
+
+        return Response({
+            "success": "updated"        }, status=HTTP_200_OK)
+
+
+
 @api_view(['POST'])
 def item_name(request):
     if request.method == 'POST':
@@ -1136,7 +1232,7 @@ def create_item(request):
 
         odata = json.loads(userorg.org)
         org = odata["organisations"]
-
+        field = {"document_name": username}
         for i_name in org[0][level]["items"]:
             if item_code == i_name['item_code']:
                 return Response("Item code must be unique", status=HTTP_400_BAD_REQUEST)
@@ -1157,7 +1253,9 @@ def create_item(request):
 
         # Update the database here. Assuming 'dowellconnection' function does that.
         # Handle exceptions or errors that might occur during the update.
-
+        update = {"organisations": org}
+        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                         "update", field, update)
         userorg.org = json.dumps(odata)
         userorg.save()
         return Response("Item created successfully", status=HTTP_201_CREATED)
@@ -1282,7 +1380,7 @@ def create_portfolio(request):
                         {"name": mem, "portfolio_name": portfolio_name, "product": product, "status": "unused",
                          "link": f"https://100014.pythonanywhere.com/?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"})
 
-                link_string= f"?members=all&username=&owner_name{username}=&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
+                link_string= f"?members=all&username=&owner_name={username}&org_name={presentorg}&type=public&code=masterlink&product={product}&data_type={data_type}&operations_right={op_rights}&role={role}&portfolio_name={portfolio_name}&portfolio_code={portfolio_code}&portfolio_specification={portfolio_spec}&portfolio_uni_code={portfolio_u_code}&portfolio_details={portfolio_det}&status=enable"
                 encrypted = encrypt_message(link_string, crpassword,saved_salt)
                 master_link = f"https://100014.pythonanywhere.com/linklogin?data={encrypted}"
                 user = passgen.generate_random_password1(12)
@@ -1302,7 +1400,7 @@ def create_portfolio(request):
                 login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                                          "update", field, update)
                 # return JsonResponse({"resp":f"{memberpublic}"})
-                obj, created = AllPubPortfolio.objects.update_or_create(masterlink=master_link,qrcode=f"https://100093.pythonanywhere.com/media/userqrcodes/{user}.png",defaults={'username': username})
+                obj, created = AllPubPortfolio.objects.update_or_create(masterlink=master_link,qrcode=f"https://100093.pythonanywhere.com/media/userqrcodes/{user}.png",product=product,defaults={'username': username})
                 return Response(
                     {"success": f'{portfolio_name} successfully created',
                      "masterlink": f"your masterlink is {master_link}","qrcode": f"https://100093.pythonanywhere.com/media/userqrcodes/{user}.png"}, status=HTTP_200_OK)
@@ -2065,6 +2163,25 @@ def get_last_login(request):
 
 @api_view(['POST'])
 def connect_portfolio(request):
+    PRODUCT_URLS = {
+            "Dowell Services": "https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={session_id}&id=100093",
+            "My Channel": "https://dowell-my-channel.flutterflow.app/?session_id={session_id}&id=100093",
+            "Workflow AI": "https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session_id}&id=100093",
+            "Digital": "https://dowell-digitalq-manager.flutterflow.app/?session_id={session_id}&id=100093",
+            "Maps": "https://livinglab-maps.flutterflow.app/?session_id={session_id}&id=100093",
+            "Scale": "https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session_id}&id=100093",
+            "Legalzard": "https://play.google.com/store/apps/details?id=com.legalzard.policies",
+            "Calculator": "https://100050.pythonanywhere.com/calculator/?session_id={session_id}&id=100093",
+            "Team": "https://ll07-team-dowell.github.io/Jobportal/#?session_id={session_id}&id=100093",
+            "Media": "https://www.socialmediaautomation.uxlivinglab.online/?session_id={session_id}&id=100093",
+            "Customer": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session_id}&id=100093",
+            "Chat": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session_id}&id=100093",
+            "Wifi": "https://l.ead.me/dowellwifiqrcode/?session_id={session_id}&id=100093",
+            "Wallet": "https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session_id}&id=100093",
+            "Shortner": "https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session_id}&id=100093",
+            "Repositories": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093"
+            # Add more products as needed
+        }
     if request.method == "POST" and "connect_portfolio" in request.data.get("action"):
         user = request.data.get("username")
         portf = request.data.get("portfl")
@@ -2169,58 +2286,72 @@ def connect_portfolio(request):
             # return JsonResponse({"msg":mydict})
             obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
             # print("connecting product owner org is",product)
-            if product == "My Channel":
-                product = "dowell_channel"
-            if "Workflow AI" in product or "workflow" in product:
-                if s["User_type"] == "betatester":
-                    return Response(
-                        f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',status=HTTP_200_OK)
-                else:
-                    # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
-                    return Response(
-                        f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
+            # if product == "My Channel":
+            #     product = "dowell_channel"
+            # if "Workflow AI" in product or "workflow" in product:
+            #     if s["User_type"] == "betatester":
+            #         return Response(
+            #             f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+            #     else:
+            #         # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
+            #         return Response(
+            #             f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
 
-            elif "Digital" in product:
-                return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Digital" in product:
+            #     return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Maps" in product:
+            #     return Response(f'https://livinglab-maps.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Scale" in product or "scales" in product:
+            #     return Response(
+            #         f'https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Legalzar" in product or "Legalzard" in product:
+            #     return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies',status=HTTP_200_OK)
+            # elif "Calculator" in product:
+            #     return Response(
+            #         f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Team" in product:
+            #     if s["User_type"] == "betatester":
+            #         return Response(
+            #             f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+            #     else:
+            #         return Response(
+            #             f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Media" in product:
+            #     return Response(f'https://www.socialmediaautomation.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Customer" in product:
+            #     return Response(
+            #         f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Chat" in product:
+            #     return Response(
+            #         f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Wifi" in product:
+            #     return Response(
+            #         f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Wallet" in product:
+            #     return Response(
+            #         f'https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Shortner" in product or "shortner" in product:
+            #     return Response(
+            #         f'https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif product == "dowell_channel":
+            #         return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif "Repositories" or "Secure Repositories" in product:
+            #     return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # else:
+            #     return Response(f"Redirect the URL of this {product} product not avail in database")
 
-            elif "Scale" in product or "scales" in product:
+            if product in PRODUCT_URLS:
+                url = PRODUCT_URLS[product].format(session_id=session)
+                return Response(url, status=HTTP_200_OK)
+
+            # Handle special cases
+            if product == "Workflow AI" and s.get("User_type") == "betatester":
+                # Beta tester URL for Workflow AI
                 return Response(
-                    f'https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Legalzar" in product or "Legalzard" in product:
-                return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies',status=HTTP_200_OK)
-            elif "Calculator" in product:
-                return Response(
-                    f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Team" in product:
-                if s["User_type"] == "betatester":
-                    return Response(
-                        f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093',status=HTTP_200_OK)
-                else:
-                    return Response(
-                        f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Media" in product:
-                return Response(f'https://www.socialmediaautomation.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Customer" in product:
-                return Response(
-                    f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Chat" in product:
-                return Response(
-                    f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Wifi" in product:
-                return Response(
-                    f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Wallet" in product:
-                return Response(
-                    f'https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Shortner" in product or "shortner" in product:
-                return Response(
-                    f'https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif product == "dowell_channel":
-                    return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-            elif "Repositories" or "Secure Repositories" in product:
-                return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session}&id=100093',status=HTTP_200_OK)
-            else:
-                return Response(f"Redirect the URL of this {product} product not avail in database")
+                    f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',
+                    status=HTTP_200_OK
+                )
+
 
         for ii in ro1:
             pfield = ii.org
@@ -2325,6 +2456,8 @@ def connect_portfolio(request):
 
         elif "Digital" in product:
             return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+        elif "Maps" in product:
+            return Response(f'https://livinglab-maps.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
 
         elif "Scale" in product or "scales" in product:
             return Response(
@@ -2778,29 +2911,33 @@ def public_user(request):
         else:
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(["POST"])
+@api_view(["GET", "POST"])
 def public_org(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        # Fetch all unique usernames from publiclink objects
+        unique_usernames = publiclink.objects.order_by('username').values_list('username', flat=True).distinct()
+        return JsonResponse(list(unique_usernames), safe=False)
+
+    elif request.method == 'POST':
         org = request.data.get("org")
-        allpub = publiclink.objects.all().filter(username=org)
+        allpub = publiclink.objects.filter(username=org)
         try:
             most_recent_item = allpub.order_by('-id').first()
             if most_recent_item:
                 links = json.loads(most_recent_item.link)
-
                 qrcodeids = [link["qrcodeid"] for link in links]
-                # Construct the response with 'qrcodeids' and 'org' keys
+                # Construct the response with 'public_links' key instead of 'qrcodeids'
                 response_data = {
                     "public_links": qrcodeids,
                     "org": org  # Add the username
                 }
-
                 return JsonResponse(response_data, safe=False)
             else:
-                return JsonResponse({"qrcodeids": [], "org": org}, safe=False)
+                # Make sure to return 'public_links' for consistency with the 'POST' response
+                return JsonResponse({"public_links": [], "org": org}, safe=False)
         except Exception as e:
-            # It's a good practice to log the exception in case of an error
-            # print(e)
+            # Replace print(e) with proper logging
+            # logger.error(e)
             return Response({"error": "Response failed"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(["POST"])
@@ -2892,7 +3029,7 @@ def create_public_member(request):
                 linkcode = passgen.generate_random_password1(16)
                 # path = f'https://100093.pythonanywhere.com/masterlink?next={org}&type={pmembers}&code={user}'
                 link_string = f"?next={org}&type={pmembers}&code={user}"
-                encrpted = encrypt_message(link_string, crpassword)
+                encrpted = encrypt_message(link_string, crpassword,saved_salt)
                 path = f'https://100014.pythonanywhere.com/masterlink?data={encrpted}'
                 test_dict = {"link": path, "linkstatus": "unused", "productstatus": "unused", "qrcodeid": user,
                              "linkcode": linkcode}
@@ -3399,3 +3536,37 @@ class GoogleTranslateAPIView(APIView):
         else:
             # Return an error if something went wrong
             return Response(response.json(), status=response.status_code)
+
+
+@api_view(['POST'])
+def remove_used_links(request):
+    # Validate the presence of 'username' and 'public' in the request data
+    if 'username' not in request.data or 'public' not in request.data:
+        return Response({'error': 'Missing required fields.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get the username and list of qrcodeids from the request
+    username = request.data.get('username')
+    qrcodeid_list = request.data.get('public', [])
+
+    # Validate that qrcodeid_list is a list
+    if not isinstance(qrcodeid_list, list):
+        return Response({'error': 'Invalid data format for qrcodeids.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Fetch the most recent publiclink object for the given username
+    try:
+        plink = publiclink.objects.filter(username=username).latest('id')
+    except publiclink.DoesNotExist:
+        return Response({'error': 'No publiclink objects found for the given username.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Deserialize the JSON data from the link field
+    links = json.loads(plink.link)
+
+    # Filter out the objects with qrcodeids that are in the qrcodeid_list
+    filtered_links = [link for link in links if link.get('qrcodeid') not in qrcodeid_list]
+
+    # Serialize the data back to JSON and update the object
+    plink.link = json.dumps(filtered_links)
+    plink.save()
+
+    # Return a success response
+    return Response({'status': 'success', 'updated_links': filtered_links}, status=status.HTTP_200_OK)
