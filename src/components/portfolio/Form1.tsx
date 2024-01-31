@@ -74,7 +74,7 @@ const Form1 = () => {
     label: option,
   }));
 
-  const handleSearchInputChange = (query: any) => {
+  const handleSearchInputChange = (query: unknown) => {
     if (query) {
       const selectedOptions = (query as Option[]).map((option) => option.value);
       const selected: HTMLSelectElement | null = document.getElementById(
@@ -222,15 +222,28 @@ const Form1 = () => {
       setIsLoading(true);
       await axios
         .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
-        .then((res) => {
-          console.log(res.data);
-
+        .then(async (res) => {
           if (data.member_type === "public") {
             setLink(res.data.masterlink);
           }
           if (res.data.success) {
             toast.success(res.data.success);
             res.data.qrcode != undefined ? setimageLink(res.data.qrcode) : "";
+            if (data.member_type === "public" && res.data.success) {
+              const usedLink = await axios.post(
+                "https://100093.pythonanywhere.com/api/remove_used_public/",
+                {
+                  public: JSON.parse(data.member),
+                  username: data.username,
+                }
+              );
+              setPublicData(
+                publicData?.filter(
+                  (member) => !JSON.parse(data.member).includes(member?.id)
+                )
+              );
+              console.log("usedLInk", usedLink);
+            }
             // if (isnewOwner) {
             //   return;
             // } else {

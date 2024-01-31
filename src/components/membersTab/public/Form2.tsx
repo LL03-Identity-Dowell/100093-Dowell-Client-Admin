@@ -3,6 +3,8 @@ import { RootState } from "../../../store/Store";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
+import { Option } from "../../portfolio/types";
+import Select from "react-select";
 
 const Form2 = () => {
   const public_member = useSelector(
@@ -18,7 +20,8 @@ const Form2 = () => {
     }
   }, [viewAccess]);
   const sessionId = localStorage.getItem("sessionId");
-
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [rangeInput, setRangeInput] = useState<string>("");
   const getUsedAndUnusedLink = async () => {
     const assignedData = {
       session_id: sessionId,
@@ -56,14 +59,75 @@ const Form2 = () => {
       }
     }
   };
+  const query: Option[] = getUsedAndUnusedData.map((option) => ({
+    value: option,
+    label: option,
+  }));
+  const handleSelectRange = (start: number, end: number) => {
+    const allOptions = getUsedAndUnusedData;
+    const selectedRange = allOptions.slice(start - 1, end);
+    setSelectedItems(selectedRange);
+  };
+  const handleRangeInput = () => {
+    const [startStr, endStr] = rangeInput.split("-").map((str) => str.trim());
+    const start = parseInt(startStr);
+    const end = parseInt(endStr);
 
+    if (!isNaN(start) && !isNaN(end)) {
+      handleSelectRange(start, end);
+    }
+  };
+
+  const handleSelectAll = () => {
+    let allOptions: string[] = [];
+    allOptions = getUsedAndUnusedData.map((member) => member) || [];
+
+    const selected: HTMLSelectElement | null = document.getElementById(
+      "unassignedPublicLinks"
+    ) as HTMLSelectElement;
+    Array.from(selected.options).forEach((option) => {
+      if (allOptions.includes(option.textContent || "")) {
+        option.selected = true;
+      }
+    });
+    setSelectedItems(allOptions);
+  };
+  const handleSelectAllChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      handleSelectAll();
+    } else {
+      setSelectedItems([]);
+    }
+  };
+  const handleKeyPress = (e: { key: string; preventDefault: () => void }) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleRangeInput();
+    }
+  };
+  const handleSearchInputChange = (query: unknown) => {
+    if (query) {
+      const selectedOptions = (query as Option[]).map((option) => option.value);
+      const selected: HTMLSelectElement | null = document.getElementById(
+        "unassignedPublicLinks"
+      ) as HTMLSelectElement;
+      Array.from(selected.options).forEach((option) => {
+        if (selectedOptions.includes(option.textContent || "")) {
+          option.selected = true;
+        }
+      });
+      setSelectedItems([...selectedOptions]);
+    } else {
+      setSelectedItems([]);
+    }
+  };
   useEffect(() => {
     getUsedAndUnusedLink();
   }, []);
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-
+  console.log(selectedItems);
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
@@ -81,7 +145,7 @@ const Form2 = () => {
             >
               Unused Public Links not having Portfolio
             </label>
-            <select
+            {/* <select
               id="publicselect2"
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
@@ -89,6 +153,70 @@ const Form2 = () => {
               {getUsedAndUnusedData?.map((members, index) => (
                 <option key={index} value={members}>
                   {members}
+                </option>
+              ))}
+            </select> */}
+          </div>
+          <div className="mb-4">
+            <div className="flex items-center gap-3">
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+                <span id="portfolioForm1Text4">Select links to disable </span>
+                <span className="text-[#ff0000] text-base">*</span>
+              </label>
+              <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
+                <span id="portfolioForm1Text5"> Select All</span>
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAllChange}
+                  checked={
+                    selectedItems.length > 0 &&
+                    selectedItems.length === getUsedAndUnusedData.length
+                  }
+                />
+              </label>
+            </div>
+            <div className="w-full">
+              <input
+                type="text"
+                placeholder="separate numbers with '-'e.g 1-10"
+                onChange={(e) => setRangeInput(e.target.value)}
+                className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
+                onBlur={handleRangeInput}
+                onKeyDown={handleKeyPress}
+              />
+            </div>
+
+            <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
+              <span id="portfolioForm1Text6" className="font-roboto text-base">
+                (Total links: {getUsedAndUnusedData.length})
+              </span>
+              <Select
+                classNames={{
+                  control: () => "border border-none shadow-none rounded-md",
+                }}
+                className="w-full outline-none shadow-none"
+                isMulti
+                options={query}
+                placeholder="Search..."
+                onChange={handleSearchInputChange}
+              />
+            </div>
+            <select
+              required
+              multiple
+              id="unassignedPublicLinks"
+              className="outline-none w-full h-40 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            >
+              {getUsedAndUnusedData.map((option, key) => (
+                <option
+                  key={key}
+                  className={
+                    selectedItems.includes(option)
+                      ? "bg-[#007BFF] text-white"
+                      : ""
+                  }
+                >
+                  {option}
                 </option>
               ))}
             </select>
