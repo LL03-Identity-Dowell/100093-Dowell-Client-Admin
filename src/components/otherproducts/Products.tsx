@@ -82,6 +82,7 @@ const Products = () => {
 						dispatch(setAdminData(responseAdmin.data.data[0]));
 						dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
 					} catch (error: unknown) {
+            toast.error("an unknown error occurred, please try again");
 						console.error(error);
 					}
 				} else {

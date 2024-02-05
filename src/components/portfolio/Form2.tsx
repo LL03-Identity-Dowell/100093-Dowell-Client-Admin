@@ -10,10 +10,10 @@ const initialFormInputs: FormInputs = {
   username: "",
   member_type: "",
   member: [],
-  product: "",
-  data_type: "",
-  op_rights: "",
-  role: "",
+  product: [],
+  data_type: [],
+  op_rights: [],
+  role: [],
   portfolio_name: "",
   portfolio_code: "",
   portfolio_status: "",
@@ -40,9 +40,23 @@ const Form2 = () => {
 
   const [formInputs, setFormInputs] = useState(initialFormInputs);
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
-    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+    if (
+      e.target.type === "select-multiple" &&
+      e.target.name !== "member_type"
+    ) {
+      setFormInputs({
+        ...formInputs,
+        [e.target.name]: Array.from(e.target.selectedOptions).map(
+          (item) => item.value
+        ),
+      });
+    } else {
+      setFormInputs({
+        ...formInputs,
+        [e.target.name]: e.target.value,
+      });
+    }
   };
-
   const handleSubmitStatus = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoadingStatus(true);
@@ -95,14 +109,16 @@ const Form2 = () => {
     setFormInputs(initialFormInputs);
   };
 
-  const filterDataByProduct = portfolio?.filter(
-    (item) => item.product === formInputs?.product || item.product === "all"
-  );
-
+  const filterDataByProduct = formInputs?.product
+    .map((product) => {
+      return portfolio?.filter(
+        (item) => item.product === product || item.product === "all"
+      );
+    })
+    .flat();
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-
   interface PublicResponse {
     id: string;
   }
@@ -121,7 +137,6 @@ const Form2 = () => {
           "https://100093.pythonanywhere.com/api/public_user/",
           data
         );
-        console.log("public data", response.data);
         setPublicData(response.data);
       } catch (error) {
         console.error(error);
@@ -129,7 +144,30 @@ const Form2 = () => {
     };
     fetchData();
   }, []);
-
+  const enableFilteredData = filterDataByProduct?.filter(
+    (products) =>
+      products.status === "enable" &&
+      products.member_type === formInputs.member_type &&
+      (formInputs.data_type.length
+        ? formInputs.data_type.includes(products.data_type.toLowerCase())
+        : true) &&
+      (formInputs.op_rights.length
+        ? formInputs.op_rights.includes(products.operations_right.toLowerCase())
+        : true) &&
+      (formInputs.role.length ? formInputs.role.includes(products.role) : true)
+  );
+  const disableFilteredData = filterDataByProduct?.filter(
+    (products) =>
+      products.status === "disable" &&
+      products.member_type === formInputs.member_type &&
+      (formInputs.data_type.length
+        ? formInputs.data_type.includes(products.data_type.toLowerCase())
+        : true) &&
+      (formInputs.op_rights.length
+        ? formInputs.op_rights.includes(products.operations_right.toLowerCase())
+        : true) &&
+      (formInputs.role.length ? formInputs.role.includes(products.role) : true)
+  );
   return (
     <>
       <ToastContainer position="top-right" />
@@ -231,12 +269,14 @@ const Form2 = () => {
             <select
               id="portfolioForm2Select4"
               multiple
+              name="data_type"
+              onChange={handleSelectStatus}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option>Real Data</option>
-              <option>Learning Data</option>
-              <option>Testing Data</option>
-              <option>Archived Data</option>{" "}
+              <option value={"real_data"}>Real Data</option>
+              <option value={"learning_data"}>Learning Data</option>
+              <option value={"testing_data"}>Testing Data</option>
+              <option value={"archived_data"}>Archived Data</option>
             </select>
           </div>
           <div className="mb-4">
@@ -249,12 +289,14 @@ const Form2 = () => {
             <select
               id="portfolioForm2Select5"
               multiple
+              name="op_rights"
+              onChange={handleSelectStatus}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
-              <option>View</option>
-              <option>Add/Edit</option>
-              <option>Delete</option>
-              <option>Admin</option>
+              <option value={"view"}>View</option>
+              <option value={"add/edit"}>Add/Edit</option>
+              <option value={"delete"}>Delete</option>
+              <option value={"admin"}>Admin</option>
             </select>
           </div>
           <div className="mb-4">
@@ -267,6 +309,8 @@ const Form2 = () => {
             <select
               id="portfolioForm2Select6"
               multiple
+              name="role"
+              onChange={handleSelectStatus}
               className="outline-none w-full h-24 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             >
               {rolesdata?.map((roles, key) =>
@@ -292,15 +336,11 @@ const Form2 = () => {
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
-                {filterDataByProduct?.map((products, key) =>
-                  products.status === "enable" &&
-                  products.member_type === formInputs.member_type ? (
-                    <option key={key} value={products.portfolio_code}>
-                      {" "}
-                      {products.portfolio_name}
-                    </option>
-                  ) : null
-                )}
+                {enableFilteredData?.map((products, key) => (
+                  <option key={key} value={products.portfolio_code}>
+                    {products.portfolio_name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -318,15 +358,11 @@ const Form2 = () => {
                 className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               >
                 <option>...select...</option>
-                {filterDataByProduct?.map((products, key) =>
-                  products.status === "disable" &&
-                  products.member_type === formInputs.member_type ? (
-                    <option key={key} value={products.portfolio_code}>
-                      {" "}
-                      {products.portfolio_name}
-                    </option>
-                  ) : null
-                )}
+                {disableFilteredData?.map((products, key) => (
+                  <option key={key} value={products.portfolio_code}>
+                    {products.portfolio_name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-4">

@@ -2,10 +2,10 @@ export type FormInputs = {
   username: string;
   member_type: string;
   member: string[];
-  product: string;
-  data_type: string;
-  op_rights: string;
-  role: string;
+  product: string[];
+  data_type: string[];
+  op_rights: string[];
+  role: string[];
   portfolio_name: string;
   portfolio_code: string;
   portfolio_status: string;
