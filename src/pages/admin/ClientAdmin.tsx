@@ -27,13 +27,14 @@ const ClientAdmin = () => {
     (state: RootState) => state.userinfo.userinfo.username
   );
   const dispatch = useDispatch();
+  const sessionId = localStorage.getItem("sessionId");
   const fetchIsOwnerData = async () => {
     if (localStorage.getItem("username")) {
       if (!isnewOwner) {
         const username = localStorage.getItem("username");
         const responseAdmin = await axios.post(
           "https://100093.pythonanywhere.com/api/get_data/",
-          { username: username }
+          { username: username, session_id: sessionId }
         );
         const response = await axios.post(
           "https://100093.pythonanywhere.com/api/settings/",
@@ -63,13 +64,15 @@ const ClientAdmin = () => {
                   <div className="lg:w-[90%] ">
                     {isnewOwner && (
                       <div className="flex flex-col md:flex-row items-center justify-center gap-10 mb-5">
-                        <h2  className="md:w-[55%] text-center  font-medium text-xl text-[#61CE70]">
-                         <span id="clientAdminText1">You are connected to{" "}</span>
+                        <h2 className="md:w-[55%] text-center  font-medium text-xl text-[#61CE70]">
+                          <span id="clientAdminText1">
+                            You are connected to{" "}
+                          </span>
                           <span className="text-[#FF0000]">{isnewOwner}</span>{" "}
-                         <span id="clientAdminText2">Workspace</span>
+                          <span id="clientAdminText2">Workspace</span>
                         </h2>
                         <button
-                        id="clientAdminText3" 
+                          id="clientAdminText3"
                           className="md:w-[20%] px-4 py-2 bg-[#61CE70] text-white rounded-md hover:bg-[#2ea53e]"
                           onClick={() => {
                             localStorage.removeItem("username");

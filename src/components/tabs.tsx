@@ -144,7 +144,7 @@ const AdminTabs = () => {
 
           const response = await axios.post(
             "https://100093.pythonanywhere.com/api/get_data/",
-            { username: adminusername }
+            { username: adminusername,session_id: sessionId }
           );
           const productResponse = await axios.post(
             "https://100093.pythonanywhere.com/api/getproducts/",
