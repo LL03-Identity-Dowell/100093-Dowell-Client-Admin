@@ -148,10 +148,10 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
     userName === "uxliveadmin"
       ? productData?.products
       : productData?.products?.filter(
-        (product) =>
-          product.product_name !== "Living Lab Monitoring" &&
-          product.product_name !== "Dowell Wallet"
-      );
+          (product) =>
+            product.product_name !== "Living Lab Monitoring" &&
+            product.product_name !== "Dowell Wallet"
+        );
   const defaultOptions = useMemo(() => {
     const initialDefaultOptions: Record<string, any> = {};
     filteredProducts.forEach((product) => {
@@ -234,13 +234,17 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       );
       toast.success("success");
       window.location.href = response.data;
-    } catch (error) {
+    } catch (error: any) {
       if (axios.isAxiosError(error)) {
         console.error(error);
         toast.error(error.response?.data);
       } else {
         console.error("An unknown error occurred:", error);
-        toast.error("An unknown error occurred");
+        if (error?.msg) {
+          toast.error("Failed to connect product, try again!");
+        } else {
+          console.error("An unknown error occurred");
+        }
       }
     } finally {
       setIsLoading(false);
@@ -431,13 +435,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
     >
       <div className="h-80 w-80">
         <img
-          src={`${product.product_logo?.includes("https://100093.pythonanywhere.com")
+          src={`${
+            product.product_logo?.includes("https://100093.pythonanywhere.com")
               ? product.product_logo
               : `https://100093.pythonanywhere.com${product.product_logo}`
-            } `}
+          } `}
           alt="product logo"
-          className={`w-full h-full ${product.product_name === hovertitle ? "" : ""
-            }`}
+          className={`w-full h-full ${
+            product.product_name === hovertitle ? "" : ""
+          }`}
         />
       </div>
 
@@ -447,7 +453,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             className="relative w-full h-full"
             onSubmit={
               filterDataByProduct.length > 0 ||
-                selectedProduct === "Dowell Services"
+              selectedProduct === "Dowell Services"
                 ? (e) => handleSubmit(e, title)
                 : handleRequestPortfolio
             }

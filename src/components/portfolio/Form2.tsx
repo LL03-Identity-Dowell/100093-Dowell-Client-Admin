@@ -4,9 +4,9 @@ import { RootState } from "../../store/Store";
 import { useState, ChangeEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import { FormInputs } from "./types";
+import { Form2Inputs } from "./types";
 
-const initialFormInputs: FormInputs = {
+const initialFormInputs: Form2Inputs = {
   username: "",
   member_type: "",
   member: [],
