@@ -235,7 +235,7 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       toast.success("success");
       window.location.href = response.data;
     } catch (error) {
-      clg("error", error);
+      console.log("error", error);
       toast.error("Failed to connect product, try again!");
       // if (axios.isAxiosError(error)) {
       //   console.error(error);
