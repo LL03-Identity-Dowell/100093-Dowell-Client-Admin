@@ -127,7 +127,6 @@ const Form2 = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-  console.log(selectedItems);
   return (
     <>
       <div className="lg:w-1/3 border border-[#54595F] card-shadow">
@@ -143,7 +142,7 @@ const Form2 = () => {
               id="publictext9"
               className="text-[#7A7A7A] text-lg font-roboto font-bold "
             >
-              Unused Public Links not having Portfolio
+              Unused Public Users not having Portfolio
             </label>
             {/* <select
               id="publicselect2"
@@ -160,7 +159,7 @@ const Form2 = () => {
           <div className="mb-4">
             <div className="flex items-center gap-3">
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-                <span id="portfolioForm1Text4">Select links to disable </span>
+                <span id="portfolioForm1Text4">Select users to disable </span>
                 <span className="text-[#ff0000] text-base">*</span>
               </label>
               <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-center gap-2">
@@ -188,7 +187,7 @@ const Form2 = () => {
 
             <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
               <span id="portfolioForm1Text6" className="font-roboto text-base">
-                (Total links: {getUsedAndUnusedData.length})
+                (Total users: {getUsedAndUnusedData.length})
               </span>
               <Select
                 classNames={{
@@ -226,7 +225,7 @@ const Form2 = () => {
               id="publictext10"
               className="text-[#7A7A7A] text-lg font-roboto font-bold "
             >
-              Unused Public Links with assigned Portfolio
+              Unused Public Users with assigned Portfolio
             </label>
             <select
               id="publicselect3"
@@ -246,7 +245,7 @@ const Form2 = () => {
               id="publictext11"
               className="text-[#7A7A7A] text-lg font-roboto font-bold "
             >
-              Used Public Links
+              Used Public users
             </label>
             <select
               id="publicselect4"
@@ -273,7 +272,7 @@ const Form2 = () => {
                 : "bg-[#7A7A7A]"
             }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
           >
-            Hide used Public Links
+            Hide used Public Users
           </button>
         </form>
       </div>

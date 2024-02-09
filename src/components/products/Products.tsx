@@ -235,18 +235,13 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       toast.success("success");
       window.location.href = response.data;
     } catch (error) {
-      console.log("error", error);
+      // console.log("error", error);
       toast.error("Failed to connect product, try again!");
       // if (axios.isAxiosError(error)) {
       //   console.error(error);
       //   toast.error(error.response?.data);
       // } else {
       //   console.error("An unknown error occurred:", error);
-      //   if (error?.msg) {
-      //     toast.error("Failed to connect product, try again!");
-      //   } else {
-      //     console.error("An unknown error occurred");
-      //   }
       // }
     } finally {
       setIsLoading(false);
