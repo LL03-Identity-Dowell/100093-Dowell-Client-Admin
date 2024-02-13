@@ -416,11 +416,11 @@ const Header = () => {
                       : "bg-[#a1a1a1] "
                   }  text-center text-white p-[15px] border-2 border-[#7a7a7a] mt-8 py-6 font-semibold text-lg`}
                 >
-                  <span id="headertext8">Settings for</span>
+                  <span id="headertext8">Settings for </span>
                   <span className="text-[red]">
                     {userData?.userinfo?.username}
                   </span>
-                  , <span id="headertext9">Owner</span>
+                  ,<span id="headertext9"> Owner </span>
                   <span className="text-[red]">
                     {userData?.userinfo?.username}
                   </span>
