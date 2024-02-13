@@ -209,7 +209,6 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       username: userName,
       action: "connect_portfolio",
       portfl: selectedOption?.value,
-
       product: selectedProduct,
       present_org: presentOrg,
       session_id: sessionId,
@@ -472,7 +471,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     onChange={(selectedOption) =>
                       handleSelectChange(selectedOption, title)
                     }
-                    defaultValue={options[0]}
+                    placeholder="Select a portfolio"
                     value={selectedOption}
                   />
                 )}
