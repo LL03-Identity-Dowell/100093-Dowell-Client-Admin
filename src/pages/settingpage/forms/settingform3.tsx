@@ -1,5 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const Settingform3 = () => {
   const mandatory_sections = useSelector(
@@ -8,6 +10,37 @@ const Settingform3 = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo?.userinfo?.username
+  );
+  const sessionId = localStorage.getItem("sessionId");
+
+  const [sections, setSections] = useState({});
+  const [sectionIndex, setSectionIndex] = useState<any>("");
+  useEffect(() => {
+    const handleSections = async () => {
+      let content: any = undefined;
+      const postData = async () => {
+        try {
+          const data = {
+            username: adminusername,
+            session_id: sessionId,
+          };
+          const response = await axios.post(
+            "https://100097.pythonanywhere.com/get_user_sections",
+            data
+          );
+          if (content === undefined) content = response.data.data;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      await postData();
+      setSections(content);
+    };
+    handleSections();
+  }, [adminusername, sessionId]);
+  console.log(Object.entries(sections));
   return (
     <div className="form-item">
       <div
@@ -38,7 +71,7 @@ const Settingform3 = () => {
             : "border-[#7A7A7A]"
         } border-solid`}
       >
-        <div className="w-full mb-3">
+        <div className="w-full mb-3 relative">
           <label
             id="settingForm3text2"
             htmlFor=""
@@ -52,14 +85,36 @@ const Settingform3 = () => {
             aria-label="Default select example"
             multiple
           >
-            {mandatory_sections.map((item, index) => (
-              <option key={index} value={item}>
-                {item}
-              </option>
-            ))}
+            {sections &&
+              Object.entries(sections).map((key, index) => (
+                <option
+                  key={index}
+                  value={key[0]}
+                  onMouseEnter={() => setSectionIndex(key[1])}
+                  onMouseLeave={() => setSectionIndex("")}
+                  className="hover:bg-slate-300"
+                >
+                  {key[0]}
+                </option>
+              ))}
           </select>
+          {sectionIndex && (
+            <div className="absolute flex flex-col gap-3 bg-white rounded-lg p-4 border border-[#33a753] left-32 top-1">
+              {Object.entries(sectionIndex).map((item, itemIndex) => (
+                <div key={itemIndex} className="flex place-items-center gap-3">
+                  {item[0]}:{" "}
+                  <span>
+                    {item[1] === true
+                      ? "true"
+                      : item[1] === false
+                      ? "false"
+                      : (item[1] as any)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-
         <div className="w-full mb-1">
           <button
             id="settingForm3text3"
