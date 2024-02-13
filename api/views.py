@@ -72,22 +72,35 @@ def sessionView(request):
     mdata=request.data
     s=mdata["session_id"]
 
-    ro1=UserData.objects.all().filter(sessionid=s)
-    if not ro1:
+    # ro1=UserData.objects.all().filter(sessionid=s)
+    field_n = {"session_id":s}
+    l1 = dowellconnection("login","bangalore","login","company","company","1083","ABCDE","fetch",field_n,"nil")
+    new = json.loads(l1)
+    if len(new["data"]) < 1:
         return Response({"msg":"No user found"})
-    # return HttpResponse(f"hi{ro1}")
-    for i in ro1:
-        r=i.alldata
-        rj=json.loads(r)
-    field= {"document_name":rj["userinfo"]["username"]}
+    else:
+        data = new["data"][0]["user_data"]
+
+
+
+    # if not ro1:
+    #     return Response({"msg":"No user found"})
+    # # return HttpResponse(f"hi{ro1}")
+    # for i in ro1:
+    #     r=i.alldata
+    #     rj=json.loads(r)
+
+    field= {"document_name":data["userinfo"]["username"]}
     l1=dowellconnection("login","bangalore","login","client_admin","client_admin","1159","ABCDE","fetch",field,"nil")
+
     l1 = json.loads(l1)
     roles = l1["data"][0]["roles"]
-    rj["roles"] = roles
+    # rj["roles"] = roles
+    data["roles"] = roles
     # return Response({"roles":roles})
     try:
-        if rj:
-            return Response(rj)
+        if data:
+            return Response(data)
     except:
         return Response({"msg":"your data not found in database try again with session_id"})
 @api_view(["POST"])
@@ -1273,6 +1286,7 @@ def get_data(request):
                                  "fetch", field_c, "nil")
         try:
             session_id = request.data.get("session_id")
+            # print("SESSION",session_id)
         except:
             pass
 
@@ -1288,7 +1302,7 @@ def get_data(request):
             except:
                 return HttpResponse('<style>body{background-color: rgba(0,0,0, 0.4);}.close-btn {position: absolute;bottom: 12px;right: 25px;}.content {position: absolute;width: 250px;height: 200px;background: #fff;top: 0%;left: 50%;transform: translate(-50%, -50%)scale(0.1);visibility: hidden;transition: transform 0.4s, top 0.4s;}.open-popup {visibility: visible;top: 50%;transform: translate(-50%, -50%)scale(1);}.header {height: 50px;background: #efea53;overflow: hidden;text-align: center;}p {padding-top: 40px;text-align: center;}</style><div class="content open-popup" id="popup"><div class="header"><h2>Alert!</h2></div><p>Some thing went wrong pl <a href="/logout" >logout </a> <a href="/">login</a> again</p><div><button type="button" onclick="history.back();" class="close-btn">close</button></div></div>')
 
-            # print(user["userinfo"])
+            # print(user["userinfo"]["username"])
             obj, created = UserInfo.objects.update_or_create(username=user["userinfo"]["username"],defaults={'userinfo': json.dumps(user["userinfo"])})
         return Response(resp)
         data = resp['data']
@@ -2163,48 +2177,62 @@ def get_last_login(request):
 
 @api_view(['POST'])
 def connect_portfolio(request):
-    PRODUCT_URLS = {
-            "Dowell Services": "https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={session_id}&id=100093",
-            "My Channel": "https://dowell-my-channel.flutterflow.app/?session_id={session_id}&id=100093",
-            "Workflow AI": "https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session_id}&id=100093",
-            "Digital": "https://dowell-digitalq-manager.flutterflow.app/?session_id={session_id}&id=100093",
-            "Maps": "https://livinglab-maps.flutterflow.app/?session_id={session_id}&id=100093",
-            "Scale": "https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session_id}&id=100093",
-            "Legalzard": "https://play.google.com/store/apps/details?id=com.legalzard.policies",
-            "Calculator": "https://100050.pythonanywhere.com/calculator/?session_id={session_id}&id=100093",
-            "Team": "https://ll07-team-dowell.github.io/Jobportal/#?session_id={session_id}&id=100093",
-            "Media": "https://www.socialmediaautomation.uxlivinglab.online/?session_id={session_id}&id=100093",
-            "Customer": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session_id}&id=100093",
-            "Chat": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session_id}&id=100093",
-            "Wifi": "https://l.ead.me/dowellwifiqrcode/?session_id={session_id}&id=100093",
-            "Wallet": "https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session_id}&id=100093",
-            "Shortner": "https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session_id}&id=100093",
-            "Repositories": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093"
-            # Add more products as needed
-        }
-    if request.method == "POST" and "connect_portfolio" in request.data.get("action"):
-        user = request.data.get("username")
-        portf = request.data.get("portfl")
-        action = request.data.get("action")
-        product = request.data.get("product")
-        orl = request.data.get("present_org")
-        session = request.data.get("session_id")
-        # print("Product passed",product)
-        # if request.data.get("portfolio_name") and
+    try:
+        # s= a["data"]
+        PRODUCT_URLS = {
+                "Dowell Services": "https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={session_id}&id=100093",
+                "My Channel": "https://dowell-my-channel.flutterflow.app/?session_id={session_id}&id=100093",
+                "Workflow AI": "https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session_id}&id=100093",
+                "Digital": "https://dowell-digitalq-manager.flutterflow.app/?session_id={session_id}&id=100093",
+                "Maps": "https://livinglab-maps.flutterflow.app/?session_id={session_id}&id=100093",
+                "Scale": "https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session_id}&id=100093",
+                "Legalzard": "https://play.google.com/store/apps/details?id=com.legalzard.policies",
+                "Calculator": "https://100050.pythonanywhere.com/calculator/?session_id={session_id}&id=100093",
+                "Team": "https://ll07-team-dowell.github.io/Jobportal/#?session_id={session_id}&id=100093",
+                "Media": "https://www.socialmediaautomation.uxlivinglab.online/?session_id={session_id}&id=100093",
+                "Customer": "https://ll03-identity-dowell.github.io/100096-customer-support/?session_id={session_id}&id=100093",
+                "Chat": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session_id}&id=100093",
+                "Wifi": "https://l.ead.me/dowellwifiqrcode/?session_id={session_id}&id=100093",
+                "Wallet": "https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session_id}&id=100093",
+                "Shortner": "https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session_id}&id=100093",
+                "Repositories": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093"
+                # Add more products as needed
+            }
+        if request.method == "POST" and "connect_portfolio" in request.data.get("action"):
+            user = request.data.get("username")
+            portf = request.data.get("portfl")
+            action = request.data.get("action")
+            product = request.data.get("product")
+            orl = request.data.get("present_org")
+            session = request.data.get("session_id")
+            # print("Product passed",product)
+            # if request.data.get("portfolio_name") and
 
 
-        if "Dowell Services" in product:
-            return Response(
-                    f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={session}&id=100093',status=HTTP_200_OK)
+            if "Dowell Services" in product:
+                return Response(
+                        f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={session}&id=100093',status=HTTP_200_OK)
 
 
-        try:
-            lo=UserOrg.objects.all().filter(username=orl)
-        except:
-            return HttpResponse("User Org Not Found in Local Database")
+            # try:
+            #     lo=UserOrg.objects.all().filter(username=orl)
+            # except:
+            #     return HttpResponse("User Org Not Found in Local Database")
 
 
-        if not lo.exists():
+            # if not lo.exists():
+            #     user_f = orl
+            #     field_c = {"document_name": user_f}
+            #     login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+            #                             "fetch", field_c, "nil")
+
+            #     ##########################################
+            #     resp = json.loads(login)
+            #     obj, created = UserOrg.objects.update_or_create(username=user_f,defaults={'org': json.dumps(resp["data"][0])})
+
+            # lo=UserOrg.objects.all().filter(username=orl)
+
+
             user_f = orl
             field_c = {"document_name": user_f}
             login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
@@ -2212,307 +2240,345 @@ def connect_portfolio(request):
 
             ##########################################
             resp = json.loads(login)
-            obj, created = UserOrg.objects.update_or_create(username=user_f,defaults={'org': json.dumps(resp["data"][0])})
 
-        lo=UserOrg.objects.all().filter(username=orl)
+            # for rd in lo:
+            #     lo1=rd.org
+            #     lrf=json.loads(lo1)
+            lrf = resp["data"][0]
+            mydict={}
+            # if "API" in product:
+            #     return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
 
-        for rd in lo:
-            lo1=rd.org
-            lrf=json.loads(lo1)
-        mydict={}
-        # if "API" in product:
-        #     return redirect(f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={request.session["session_id"]}&id=100093')
+            ro=UserInfo.objects.all().filter(username=user)
+            # ro1=UserOrg.objects.all().filter(username=user)
 
-        ro=UserInfo.objects.all().filter(username=user)
-        ro1=UserOrg.objects.all().filter(username=user)
-        # user_orgn = UserOrg.objects.get(username=user)
-        # org_dict = json.loads(user_orgn.org)
-        # # return HttpResponse(org_dict["profile_info"])
-        # try:
-        #     # Iterate over the 'portpolio' list in the data
-        #     for portfolio in org_dict['portpolio']:
-        #         if portfolio['portfolio_name'] == portf:
-        #             status = portfolio['status']
-        #             notification_obj = Notification(username=user, owner=orl,
-        #                     notification=json.dumps(org_dict["profile_info"]),
-        #                     status=status)
-        #             notification_obj.save()
-        # # return HttpResponse(lrf)
-        # except:
-        #     pass
+            user_u = user
+            field_u = {"document_name": user_u}
+            login_u = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                    "fetch", field_u, "nil")
 
-        for i in ro:
-            rofield=i.userinfo
-            #s = rofield.replace("\'", "\"")
-            s=json.loads(rofield)
-            mydict["userinfo"]=s
+            ##########################################
+            resp_u = json.loads(login_u)
 
-        if orl==user:
-            lrst=[]
-            for lis in lrf["portpolio"]:
-                # Check if 'portfolio_code' key is not present and skip
-                if "portfolio_code" not in lis:
-                    continue
+            # user_orgn = UserOrg.objects.get(username=user)
+            # org_dict = json.loads(user_orgn.org)
+            # # return HttpResponse(org_dict["profile_info"])
+            # try:
+            #     # Iterate over the 'portpolio' list in the data
+            #     for portfolio in org_dict['portpolio']:
+            #         if portfolio['portfolio_name'] == portf:
+            #             status = portfolio['status']
+            #             notification_obj = Notification(username=user, owner=orl,
+            #                     notification=json.dumps(org_dict["profile_info"]),
+            #                     status=status)
+            #             notification_obj.save()
+            # # return HttpResponse(lrf)
+            # except:
+            #     pass
 
-                # print(lis)
-                if lis["product"] == "all":
-                    lis["product"]= product
+            for i in ro:
+                rofield=i.userinfo
+                #s = rofield.replace("\'", "\"")
+                s=json.loads(rofield)
+                mydict["userinfo"]=s
+            # try:
+            #     print(s)
+            # except:
+            #     pass
+            if orl==user:
+                lrst=[]
+                for lis in lrf["portpolio"]:
+                    # Check if 'portfolio_code' key is not present and skip
+                    if "portfolio_code" not in lis:
+                        continue
+
+                    # print(lis)
+                    if lis["product"] == "all":
+                        lis["product"]= product
 
 
-                if str(lis["portfolio_code"]) == portf:
+                    if str(lis["portfolio_code"]) == portf:
 
-                    mydict["portfolio_info"] = [lis]
+                        mydict["portfolio_info"] = [lis]
 
 
-                # Assuming 'product' is always present in 'lis', or you'd need to add another check
-                if lis["product"] in product and len(lis["username"]) > 0:
-                    lrst.append(lis)
-                # print(lrst)
+                    # Assuming 'product' is always present in 'lis', or you'd need to add another check
+                    if lis["product"] in product and len(lis["username"]) > 0:
+                        lrst.append(lis)
+                    # print(lrst)
+                    # else:
+                    #     return HttpResponse(f"<h1 align='center'>Data Not Found<br><a href='/'>Home</a></h1>")
+                try:
+                    if lrf["organisations"][0]["org_img"]:
+                        mydict["userinfo"]["org_img"] = lrf["organisations"][0]["org_img"]
+                except:
+                        mydict["userinfo"]["org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
+
+                try:
+                    mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
+                    mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
+                    mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
+                except Exception as e:
+                    return Response(f"Data Not Found{e}")
+                mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
+                # return JsonResponse({"msg":mydict})
+                print("USER",user)
+                field_n = {"session_id":session}
+                l1 = dowellconnection("login","bangalore","login","company","company","1083","ABCDE","fetch",field_n,"nil")
+                userdata_n = json.loads(l1)
+                if len(userdata_n["data"]) > 0:
+                    update_user = {"user_data":mydict}
+                    dowellconnection("login","bangalore","login","company","company","1083","ABCDE","update",field_n,update_user)
+                else:
+                    insert_user = {"session_id":session,"user":user,"user_data":mydict}
+                    dowellconnection("login","bangalore","login","company","company","1083","ABCDE","insert",insert_user,"nil")
+
+
+                # obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+
+                # print("connecting product owner org is",product)
+                # if product == "My Channel":
+                #     product = "dowell_channel"
+                # if "Workflow AI" in product or "workflow" in product:
+                #     if s["User_type"] == "betatester":
+                #         return Response(
+                #             f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+                #     else:
+                #         # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
+                #         return Response(
+                #             f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
+
+                # elif "Digital" in product:
+                #     return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Maps" in product:
+                #     return Response(f'https://livinglab-maps.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Scale" in product or "scales" in product:
+                #     return Response(
+                #         f'https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Legalzar" in product or "Legalzard" in product:
+                #     return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies',status=HTTP_200_OK)
+                # elif "Calculator" in product:
+                #     return Response(
+                #         f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Team" in product:
+                #     if s["User_type"] == "betatester":
+                #         return Response(
+                #             f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+                #     else:
+                #         return Response(
+                #             f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Media" in product:
+                #     return Response(f'https://www.socialmediaautomation.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Customer" in product:
+                #     return Response(
+                #         f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Chat" in product:
+                #     return Response(
+                #         f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Wifi" in product:
+                #     return Response(
+                #         f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Wallet" in product:
+                #     return Response(
+                #         f'https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Shortner" in product or "shortner" in product:
+                #     return Response(
+                #         f'https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif product == "dowell_channel":
+                #         return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # elif "Repositories" or "Secure Repositories" in product:
+                #     return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session}&id=100093',status=HTTP_200_OK)
                 # else:
-                #     return HttpResponse(f"<h1 align='center'>Data Not Found<br><a href='/'>Home</a></h1>")
-            try:
-                if lrf["organisations"][0]["org_img"]:
-                    mydict["userinfo"]["org_img"] = lrf["organisations"][0]["org_img"]
-            except:
-                    mydict["userinfo"]["org_img"] = "https://100093.pythonanywhere.com/static/clientadmin/img/logomissing.png"
+                #     return Response(f"Redirect the URL of this {product} product not avail in database")
 
-            try:
-                mydict["portfolio_info"][0]["org_id"]=lrf["_id"]
-                mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
-                mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
-            except Exception as e:
-                return Response(f"Data Not Found{e}")
-            mydict["selected_product"]={"product_id":1,"product_name":product,"platformpermissionproduct":[{"type":"member","operational_rights":["view","add","edit","delete"],"role":"admin"}],"platformpermissiondata":["real","learning","testing","archived"],"orgid":lrf["_id"],"orglogo":"","ownerid":"","userportfolio":lrst,"payment_status":"unpaid"}
-            # return JsonResponse({"msg":mydict})
-            obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
-            # print("connecting product owner org is",product)
-            # if product == "My Channel":
-            #     product = "dowell_channel"
-            # if "Workflow AI" in product or "workflow" in product:
-            #     if s["User_type"] == "betatester":
-            #         return Response(
-            #             f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',status=HTTP_200_OK)
-            #     else:
-            #         # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
-            #         return Response(
-            #             f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
+                if product in PRODUCT_URLS:
+                    url = PRODUCT_URLS[product].format(session_id=session)
+                    return Response(url, status=HTTP_200_OK)
 
-            # elif "Digital" in product:
-            #     return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Maps" in product:
-            #     return Response(f'https://livinglab-maps.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Scale" in product or "scales" in product:
-            #     return Response(
-            #         f'https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Legalzar" in product or "Legalzard" in product:
-            #     return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies',status=HTTP_200_OK)
-            # elif "Calculator" in product:
-            #     return Response(
-            #         f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Team" in product:
-            #     if s["User_type"] == "betatester":
-            #         return Response(
-            #             f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093',status=HTTP_200_OK)
-            #     else:
-            #         return Response(
-            #             f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Media" in product:
-            #     return Response(f'https://www.socialmediaautomation.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Customer" in product:
-            #     return Response(
-            #         f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Chat" in product:
-            #     return Response(
-            #         f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Wifi" in product:
-            #     return Response(
-            #         f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Wallet" in product:
-            #     return Response(
-            #         f'https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Shortner" in product or "shortner" in product:
-            #     return Response(
-            #         f'https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif product == "dowell_channel":
-            #         return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # elif "Repositories" or "Secure Repositories" in product:
-            #     return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session}&id=100093',status=HTTP_200_OK)
-            # else:
-            #     return Response(f"Redirect the URL of this {product} product not avail in database")
-
-            if product in PRODUCT_URLS:
-                url = PRODUCT_URLS[product].format(session_id=session)
-                return Response(url, status=HTTP_200_OK)
-
-            # Handle special cases
-            if product == "Workflow AI" and s.get("User_type") == "betatester":
-                # Beta tester URL for Workflow AI
-                return Response(
-                    f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',
-                    status=HTTP_200_OK
-                )
+                # Handle special cases
+                # if product == "Workflow AI" and s.get("User_type") == "betatester":
+                #     # Beta tester URL for Workflow AI
+                #     return Response(
+                #         f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',
+                #         status=HTTP_200_OK
+                #     )
 
 
-        for ii in ro1:
-            pfield = ii.org
-            # s = rofield.replace("\'", "\"")
-            ss = json.loads(pfield)
-            rr = ss["other_organisation"]
-            rr1 = ss["organisations"]
+            # for ii in ro1:
+            #     pfield = ii.org
+            #     # s = rofield.replace("\'", "\"")
+            #     ss = json.loads(pfield)
+            #     rr = ss["other_organisation"]
+            #     rr1 = ss["organisations"]
 
-        # print("RR",rr)
-        for iii in rr:
-            if "portfolio_code" not in iii:
-                continue
-            if iii["org_name"] == orl:
-                    try:
-                        if str(iii["portfolio_code"]) == portf:
-                            mydict["portfolio_info"] = [iii]
+            rr = resp_u["data"][0]["other_organisation"]
+            rr1 = resp_u["data"][0]["organisations"]
 
-                        else:
+            # print("RR",rr)
+            for iii in rr:
+                if "portfolio_code" not in iii:
+                    continue
+                if iii["org_name"] == orl:
+                        try:
+                            if str(iii["portfolio_code"]) == portf:
+                                mydict["portfolio_info"] = [iii]
+
+                            else:
+                                pass
+                        except:
                             pass
-                    except:
-                        pass
 
 
-        # mydict["portfolio_info"] = [item for item in rr if item.get("portfolio_code") == portf and item.get("org_name") == orl]
+            # mydict["portfolio_info"] = [item for item in rr if item.get("portfolio_code") == portf and item.get("org_name") == orl]
 
-        # for iii in mylist:
-        #     if "org_name" in iii and iii["org_name"] == orl:
-        #         if "portfolio_code" in iii:
-        #             if str(iii["portfolio_code"]) == portf:
-        #                 mydict["portfolio_info"] = [iii]
-        #         else:
-        #             # Item does not have "portfolio_code" key, so skip it
-        #             continue
+            # for iii in mylist:
+            #     if "org_name" in iii and iii["org_name"] == orl:
+            #         if "portfolio_code" in iii:
+            #             if str(iii["portfolio_code"]) == portf:
+            #                 mydict["portfolio_info"] = [iii]
+            #         else:
+            #             # Item does not have "portfolio_code" key, so skip it
+            #             continue
 
-        try:
-            selected_role = mydict["portfolio_info"]["role"]
-        except:
-            pass
-        level1 = {}
-        level2 = {}
-        level3 = {}
-        level4 = {}
-        level5 = {}
-        try:
-            for items in lrf["roles"]:
-                if selected_role == items["role_name"]:
-                    if items["level1_item"]:
-                        level1["level1name"] = lrf["organisations"][0]["level1"]["level_name"]
-                        level1["level1items"] = lrf["organisations"][0]["level1"]["items"]
-                    if items["level2_item"]:
-                        level2["level1name"] = lrf["organisations"][0]["level2"]["level_name"]
-                        level2["level1items"] = lrf["organisations"][0]["level2"]["items"]
-                    if items["level3_item"]:
-                        level2["level3name"] = lrf["organisations"][0]["level3"]["level_name"]
-                        level2["level3items"] = lrf["organisations"][0]["level3"]["items"]
-                    if items["level4_item"]:
-                        level2["level4name"] = lrf["organisations"][0]["level4"]["level_name"]
-                        level2["level4items"] = lrf["organisations"][0]["level4"]["items"]
-                    if items["level5_item"]:
-                        level2["level5name"] = lrf["organisations"][0]["level5"]["level_name"]
-                        level2["level5items"] = lrf["organisations"][0]["level5"]["items"]
-        except:
-            pass
-        if "portfolio_info" not in mydict:
-            # return HttpResponse(f'{rr1}')
-            mydict["portfolio_info"] = [ss["portpolio"][0]]
-        productport = []
-        for product2 in lrf["portpolio"]:
-            if product == product2["product"]:
-                productport.append(product2)
+            try:
+                selected_role = mydict["portfolio_info"]["role"]
+            except:
+                pass
+            level1 = {}
+            level2 = {}
+            level3 = {}
+            level4 = {}
+            level5 = {}
+            try:
+                for items in lrf["roles"]:
+                    if selected_role == items["role_name"]:
+                        if items["level1_item"]:
+                            level1["level1name"] = lrf["organisations"][0]["level1"]["level_name"]
+                            level1["level1items"] = lrf["organisations"][0]["level1"]["items"]
+                        if items["level2_item"]:
+                            level2["level1name"] = lrf["organisations"][0]["level2"]["level_name"]
+                            level2["level1items"] = lrf["organisations"][0]["level2"]["items"]
+                        if items["level3_item"]:
+                            level2["level3name"] = lrf["organisations"][0]["level3"]["level_name"]
+                            level2["level3items"] = lrf["organisations"][0]["level3"]["items"]
+                        if items["level4_item"]:
+                            level2["level4name"] = lrf["organisations"][0]["level4"]["level_name"]
+                            level2["level4items"] = lrf["organisations"][0]["level4"]["items"]
+                        if items["level5_item"]:
+                            level2["level5name"] = lrf["organisations"][0]["level5"]["level_name"]
+                            level2["level5items"] = lrf["organisations"][0]["level5"]["items"]
+            except:
+                pass
+            if "portfolio_info" not in mydict:
+                # return HttpResponse(f'{rr1}')
+                mydict["portfolio_info"] = [ss["portpolio"][0]]
+            productport = []
+            for product2 in lrf["portpolio"]:
+                if product == product2["product"]:
+                    productport.append(product2)
 
-        mydict["organisations"] = [{"orgname": lrf["document_name"], "orgowner": lrf["document_name"]}]
-        mydict["selected_product"] = {"product_id": 1, "product_name": product, "platformpermissionproduct": [
-            {"type": "member", "operational_rights": ["view", "add", "edit", "delete"], "role": "admin"}],
-                                      "platformpermissiondata": ["real", "learning", "testing", "archived"],
-                                      "orgid": lrf["_id"], "orglogo": "", "ownerid": "", "userportfolio": productport,
-                                      "payment_status": "unpaid"}
-        mydict["selected_portfoliolevel"] = level1
-        mydict["selected_portfolioleve2"] = level2
-        mydict["selected_portfolioleve3"] = level3
-        mydict["selected_portfolioleve4"] = level4
-        mydict["selected_portfolioleve5"] = level5
-        mydict["portfolio_info"][0]["org_id"] = lrf["_id"]
-        mydict["portfolio_info"][0]["owner_name"] = lrf["document_name"]
-        mydict["portfolio_info"][0]["org_name"] = lrf["document_name"]
-        # print("MYDICT",mydict["portfolio_info"])
-        obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
-                                                         defaults={'alldata': json.dumps(mydict)})
+            mydict["organisations"] = [{"orgname": lrf["document_name"], "orgowner": lrf["document_name"]}]
+            mydict["selected_product"] = {"product_id": 1, "product_name": product, "platformpermissionproduct": [
+                {"type": "member", "operational_rights": ["view", "add", "edit", "delete"], "role": "admin"}],
+                                          "platformpermissiondata": ["real", "learning", "testing", "archived"],
+                                          "orgid": lrf["_id"], "orglogo": "", "ownerid": "", "userportfolio": productport,
+                                          "payment_status": "unpaid"}
+            mydict["selected_portfoliolevel"] = level1
+            mydict["selected_portfolioleve2"] = level2
+            mydict["selected_portfolioleve3"] = level3
+            mydict["selected_portfolioleve4"] = level4
+            mydict["selected_portfolioleve5"] = level5
+            mydict["portfolio_info"][0]["org_id"] = lrf["_id"]
+            mydict["portfolio_info"][0]["owner_name"] = lrf["document_name"]
+            mydict["portfolio_info"][0]["org_name"] = lrf["document_name"]
+            # print("MYDICT",mydict["portfolio_info"])
+            # obj, created = UserData.objects.update_or_create(username=user, sessionid=session,
+            #                                                  defaults={'alldata': json.dumps(mydict)})
 
-
-        # if product == "My Channel":
-        #         product = "dowell_channel"
-        # print("connecting product other org is",product)
-        if "Workflow AI" in product or "workflow" in product:
-            if s["User_type"] == "betatester":
-                return Response(
-                    f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+            field_n = {"session_id":session}
+            l1 = dowellconnection("login","bangalore","login","company","company","1083","ABCDE","fetch",field_n,"nil")
+            userdata_n = json.loads(l1)
+            if len(userdata_n["data"]) > 0:
+                update_user = {"user_data":mydict}
+                dowellconnection("login","bangalore","login","company","company","1083","ABCDE","update",field_n,update_user)
             else:
-                # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
-                return Response(
-                    f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
+                insert_user = {"session_id":session,"user":user,"user_data":mydict}
+                dowellconnection("login","bangalore","login","company","company","1083","ABCDE","insert",insert_user,"nil")
 
-        elif "Digital" in product:
-            return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Maps" in product:
-            return Response(f'https://livinglab-maps.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
 
-        elif "Scale" in product or "scales" in product:
-            return Response(
-                f'https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Legalzar" in product or "Legalzard" in product:
-            return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies',status=HTTP_200_OK)
-        elif "Calculator" in product:
-            return Response(
-                f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Team" in product:
-            if s["User_type"] == "betatester":
+            # if product == "My Channel":
+            #         product = "dowell_channel"
+            # print("connecting product other org is",product)
+            if "Workflow AI" in product or "workflow" in product:
+                if s["User_type"] == "betatester":
+                    return Response(
+                        f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+                else:
+                    # return redirect(f'https://ll04-finance-dowell.github.io/100018-dowellWorkflowAi-testing/?session_id={request.session["session_id"]}&id=100093')
+                    return Response(
+                        f'https://ll04-finance-dowell.github.io/workflowai.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
+
+            elif "Digital" in product:
+                return Response(f'https://dowell-digitalq-manager.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Maps" in product:
+                return Response(f'https://livinglab-maps.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+
+            elif "Scale" in product or "scales" in product:
                 return Response(
-                    f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+                    f'https://ll08-mathematicalmodelling-dowell.github.io/100035-DowellScale-Function/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Legalzar" in product or "Legalzard" in product:
+                return Response(f'https://play.google.com/store/apps/details?id=com.legalzard.policies',status=HTTP_200_OK)
+            elif "Calculator" in product:
+                return Response(
+                    f'https://100050.pythonanywhere.com/calculator/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Team" in product:
+                # if s["User_type"] == "betatester":
+                #     return Response(
+                #         f'https://ll07-team-dowell.github.io/100098-DowellJobPortal/#/?session_id={session}&id=100093',status=HTTP_200_OK)
+                # else:
+                return Response(
+                        f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Media" in product:
+                return Response(f'https://www.socialmediaautomation.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Admin" in product:
+                return Response(f'https://100093.pythonanywhere.com/?owner={orl}',status=HTTP_200_OK)
+            elif "Customer" in product:
+                return Response(
+                    f'https://ll03-identity-dowell.github.io/100096-customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Chat" in product:
+                return Response(
+                    f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Repositories" in product:
+                return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/',status=HTTP_200_OK)
+            elif "Wifi" in product:
+                return Response(
+                    f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Wallet" in product:
+                return Response(
+                    f'https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session}&id=100093',status=HTTP_200_OK)
+            elif "Channel" or "My Channel" in product:
+                    return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
+            # elif product == "dowell_channel":
+            #     return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
             else:
-                return Response(
-                    f'https://ll07-team-dowell.github.io/Jobportal/#?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Media" in product:
-            return Response(f'https://www.socialmediaautomation.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Admin" in product:
-            return Response(f'https://100093.pythonanywhere.com/?owner={orl}',status=HTTP_200_OK)
-        elif "Customer" in product:
-            return Response(
-                f'https://ll03-identity-dowell.github.io/100096-DowellChat/#/customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Chat" in product:
-            return Response(
-                f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Repositories" in product:
-            return Response(f'https://ll07-team-dowell.github.io/100045-SecureRepository/',status=HTTP_200_OK)
-        elif "Wifi" in product:
-            return Response(
-                f'https://l.ead.me/dowellwifiqrcode/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Wallet" in product:
-            return Response(
-                f'https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session}&id=100093',status=HTTP_200_OK)
-        elif "Channel" or "My Channel" in product:
-                return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-        # elif product == "dowell_channel":
-        #     return Response(f'https://dowell-my-channel.flutterflow.app/?session_id={session}&id=100093',status=HTTP_200_OK)
-        else:
-            return Response(f"Redirect the URL of this {product} product not avail in database")
-    if request.method == "POST" and "request_portfolio" in request.POST:
-        user = request.data.get("username")
-        orl = request.data.get("present_org")
-        product = request.data.get("product")
-        user_orgn = UserOrg.objects.get(username=user)
-        org_dict = json.loads(user_orgn.org)
+                return Response(f"Redirect the URL of this {product} product not avail in database")
+        if request.method == "POST" and "request_portfolio" in request.POST:
+            user = request.data.get("username")
+            orl = request.data.get("present_org")
+            product = request.data.get("product")
+            user_orgn = UserOrg.objects.get(username=user)
+            org_dict = json.loads(user_orgn.org)
 
-        try:
-            # Iterate over the 'portpolio' list in the data
-            notification_obj = Notification(username=user, owner=orl,
-                                            notification=json.dumps(org_dict["profile_info"]),
-                                            status="enable", product=product)
-            notification_obj.save()
-        except:
-            pass
+            try:
+                # Iterate over the 'portpolio' list in the data
+                notification_obj = Notification(username=user, owner=orl,
+                                                notification=json.dumps(org_dict["profile_info"]),
+                                                status="enable", product=product)
+                notification_obj.save()
+            except:
+                pass
+    except Exception as e:
+        return Response({"msg":f"failure:{e}"},status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['POST'])
@@ -3570,3 +3636,178 @@ def remove_used_links(request):
 
     # Return a success response
     return Response({'status': 'success', 'updated_links': filtered_links}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def create_team_data(request):
+    try:
+        data = json.loads(request.body)
+        username = data.get('username', '')
+        owner = data.get('owner', '')
+        client_admin_id = data.get('client_admin_id', '')
+
+        # Check if 'team_name' is provided and is not empty
+        if 'team_name' not in data or not data['team_name'].strip():
+            return JsonResponse({"error": "The 'team_name' field is mandatory."}, status=400)
+
+        team_name = data['team_name']  # 'team_name' is now mandatory
+        lookup_u = {"username":username}
+        check = dowellconnection("login","bangalore","login","browsers","browsers","1109","ABCDE","fetch",lookup_u,"nil")
+        check = json.loads(check)
+        if check["data"] == 0:
+            my_teams = [{
+                "team_name": team_name,
+                "members": {
+                    "team_members": [],
+                    "public_members": []
+                }
+            }]
+
+            response_data = {
+                "username": username,
+                "owner": owner,
+                "client_admin_id": client_admin_id,
+                "my_teams": my_teams
+            }
+            dowellconnection("login","bangalore","login","browsers","browsers","1109","ABCDE","insert",response_data,"nil")
+            return JsonResponse(response_data, status=200)
+        else:
+            return JsonResponse({"error": "Username already present"}, status=500)
+
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+@api_view(['POST'])
+def add_member_to_team(request):
+    if request.method == 'POST':
+        try:
+            # Assuming 'dowellconnection' simulates fetching data from a database or external service
+            field = {}
+            login_response = dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "fetch", field, "nil")
+            fetched_data = json.loads(request.body)
+
+            # Extract the necessary data from the request
+            username_requested = fetched_data.get('username')
+            team_name = fetched_data.get('team_name')
+            members_to_add = fetched_data.get('members', [])
+            member_type = fetched_data.get('type')
+
+            # Simulate fetching data structure that contains users and their teams
+            data_structure = json.loads(login_response)
+
+            # Find the user by username in the data structure
+            for user_data in data_structure.get('data', []):
+                if user_data.get('username') == username_requested:
+                    # User found, now find the specified team within this user's data
+                    for team in user_data.get('my_teams', []):
+                        if team['team_name'] == team_name:
+                            # Found the team, now add the members based on the member_type
+                            for member in members_to_add:
+                                if member_type == 'team_members':
+                                    team['members']['team_members'].append(member)
+                                elif member_type == 'public_members':
+                                    team['members']['public_members'].append(member)
+                            # Assuming dowellconnection update is successful and you want to return the updated user data
+                            # This is commented out since it's not clear if dowellconnection is meant to be executed here
+                            field1={"username": username_requested}
+                            update_field = {"my_teams": user_data["my_teams"]}
+                            dowellconnection("login","bangalore","login","browsers","browsers","1109","ABCDE","update",field1,update_field)
+                            return JsonResponse({"success": True, "message": "Members added successfully", "data": user_data["my_teams"]}, status=200)
+
+                    # If specified team is not found in the user's data
+                    return JsonResponse({"error": "Team not found"}, status=404)
+
+            # If specified username is not found in the data structure
+            return JsonResponse({"error": "Username not found"}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@api_view(['POST'])
+def get_team_names_by_username(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username_requested = data.get('username')
+
+            # Simulated data structure
+            # data_structure = {
+            #     'isSuccess': True,
+            #     'data': [
+            #         # Assuming this data structure is already loaded or fetched from somewhere
+            #     ]
+            # }
+            field = {}
+            login_response = dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "fetch", field, "nil")
+            data_structure = json.loads(login_response)
+
+            # Find the user by username in the data structure
+            teams = []
+            for user_data in data_structure.get('data', []):
+                if user_data.get('username') == username_requested:
+                    # User found, extract team names
+                    teams = [team['team_name'] for team in user_data.get('my_teams', [])]
+                    break  # Exit the loop once the user is found
+
+            if teams:
+                return JsonResponse({"username": username_requested, "teams": teams}, status=200)
+            else:
+                return JsonResponse({"error": "Username not found or no teams associated"}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@api_view(['POST'])
+def get_member_names_by_team(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username_requested = data.get('username')
+            team_name_requested = data.get('team_name')
+            member_type_requested = data.get('member_type')  # 'team_members' or 'public_members'
+
+            field = {}
+            login_response = dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "fetch", field, "nil")
+            data_structure = json.loads(login_response)
+
+            member_names = []
+            user_found = False
+            team_found = False
+
+            for user_data in data_structure.get('data', []):
+                if user_data.get('username') == username_requested:
+                    user_found = True
+                    for team in user_data.get('my_teams', []):
+                        if team['team_name'] == team_name_requested:
+                            team_found = True
+                            if member_type_requested in ['team_members', 'public_members']:
+                                members_list = team['members'].get(member_type_requested, [])
+                                member_names = [member['member_name'] for member in members_list if 'member_name' in member]
+                            break
+                    break
+
+            if not user_found:
+                return JsonResponse({"error": "Username not found"}, status=404)
+            elif not team_found:
+                return JsonResponse({"error": "Team not found"}, status=404)
+            elif not member_names:
+                return JsonResponse({"error": "No members found for the specified member type"}, status=404)
+            else:
+                return JsonResponse({"username": username_requested, "team_name": team_name_requested, "member_type": member_type_requested, "member_names": member_names}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)

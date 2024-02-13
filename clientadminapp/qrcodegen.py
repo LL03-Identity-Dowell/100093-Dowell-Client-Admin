@@ -62,7 +62,7 @@ def addurltoqrcode(url,imgpath):
     img = qrcode.make(url)
     img.save(imgpath)
 
-import qrcode.image.svg
+# import qrcode.image.svg
 def check():
     img = qrcode.make('http://www.google.com/', image_factory=qrcode.image.svg.SvgImage)
 

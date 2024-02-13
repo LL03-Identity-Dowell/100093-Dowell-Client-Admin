@@ -54,6 +54,13 @@ urlpatterns = [
     path('languages/', LanguageListView.as_view(), name='language-list'),
     path('update_org_name/', update_org_name, name='update_org_name'),
     path('translate/', GoogleTranslateAPIView.as_view(), name='translate_api'),
+    path('get_public_usernames/', find_public, name='get_public_usernames'),
+    path('remove_public_usernames/', remove_public, name='remove_public_usernames'),
+    path('remove_used_public/', remove_used_links, name='remove_used_links'),
+    path('create_team_data/', create_team_data, name='create_team_data'),
+    path('add_member_to_team/', add_member_to_team, name='add_member_to_team'),
+    path('get_team_names_by_username/', get_team_names_by_username, name='get_team_names_by_username'),
+    path('get_member_names_by_team/', get_member_names_by_team, name='get_member_names_by_team'),
 
 
 ]
