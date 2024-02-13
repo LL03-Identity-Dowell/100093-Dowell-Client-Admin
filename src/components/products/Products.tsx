@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
 import { ProductSelectIds, ProductTextIds } from "../../Ids";
+import { isFluxStandardAction } from "@reduxjs/toolkit";
 //defining interfaces for product , portfolio,ChildPropsProductCardProps
 type Product = {
   _id: string;
@@ -222,6 +223,11 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       portfolio_name?: string;
     };
 
+    if (!data.portfl) {
+      toast.warning("Select a portfolio.");
+      setIsLoading(false);
+      return;
+    }
     if (selectedporfolio?.product === "all") {
       data.portfolio_name = "default";
     }
