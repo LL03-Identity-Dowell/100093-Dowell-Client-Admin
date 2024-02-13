@@ -4,9 +4,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const Settingform3 = () => {
-  const mandatory_sections = useSelector(
-    (state: RootState) => state.setting?.data?.mandatory_sections
-  );
+  // const mandatory_sections = useSelector(
+  //   (state: RootState) => state.setting?.data?.mandatory_sections
+  // );
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
