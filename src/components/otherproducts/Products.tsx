@@ -28,11 +28,8 @@ const Products = () => {
   const [hovertitle, setHovertitle] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<Option | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
-    setIsLoading(!productData);
-  }, [productData]);
 
   const handleMouseOver = (title: string) => {
     setIsHovering(true);
