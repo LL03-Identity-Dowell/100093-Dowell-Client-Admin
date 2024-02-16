@@ -10,13 +10,14 @@ import { Option } from "../portfolio/types";
 import { isNewOwner, setAdminData } from "../../store/slice/adminData";
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
-
+import Lottie from "lottie-react";
+import LoaderAnim from "../../assets/json/loader.json";
 const Products = () => {
   const defaultproductData = useSelector(
     (state: RootState) => state.otherorgdata.data
   );
 
-   const productData = defaultproductData.filter((e)=>e.product!="")
+  const productData = defaultproductData.filter((e) => e.product != "");
   const showLoader = useSelector((state: RootState) => state?.loaderslice);
   const selectedOrgName = useSelector(
     (state: RootState) => state.selectedorg.orgname
@@ -27,7 +28,7 @@ const Products = () => {
   const [hovertitle, setHovertitle] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("");
   const [selectedItem, setSelectedItem] = useState<Option | null>(null);
-  const [isLoading, setIsLoading] = useState(!productData);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     setIsLoading(!productData);
@@ -46,63 +47,67 @@ const Products = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-     e.preventDefault();
+    e.preventDefault();
     if (selectedItem != null) {
-     
-			setIsLoading(true);
-
-			const data = {
-				username: userName,
-				action: "connect_portfolio",
-				portfl: selectedItem?.value,
-				product: selectedProduct,
-				present_org: selectedOrgName,
-				session_id: sessionId,
-			};
-			try {
-				const response = await axios.post(
-					"https://100093.pythonanywhere.com/api/connect_portfolio/",
-					data
-				);
-				if (data.product === "Living Lab Admin") {
-					const username = response.data.split("?")[1].split("=")[1];
-					try {
-						const responseAdmin = await axios.post(
-							"https://100093.pythonanywhere.com/api/get_data/",
-							{ username: username }
-						);
-						const response = await axios.post(
-							"https://100093.pythonanywhere.com/api/settings/",
-							{ username: username }
-						);
-						toast.success("Success");
-						dispatch(isNewOwner(username));
-						localStorage.setItem("username", username);
-						dispatch(getViewAccess(response.data.data.processes_to_portfolio));
-						dispatch(setAdminData(responseAdmin.data.data[0]));
-						dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
-					} catch (error: unknown) {
-            toast.error("an unknown error occurred, please try again");
-						console.error(error);
-					}
-				} else {
-					toast.success("Success");
-					window.location.href = response.data;
-				}
-			} catch (error: unknown) {
-				if (axios.isAxiosError(error)) {
-					console.error(error);
-					toast.error(error.response?.data);
-				} else {
-					console.error("An unknown error occurred:", error);
-					toast.error("An unknown error occurred");
-				}
-			} finally {
-				setIsLoading(false);
-			}
+      setIsLoading(true);
+      const data = {
+        username: userName,
+        action: "connect_portfolio",
+        portfl: selectedItem?.value,
+        product: selectedProduct,
+        present_org: selectedOrgName,
+        session_id: sessionId,
+      };
+      setTimeout(async () => {
+        try {
+          const response = await axios.post(
+            "https://100093.pythonanywhere.com/api/connect_portfolio/",
+            data
+          );
+          if (data.product === "Living Lab Admin") {
+            const username = response.data.split("?")[1].split("=")[1];
+            try {
+              const responseAdmin = await axios.post(
+                "https://100093.pythonanywhere.com/api/get_data/",
+                { username: username }
+              );
+              const response = await axios.post(
+                "https://100093.pythonanywhere.com/api/settings/",
+                { username: username }
+              );
+              toast.success("Success");
+              dispatch(isNewOwner(username));
+              localStorage.setItem("username", username);
+              dispatch(
+                getViewAccess(response.data.data.processes_to_portfolio)
+              );
+              dispatch(setAdminData(responseAdmin.data.data[0]));
+              dispatch(getselectedorgs({ orgname: userName, type: "owner" }));
+            } catch (error: unknown) {
+              toast.error("an unknown error occurred, please try again");
+              console.error(error);
+            }
+          } else {
+            toast.success("Success");
+            window.location.href = response.data;
+          }
+        } catch (error: unknown) {
+          if (axios.isAxiosError(error)) {
+            console.error(error);
+            toast.error(error.response?.data);
+          } else {
+            console.error("An unknown error occurred:", error);
+            toast.error("An unknown error occurred");
+          }
+        } finally {
+          setIsLoading(false);
+        }
+        setIsLoading(false);
+      }, 0);
     } else {
       toast.error("Select Portfolio From Dropdown");
-   }
+      setIsLoading(false);
+    }
   };
 
   const options: Option[] | undefined = productData
@@ -171,11 +176,19 @@ const Products = () => {
                                     options={options}
                                     onChange={handleOnChange}
                                     value={selectedItem}
-                                    placeholder="Select"
+                                    placeholder="Select a portfolio"
                                   />
                                 </div>
                                 <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
-                                  {isLoading ? "Loading..." : "Connect"}
+                                  {isLoading ? (
+                                    <Lottie
+                                      animationData={LoaderAnim}
+                                      loop={true}
+                                      style={{ width: "50px" }}
+                                    />
+                                  ) : (
+                                    "Connect"
+                                  )}
                                 </button>
                               </div>
                             </form>

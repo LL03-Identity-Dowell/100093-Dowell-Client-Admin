@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
-import Loader from "../../pages/whiteloader";
+// import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
 import { ProductSelectIds, ProductTextIds } from "../../Ids";
-import { isFluxStandardAction } from "@reduxjs/toolkit";
+import Lottie from "lottie-react";
+import LoaderAnim from "../../assets/json/loader.json";
 //defining interfaces for product , portfolio,ChildPropsProductCardProps
 type Product = {
   _id: string;
@@ -35,6 +36,7 @@ type Portfolio = {
 interface ProductCardProps {
   product: Product;
   hovertitle: string;
+  isLoading: boolean;
   handleTabSwitch: (arg1: number) => void;
   handleMouseOver: (title: string) => void;
   selectedProduct: string;
@@ -232,25 +234,27 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
       data.portfolio_name = "default";
     }
 
-    try {
-      const response = await axios.post(
-        "https://100093.pythonanywhere.com/api/connect_portfolio/",
-        data
-      );
-      toast.success("success");
-      window.location.href = response.data;
-    } catch (error) {
-      // console.log("error", error);
-      toast.error("Failed to connect product, try again!");
-      // if (axios.isAxiosError(error)) {
-      //   console.error(error);
-      //   toast.error(error.response?.data);
-      // } else {
-      //   console.error("An unknown error occurred:", error);
-      // }
-    } finally {
-      setIsLoading(false);
-    }
+    setTimeout(async () => {
+      try {
+        const response = await axios.post(
+          "https://100093.pythonanywhere.com/api/connect_portfolio/",
+          data
+        );
+        toast.success("success");
+        window.location.href = response.data;
+      } catch (error) {
+        // console.log("error", error);
+        toast.error("Failed to connect product, try again!");
+        // if (axios.isAxiosError(error)) {
+        //   console.error(error);
+        //   toast.error(error.response?.data);
+        // } else {
+        //   console.error("An unknown error occurred:", error);
+        // }
+      } finally {
+        setIsLoading(false);
+      }
+    }, 0);
   };
 
   const dispatch = useDispatch();
@@ -285,94 +289,87 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 
   return (
     <>
-      {!isLoading ? (
-        <div className="mt-8">
-          <div className="pl-8">
-            <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
-              <span id="productText1"> Products of </span>
-              <span className="text-[#FF0000]">
-                {adminData.Username || userData.userinfo.username}
-              </span>
-              , <span id="productText2">Owner </span>
-              <span className="text-[#FF0000]">
-                {adminData.profile_info.first_name ||
-                  userData.userinfo.first_name}{" "}
-                {adminData.profile_info.last_name ||
-                  userData.userinfo.last_name}
-              </span>
-            </p>
-            <p
-              id="productText3"
-              className="font-roboto text-lg text-[#7a7a7a] font-semibold"
-            >
-              Select product & Portfolio to connect
-            </p>
-          </div>
-
-          <section className="relative">
-            <main className="flex flex-col w-full">
-              <div className="flex flex-wrap w-full justify-between">
-                {filteredProducts
-                  .filter((product) => {
-                    // Find the corresponding product in getallproduct array
-                    if (typeof getallproducts[0] === "object") {
-                      const matchingProduct = getallproducts.find(
-                        (getProduct) =>
-                          getProduct.product_name === product.product_name
-                      );
-
-                      // Check if the product status is "enable" in getallproduct array
-                      return (
-                        matchingProduct &&
-                        matchingProduct.product_status === "enable"
-                      );
-                    } else {
-                      return product;
-                    }
-                  })
-                  .map((product) => (
-                    <ProductCard
-                      handleTabSwitch={handleTabSwitch}
-                      key={product._id}
-                      product={product}
-                      hovertitle={hovertitle}
-                      handleMouseOver={handleMouseOver}
-                      selectedProduct={selectedProduct}
-                      defaultOptions={defaultOptions}
-                      selectedOptions={selectedOptions}
-                      handleSelectChange={handleSelectChange}
-                      handleSubmit={handleSubmit}
-                      handleRequestPortfolio={handleRequestPortfolio}
-                    />
-                  ))}
-                <>
-                  {filteredProducts?.length % 3 == 2 ? (
-                    <>
-                      <div className="relative box-placer"></div>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  {filteredProducts?.length % 3 == 1 ? (
-                    <>
-                      <div className="relative box-placer"></div>
-                      <div className="relative box-placer"></div>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </>
-              </div>
-            </main>
-          </section>
-
-          <ProductForm />
+      <div className="mt-8">
+        <div className="pl-8">
+          <p className="font-roboto text-lg text-[#7a7a7a] font-semibold my-8">
+            <span id="productText1"> Products of </span>
+            <span className="text-[#FF0000]">
+              {adminData.Username || userData.userinfo.username}
+            </span>
+            , <span id="productText2">Owner </span>
+            <span className="text-[#FF0000]">
+              {adminData.profile_info.first_name ||
+                userData.userinfo.first_name}{" "}
+              {adminData.profile_info.last_name || userData.userinfo.last_name}
+            </span>
+          </p>
+          <p
+            id="productText3"
+            className="font-roboto text-lg text-[#7a7a7a] font-semibold"
+          >
+            Select product & Portfolio to connect
+          </p>
         </div>
-      ) : (
-        <div className="mt-4">
-          <Loader />
-        </div>
-      )}
+
+        <section className="relative">
+          <main className="flex flex-col w-full">
+            <div className="flex flex-wrap w-full justify-between">
+              {filteredProducts
+                .filter((product) => {
+                  // Find the corresponding product in getallproduct array
+                  if (typeof getallproducts[0] === "object") {
+                    const matchingProduct = getallproducts.find(
+                      (getProduct) =>
+                        getProduct.product_name === product.product_name
+                    );
+
+                    // Check if the product status is "enable" in getallproduct array
+                    return (
+                      matchingProduct &&
+                      matchingProduct.product_status === "enable"
+                    );
+                  } else {
+                    return product;
+                  }
+                })
+                .map((product) => (
+                  <ProductCard
+                    handleTabSwitch={handleTabSwitch}
+                    key={product._id}
+                    isLoading={isLoading}
+                    product={product}
+                    hovertitle={hovertitle}
+                    handleMouseOver={handleMouseOver}
+                    selectedProduct={selectedProduct}
+                    defaultOptions={defaultOptions}
+                    selectedOptions={selectedOptions}
+                    handleSelectChange={handleSelectChange}
+                    handleSubmit={handleSubmit}
+                    handleRequestPortfolio={handleRequestPortfolio}
+                  />
+                ))}
+              <>
+                {filteredProducts?.length % 3 == 2 ? (
+                  <>
+                    <div className="relative box-placer"></div>
+                  </>
+                ) : (
+                  ""
+                )}
+                {filteredProducts?.length % 3 == 1 ? (
+                  <>
+                    <div className="relative box-placer"></div>
+                    <div className="relative box-placer"></div>
+                  </>
+                ) : (
+                  ""
+                )}
+              </>
+            </div>
+          </main>
+        </section>
+        <ProductForm />
+      </div>
     </>
   );
 };
@@ -382,6 +379,7 @@ export default Products;
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   hovertitle,
+  isLoading,
   handleTabSwitch,
   handleMouseOver,
   selectedProduct,
@@ -502,7 +500,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
               </div>
               <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
                 {options.length > 0 || selectedProduct === "Dowell Services" ? (
-                  <p id="productText5">Connect</p>
+                  isLoading ? (
+                    <Lottie
+                      animationData={LoaderAnim}
+                      loop={true}
+                      style={{ width: "50px" }}
+                    />
+                  ) : (
+                    <p id="productText5">Connect</p>
+                  )
                 ) : (
                   <span id="productText5" onClick={() => handleTabClick(2)}>
                     create a portfolio
