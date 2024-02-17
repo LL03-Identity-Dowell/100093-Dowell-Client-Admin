@@ -498,7 +498,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
                     />
                   )}
               </div>
-              <button className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]">
+              <button
+                className="bg-black text-white h-12 px-6 py-4 rounded-md flex items-center hover:bg-[#666666]"
+                disabled={isLoading}
+              >
                 {options.length > 0 || selectedProduct === "Dowell Services" ? (
                   isLoading ? (
                     <Lottie
