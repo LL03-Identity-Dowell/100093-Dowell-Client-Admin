@@ -5,7 +5,7 @@ import datetime
 # Create your tests here.
 
 
-field1 = {"document_name":"Jazz3655"}
+field1 = {"username":"michael"}
 field = {}
 print(datetime.datetime.now())
 # login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
@@ -17,6 +17,7 @@ print(datetime.datetime.now())
 # r = json.loads(login1)
 r = json.loads(login1)
 print(r)
+print(len(r))
 
 # portfolio = r['data'][0]['portpolio']
 
