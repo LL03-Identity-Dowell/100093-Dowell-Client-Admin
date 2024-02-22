@@ -11,6 +11,7 @@ import Organization from "./pages/organizationpage/organization";
 import Exportfolio from "./pages/exportfolio";
 import CountrySelector from "./components/Test";
 import NotFound from "./pages/notfound/NotFound";
+import Reports from "./pages/Reports";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
 					<Route path="/about-us" element={<AboutUs />} />
 					<Route path="/org" element={<Organization />} />
 					<Route path="/faq" element={<Faq />} />
+					<Route path="/reports" element={<Reports />} />
 					<Route path="/setting" element={<Setting></Setting>} />
 					<Route path="/exportfolio" element={<Exportfolio />} />
 					<Route path="/test" element={<CountrySelector />} />

@@ -7,6 +7,20 @@ import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
 import { roleselectid, roletextid } from "./Roleid";
 
+export interface roleItemProps {
+  level1_item: string;
+  level2_item: string;
+  level3_item: string;
+  level4_item: string;
+  level5_item: string;
+  security_layer: string;
+  role_name: string;
+  role_code: string;
+  role_details: null;
+  role_uni_code: null;
+  role_specification: null;
+  status: string;
+}
 const Roles = () => {
   const [isLoading, setIsLoading] = useState(false);
   let adminusername = useSelector(
@@ -51,21 +65,7 @@ const Roles = () => {
   const enablerules = rolesdata.filter((r) => r.status == "enable");
   const disablerules = rolesdata.filter((r) => r.status == "disable");
 
-  interface ruleItem {
-    level1_item: string;
-    level2_item: string;
-    level3_item: string;
-    level4_item: string;
-    level5_item: string;
-    security_layer: string;
-    role_name: string;
-    role_code: string;
-    role_details: null;
-    role_uni_code: null;
-    role_specification: null;
-    status: string;
-  }
-  const [selectedrule, setselectedrule] = useState<ruleItem>({
+  const [selectedrule, setselectedrule] = useState<roleItemProps>({
     level1_item: "",
     level2_item: "",
     level3_item: "",
@@ -385,8 +385,8 @@ const Roles = () => {
     });
   };
 
-  const [enablerulesitem, setenablerulesitem] = useState<ruleItem[]>([]);
-  const [disablerulesitem, setdisablerulesitem] = useState<ruleItem[]>([]);
+  const [enablerulesitem, setenablerulesitem] = useState<roleItemProps[]>([]);
+  const [disablerulesitem, setdisablerulesitem] = useState<roleItemProps[]>([]);
 
   useEffect(() => {
     console.log(selectionrulestate);
