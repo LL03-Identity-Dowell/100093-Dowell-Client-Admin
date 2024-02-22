@@ -1,12 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
 interface layerItemProps {
   category: string;
   details: any;
 }
 const LayerReport: React.FC = () => {
   const [layerReport, setLayerReport] = useState<layerItemProps[]>([]);
-  const username = "Jazz3655";
+  const userData = useSelector((state: RootState) => state.userinfo);
+  const username = userData.userinfo.username;
   useEffect(() => {
     const fetchLayers = async () => {
       try {

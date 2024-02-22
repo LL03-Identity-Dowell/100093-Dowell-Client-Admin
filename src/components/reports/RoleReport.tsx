@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { roleItemProps } from "../roles/Roles";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/Store";
 const RoleReport = () => {
   const [roleReport, setRoleReport] = useState<roleItemProps[]>([]);
-  const username = "Jazz3655";
+  const userData = useSelector((state: RootState) => state.userinfo);
+  const username = userData.userinfo.username;
   useEffect(() => {
     const fetchRoles = async () => {
       try {
