@@ -135,9 +135,7 @@ const ReportTabs = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-  const handleTabSwitch = (index: number) => {
-    setTabIndex(index);
-  };
+
   return (
     <div>
       {ismobile ? (

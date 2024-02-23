@@ -11,7 +11,6 @@ import { getViewAccess } from "../store/slice/viewAccess";
 import ReportTabs from "../components/ReportTabs";
 
 const Reports = () => {
-  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
   const overlaysidebarstate = useSelector(
     (state: RootState) => state.overlaysidebar
