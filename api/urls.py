@@ -61,6 +61,11 @@ urlpatterns = [
     path('add_member_to_team/', add_member_to_team, name='add_member_to_team'),
     path('get_team_names_by_username/', get_team_names_by_username, name='get_team_names_by_username'),
     path('get_member_names_by_team/', get_member_names_by_team, name='get_member_names_by_team'),
+    path('find_teams_by_member_email/', find_teams_by_member_email, name='find_teams_by_member_email'),
+    path('portfolio_reports/', portfolio_reports, name='portfolio_reports'),
+    path('role_reports/', role_reports, name='role_reports'),
+    path('layer_reports/', layer_reports, name='layer_reports'),
+    path('member_reports/', member_reports, name='member_reports'),
 
 
 ]

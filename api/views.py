@@ -1156,19 +1156,30 @@ def remove_public(request):
         dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE", "update",
                          field_c, updated_portfolio)
 
-        fetch = UserData.objects.filter(username=username,sessionid=sessionid)
+        # fetch = UserData.objects.filter(username=username,sessionid=sessionid)
 
-        for rd in fetch:
-            lo1=rd.alldata
-            lrf=json.loads(lo1)
+        field_n = {"session_id":sessionid}
+        l1 = dowellconnection("login","bangalore","login","company","company","1083","ABCDE","fetch",field_n,"nil")
+        userdata_n = json.loads(l1)
 
-        for entry in lrf["selected_product"]["userportfolio"]:
+        # return Response({"data":userdata_n})
+
+
+        # for rd in userdata_n:
+        #     lo1=rd.alldata
+        #     lrf=json.loads(lo1)
+
+        for entry in userdata_n["data"][0]["user_data"]["selected_product"]["userportfolio"]:
             if entry['member_type'] == 'public' and entry['product'] == product and entry['portfolio_code']==portfolio_code:
                 entry['username'] = [username for username in entry['username'] if username not in usernames_to_remove]
         # return Response({"msg":json.dumps(lrf)})
-        obj, created = UserData.objects.update_or_create(username=username,sessionid=sessionid,defaults={'alldata': json.dumps(lrf)})
+        # obj, created = UserData.objects.update_or_create(username=username,sessionid=sessionid,defaults={'alldata': json.dumps(lrf)})
 
+        update_user = {"user_data":userdata_n}
 
+        dowellconnection("login","bangalore","login","company","company","1083","ABCDE","update",field_n,update_user)
+
+        # return Response({"data":userdata_n})
         return Response({
             "success": "updated"        }, status=HTTP_200_OK)
 
@@ -2190,12 +2201,13 @@ def connect_portfolio(request):
                 "Calculator": "https://100050.pythonanywhere.com/calculator/?session_id={session_id}&id=100093",
                 "Team": "https://ll07-team-dowell.github.io/Jobportal/#?session_id={session_id}&id=100093",
                 "Media": "https://www.socialmediaautomation.uxlivinglab.online/?session_id={session_id}&id=100093",
-                "Customer": "https://ll03-identity-dowell.github.io/100096-customer-support/?session_id={session_id}&id=100093",
+                "Customer": "https://ll03-identity-dowell.github.io/100096-customer-support/#?session_id={session_id}&id=100093",
                 "Chat": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session_id}&id=100093",
                 "Wifi": "https://l.ead.me/dowellwifiqrcode/?session_id={session_id}&id=100093",
                 "Wallet": "https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session_id}&id=100093",
-                "Shortner": "https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session_id}&id=100093",
-                "Repositories": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093"
+                "Dowell Link Shortener": "https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session_id}&id=100093",
+                "Repositories": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093",
+                "Dowell Survey":"https://dowelllabs.github.io/DoWell-Survey/"
                 # Add more products as needed
             }
         if request.method == "POST" and "connect_portfolio" in request.data.get("action"):
@@ -2544,7 +2556,7 @@ def connect_portfolio(request):
                 return Response(f'https://100093.pythonanywhere.com/?owner={orl}',status=HTTP_200_OK)
             elif "Customer" in product:
                 return Response(
-                    f'https://ll03-identity-dowell.github.io/100096-customer-support/?session_id={session}&id=100093',status=HTTP_200_OK)
+                    f'https://ll03-identity-dowell.github.io/100096-customer-support/#?session_id={session}&id=100093',status=HTTP_200_OK)
             elif "Chat" in product:
                 return Response(
                     f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
@@ -3389,7 +3401,16 @@ def portfolioUrl(request):
             mydict["portfolio_info"][0]["owner_name"]=lrf["document_name"]
             mydict["roles"] = lrf["roles"]
             mydict["portfolio_info"][0]["org_name"]=lrf["document_name"]
-            obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+            # obj, created = UserData.objects.update_or_create(username=user,sessionid=session,defaults={'alldata': json.dumps(mydict)})
+            field_n = {"session_id":session}
+            l1 = dowellconnection("login","bangalore","login","company","company","1083","ABCDE","fetch",field_n,"nil")
+            userdata_n = json.loads(l1)
+            if len(userdata_n["data"]) > 0:
+                update_user = {"user_data":mydict}
+                dowellconnection("login","bangalore","login","company","company","1083","ABCDE","update",field_n,update_user)
+            else:
+                insert_user = {"session_id":session,"user":user,"user_data":mydict}
+                dowellconnection("login","bangalore","login","company","company","1083","ABCDE","insert",insert_user,"nil")
             if url_path:
                     return Response(f'{url_path}?session_id={session}&id=100093')
             if "Workflow AI" in product or "workflow" in product:
@@ -3650,10 +3671,14 @@ def create_team_data(request):
             return JsonResponse({"error": "The 'team_name' field is mandatory."}, status=400)
 
         team_name = data['team_name']  # 'team_name' is now mandatory
-        lookup_u = {"username":username}
-        check = dowellconnection("login","bangalore","login","browsers","browsers","1109","ABCDE","fetch",lookup_u,"nil")
-        check = json.loads(check)
-        if check["data"] == 0:
+
+        # Fetch existing user data
+        lookup_u = {"username": username}
+        user_data = dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "fetch", lookup_u, "nil")
+        user_data = json.loads(user_data)
+
+        if len(user_data["data"]) == 0:
+            # User does not exist, create new user with one team
             my_teams = [{
                 "team_name": team_name,
                 "members": {
@@ -3661,65 +3686,74 @@ def create_team_data(request):
                     "public_members": []
                 }
             }]
-
             response_data = {
                 "username": username,
                 "owner": owner,
                 "client_admin_id": client_admin_id,
                 "my_teams": my_teams
             }
-            dowellconnection("login","bangalore","login","browsers","browsers","1109","ABCDE","insert",response_data,"nil")
-            return JsonResponse(response_data, status=200)
+            dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "insert", response_data, "nil")
         else:
-            return JsonResponse({"error": "Username already present"}, status=500)
+            # User exists, append new team to existing 'my_teams' list
+            existing_teams = user_data["data"][0].get("my_teams", [])
+            new_team = {
+                "team_name": team_name,
+                "members": {
+                    "team_members": [],
+                    "public_members": []
+                }
+            }
+            existing_teams.append(new_team)
+            response_data = {
+                "my_teams": existing_teams
+            }
+            # Update user data with new team
+            dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "update", lookup_u,response_data )
+        return JsonResponse(response_data, status=200)
 
-
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
 
 @api_view(['POST'])
 def add_member_to_team(request):
     if request.method == 'POST':
         try:
-            # Assuming 'dowellconnection' simulates fetching data from a database or external service
             field = {}
             login_response = dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "fetch", field, "nil")
             fetched_data = json.loads(request.body)
 
-            # Extract the necessary data from the request
             username_requested = fetched_data.get('username')
             team_name = fetched_data.get('team_name')
             members_to_add = fetched_data.get('members', [])
             member_type = fetched_data.get('type')
 
-            # Simulate fetching data structure that contains users and their teams
             data_structure = json.loads(login_response)
 
-            # Find the user by username in the data structure
             for user_data in data_structure.get('data', []):
                 if user_data.get('username') == username_requested:
-                    # User found, now find the specified team within this user's data
+                    existing_emails = set(member.get('member_email') for team in user_data.get('my_teams', []) for member in team['members'].get(member_type, []) if 'member_email' in member)
                     for team in user_data.get('my_teams', []):
                         if team['team_name'] == team_name:
-                            # Found the team, now add the members based on the member_type
+                            email_set = set()
                             for member in members_to_add:
-                                if member_type == 'team_members':
-                                    team['members']['team_members'].append(member)
-                                elif member_type == 'public_members':
-                                    team['members']['public_members'].append(member)
-                            # Assuming dowellconnection update is successful and you want to return the updated user data
-                            # This is commented out since it's not clear if dowellconnection is meant to be executed here
-                            field1={"username": username_requested}
+                                member_email = member.get('member_email')
+                                if not member_email:
+                                    return JsonResponse({"error": "Member email is required for each member."}, status=400)
+                                if member_email in existing_emails:
+                                    return JsonResponse({"error": f"Member with email {member_email} already exists in the team."}, status=400)
+                                if member_email in email_set:
+                                    return JsonResponse({"error": f"Duplicate member email {member_email} in the request."}, status=400)
+                                email_set.add(member_email)
+                                team['members'][member_type].append(member)
+
+                            field1 = {"username": username_requested}
                             update_field = {"my_teams": user_data["my_teams"]}
-                            dowellconnection("login","bangalore","login","browsers","browsers","1109","ABCDE","update",field1,update_field)
+                            dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "update", field1, update_field)
                             return JsonResponse({"success": True, "message": "Members added successfully", "data": user_data["my_teams"]}, status=200)
 
-                    # If specified team is not found in the user's data
                     return JsonResponse({"error": "Team not found"}, status=404)
 
-            # If specified username is not found in the data structure
             return JsonResponse({"error": "Username not found"}, status=404)
 
         except json.JSONDecodeError:
@@ -3728,6 +3762,37 @@ def add_member_to_team(request):
             return JsonResponse({"error": str(e)}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+@api_view(['POST'])
+def find_teams_by_member_email(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            client_admin_id = data.get('client_admin_id')
+            member_email = data.get('member_email')
+            field = {}
+            login_response = dowellconnection("login", "bangalore", "login", "browsers", "browsers", "1109", "ABCDE", "fetch", field, "nil")
+            all_data = json.loads(login_response)
+            teams = []
+            for record in all_data.get('data',[]):
+                if record.get('client_admin_id') == client_admin_id:
+                    for team in record.get('my_teams', []):
+                        for member_type, members in team.get('members', {}).items():
+                            for member in members:
+                                if member.get('member_email') == member_email:
+                                    teams.append({'team_name': team['team_name'], 'member_type': member_type})
+                                    break
+
+            return JsonResponse({'success': True, 'teams': teams})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 @api_view(['POST'])
 def get_team_names_by_username(request):
@@ -3792,7 +3857,10 @@ def get_member_names_by_team(request):
                             team_found = True
                             if member_type_requested in ['team_members', 'public_members']:
                                 members_list = team['members'].get(member_type_requested, [])
-                                member_names = [member['member_name'] for member in members_list if 'member_name' in member]
+                                member_names = [
+                                    member['member_name'] for member in members_list
+                                    if isinstance(member, dict) and 'member_name' in member
+                                ]
                             break
                     break
 
@@ -3811,3 +3879,79 @@ def get_member_names_by_team(request):
             return JsonResponse({"error": str(e)}, status=500)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@api_view(['POST'])
+def portfolio_reports(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data'][0]['portpolio']
+
+        return Response(
+            data
+            , status=HTTP_200_OK)
+
+@api_view(['POST'])
+def role_reports(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data'][0]['roles']
+
+        return Response(
+            data
+            , status=HTTP_200_OK)
+
+@api_view(['POST'])
+def layer_reports(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data'][0]['security_layers']
+
+        new_resp = []
+
+        for layer, categories in data.items():
+            for category, details in categories.items():
+                if isinstance(details, list):
+                    new_details = {detail: layer for detail in details}
+                elif isinstance(details, dict):
+                    new_details = {k: layer for k, v in details.items() if v}
+                else:
+                    continue
+                new_resp.append({
+                    "category": category,
+                    "details": new_details
+                })
+
+        return Response(
+            new_resp
+            , status=HTTP_200_OK)
+
+
+@api_view(['POST'])
+def member_reports(request):
+    if request.method == 'POST':
+        username = request.data.get("username")
+        field_c = {"document_name": username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field_c, "nil")
+        ##########################################
+        resp = json.loads(login)
+        data = resp['data'][0]['members']
+
+        return Response(
+            data
+            , status=HTTP_200_OK)
