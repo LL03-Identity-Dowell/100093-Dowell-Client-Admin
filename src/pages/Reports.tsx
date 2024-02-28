@@ -52,10 +52,10 @@ const Reports = () => {
       <div className="relative">
         <Layout>
           <main>
-            <div className="mx-5 mb-20 lg:px-0 px-4">
+            <div className="container mx-auto mb-20 lg:px-0 px-4">
               <Header />
 
-              <section className="w-full mt-4 flex lg:flex-row">
+              <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
                 {loadingstate === true ? (
                   <div className="lg:w-full">
                     <ReportTabs />
