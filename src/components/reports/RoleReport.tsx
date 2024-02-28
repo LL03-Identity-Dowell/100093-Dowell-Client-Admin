@@ -23,7 +23,7 @@ const RoleReport = () => {
     fetchRoles();
   }, [username]);
   return (
-    <div className="w-full my-10">
+    <div className="w-full my-10 relative overflow-x-scroll">
       <table className="w-full border-collapse border border-gray-400">
         <thead className="bg-gray-200">
           <tr>
