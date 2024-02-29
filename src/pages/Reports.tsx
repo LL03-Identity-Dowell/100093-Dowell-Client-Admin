@@ -1,6 +1,5 @@
 import Layout from "../components/layout";
 import Sidebar from "./admin/Sidebar";
-import Header from "./admin/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/Store";
 import Loader from "./whiteloader";
@@ -9,6 +8,7 @@ import { getselectedorgs } from "../store/slice/selectedorg";
 import axios from "axios";
 import { getViewAccess } from "../store/slice/viewAccess";
 import ReportTabs from "../components/ReportTabs";
+import ReportHeader from "../components/reports/ReportHeader";
 
 const Reports = () => {
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
@@ -53,7 +53,7 @@ const Reports = () => {
         <Layout>
           <main>
             <div className="container mx-auto mb-20 lg:px-0 px-4">
-              <Header />
+              <ReportHeader />
 
               <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
                 {loadingstate === true ? (
