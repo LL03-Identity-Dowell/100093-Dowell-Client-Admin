@@ -29,7 +29,7 @@ const LevelReport = () => {
           "https://100093.pythonanywhere.com/api/member_reports/",
           { username: username }
         );
-        console.log(response.data);
+       setLevelReport(response.data);
         // setLevelReport(response.data);
       } catch (error) {
         console.log("error =", error);
