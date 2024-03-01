@@ -62,10 +62,13 @@ urlpatterns = [
     path('get_team_names_by_username/', get_team_names_by_username, name='get_team_names_by_username'),
     path('get_member_names_by_team/', get_member_names_by_team, name='get_member_names_by_team'),
     path('find_teams_by_member_email/', find_teams_by_member_email, name='find_teams_by_member_email'),
+    path('delete_team_data/', delete_team_data, name='delete_team_data'),
+    path('remove_member_from_team/', remove_member_from_team, name='remove_member_from_team'),
     path('portfolio_reports/', portfolio_reports, name='portfolio_reports'),
     path('role_reports/', role_reports, name='role_reports'),
     path('layer_reports/', layer_reports, name='layer_reports'),
     path('member_reports/', member_reports, name='member_reports'),
+    path('level_reports/', level_reports, name='level_reports'),
 
 
 ]
