@@ -10,24 +10,86 @@ import LevelFiveReport from "./LevelFiveReport";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { FaLevelDownAlt } from "react-icons/fa";
 
-// interface memberProps {
-//   data_type: string;
-//   member_type: string;
-//   operations_right: string;
-//   portfolio_code: string;
-//   portfolio_details: string;
-//   portfolio_name: string;
-//   portfolio_specification: string;
-//   portfolio_uni_code: string;
-//   role: string;
-//   security_layer: string;
-//   product: string;
-//   status: string;
-//   username: string[];
-// }
+interface LevelReportProps {
+  level1: {
+    items: {
+      item_bardcode: string;
+      item_code: string;
+      item_details: string;
+      item_image1: string;
+      item_image2: string;
+      item_name: string;
+      item_specification: string;
+      item_universal_code: string;
+      status: string;
+    }[];
+    level_name: string;
+    roles: string[];
+  };
+  level2: {
+    items: {
+      item_bardcode: string;
+      item_code: string;
+      item_details: string;
+      item_image1: string;
+      item_image2: string;
+      item_name: string;
+      item_specification: string;
+      item_universal_code: string;
+      status: string;
+    }[];
+    level_name: string;
+    roles: string[];
+  };
+  level3: {
+    items: {
+      item_bardcode: string;
+      item_code: string;
+      item_details: string;
+      item_image1: string;
+      item_image2: string;
+      item_name: string;
+      item_specification: string;
+      item_universal_code: string;
+      status: string;
+    }[];
+    level_name: string;
+    roles: string[];
+  };
+  level4: {
+    items: {
+      item_bardcode: string;
+      item_code: string;
+      item_details: string;
+      item_image1: string;
+      item_image2: string;
+      item_name: string;
+      item_specification: string;
+      item_universal_code: string;
+      status: string;
+    }[];
+    level_name: string;
+    roles: string[];
+  };
+  level5: {
+    items: {
+      item_bardcode: string;
+      item_code: string;
+      item_details: string;
+      item_image1: string;
+      item_image2: string;
+      item_name: string;
+      item_specification: string;
+      item_universal_code: string;
+      status: string;
+    }[];
+    level_name: string;
+    roles: string[];
+  };
+}
 const LevelReport = () => {
   const [tabIndex, setTabIndex] = useState(-1);
-  // const [levelReport, setLevelReport] = useState<memberProps[]>([]);
+  const [levelReport, setLevelReport] = useState<LevelReportProps>();
   const userData = useSelector((state: RootState) => state.userinfo);
   const username = userData.userinfo.username;
   const color_scheme = useSelector(
@@ -37,12 +99,11 @@ const LevelReport = () => {
     const fetchPortfolios = async () => {
       try {
         const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/member_reports/",
+          "https://100093.pythonanywhere.com/api/level_reports/",
           { username: username }
         );
-        console.log(response.data);
-        // setLevelReport(response.data);
-        // setLevelReport(response.data);
+        console.log(response.data[0]);
+        setLevelReport(response.data[0]);
       } catch (error) {
         console.log("error =", error);
       }
@@ -86,19 +147,19 @@ const LevelReport = () => {
         </TabList>
 
         <TabPanel>
-          <LevelOneReport />
+          <LevelOneReport data={levelReport?.level1} />
         </TabPanel>
         <TabPanel>
-          <LevelTwoReport />
+          <LevelTwoReport data={levelReport?.level2} />
         </TabPanel>
         <TabPanel>
-          <LevelThreeReport />
+          <LevelThreeReport data={levelReport?.level3} />
         </TabPanel>
         <TabPanel>
-          <LevelFourReport />
+          <LevelFourReport data={levelReport?.level4} />
         </TabPanel>
         <TabPanel>
-          <LevelFiveReport />
+          <LevelFiveReport data={levelReport?.level5} />
         </TabPanel>
       </Tabs>
     </div>
