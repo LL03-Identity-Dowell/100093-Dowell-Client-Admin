@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
@@ -21,6 +21,7 @@ const ReportHeader = () => {
   const currentPath = window.location.pathname;
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const defaultlang = useSelector(
     (state: RootState) => state.setting?.data?.default_language
   );
@@ -189,6 +190,7 @@ const ReportHeader = () => {
     console.log({ org });
     if (org) {
       dispatch(getselectedorgs(org));
+      navigate("/", { state: { orgname: selectedOrgname } });
     }
   };
 

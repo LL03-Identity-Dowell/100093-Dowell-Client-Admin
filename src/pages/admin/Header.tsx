@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
@@ -21,9 +21,60 @@ const Header = () => {
   const currentPath = window.location.pathname;
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
+  const routeLocation = useLocation();
+
   const defaultlang = useSelector(
     (state: RootState) => state.setting?.data?.default_language
   );
+  // select ownerorg , workspace , all org and selected org from redux state
+  const ownerorg = useSelector(
+    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
+  );
+  const otherorglist = useSelector(
+    (state: RootState) => state?.sidebar?.workspace
+  );
+
+  const organizations = useSelector((state: RootState) => state.org);
+  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
+
+  useEffect(() => {
+    // Function to simulate change of select value on page load
+    const simulateSelectChange = () => {
+      const newValue = routeLocation?.state?.orgname; // Set the desired option
+      setTimeout(() => {
+        handleOrgChange({
+          target: { value: newValue },
+        } as React.ChangeEvent<HTMLSelectElement>);
+      }, 0); // Ensuring this runs after the initial render
+    };
+
+    // Call the function to simulate change of select value on page load
+    simulateSelectChange();
+    if (!routeLocation?.state?.orgname) {
+      interface OrgInfo {
+        orgname: string;
+        type: string;
+      }
+
+      const fetchedOrganizations: OrgInfo[] = otherorglist.map((orgname) => ({
+        orgname,
+        type: "other",
+      }));
+
+      const ownerObj = { orgname: ownerorg, type: "owner" };
+      fetchedOrganizations.push(ownerObj);
+
+      dispatch(getorgs(fetchedOrganizations));
+      // Find the default organization (type 'owner') and set it as the selected organization
+      const defaultOrg = fetchedOrganizations.find(
+        (org) => org.type === "owner"
+      );
+      if (defaultOrg) {
+        dispatch(getselectedorgs(defaultOrg));
+      }
+    }
+  }, [dispatch, otherorglist, ownerorg, routeLocation?.state?.orgname]); // Run only once after initial render
+
   useEffect(() => {
     const FetchLanguage = () => {
       HeaderSelectIds.forEach((id: string) => {
@@ -146,40 +197,6 @@ const Header = () => {
     localStorage.removeItem("sessionId");
     location.href = logout_url;
   };
-
-  // select ownerorg , workspace , all org and selected org from redux state
-  const ownerorg = useSelector(
-    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
-  );
-  const otherorglist = useSelector(
-    (state: RootState) => state?.sidebar?.workspace
-  );
-
-  const organizations = useSelector((state: RootState) => state.org);
-  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
-
-  useEffect(() => {
-    // Fetch organizations (e.g., using an API call) and set them in the Redux store
-    interface OrgInfo {
-      orgname: string;
-      type: string;
-    }
-
-    const fetchedOrganizations: OrgInfo[] = otherorglist.map((orgname) => ({
-      orgname,
-      type: "other",
-    }));
-
-    const ownerObj = { orgname: ownerorg, type: "owner" };
-    fetchedOrganizations.push(ownerObj);
-
-    dispatch(getorgs(fetchedOrganizations));
-    // Find the default organization (type 'owner') and set it as the selected organization
-    const defaultOrg = fetchedOrganizations.find((org) => org.type === "owner");
-    if (defaultOrg) {
-      dispatch(getselectedorgs(defaultOrg));
-    }
-  }, [ownerorg, otherorglist]);
 
   const handleOrgChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOrgname = event.target.value;
