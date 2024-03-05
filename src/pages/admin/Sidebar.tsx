@@ -230,7 +230,7 @@ const Sidebar = () => {
                 <div className="bg-[#CEF9D2] p-4 pl-8 box-border">
                   <ul>
                     <li
-                      className="text-[#7a7a7a] text-lg font-medium list-decimal cursor-pointer"
+                      className="text-[#7a7a7a] text-lg font-medium cursor-pointer"
                       onClick={() => {
                         navigate("/reports");
                         dispatch(getoverlaysidebar(false));

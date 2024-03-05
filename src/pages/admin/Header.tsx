@@ -237,7 +237,7 @@ const Header = () => {
     // Call the API when the component mounts
     if (userData.userinfo.username != "" && settingdata == "") {
       fetchsetting();
-    }
+    } 
   }, [userData]); // The empty dependency array ensures that the effect runs only once
 
   const color_scheme = useSelector(
