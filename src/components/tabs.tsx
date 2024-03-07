@@ -144,7 +144,7 @@ const AdminTabs = () => {
 
           const response = await axios.post(
             "https://100093.pythonanywhere.com/api/get_data/",
-            { username: adminusername,session_id: sessionId }
+            { username: adminusername, session_id: sessionId }
           );
           const productResponse = await axios.post(
             "https://100093.pythonanywhere.com/api/getproducts/",
@@ -207,31 +207,29 @@ const AdminTabs = () => {
           <TabList className="w-full grid lg:grid-cols-4 grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-0">
             {mobiletab.map((tabs, index) => {
               return (
-                <>
-                  <Tab
-                    key={tabs.title}
-                    className={`xl:w-[90%] card-shadow h-12  flex items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-4 border border-[#7a7a7a] rounded-lg ${
-                      color_scheme == "Red"
-                        ? "hover:bg-[#DC4C64]"
-                        : color_scheme == "Green"
-                        ? "hover:bg-[#14A44D]"
-                        : "hover:bg-[#7A7A7A]"
-                    } hover:text-white cursor-pointer  outline-none`}
-                    onClick={() => {
-                      index === 7 || index === 6
-                        ? handleTabClick(index, tabs.link || "")
-                        : null;
-                    }}
+                <Tab
+                  key={index.toString()}
+                  className={`xl:w-[90%] card-shadow h-12  flex items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-4 border border-[#7a7a7a] rounded-lg ${
+                    color_scheme == "Red"
+                      ? "hover:bg-[#DC4C64]"
+                      : color_scheme == "Green"
+                      ? "hover:bg-[#14A44D]"
+                      : "hover:bg-[#7A7A7A]"
+                  } hover:text-white cursor-pointer  outline-none`}
+                  onClick={() => {
+                    index === 7 || index === 6
+                      ? handleTabClick(index, tabs.link || "")
+                      : null;
+                  }}
+                >
+                  <i className=" text-xl font-black">{tabs.icon}</i>
+                  <p
+                    id={`adminTabText${index}`}
+                    className="font-roboto text-lg"
                   >
-                    <i className=" text-xl font-black">{tabs.icon}</i>
-                    <p
-                      id={`adminTabText${index}`}
-                      className="font-roboto text-lg"
-                    >
-                      {tabs.title}
-                    </p>
-                  </Tab>
-                </>
+                    {tabs.title}
+                  </p>
+                </Tab>
               );
             })}
           </TabList>
@@ -274,36 +272,33 @@ const AdminTabs = () => {
           <TabList className="w-full grid lg:grid-cols-4 grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-0">
             {tabTitle.map((tabs, index) => {
               return (
-                <>
-                  <Tab
-                    key={tabs.title}
-                    className={`xl:w-[90%] card-shadow h-12  flex  items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-4 border border-[#7a7a7a] rounded-lg ${
-                      color_scheme == "Red"
-                        ? "hover:bg-[#DC4C64]"
-                        : color_scheme == "Green"
-                        ? "hover:bg-[#14A44D]"
-                        : "hover:bg-[#7A7A7A]"
-                    } hover:text-white cursor-pointer  outline-none`}
-                    onClick={() => {
-                      index === 0 || index === 4
-                        ? handleTabClick(index, tabs.link || "")
-                        : null;
-                    }}
+                <Tab
+                  key={index.toString()}
+                  className={`xl:w-[90%] card-shadow h-12  flex  items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-4 border border-[#7a7a7a] rounded-lg ${
+                    color_scheme == "Red"
+                      ? "hover:bg-[#DC4C64]"
+                      : color_scheme == "Green"
+                      ? "hover:bg-[#14A44D]"
+                      : "hover:bg-[#7A7A7A]"
+                  } hover:text-white cursor-pointer  outline-none`}
+                  onClick={() => {
+                    index === 0 || index === 4
+                      ? handleTabClick(index, tabs.link || "")
+                      : null;
+                  }}
+                >
+                  <i className="text-xl font-black">{tabs.icon}</i>
+                  <p
+                    id={`adminTabText${index}`}
+                    className="font-roboto text-lg"
                   >
-                    <i className="text-xl font-black">{tabs.icon}</i>
-                    <p
-                      id={`adminTabText${index}`}
-                      className="font-roboto text-lg"
-                    >
-                      {tabs.title}
-                    </p>
-                  </Tab>
-                </>
+                    {tabs.title}
+                  </p>
+                </Tab>
               );
             })}
           </TabList>
           <TabPanel></TabPanel>
-
           <TabPanel>
             <Products handleTabSwitch={handleTabSwitch} />
           </TabPanel>

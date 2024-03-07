@@ -389,7 +389,10 @@ const Sidebar = () => {
                   <ul>
                     {allProducts
                       ? allProducts.map((product, index) => (
-                          <li className="text-[#7a7a7a] text-lg font-medium">
+                          <li
+                            key={index.toString()}
+                            className="text-[#7a7a7a] text-lg font-medium"
+                          >
                             {index + 1}. {product.product_name}
                           </li>
                         ))

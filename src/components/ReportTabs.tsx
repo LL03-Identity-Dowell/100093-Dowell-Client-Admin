@@ -19,6 +19,7 @@ import RoleReport from "./reports/RoleReport";
 import LevelReport from "./reports/LevelReport";
 import LayerReport from "./reports/LayerReport";
 import MemberReport from "./reports/MemberReport";
+import { Axios93Base } from "../api/axios";
 
 const ReportTabs = () => {
   const sessionId = localStorage.getItem("sessionId");
@@ -110,12 +111,12 @@ const ReportTabs = () => {
           //   session_id: sessionId,
           // };
 
-          const response = await axios.post(
-            "https://100093.pythonanywhere.com/api/get_data/",
-            { username: adminusername, session_id: sessionId }
-          );
-          const productResponse = await axios.post(
-            "https://100093.pythonanywhere.com/api/getproducts/",
+          const response = await Axios93Base.post("/get_data/", {
+            username: adminusername,
+            session_id: sessionId,
+          });
+          const productResponse = await Axios93Base.post(
+            "/getproducts/",
             productData
           );
           dispatch(getAdminData(response.data));
@@ -209,26 +210,24 @@ const ReportTabs = () => {
           <TabList className="w-full grid lg:grid-cols-5 grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-0">
             {tabTitle.map((tabs, index) => {
               return (
-                <>
-                  <Tab
-                    key={tabs.title}
-                    className={`xl:w-[90%] card-shadow h-12  flex  items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-4 border border-[#7a7a7a] rounded-lg ${
-                      color_scheme == "Red"
-                        ? "hover:bg-[#DC4C64]"
-                        : color_scheme == "Green"
-                        ? "hover:bg-[#14A44D]"
-                        : "hover:bg-[#7A7A7A]"
-                    } hover:text-white cursor-pointer  outline-none`}
+                <Tab
+                  key={index.toString()}
+                  className={`xl:w-[90%] card-shadow h-12  flex  items-center px-8 text-[#7a7a7a] gap-x-10 xl:gap-x-4 border border-[#7a7a7a] rounded-lg ${
+                    color_scheme == "Red"
+                      ? "hover:bg-[#DC4C64]"
+                      : color_scheme == "Green"
+                      ? "hover:bg-[#14A44D]"
+                      : "hover:bg-[#7A7A7A]"
+                  } hover:text-white cursor-pointer  outline-none`}
+                >
+                  <i className="text-xl font-black">{tabs.icon}</i>
+                  <p
+                    id={`adminTabText${index}`}
+                    className="font-roboto text-lg"
                   >
-                    <i className="text-xl font-black">{tabs.icon}</i>
-                    <p
-                      id={`adminTabText${index}`}
-                      className="font-roboto text-lg"
-                    >
-                      {tabs.title}
-                    </p>
-                  </Tab>
-                </>
+                    {tabs.title}
+                  </p>
+                </Tab>
               );
             })}
           </TabList>

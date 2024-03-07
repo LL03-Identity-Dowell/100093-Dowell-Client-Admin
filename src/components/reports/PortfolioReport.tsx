@@ -1,7 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
+import Loader from "../../pages/whiteloader";
+import { Axios93Base } from "../../api/axios";
 
 interface portfolioProps {
   data_type: string;
@@ -19,16 +20,15 @@ interface portfolioProps {
   username: string[];
 }
 const PortfolioReport = () => {
-  const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>([]);
+  const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
   const userData = useSelector((state: RootState) => state.userinfo);
   const username = userData.userinfo.username;
   useEffect(() => {
     const fetchPortfolios = async () => {
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/portfolio_reports/",
-          { username: username }
-        );
+        const response = await Axios93Base.post("/portfolio_reports/", {
+          username: username,
+        });
 
         setPortfolioReport(response.data);
       } catch (error) {
@@ -39,33 +39,33 @@ const PortfolioReport = () => {
   }, [username]);
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
-      <table className="w-full border-collapse border border-gray-400">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="border border-gray-400 px-2">No</th>
-            <th className="border border-gray-400 px-2">Portfolio Name</th>
-            <th className="border border-gray-400 px-2">Member Type</th>
-            <th className="border border-gray-400 px-2">Role</th>
-            <th className="border border-gray-400 px-2">Member Name</th>
-            <th className="border border-gray-400 px-2">Product Assigned</th>
-            <th className="border border-gray-400 px-2">Data Type</th>
-            <th className="border border-gray-400 px-2">
-              Operations of Rights
-            </th>
-            <th className="border border-gray-400 px-2">
-              Portfolio Code(Unique)
-            </th>
-            <th className="border border-gray-400 px-2">
-              Portfolio Universal Code
-            </th>
-            <th className="border border-gray-400 px-2">Portfolio Details</th>
-            <th className="border border-gray-400 px-2">Enable/ Disable</th>
-          </tr>
-        </thead>
-        <tbody>
-          {portfolioReport.length ? (
-            portfolioReport.map((item, index: number) => (
-              <tr key={index} className="border border-gray-400">
+      {Object.prototype.toString.call(portfolioReport) === "[object Array]" ? (
+        <table className="w-full border-collapse border border-gray-400">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="border border-gray-400 px-2">No</th>
+              <th className="border border-gray-400 px-2">Portfolio Name</th>
+              <th className="border border-gray-400 px-2">Member Type</th>
+              <th className="border border-gray-400 px-2">Role</th>
+              <th className="border border-gray-400 px-2">Member Name</th>
+              <th className="border border-gray-400 px-2">Product Assigned</th>
+              <th className="border border-gray-400 px-2">Data Type</th>
+              <th className="border border-gray-400 px-2">
+                Operations of Rights
+              </th>
+              <th className="border border-gray-400 px-2">
+                Portfolio Code(Unique)
+              </th>
+              <th className="border border-gray-400 px-2">
+                Portfolio Universal Code
+              </th>
+              <th className="border border-gray-400 px-2">Portfolio Details</th>
+              <th className="border border-gray-400 px-2">Enable/ Disable</th>
+            </tr>
+          </thead>
+          <tbody>
+            {portfolioReport?.map((item, index: number) => (
+              <tr key={index.toString()} className="border border-gray-400">
                 <td className="border border-gray-400 px-2">{index + 1}</td>
                 <td className="border border-gray-400 px-2">
                   {item.portfolio_name}
@@ -96,16 +96,17 @@ const PortfolioReport = () => {
                 </td>
                 <td className="border border-gray-400 px-2">{item.status}</td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td className="p-4" colSpan={3}>
-                No Data...
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            ))}
+            {portfolioReport?.length === 0 && (
+              <tr>
+                <td colSpan={3}>No Data</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };

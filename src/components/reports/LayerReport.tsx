@@ -1,23 +1,22 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
+import Loader from "../../pages/whiteloader";
+import { Axios93Base } from "../../api/axios";
 interface layerItemProps {
   category: string;
   details: any;
 }
 const LayerReport: React.FC = () => {
-  const [layerReport, setLayerReport] = useState<layerItemProps[]>([]);
+  const [layerReport, setLayerReport] = useState<layerItemProps[]>();
   const userData = useSelector((state: RootState) => state.userinfo);
   const username = userData.userinfo.username;
   useEffect(() => {
     const fetchLayers = async () => {
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/layer_reports/",
-          { username: username }
-        );
-        console.log(response);
+        const response = await Axios93Base.post("/layer_reports/", {
+          username: username,
+        });
         setLayerReport(response.data);
       } catch (error) {
         console.log("error =", error);
@@ -29,23 +28,23 @@ const LayerReport: React.FC = () => {
   let idCounter = 0;
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
-      <table className="w-full border-collapse border border-gray-400">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="border border-gray-400 px-2">ID</th>
-            <th className="border border-gray-400 px-2">Category</th>
-            <th className="border border-gray-400 px-2">Details</th>
-            <th className="border border-gray-400 px-2">Layer 1</th>
-            <th className="border border-gray-400 px-2">Layer 2</th>
-            <th className="border border-gray-400 px-2">Layer 3</th>
-            <th className="border border-gray-400 px-2">Layer 4</th>
-            <th className="border border-gray-400 px-2">Layer 5</th>
-            <th className="border border-gray-400 px-2">Layer 6</th>
-          </tr>
-        </thead>
-        <tbody>
-          {layerReport.length ? (
-            layerReport.map((item: any) => {
+      {Object.prototype.toString.call(layerReport) === "[object Array]" ? (
+        <table className="w-full border-collapse border border-gray-400">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="border border-gray-400 px-2">ID</th>
+              <th className="border border-gray-400 px-2">Category</th>
+              <th className="border border-gray-400 px-2">Details</th>
+              <th className="border border-gray-400 px-2">Layer 1</th>
+              <th className="border border-gray-400 px-2">Layer 2</th>
+              <th className="border border-gray-400 px-2">Layer 3</th>
+              <th className="border border-gray-400 px-2">Layer 4</th>
+              <th className="border border-gray-400 px-2">Layer 5</th>
+              <th className="border border-gray-400 px-2">Layer 6</th>
+            </tr>
+          </thead>
+          <tbody>
+            {layerReport?.map((item: any) => {
               const detailKeys = Object.keys(item.details);
               const numRows = Math.max(detailKeys.length, 1);
 
@@ -128,86 +127,19 @@ const LayerReport: React.FC = () => {
                   </tr>
                 );
               });
-            })
-          ) : (
-            <tr>
-              <td className="p-4" colSpan={3}>
-                No Data...
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            })}
+            {layerReport?.length === 0 && (
+              <tr>
+                <td colSpan={3}>No Data</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };
 
 export default LayerReport;
-
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-// interface layerItemProps {
-//   category: "";
-//   details: object;
-// }
-// const LayerReport = () => {
-//   const [layerReport, setLayerReport] = useState<layerItemProps[]>([]);
-//   const username = "Jazz3655";
-//   useEffect(() => {
-//     const fetchLayers = async () => {
-//       try {
-//         const response = await axios.post(
-//           "https://100093.pythonanywhere.com/api/layer_reports/",
-//           { username: username }
-//         );
-//         console.log(response);
-//         setLayerReport(response.data);
-//       } catch (error) {
-//         console.log("error =", error);
-//       }
-//     };
-//     fetchLayers();
-//   }, [username]);
-//   return (
-//     <div className="w-full my-10">
-//       <table className="w-full border-collapse border border-gray-400">
-//         <thead className="bg-gray-200">
-//           <tr>
-//             <th className="border border-gray-400 px-2">No</th>
-//             <th className="border border-gray-400 px-2">Category</th>
-//             <th className="border border-gray-400 px-2">Details</th>
-//             <th className="border border-gray-400 px-2">Layer 1</th>
-//             <th className="border border-gray-400 px-2">Layer 2</th>
-//             <th className="border border-gray-400 px-2">Layer 3</th>
-//             <th className="border border-gray-400 px-2">Layer 4</th>
-//             <th className="border border-gray-400 px-2">Layer 5</th>
-//             <th className="border border-gray-400 px-2">Layer 6</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {layerReport.length ? (
-//             layerReport.map((layer: layerItemProps, index: number) => (
-//               <tr key={index + 1} className="border border-gray-400">
-//                 <td className="border border-gray-400 px-2">{index + 1}</td>
-//                 <td className="border border-gray-400 px-2">
-//                   {layer.category}
-//                 </td>
-//                 <td className="border border-gray-400 px-2">
-//                   {layer.details[]}
-//                 </td>
-//               </tr>
-//             ))
-//           ) : (
-//             <tr>
-//               <td className="p-4" colSpan={3}>
-//                 No Data...
-//               </td>
-//             </tr>
-//           )}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default LayerReport;

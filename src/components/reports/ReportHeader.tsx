@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
@@ -14,7 +13,7 @@ import { getsetting } from "../../store/slice/setting";
 import { getloaderstate } from "../../store/slice/loaderstate";
 import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 import { FaBars } from "react-icons/fa";
-import { HeaderSelectIds, HeaderTextIds } from "../../Ids";
+import { Axios14Base, Axios93Base } from "../../api/axios";
 
 const ReportHeader = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
@@ -22,73 +21,69 @@ const ReportHeader = () => {
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const defaultlang = useSelector(
-    (state: RootState) => state.setting?.data?.default_language
-  );
-  useEffect(() => {
-    const FetchLanguage = () => {
-      HeaderSelectIds.forEach((id: string) => {
-        const select = document.getElementById(id) as HTMLSelectElement | null;
-        // Accessing individual options
-        if (select) {
-          const options = select.options;
-          for (let i = 0; i < options.length; i++) {
-            const translate = async () => {
-              try {
-                const data = {
-                  text: options[i].text,
-                  target_language: defaultlang,
-                };
-                const response = await axios.post(
-                  `https://100093.pythonanywhere.com/api/translate/`,
-                  data
-                );
+  // const defaultlang = useSelector(
+  //   (state: RootState) => state.setting?.data?.default_language
+  // );
 
-                const translationData = await response.data;
-                if (id === "settingForm2text1") {
-                  console.log(translationData);
-                }
-                options[i].text =
-                  translationData.data.translations[0].translatedText;
-              } catch (error) {
-                console.error("Translation error:", error);
-                return options[i].text;
-              }
-            };
-            translate();
-          }
-        }
-      });
-      HeaderTextIds.forEach((id: string) => {
-        const text = document.getElementById(id);
-        if (text) {
-          const translate = async () => {
-            try {
-              const data = {
-                text: text.innerText,
-                target_language: defaultlang,
-              };
-              const response = await axios.post(
-                `https://100093.pythonanywhere.com/api/translate/`,
-                data
-              );
+  // UNCOMMENT WHEN TRANSLATE API IS ACTIVE
+  // useEffect(() => {
+  //   const FetchLanguage = () => {
+  //     HeaderSelectIds.forEach((id: string) => {
+  //       const select = document.getElementById(id) as HTMLSelectElement | null;
+  //       // Accessing individual options
+  //       if (select) {
+  //         const options = select.options;
+  //         for (let i = 0; i < options.length; i++) {
+  //           const translate = async () => {
+  //             try {
+  //               const data = {
+  //                 text: options[i].text,
+  //                 target_language: defaultlang,
+  //               };
+  // const response = await Axios93Base.post(`/translate/`, data);
 
-              const translationData = await response.data;
-              text.innerText =
-                translationData.data.translations[0].translatedText;
-            } catch (error) {
-              console.error("Translation error:", error);
-              return text;
-            }
-          };
-          translate();
-        }
-      });
-    };
-    if (defaultlang) {
-      FetchLanguage();
-    }
-  }, [defaultlang, dispatch]);
+  //               const translationData = await response.data;
+  //               if (id === "settingForm2text1") {
+  //                 console.log(translationData);
+  //               }
+  //               options[i].text =
+  //                 translationData.data.translations[0].translatedText;
+  //             } catch (error) {
+  //               console.error("Translation error:", error);
+  //               return options[i].text;
+  //             }
+  //           };
+  //           translate();
+  //         }
+  //       }
+  //     });
+  //     HeaderTextIds.forEach((id: string) => {
+  //       const text = document.getElementById(id);
+  //       if (text) {
+  //         const translate = async () => {
+  //           try {
+  //             const data = {
+  //               text: text.innerText,
+  //               target_language: defaultlang,
+  //             };
+  // const response = await Axios93Base.post(`/translate/`, data);
+
+  //             const translationData = await response.data;
+  //             text.innerText =
+  //               translationData.data.translations[0].translatedText;
+  //           } catch (error) {
+  //             console.error("Translation error:", error);
+  //             return text;
+  //           }
+  //         };
+  //         translate();
+  //       }
+  //     });
+  //   };
+  //   if (defaultlang) {
+  //     FetchLanguage();
+  //   }
+  // }, [defaultlang, dispatch]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -114,9 +109,7 @@ const ReportHeader = () => {
       dispatch(getloaderstate(false));
       if (sessionId) {
         try {
-          const url = "https://100014.pythonanywhere.com/api/logininfo/";
-          await axios
-            .post(url, { session_id: sessionId })
+          await Axios14Base.post("/logininfo/", { session_id: sessionId })
             .then((response) => {
               try {
                 if (response.data.message) {
@@ -207,11 +200,7 @@ const ReportHeader = () => {
           username: userData.userinfo.username,
         };
 
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
-        console.log("settings", response.data);
+        const response = await Axios93Base.post("/settings/", data);
         dispatch(getsetting(response.data));
         dispatch(getloaderstate(true));
       } catch (error) {
