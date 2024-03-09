@@ -22,9 +22,9 @@ const Header = () => {
   const dispatch = useDispatch();
   const routeLocation = useLocation();
 
-  const defaultlang = useSelector(
-    (state: RootState) => state.setting?.data?.default_language
-  );
+  // const defaultlang = useSelector(
+  //   (state: RootState) => state.setting?.data?.default_language
+  // );
   // select ownerorg , workspace , all org and selected org from redux state
   const ownerorg = useSelector(
     (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name

@@ -9,7 +9,6 @@ import {
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { getAdminData } from "../store/slice/adminData";
 import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
