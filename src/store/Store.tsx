@@ -39,6 +39,7 @@ const store = configureStore({
     langdata: languagedata,
     viewAccess: viewAccessSlice,
   },
+  // devTools: false,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

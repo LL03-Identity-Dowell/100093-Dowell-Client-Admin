@@ -18,11 +18,11 @@ import Portfolio from "./portfolio/Portfolio";
 import Roles from "./roles/Roles";
 import Layers from "./layers/Layers";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { getAdminData } from "../store/slice/adminData";
 import { getloaderstate } from "../store/slice/loaderstate";
 import { RootState } from "../store/Store";
 import { getproducts } from "../store/slice/products";
+import { Axios93Base } from "../api/axios";
 
 const AdminTabs = () => {
   const sessionId = localStorage.getItem("sessionId");
@@ -142,12 +142,12 @@ const AdminTabs = () => {
           //   session_id: sessionId,
           // };
 
-          const response = await axios.post(
-            "https://100093.pythonanywhere.com/api/get_data/",
-            { username: adminusername, session_id: sessionId }
-          );
-          const productResponse = await axios.post(
-            "https://100093.pythonanywhere.com/api/getproducts/",
+          const response = await Axios93Base.post("/get_data/", {
+            username: adminusername,
+            session_id: sessionId,
+          });
+          const productResponse = await Axios93Base.post(
+            "/getproducts/",
             productData
           );
           dispatch(getAdminData(response.data));
