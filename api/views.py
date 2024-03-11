@@ -2205,7 +2205,7 @@ def connect_portfolio(request):
                 "Wifi": "https://l.ead.me/dowellwifiqrcode/?session_id={session_id}&id=100093",
                 "Wallet": "https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session_id}&id=100093",
                 "Dowell Link Shortener": "https://ll06-reports-analysis-dowell.github.io/100056-DowellQRCodeGenertor2.0/?session_id={session_id}&id=100093",
-                "Repositories": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093",
+                "Secure Github Repository": "https://ll07-team-dowell.github.io/100045-SecureRepository/?session_id={session_id}&id=100093",
                 "Dowell Survey":"https://dowelllabs.github.io/DoWell-Survey/"
                 # Add more products as needed
             }
