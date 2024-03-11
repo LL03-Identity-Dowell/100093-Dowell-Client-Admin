@@ -4050,3 +4050,83 @@ def level_reports(request):
         return Response(
             data
             , status=HTTP_200_OK)
+
+
+
+class TestDatacube(APIView):
+    def post(self, request):
+        url = "https://datacube.uxlivinglab.online/db_api/crud/"
+
+
+        username = request.data.get("username")
+        member_name = request.data.get('member_name')
+        member_code = request.data.get('member_code')
+        member_spec = request.data.get('member_spec', "")
+        member_u_code = request.data.get('member_u_code', "")
+        member_det = request.data.get('member_det', "")
+
+        # # Base64 encoding for security
+        # membername = base64.b64encode(bytes(member_name, 'utf-8')).decode()
+        # membercode = base64.b64encode(bytes(member_code, 'utf-8')).decode()
+        # memberspec = base64.b64encode(bytes(member_spec, 'utf-8')).decode()
+        # memberucode = base64.b64encode(bytes(member_u_code, 'utf-8')).decode()
+        # memberdet = base64.b64encode(bytes(member_det, 'utf-8')).decode()
+        # teammembers = base64.b64encode(bytes("team_members", 'utf-8')).decode()
+
+        tmembers = {
+            "name": member_name,
+            "member_code": member_code,
+            "member_spec": member_spec,
+            "member_uni_code": member_u_code,
+            "member_details": member_det,
+            "link": 'link',
+            "status": "unused",
+                    }
+        
+        payload = {
+            "api_key": "7bd48075-dc79-4ec8-812a-7f15c0822199",
+            "db_name": "Clientadmin_DB1",
+            "coll_name": "team_members",
+            "operation": "insert",
+            "data":{"username":username,"members":tmembers}
+
+        }
+        response = requests.post(url, json=payload)
+        # print(response.text)
+
+        if response.status_code == 200:
+            return Response(response.json(), status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Failed to fetch data from external API"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class FetchMembers(APIView):
+    def post(self, request):
+        # URL of the external API
+        url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+
+        # Data to be sent to the external API
+        payload = {
+            "api_key": "7bd48075-dc79-4ec8-812a-7f15c0822199",
+            "db_name": "Clientadmin_DB1",
+            "coll_name": "team_members",
+            "operation": "fetch",
+            # "filters": {
+            #     "_id": "101001010101"
+            # },
+            # "limit": 1,
+            "offset": 0
+        }
+
+        # Make the API call
+        response = requests.post(url, json=payload)
+
+        # Check if the request was successful
+        # if response.status_code == 200:
+            # Return the response from the external API
+        return Response(response.json(), status=status.HTTP_200_OK)
+        # else:
+        #     # Return an error response
+        #     return Response({"error": "Failed to fetch data from external API"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

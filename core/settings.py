@@ -81,25 +81,25 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    #     'OPTIONS': {
-    #         'timeout': 20,  # in seconds
-    #         # see also
-    #         # https://docs.python.org/3.7/library/sqlite3.html#sqlite3.connect
-    #     }
-    # }
-
-        'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '100093$dowell_db',
-        'USER': '100093',
-        'PASSWORD': 'Dowell@93',
-        'HOST': '100093.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20,  # in seconds
+            # see also
+            # https://docs.python.org/3.7/library/sqlite3.html#sqlite3.connect
+        }
     }
+
+    #     'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': '100093$dowell_db',
+    #     'UvSER': '100093',
+    #     'PASSWORD': 'Dowell@93',
+    #     'HOST': '100093.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
+    #     'PORT': '3306',
+
+    # }
 }
 
 

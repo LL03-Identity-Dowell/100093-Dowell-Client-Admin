@@ -69,6 +69,7 @@ urlpatterns = [
     path('layer_reports/', layer_reports, name='layer_reports'),
     path('member_reports/', member_reports, name='member_reports'),
     path('level_reports/', level_reports, name='level_reports'),
-
+    path('external-api-call/', TestDatacube.as_view(), name='external-api-call'),
+    path('fetch_members/', FetchMembers.as_view(), name='fetch_members'),
 
 ]
