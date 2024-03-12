@@ -2200,7 +2200,7 @@ def connect_portfolio(request):
                 "Calculator": "https://100050.pythonanywhere.com/calculator/?session_id={session_id}&id=100093",
                 "Team": "https://ll07-team-dowell.github.io/Jobportal/#?session_id={session_id}&id=100093",
                 "Media": "https://www.socialmediaautomation.uxlivinglab.online/?session_id={session_id}&id=100093",
-                "Customer": "https://ll03-identity-dowell.github.io/100096-customer-support/#?session_id={session_id}&id=100093",
+                "Customer": "https://www.dowellchat.uxlivinglab.online/#?session_id={session_id}&id=100093",
                 "Chat": "https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session_id}&id=100093",
                 "Wifi": "https://l.ead.me/dowellwifiqrcode/?session_id={session_id}&id=100093",
                 "Wallet": "https://ll04-finance-dowell.github.io/100088-dowellwallet/#/login/?session_id={session_id}&id=100093",
