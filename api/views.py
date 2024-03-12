@@ -4130,3 +4130,48 @@ class FetchMembers(APIView):
         #     # Return an error response
         #     return Response({"error": "Failed to fetch data from external API"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+AVAILABLE_DBS = ['clientadmin_DB1']
+ALLOTTED_DBS = []
+
+@api_view(['POST'])
+def manage_user(request):
+    api_key = '7bd48075-dc79-4ec8-812a-7f15c0822199'
+    clientadmin_db = 'clientadmin_DB0'
+    user_id = request.data.get('user_id')
+    user_name = request.data.get('user_name')
+
+    if not user_id or not user_name:
+        return Response({'error': 'User ID and username are required'}, status=400)
+
+    # Check if a collection with the username exists in clientadmin_db0
+    url = f'https://dowelluxlab.com/api/v1/db/{clientadmin_db}/collections'
+    headers = {'Authorization': f'Bearer {api_key}'}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        collections = response.json()
+        if user_name in collections:
+            return Response({'message': 'User already exists'})
+
+    if AVAILABLE_DBS:
+        allotted_db = AVAILABLE_DBS.pop(0)
+        ALLOTTED_DBS.append(allotted_db)
+
+        url = f'https://dowelluxlab.com/api/v1/db/{allotted_db}/add_collection'
+        data = {'collection_name': user_name}
+        response = requests.post(url, headers=headers, json=data)
+
+        if response.status_code == 200:
+            url = f'https://dowelluxlab.com/api/v1/db/{clientadmin_db}/collections/{user_name}/documents'
+            data = {'user_id': user_id, 'user_name': user_name, 'db_name': allotted_db}
+            response = requests.post(url, headers=headers, json=data)
+
+            if response.status_code == 200:
+                return Response({'message': 'User added successfully', 'allotted_db': allotted_db})
+            else:
+                return Response({'error': 'Failed to add user to the collection'}, status=response.status_code)
+        else:
+            return Response({'error': 'Failed to create collection'}, status=response.status_code)
+    else:
+        return Response({'error': 'No available databases'}, status=400)
