@@ -3,7 +3,7 @@ import { RootState } from "../../../store/Store";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { getlayerdevices } from "../../../store/slice/layers";
-import axios from "axios";
+import { Axios93Base } from "../../../api/axios";
 
 export default function Deviceform() {
   const adminusername = useSelector(
@@ -86,10 +86,7 @@ export default function Deviceform() {
       try {
         // dispatch(getloaderstate(true));
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/save_device_layers/",
-          data
-        );
+        await Axios93Base.post("/save_device_layers/", data);
 
         dispatch(
           getlayerdevices({
@@ -202,7 +199,7 @@ export default function Deviceform() {
             onChange={(e) => setselectedOthers(e.target.value)}
             value={selectedOthers}
           >
-           <option disabled={Boolean(Others)} selected>
+            <option disabled={Boolean(Others)} selected>
               …select security layer…
             </option>
             {Others && (

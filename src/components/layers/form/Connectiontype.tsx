@@ -2,9 +2,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
-import axios from "axios";
 import { getlayercontype } from "../../../store/slice/layers";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 
 export default function Connectiontype() {
   const adminusername = useSelector(
@@ -84,10 +84,7 @@ export default function Connectiontype() {
       try {
         // dispatch(getloaderstate(true));
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/save_device_layers/",
-          data
-        );
+        await Axios93Base.post("/save_device_layers/", data);
 
         dispatch(
           getlayercontype({

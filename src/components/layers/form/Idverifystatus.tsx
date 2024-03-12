@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { getlayerverifyid } from "../../../store/slice/layers";
-import axios from "axios";
+import { Axios93Base } from "../../../api/axios";
 
 export default function Idverifystatus() {
   const adminusername = useSelector(
@@ -121,10 +121,7 @@ export default function Idverifystatus() {
       try {
         // dispatch(getloaderstate(true));
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/save_device_layers/",
-          data
-        );
+        await Axios93Base.post("/save_device_layers/", data);
 
         dispatch(
           getlayerverifyid({

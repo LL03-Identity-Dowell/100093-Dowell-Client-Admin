@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import axios from "axios";
 import { getlayerbrowsers } from "../../../store/slice/layers";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 
 export default function Browsers() {
   const adminusername = useSelector(
@@ -107,10 +107,7 @@ export default function Browsers() {
           },
         };
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/save_device_layers/",
-          databrowser
-        );
+        await Axios93Base.post("/save_device_layers/", databrowser);
 
         dispatch(
           getlayerbrowsers({

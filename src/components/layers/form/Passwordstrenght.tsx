@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { getlayerpasswordstrength } from "../../../store/slice/layers";
-import axios from "axios";
+import { Axios93Base } from "../../../api/axios";
 
 export default function Passwordstrenght() {
   const adminusername = useSelector(
@@ -95,7 +95,7 @@ export default function Passwordstrenght() {
       try {
         // dispatch(getloaderstate(true));
 
-        await axios.post(
+        await Axios93Base.post(
           "https://100093.pythonanywhere.com/api/save_device_layers/",
           data
         );

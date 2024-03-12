@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Accordion from "../../components/accordion";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getsidebarlastlogin,
@@ -12,6 +11,7 @@ import { getportfolioNotifications } from "../../store/slice/portfolioNotificati
 import { FaTimes } from "react-icons/fa";
 import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 import { useNavigate } from "react-router-dom";
+import { Axios93Base } from "../../api/axios";
 
 const Sidebar = () => {
   const adminusername = useSelector(
@@ -37,10 +37,7 @@ const Sidebar = () => {
           username: adminusername,
         };
 
-        const osresponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_workspaces/",
-          os
-        );
+        const osresponse = await Axios93Base.post("/get_workspaces/", os);
 
         usedispatch(getsidebarworkspace(osresponse.data));
 
@@ -48,10 +45,7 @@ const Sidebar = () => {
           username: adminusername,
         };
 
-        const os2response = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_last_login/",
-          os2
-        );
+        const os2response = await Axios93Base.post("/get_last_login/", os2);
 
         usedispatch(getsidebarlastlogin(os2response.data));
 
@@ -59,8 +53,8 @@ const Sidebar = () => {
         const notificationData = {
           present_org: present_org,
         };
-        const notificationResponse = await axios.post(
-          "https://100093.pythonanywhere.com/api/fetch_notifications/",
+        const notificationResponse = await Axios93Base.post(
+          "/fetch_notifications/",
           notificationData
         );
         usedispatch(getportfolioNotifications(notificationResponse.data));
@@ -83,20 +77,14 @@ const Sidebar = () => {
     try {
       const removeNotification = notifications.filter((_, id) => id !== key);
       usedispatch(getportfolioNotifications(removeNotification));
-      await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/dismiss_notifications/",
-          removeNotificationData
-        )
-        .then(() => {
-          toast.success("success");
-        });
+      await Axios93Base.post(
+        "/dismiss_notifications/",
+        removeNotificationData
+      ).then(() => {
+        toast.success("success");
+      });
     } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error(error);
-      } else {
-        console.error("An unknown error occurred:", error);
-      }
+      console.error(error);
     }
   };
 

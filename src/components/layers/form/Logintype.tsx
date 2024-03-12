@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import { getlayerlogintype } from "../../../store/slice/layers";
-import axios from "axios";
+import { Axios93Base } from "../../../api/axios";
 
 export default function Logintype() {
   const adminusername = useSelector(
@@ -100,10 +100,7 @@ export default function Logintype() {
       try {
         // dispatch(getloaderstate(true));
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/save_device_layers/",
-          data
-        );
+        await Axios93Base.post("/save_device_layers/", data);
 
         dispatch(
           getlayerlogintype({
