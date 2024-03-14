@@ -2223,7 +2223,9 @@ def connect_portfolio(request):
             if "Dowell Services" in product:
                 return Response(
                         f'https://ll05-ai-dowell.github.io/100105-DowellApiKeySystem/?session_id={session}&id=100093',status=HTTP_200_OK)
-
+            elif "Dowell Datacube" in product:
+                return Response(
+                        f'https://datacube.uxlivinglab.online/?session_id={session}&id=100093',status=HTTP_200_OK)
 
             # try:
             #     lo=UserOrg.objects.all().filter(username=orl)
@@ -2555,7 +2557,7 @@ def connect_portfolio(request):
                 return Response(f'https://100093.pythonanywhere.com/?owner={orl}',status=HTTP_200_OK)
             elif "Customer" in product:
                 return Response(
-                    f'https://ll03-identity-dowell.github.io/100096-customer-support/#?session_id={session}&id=100093',status=HTTP_200_OK)
+                    f'https://www.dowellchat.uxlivinglab.online/#?session_id={session}&id=100093',status=HTTP_200_OK)
             elif "Chat" in product:
                 return Response(
                     f' https://ll03-identity-dowell.github.io/100096-DowellChat/#/living-lab-chat/?session_id={session}&id=100093',status=HTTP_200_OK)
