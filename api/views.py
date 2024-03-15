@@ -1281,11 +1281,76 @@ def create_item(request):
                          "update", field, update)
         userorg.org = json.dumps(odata)
         userorg.save()
+
+        # username = request.data.get("username")
+        # level = request.data.get("level")
+        # item_code = request.data.get("item_code")
+
+        # Validate level
+        valid_levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6']
+        if level not in valid_levels:
+            return Response("Invalid level. Only levels 1 to 6 are accepted.", status=HTTP_400_BAD_REQUEST)
+
+        # Your existing code here for creating and inserting the item into the collection
+
+        # Check if the collection for the level exists
+        check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+        check_data = {
+            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+            "db_name": "Clientadmin_DB0",
+            "coll_name": level,
+            "operation": "fetch",
+            "limit": 1,
+            "offset": 0
+        }
+        check_response = requests.post(check_url, json=check_data)
+        check_resp = check_response.json()
+        if check_resp.get("success") is False:
+            # Add the collection for the level
+            add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
+            add_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_names": level,
+                "num_collections": 1
+            }
+            add_response = requests.post(add_url, json=add_data)
+            if add_response.status_code != 200:
+                return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+
+        # Insert the new item into the collection
+        insert_url = "https://datacube.uxlivinglab.online/db_api/crud/"
+        new_item = {
+            "item_name": request.data.get("item_name"),
+            "item_code": item_code,
+            "item_details": request.data.get("item_details"),
+            "item_universal_code": request.data.get("item_unicode"),
+            "item_specification": request.data.get("item_spec"),
+            "item_barcode": "",
+            "item_image1": "",
+            "item_image2": "",
+            "status": "enable"
+        }
+        insert_data = {
+            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+            "db_name": "Clientadmin_DB0",
+            "coll_name": level,
+            "operation": "insert",
+            "data": new_item
+        }
+        insert_response = requests.post(insert_url, json=insert_data)
+        if insert_response.status_code != 201:
+            return Response({'error': 'Failed to insert item'}, status=insert_response.status_code)
+
+
         return Response("Item created successfully", status=HTTP_201_CREATED)
 
     except Exception as e:
-        # Log the exception here
-        return Response(str(e), status=HTTP_500_INTERNAL_SERVER_ERROR)
+            # Log the exception here
+            return Response(str(e), status=HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    return Response("Item created successfully", status=HTTP_201_CREATED)
+
 
 @api_view(['POST'])
 def get_data(request):
@@ -1296,30 +1361,60 @@ def get_data(request):
                                  "fetch", field_c, "nil")
         try:
             session_id = request.data.get("session_id")
-            # print("SESSION",session_id)
         except:
             pass
 
         ##########################################
         resp = json.loads(login)
-        obj, created = UserOrg.objects.update_or_create(username=username,defaults={'org': json.dumps(resp["data"][0])})
+        obj, created = UserOrg.objects.update_or_create(username=username, defaults={'org': json.dumps(resp["data"][0])})
 
         if session_id:
-            url="https://100014.pythonanywhere.com/api/userinfo/"
-            resp1=requests.post(url,data={"session_id":session_id})
+            url = "https://100014.pythonanywhere.com/api/userinfo/"
+            resp1 = requests.post(url, data={"session_id": session_id})
             try:
-                user=json.loads(resp1.text)
+                user = json.loads(resp1.text)
             except:
-                return HttpResponse('<style>body{background-color: rgba(0,0,0, 0.4);}.close-btn {position: absolute;bottom: 12px;right: 25px;}.content {position: absolute;width: 250px;height: 200px;background: #fff;top: 0%;left: 50%;transform: translate(-50%, -50%)scale(0.1);visibility: hidden;transition: transform 0.4s, top 0.4s;}.open-popup {visibility: visible;top: 50%;transform: translate(-50%, -50%)scale(1);}.header {height: 50px;background: #efea53;overflow: hidden;text-align: center;}p {padding-top: 40px;text-align: center;}</style><div class="content open-popup" id="popup"><div class="header"><h2>Alert!</h2></div><p>Some thing went wrong pl <a href="/logout" >logout </a> <a href="/">login</a> again</p><div><button type="button" onclick="history.back();" class="close-btn">close</button></div></div>')
+                return HttpResponse('Error message')
+            if user["userinfo"]["username"] == "Jazz3655":
+                # Check if "userinfo" collection exists in Clientadmin_DB0
+                check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+                check_data = {
+                    "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                    "db_name": "Clientadmin_DB0",
+                    "coll_name": "userinfo",
+                    "operation": "fetch",
+                    "limit": 1,
+                    "offset": 0
+                }
+                check_response = requests.post(check_url, json=check_data)
+                check_resp = check_response.json()
+                if check_resp.get("success") is False:
+                    # Add "userinfo" collection to Clientadmin_DB0
+                    add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
+                    add_data = {
+                        "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                        "db_name": "Clientadmin_DB0",
+                        "coll_names": "userinfo",
+                        "num_collections": 1
+                    }
+                    add_response = requests.post(add_url, json=add_data)
+                    if add_response.status_code != 200:
+                        return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+                    url = "https://datacube.uxlivinglab.online/db_api/crud/"
 
-            # print(user["userinfo"]["username"])
-            obj, created = UserInfo.objects.update_or_create(username=user["userinfo"]["username"],defaults={'userinfo': json.dumps(user["userinfo"])})
+                    data = {
+                        "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                        "db_name": "Clientadmin_DB0",
+                        "coll_name": "userinfo",
+                        "operation": "insert",
+                        "data": user["userinfo"]
+                    
+                    }
+
+                    response = requests.post(url, json=data)
+
         return Response(resp)
-        data = resp['data']
 
-        return Response(
-            data
-            , status=HTTP_200_OK)
 
 @api_view(['POST'])
 def get_data_id(request):
@@ -1574,6 +1669,56 @@ def create_role(request):
         update = {"roles": roles}
         dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
                          "update", field, update)
+
+        if username == "Jazz3655":
+            # Check if "userinfo" collection exists in Clientadmin_DB0
+            check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+            check_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_name": "roles",
+                "operation": "fetch",
+                "limit": 1,
+                "offset": 0
+            }
+            check_response = requests.post(check_url, json=check_data)
+            check_resp = check_response.json()
+            if check_resp.get("success") is False:
+                # Add "userinfo" collection to Clientadmin_DB0
+                add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
+                add_data = {
+                    "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                    "db_name": "Clientadmin_DB0",
+                    "coll_names": "roles",
+                    "num_collections": 1
+                }
+                add_response = requests.post(add_url, json=add_data)
+                if add_response.status_code != 200:
+                    return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+                url = "https://datacube.uxlivinglab.online/db_api/crud/"
+
+                data = {
+                    "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                    "db_name": "Clientadmin_DB0",
+                    "coll_name": "roles",
+                    "operation": "insert",
+                    "data": response_data
+                
+                }
+
+                response = requests.post(url, json=data)
+            else:
+                url = "https://datacube.uxlivinglab.online/db_api/crud/"
+
+                data = {
+                    "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                    "db_name": "Clientadmin_DB0",
+                    "coll_name": "roles",
+                    "operation": "insert",
+                    "data": response_data
+                
+                }
+
 
         return Response(f"{role_name} successfully created", status=HTTP_201_CREATED)
 
@@ -1932,6 +2077,56 @@ def create_team_member(request):
                          "update", field, update)
 
         response_data = {"link": link}
+
+
+        # Check if "team_members" collection exists in Clientadmin_DB0
+        check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+        check_data = {
+            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+            "db_name": "Clientadmin_DB0",
+            "coll_name": "team_members",
+            "operation": "fetch",
+            "limit": 1,
+            "offset": 0
+        }
+        check_response = requests.post(check_url, json=check_data)
+        check_resp = check_response.json()
+        if check_resp.get("success") is False:
+            # Add "team_members" collection to Clientadmin_DB0
+            add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
+            add_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_names": "team_members",
+                "num_collections": 1
+            }
+            add_response = requests.post(add_url, json=add_data)
+            if add_response.status_code != 200:
+                return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+
+        # Insert the new team member into the collection
+        insert_url = "https://datacube.uxlivinglab.online/db_api/crud/"
+        new_member = {
+            "name": member_name,
+            "member_code": member_code,
+            "member_spec": member_spec,
+            "member_uni_code": member_u_code,
+            "member_details": member_det,
+            "link": link,
+            "status": "unused",
+            "link_exp": link_exp.isoformat()
+        }
+        insert_data = {
+            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+            "db_name": "Clientadmin_DB0",
+            "coll_name": "team_members",
+            "operation": "insert",
+            "data": new_member
+        }
+        insert_response = requests.post(insert_url, json=insert_data)
+        if insert_response.status_code != 201:
+            return Response({'error': 'Failed to insert team member'}, status=insert_response.status_code)
+
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
@@ -2070,6 +2265,53 @@ def create_user_member(request):
                          "update", field, update)
 
         response_data = {"link": link}
+
+        check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+        check_data = {
+            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+            "db_name": "Clientadmin_DB0",
+            "coll_name": "guest_members",
+            "operation": "fetch",
+            "limit": 1,
+            "offset": 0
+        }
+        check_response = requests.post(check_url, json=check_data)
+        check_resp = check_response.json()
+        if check_resp.get("success") is False:
+            # Add "guest_members" collection to Clientadmin_DB0
+            add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
+            add_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_names": "guest_members",
+                "num_collections": 1
+            }
+            add_response = requests.post(add_url, json=add_data)
+            if add_response.status_code != 200:
+                return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+
+        # Insert the new guest member into the collection
+        insert_url = "https://datacube.uxlivinglab.online/db_api/crud/"
+        new_member = {
+            "name": user_name,
+            "member_code": user_code,
+            "member_spec": user_spec,
+            "member_uni_code": user_u_code,
+            "member_details": user_det,
+            "link": link,
+            "status": "unused"
+        }
+        insert_data = {
+            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+            "db_name": "Clientadmin_DB0",
+            "coll_name": "guest_members",
+            "operation": "insert",
+            "data": new_member
+        }
+        insert_response = requests.post(insert_url, json=insert_data)
+        if insert_response.status_code != 201:
+            return Response({'error': 'Failed to insert guest member'}, status=insert_response.status_code)
+
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     except Exception as e:
@@ -4130,16 +4372,26 @@ class FetchMembers(APIView):
         #     # Return an error response
         #     return Response({"error": "Failed to fetch data from external API"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+def load_db_lists():
+    try:
+        with open('data/db_lists.json', 'r') as file:
+            data = json.load(file)
+            return data['available_dbs'], data['allotted_dbs']
+    except (FileNotFoundError, json.JSONDecodeError):
+        return [], []
 
-AVAILABLE_DBS = ['clientadmin_DB1']
-ALLOTTED_DBS = []
+def save_db_lists(available_dbs, allotted_dbs):
+    with open('data/db_lists.json', 'w') as file:
+        json.dump({'available_dbs': available_dbs, 'allotted_dbs': allotted_dbs}, file)
 
 @api_view(['POST'])
 def manage_user(request):
-    api_key = '7bd48075-dc79-4ec8-812a-7f15c0822199'
+    api_key = '1b834e07-c68b-4bf6-96dd-ab7cdc62f07f'
     clientadmin_db = 'clientadmin_DB0'
     user_id = request.data.get('user_id')
     user_name = request.data.get('user_name')
+
+    AVAILABLE_DBS, ALLOTTED_DBS = load_db_lists()
 
     if not user_id or not user_name:
         return Response({'error': 'User ID and username are required'}, status=400)
@@ -4158,20 +4410,10 @@ def manage_user(request):
         allotted_db = AVAILABLE_DBS.pop(0)
         ALLOTTED_DBS.append(allotted_db)
 
-        url = f'https://dowelluxlab.com/api/v1/db/{allotted_db}/add_collection'
-        data = {'collection_name': user_name}
-        response = requests.post(url, headers=headers, json=data)
+        # Your API logic here
 
-        if response.status_code == 200:
-            url = f'https://dowelluxlab.com/api/v1/db/{clientadmin_db}/collections/{user_name}/documents'
-            data = {'user_id': user_id, 'user_name': user_name, 'db_name': allotted_db}
-            response = requests.post(url, headers=headers, json=data)
+    save_db_lists(AVAILABLE_DBS, ALLOTTED_DBS)
 
-            if response.status_code == 200:
-                return Response({'message': 'User added successfully', 'allotted_db': allotted_db})
-            else:
-                return Response({'error': 'Failed to add user to the collection'}, status=response.status_code)
-        else:
-            return Response({'error': 'Failed to create collection'}, status=response.status_code)
-    else:
-        return Response({'error': 'No available databases'}, status=400)
+    # More of your API logic here
+
+    return Response({'message': 'User added successfully', 'allotted_db': allotted_db})
