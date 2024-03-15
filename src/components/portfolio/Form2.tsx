@@ -5,6 +5,7 @@ import { useState, ChangeEvent } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { Form2Inputs } from "./types";
+import { Axios93Base } from "../../api/axios";
 
 const initialFormInputs: Form2Inputs = {
   username: "",
@@ -68,9 +69,9 @@ const Form2 = () => {
     };
 
     try {
-      await axios
+      await Axios93Base
         .post(
-          "https://100093.pythonanywhere.com/api/update_portfolio_status/",
+          "/update_portfolio_status/",
           data
         )
         .then((res) => {
@@ -133,8 +134,8 @@ const Form2 = () => {
       };
 
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/public_user/",
+        const response = await Axios93Base.post(
+          "/public_user/",
           data
         );
         setPublicData(response.data);

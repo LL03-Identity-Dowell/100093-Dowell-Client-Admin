@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
-import { Ids, SelectIds } from "../../../Ids";
+// import { Ids, SelectIds } from "../../../Ids";
+import { Axios93Base } from "../../../api/axios";
 
 const Settingform7 = () => {
   const defaultlang = useSelector(
@@ -43,10 +43,7 @@ const Settingform7 = () => {
           selected_language: selectedLanguage,
         };
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
+        await Axios93Base.post("/settings/", data);
 
         dispatch(
           getsetting({
@@ -186,71 +183,71 @@ const Settingform7 = () => {
     zu: "Zulu",
   };
   const languages = Object.entries(languageMapping);
-  useEffect(() => {
-    const FetchLanguage = () => {
-      SelectIds.forEach((id: string) => {
-        const select = document.getElementById(id) as HTMLSelectElement | null;
-        // Accessing individual options
-        if (select) {
-          const options = select.options;
-          for (let i = 0; i < options.length; i++) {
-            const translate = async () => {
-              try {
-                const data = {
-                  text: options[i].text,
-                  target_language: selectedLanguage,
-                };
-                const response = await axios.post(
-                  `https://100093.pythonanywhere.com/api/translate/`,
-                  data
-                );
+  // useEffect(() => {
+  //   const FetchLanguage = () => {
+  //     SelectIds.forEach((id: string) => {
+  //       const select = document.getElementById(id) as HTMLSelectElement | null;
+  //       // Accessing individual options
+  //       if (select) {
+  //         const options = select.options;
+  //         for (let i = 0; i < options.length; i++) {
+  //           const translate = async () => {
+  //             try {
+  //               const data = {
+  //                 text: options[i].text,
+  //                 target_language: selectedLanguage,
+  //               };
+  //               const response = await Axios93Base.post(
+  //                 `/translate/`,
+  //                 data
+  //               );
 
-                const translationData = await response.data;
-                if (id === "settingForm2text1") {
-                  console.log(translationData);
-                }
-                options[i].text =
-                  translationData.data.translations[0].translatedText;
-              } catch (error) {
-                console.error("Translation error:", error);
-                return options[i].text;
-              }
-            };
-            translate();
-          }
-        }
-      });
-      Ids.forEach((id: string) => {
-        const text = document.getElementById(id);
-        if (text) {
-          const translate = async () => {
-            try {
-              const data = {
-                text: text.innerText,
-                target_language: selectedLanguage,
-              };
-              const response = await axios.post(
-                `https://100093.pythonanywhere.com/api/translate/`,
-                data
-              );
+  //               const translationData = await response.data;
+  //               if (id === "settingForm2text1") {
+  //                 console.log(translationData);
+  //               }
+  //               options[i].text =
+  //                 translationData.data.translations[0].translatedText;
+  //             } catch (error) {
+  //               console.error("Translation error:", error);
+  //               return options[i].text;
+  //             }
+  //           };
+  //           translate();
+  //         }
+  //       }
+  //     });
+  //     Ids.forEach((id: string) => {
+  //       const text = document.getElementById(id);
+  //       if (text) {
+  //         const translate = async () => {
+  //           try {
+  //             const data = {
+  //               text: text.innerText,
+  //               target_language: selectedLanguage,
+  //             };
+  //             const response = await Axios93Base.post(
+  //               `/translate/`,
+  //               data
+  //             );
 
-              const translationData = await response.data;
-              text.innerText =
-                translationData.data.translations[0].translatedText;
-            } catch (error) {
-              console.error("Translation error:", error);
-              return text;
-            }
-          };
-          translate();
-        }
-      });
-    };
+  //             const translationData = await response.data;
+  //             text.innerText =
+  //               translationData.data.translations[0].translatedText;
+  //           } catch (error) {
+  //             console.error("Translation error:", error);
+  //             return text;
+  //           }
+  //         };
+  //         translate();
+  //       }
+  //     });
+  //   };
 
-    if (selectedLanguage) {
-      FetchLanguage();
-    }
-  }, [selectedLanguage, dispatch]);
+  //   if (selectedLanguage) {
+  //     FetchLanguage();
+  //   }
+  // }, [selectedLanguage, dispatch]);
   return (
     <div className="form-item">
       <>

@@ -5,6 +5,7 @@ import { RootState } from "../store/Store";
 import axios from "axios";
 import Loader from "./whiteloader";
 import { getloaderstate } from "../store/slice/loaderstate";
+import { Axios93Base } from "../api/axios";
 
 const Exportfolio = () => {
   const show_loader = useSelector((state: RootState) => state.loaderslice);
@@ -30,15 +31,13 @@ const Exportfolio = () => {
     };
 
     try {
-      await axios
-        .get(`https://100093.pythonanywhere.com/api/exportfolio`, {
-          params: data, // Send the parameters as an object
-        })
-        .then((res) => {
-          console.log(res.data);
-          toast.success("success");
-          window.location.href = res.data;
-        });
+      await Axios93Base.get(`/exportfolio`, {
+        params: data, // Send the parameters as an object
+      }).then((res) => {
+        console.log(res.data);
+        toast.success("success");
+        window.location.href = res.data;
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);

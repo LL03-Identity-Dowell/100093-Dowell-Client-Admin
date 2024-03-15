@@ -7,6 +7,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import { getAdminData } from "../../../store/slice/adminData";
+import { Axios93Base } from "../../../api/axios";
 
 const Form3 = () => {
   //   const [selectedItem, setSelectedItem] = useState<string>("");
@@ -57,8 +58,8 @@ const Form3 = () => {
     console.log(data, "data");
 
     try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
+      await Axios93Base
+        .post("/MemEnDis/", data)
         .then((res) => {
           console.log(res.data);
           toast.success("success");

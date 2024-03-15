@@ -5,6 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
+import { Axios93Base } from "../../../api/axios";
 
 type Option = {
   value: string;
@@ -71,8 +72,8 @@ const Form2 = () => {
     };
 
     try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
+      await Axios93Base
+        .post("/MemEnDis/", data)
         .then((res) => {
           console.log(res.data);
           toast.success("success");

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
@@ -7,6 +6,7 @@ import { FaUser } from "react-icons/fa";
 import GuestReport from "./GuestReport";
 import TeamReport from "./TeamReport";
 import PublicReport from "./PublicReport";
+import { Axios93Base } from "../../api/axios";
 
 interface memberProps {
   guest_members: {
@@ -75,10 +75,9 @@ const MemberReport = () => {
   useEffect(() => {
     const fetchPortfolios = async () => {
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/member_reports/",
-          { username: username }
-        );
+        const response = await Axios93Base.post("/member_reports/", {
+          username: username,
+        });
         setMemberReport(response.data);
         // setMemberReport(response.data);
       } catch (error) {

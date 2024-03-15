@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
@@ -9,6 +8,7 @@ import LevelFourReport from "./LevelFourReport";
 import LevelFiveReport from "./LevelFiveReport";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { FaLevelDownAlt } from "react-icons/fa";
+import { Axios93Base } from "../../api/axios";
 
 interface LevelReportProps {
   level1: {
@@ -98,10 +98,9 @@ const LevelReport = () => {
   useEffect(() => {
     const fetchPortfolios = async () => {
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/level_reports/",
-          { username: username }
-        );
+        const response = await Axios93Base.post("/level_reports/", {
+          username: username,
+        });
         console.log(response.data[0]);
         setLevelReport(response.data[0]);
       } catch (error) {

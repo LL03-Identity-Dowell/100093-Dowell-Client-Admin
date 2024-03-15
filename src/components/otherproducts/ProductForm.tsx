@@ -3,9 +3,9 @@ import { RootState } from "../../store/Store";
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { Axios93Base } from "../../api/axios";
 
 const ProductForm = () => {
-
   // select product data ,user name, and selected orgname from org
   const productData = useSelector(
     (state: RootState) => state.otherorgdata.data
@@ -32,7 +32,6 @@ const ProductForm = () => {
   );
   const sessionId = localStorage.getItem("sessionId");
 
-
   // handle connect button
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,14 +47,12 @@ const ProductForm = () => {
     };
 
     try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/connect_portfolio/", data)
-        .then((res) => {
-          console.log(res.data);
-          setErrMsg("");
-          toast.success("success");
-          window.location.href = res.data;
-        });
+      await Axios93Base.post("/connect_portfolio/", data).then((res) => {
+        console.log(res.data);
+        setErrMsg("");
+        toast.success("success");
+        window.location.href = res.data;
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data);

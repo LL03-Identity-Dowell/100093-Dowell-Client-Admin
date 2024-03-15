@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 
 const Settingform9 = () => {
   const allproducts = useSelector(
@@ -44,10 +44,7 @@ const Settingform9 = () => {
           plans: plan,
         };
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
+        await Axios93Base.post("/settings/", data);
 
         dispatch(
           getsetting({

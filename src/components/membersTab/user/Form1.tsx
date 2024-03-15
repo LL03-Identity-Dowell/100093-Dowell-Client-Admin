@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { ToastContainer, toast } from "react-toastify";
 import { setAdminData } from "../../../store/slice/adminData";
+import { Axios93Base } from "../../../api/axios";
 
 const Form1 = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -69,8 +70,7 @@ const Form1 = () => {
     };
 
     try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/create_user_member/", data)
+      await Axios93Base.post("/create_user_member/", data)
         .then((res) => {
           if (res.status === 201) {
             setErrMsg("");
@@ -95,10 +95,9 @@ const Form1 = () => {
             toast.error("An unexpected error occurred");
           }
         });
-      const responseAdmin = await axios.post(
-        "https://100093.pythonanywhere.com/api/get_data/",
-        { username: userName }
-      );
+      const responseAdmin = await Axios93Base.post("/get_data/", {
+        username: userName,
+      });
       dispatch(setAdminData(responseAdmin.data.data[0]));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

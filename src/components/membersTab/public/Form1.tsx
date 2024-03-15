@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { toast } from "react-toastify";
 import images from "../../images";
+import { Axios93Base } from "../../../api/axios";
 const Form1 = () => {
   const [formInputs, setFormInputs] = useState({
     public_count: 0,
@@ -45,11 +46,7 @@ const Form1 = () => {
     }
     try {
       setIsLoading(true);
-      await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/create_public_member/",
-          data
-        )
+      await Axios93Base.post("/create_public_member/", data)
         .then((res) => {
           if (res.status === 201) {
             toast.success(res.statusText);

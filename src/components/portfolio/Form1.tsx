@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import { FormInputs, Option, PublicResponse } from "./types";
 import { setAdminData } from "../../store/slice/adminData";
+import { Axios93Base } from "../../api/axios";
 
 const initialFormInputs: FormInputs = {
   username: "",
@@ -98,10 +99,7 @@ const Form1 = () => {
       };
 
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/public_user/",
-          data
-        );
+        const response = await Axios93Base.post("/public_user/", data);
         response.data[0].id != undefined ? setPublicData(response.data) : "";
       } catch (error) {
         console.error(error);
@@ -220,60 +218,54 @@ const Form1 = () => {
     };
     try {
       setIsLoading(true);
-      await axios
-        .post("https://100093.pythonanywhere.com/api/create_portfolio/", data)
-        .then(async (res) => {
-          if (data.member_type === "public") {
-            setLink(res.data.masterlink);
+      await Axios93Base.post("/create_portfolio/", data).then(async (res) => {
+        if (data.member_type === "public") {
+          setLink(res.data.masterlink);
+        }
+        if (res.data.success) {
+          toast.success(res.data.success);
+          res.data.qrcode != undefined ? setimageLink(res.data.qrcode) : "";
+          if (data.member_type === "public" && res.data.success) {
+            const usedLink = await Axios93Base.post("/remove_used_public/", {
+              public: JSON.parse(data.member),
+              username: data.username,
+            });
+            setPublicData(
+              publicData?.filter(
+                (member) => !JSON.parse(data.member).includes(member?.id)
+              )
+            );
+            console.log("usedLInk", usedLink);
           }
-          if (res.data.success) {
-            toast.success(res.data.success);
-            res.data.qrcode != undefined ? setimageLink(res.data.qrcode) : "";
-            if (data.member_type === "public" && res.data.success) {
-              const usedLink = await axios.post(
-                "https://100093.pythonanywhere.com/api/remove_used_public/",
-                {
-                  public: JSON.parse(data.member),
-                  username: data.username,
-                }
-              );
-              setPublicData(
-                publicData?.filter(
-                  (member) => !JSON.parse(data.member).includes(member?.id)
-                )
-              );
-              console.log("usedLInk", usedLink);
-            }
-            // if (isnewOwner) {
-            //   return;
-            // } else {
-            //   window.location.reload();
-            // }
-          } else {
-            toast.error(res.data.resp);
-          }
+          // if (isnewOwner) {
+          //   return;
+          // } else {
+          //   window.location.reload();
+          // }
+        } else {
+          toast.error(res.data.resp);
+        }
 
-          setFormInputs({
-            username: "",
-            member_type: "",
-            member: [],
-            product: "",
-            data_type: "",
-            op_rights: "",
-            role: "",
-            portfolio_name: "",
-            portfolio_code: "",
-            portfolio_status: "",
-            portfolio_spec: "",
-            portfolio_u_code: "",
-            portfolio_det: "",
-          });
-          console.log(formInputs);
+        setFormInputs({
+          username: "",
+          member_type: "",
+          member: [],
+          product: "",
+          data_type: "",
+          op_rights: "",
+          role: "",
+          portfolio_name: "",
+          portfolio_code: "",
+          portfolio_status: "",
+          portfolio_spec: "",
+          portfolio_u_code: "",
+          portfolio_det: "",
         });
-      const responseAdmin = await axios.post(
-        "https://100093.pythonanywhere.com/api/get_data/",
-        { username: userName }
-      );
+        console.log(formInputs);
+      });
+      const responseAdmin = await Axios93Base.post("/get_data/", {
+        username: userName,
+      });
       dispatch(setAdminData(responseAdmin.data.data[0]));
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

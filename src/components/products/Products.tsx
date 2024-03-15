@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import axios from "axios";
@@ -7,9 +7,10 @@ import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
-import { ProductSelectIds, ProductTextIds } from "../../Ids";
+// import { ProductSelectIds, ProductTextIds } from "../../Ids";
 import Lottie from "lottie-react";
 import LoaderAnim from "../../assets/json/loader.json";
+import { Axios93Base } from "../../api/axios";
 //defining interfaces for product , portfolio,ChildPropsProductCardProps
 type Product = {
   _id: string;
@@ -70,74 +71,68 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   );
 
   //LANGUAGE SETTING START
-  const defaultlang = useSelector(
-    (state: RootState) => state.setting?.data?.default_language
-  );
-  useEffect(() => {
-    const FetchLanguage = () => {
-      ProductSelectIds.forEach((id: string) => {
-        const select = document.getElementById(id) as HTMLSelectElement | null;
-        // Accessing individual options
-        if (select) {
-          const options = select.options;
-          for (let i = 0; i < options.length; i++) {
-            const translate = async () => {
-              try {
-                const data = {
-                  text: options[i].text,
-                  target_language: defaultlang,
-                };
-                const response = await axios.post(
-                  `https://100093.pythonanywhere.com/api/translate/`,
-                  data
-                );
+  // const defaultlang = useSelector(
+  //   (state: RootState) => state.setting?.data?.default_language
+  // );
+  // useEffect(() => {
+  //   const FetchLanguage = () => {
+  //     ProductSelectIds.forEach((id: string) => {
+  //       const select = document.getElementById(id) as HTMLSelectElement | null;
+  //       // Accessing individual options
+  //       if (select) {
+  //         const options = select.options;
+  //         for (let i = 0; i < options.length; i++) {
+  //           const translate = async () => {
+  //             try {
+  //               const data = {
+  //                 text: options[i].text,
+  //                 target_language: defaultlang,
+  //               };
+  //               const response = await Axios93Base.post(`/translate/`, data);
 
-                const translationData = await response.data;
-                if (id === "settingForm2text1") {
-                  console.log(translationData);
-                }
-                options[i].text =
-                  translationData.data.translations[0].translatedText;
-              } catch (error) {
-                console.error("Translation error:", error);
-                return options[i].text;
-              }
-            };
-            translate();
-          }
-        }
-      });
-      ProductTextIds.forEach((id: string) => {
-        const text = document.getElementById(id);
-        if (text) {
-          const translate = async () => {
-            try {
-              const data = {
-                text: text.innerText,
-                target_language: defaultlang,
-              };
-              const response = await axios.post(
-                `https://100093.pythonanywhere.com/api/translate/`,
-                data
-              );
+  //               const translationData = await response.data;
+  //               if (id === "settingForm2text1") {
+  //                 console.log(translationData);
+  //               }
+  //               options[i].text =
+  //                 translationData.data.translations[0].translatedText;
+  //             } catch (error) {
+  //               console.error("Translation error:", error);
+  //               return options[i].text;
+  //             }
+  //           };
+  //           translate();
+  //         }
+  //       }
+  //     });
+  //     ProductTextIds.forEach((id: string) => {
+  //       const text = document.getElementById(id);
+  //       if (text) {
+  //         const translate = async () => {
+  //           try {
+  //             const data = {
+  //               text: text.innerText,
+  //               target_language: defaultlang,
+  //             };
+  //             const response = await Axios93Base.post(`/translate/`, data);
 
-              const translationData = await response.data;
-              text.innerText =
-                translationData.data.translations[0].translatedText;
-            } catch (error) {
-              console.error("Translation error:", error);
-              return text;
-            }
-          };
-          translate();
-        }
-      });
-    };
+  //             const translationData = await response.data;
+  //             text.innerText =
+  //               translationData.data.translations[0].translatedText;
+  //           } catch (error) {
+  //             console.error("Translation error:", error);
+  //             return text;
+  //           }
+  //         };
+  //         translate();
+  //       }
+  //     });
+  //   };
 
-    if (defaultlang) {
-      FetchLanguage();
-    }
-  }, [defaultlang, hovertitle]);
+  //   if (defaultlang) {
+  //     FetchLanguage();
+  //   }
+  // }, [defaultlang, hovertitle]);
   //LANGUAGE SETTING END
   //filter portfolio from get api data
 
@@ -155,6 +150,7 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
             product.product_name !== "Living Lab Monitoring" &&
             product.product_name !== "Dowell Wallet"
         );
+  console.log({ filteredProducts });
   const defaultOptions = useMemo(() => {
     const initialDefaultOptions: Record<string, any> = {};
     filteredProducts.forEach((product) => {
@@ -236,10 +232,7 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
 
     setTimeout(async () => {
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/connect_portfolio/",
-          data
-        );
+        const response = await Axios93Base.post("/connect_portfolio/", data);
         toast.success("success");
         window.location.href = response.data;
       } catch (error) {
@@ -271,10 +264,7 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
     };
 
     try {
-      const response = await axios.post(
-        "https://100093.pythonanywhere.com/api/request_portfolio/",
-        data
-      );
+      const response = await Axios93Base.post("/request_portfolio/", data);
       toast.success("success");
       dispatch(getportfolioNotifications(response.data));
     } catch (error) {
@@ -319,8 +309,12 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
                   // Find the corresponding product in getallproduct array
                   if (typeof getallproducts[0] === "object") {
                     const matchingProduct = getallproducts.find(
-                      (getProduct) =>
-                        getProduct.product_name === product.product_name
+                      (getProduct) => {
+                        if (getProduct.product_name === "Dowell Datacube") {
+                          console.log("Dowell Datacube", getProduct);
+                        }
+                        return getProduct.product_name === product.product_name;
+                      }
                     );
 
                     // Check if the product status is "enable" in getallproduct array

@@ -12,6 +12,7 @@ import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
 import Lottie from "lottie-react";
 import LoaderAnim from "../../assets/json/loader.json";
+import { Axios93Base } from "../../api/axios";
 const Products = () => {
   const defaultproductData = useSelector(
     (state: RootState) => state.otherorgdata.data
@@ -57,21 +58,16 @@ const Products = () => {
       };
       setTimeout(async () => {
         try {
-          const response = await axios.post(
-            "https://100093.pythonanywhere.com/api/connect_portfolio/",
-            data
-          );
+          const response = await Axios93Base.post("/connect_portfolio/", data);
           if (data.product === "Living Lab Admin") {
             const username = response.data.split("?")[1].split("=")[1];
             try {
-              const responseAdmin = await axios.post(
-                "https://100093.pythonanywhere.com/api/get_data/",
-                { username: username }
-              );
-              const response = await axios.post(
-                "https://100093.pythonanywhere.com/api/settings/",
-                { username: username }
-              );
+              const responseAdmin = await Axios93Base.post("/get_data/", {
+                username: username,
+              });
+              const response = await Axios93Base.post("/settings/", {
+                username: username,
+              });
               toast.success("Success");
               dispatch(isNewOwner(username));
               localStorage.setItem("username", username);

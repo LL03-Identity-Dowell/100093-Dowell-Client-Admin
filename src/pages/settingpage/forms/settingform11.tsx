@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 
 const Settingform11 = () => {
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
@@ -34,10 +35,7 @@ const Settingform11 = () => {
           colour_patterns: selectedColor,
         };
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
+        await Axios93Base.post("/settings/", data);
         toast.success("Success");
         dispatch(
           getsetting({

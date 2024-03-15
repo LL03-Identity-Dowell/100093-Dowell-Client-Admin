@@ -7,6 +7,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import { getAdminData } from "../../../store/slice/adminData";
+import { Axios93Base } from "../../../api/axios";
 
 const Form3 = () => {
   const [uploadLinkModal, setUploadLinkModal] = useState(false);
@@ -52,43 +53,41 @@ const Form3 = () => {
     console.log(data, "data");
 
     try {
-      await axios
-        .post("https://100093.pythonanywhere.com/api/MemEnDis/", data)
-        .then((res) => {
-          console.log(res.data);
-          toast.success("success");
-          const updatedpendingmember = guest_member?.pending_members.filter(
-            (mem) => selectedItems?.member_code != mem.member_code
-          );
-          console.log(updatedpendingmember);
-          dispatch(
-            getAdminData({
-              ...currentadmindata,
-              data: [
-                {
-                  ...currentadmindata.data[0],
-                  members: {
-                    ...currentadmindata.data[0].members,
-                    guest_members: {
-                      ...currentadmindata.data[0].members.guest_members,
-                      pending_members: updatedpendingmember,
-                    },
+      await Axios93Base.post("/MemEnDis/", data).then((res) => {
+        console.log(res.data);
+        toast.success("success");
+        const updatedpendingmember = guest_member?.pending_members.filter(
+          (mem) => selectedItems?.member_code != mem.member_code
+        );
+        console.log(updatedpendingmember);
+        dispatch(
+          getAdminData({
+            ...currentadmindata,
+            data: [
+              {
+                ...currentadmindata.data[0],
+                members: {
+                  ...currentadmindata.data[0].members,
+                  guest_members: {
+                    ...currentadmindata.data[0].members.guest_members,
+                    pending_members: updatedpendingmember,
                   },
                 },
-              ],
-            })
-          );
-          setSelectedItems({
-            name: "",
-            member_code: "",
-            member_spec: "",
-            member_uni_code: "",
-            member_details: "",
-            link: "",
-            status: "",
-          });
-          setSelectedvalue(null);
+              },
+            ],
+          })
+        );
+        setSelectedItems({
+          name: "",
+          member_code: "",
+          member_spec: "",
+          member_uni_code: "",
+          member_details: "",
+          link: "",
+          status: "",
         });
+        setSelectedvalue(null);
+      });
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);

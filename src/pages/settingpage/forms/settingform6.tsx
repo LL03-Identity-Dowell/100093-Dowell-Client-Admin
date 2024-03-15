@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 const Settingform6 = () => {
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
   const defaultorg = useSelector(
@@ -46,20 +46,18 @@ const Settingform6 = () => {
           selected_workspace: defaultorgValue,
         };
         console.log({ data });
-        await axios
-          .post("https://100093.pythonanywhere.com/api/settings/", data)
-          .then((res) => {
-            console.log(res);
-            dispatch(
-              getsetting({
-                isSuccess: true,
-                data: {
-                  ...currentSetting,
-                  defaultorg: defaultorgValue,
-                },
-              })
-            );
-          });
+        await Axios93Base.post("/settings/", data).then((res) => {
+          console.log(res);
+          dispatch(
+            getsetting({
+              isSuccess: true,
+              data: {
+                ...currentSetting,
+                defaultorg: defaultorgValue,
+              },
+            })
+          );
+        });
         toast.success("Success");
         setIsLoading(false);
       } catch (error) {

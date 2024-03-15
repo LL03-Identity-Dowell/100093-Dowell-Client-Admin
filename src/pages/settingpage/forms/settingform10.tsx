@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { toast } from "react-toastify";
 import { getsetting } from "../../../store/slice/setting";
+import { Axios93Base } from "../../../api/axios";
 
 interface Portfolio {
   username: string[];
@@ -110,10 +110,7 @@ const Settingform10 = () => {
           username: defaultusername,
           process: process,
         };
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
+        await Axios93Base.post("/settings/", data);
         dispatch(
           getsetting({
             isSuccess: true,

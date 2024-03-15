@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { Axios93Base } from "../../../api/axios";
 
 const Settingform3 = () => {
   // const mandatory_sections = useSelector(
@@ -26,10 +26,7 @@ const Settingform3 = () => {
             username: adminusername,
             session_id: sessionId,
           };
-          const response = await axios.post(
-            "https://100097.pythonanywhere.com/get_user_sections",
-            data
-          );
+          const response = await Axios93Base.post("/get_user_sections", data);
           if (content === undefined) content = response.data.data;
         } catch (error) {
           console.error(error);

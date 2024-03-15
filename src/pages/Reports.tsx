@@ -5,10 +5,10 @@ import { RootState } from "../store/Store";
 import Loader from "./whiteloader";
 import { isNewOwner, setAdminData } from "../store/slice/adminData";
 import { getselectedorgs } from "../store/slice/selectedorg";
-import axios from "axios";
 import { getViewAccess } from "../store/slice/viewAccess";
 import ReportTabs from "../components/ReportTabs";
 import ReportHeader from "../components/reports/ReportHeader";
+import { Axios93Base } from "../api/axios";
 
 const Reports = () => {
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
@@ -28,14 +28,13 @@ const Reports = () => {
     if (localStorage.getItem("username")) {
       if (!isnewOwner) {
         const username = localStorage.getItem("username");
-        const responseAdmin = await axios.post(
-          "https://100093.pythonanywhere.com/api/get_data/",
-          { username: username, session_id: sessionId }
-        );
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          { username: username }
-        );
+        const responseAdmin = await Axios93Base.post("/get_data/", {
+          username: username,
+          session_id: sessionId,
+        });
+        const response = await Axios93Base.post("/settings/", {
+          username: username,
+        });
         dispatch(isNewOwner(username));
         dispatch(setAdminData(responseAdmin.data.data[0]));
         dispatch(getselectedorgs({ orgname: userName, type: "owner" }));

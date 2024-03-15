@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { Option } from "../../portfolio/types";
 import Select from "react-select";
+import { Axios93Base } from "../../../api/axios";
 
 const Form2 = () => {
   const public_member = useSelector(
@@ -33,23 +34,17 @@ const Form2 = () => {
       portfolio_status: "assigned",
     };
     try {
-      await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/get_used_unused_links/",
-          assignedData
-        )
-        .then((res) => {
+      await Axios93Base.post("/get_used_unused_links/", assignedData).then(
+        (res) => {
           setUsedAndUnusedData(res.data);
-        });
+        }
+      );
 
-      await axios
-        .post(
-          "https://100093.pythonanywhere.com/api/get_used_unused_links/",
-          unassignedData
-        )
-        .then((res) => {
+      await Axios93Base.post("/get_used_unused_links/", unassignedData).then(
+        (res) => {
           setUsedAndUnusedUnassigned(res.data);
-        });
+        }
+      );
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error(error);

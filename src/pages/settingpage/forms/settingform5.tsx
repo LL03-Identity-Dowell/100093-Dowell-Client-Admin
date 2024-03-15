@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 
 const Settingform5 = () => {
   const [selectValue, setSelectValue] = useState("Chat");
@@ -52,28 +52,26 @@ const Settingform5 = () => {
               : selecteduxlivinglab_method[0],
         };
         console.log({ data });
-        await axios
-          .post("https://100093.pythonanywhere.com/api/settings/", data)
-          .then((res) => {
-            console.log(res);
-            console.log("response data", res.data);
-            dispatch(
-              getsetting({
-                isSuccess: true,
-                data: {
-                  ...currentSetting,
-                  uxlivinglab_method:
-                    typeof selecteduxlivinglab_method == "object"
-                      ? selecteduxlivinglab_method
-                      : [selecteduxlivinglab_method],
-                  chat_method:
-                    typeof selectedchat_method == "object"
-                      ? selectedchat_method
-                      : [selectedchat_method],
-                },
-              })
-            );
-          });
+        await Axios93Base.post("/settings/", data).then((res) => {
+          console.log(res);
+          console.log("response data", res.data);
+          dispatch(
+            getsetting({
+              isSuccess: true,
+              data: {
+                ...currentSetting,
+                uxlivinglab_method:
+                  typeof selecteduxlivinglab_method == "object"
+                    ? selecteduxlivinglab_method
+                    : [selecteduxlivinglab_method],
+                chat_method:
+                  typeof selectedchat_method == "object"
+                    ? selectedchat_method
+                    : [selectedchat_method],
+              },
+            })
+          );
+        });
         toast.success("Success");
         setIsLoading(false);
       } catch (error) {

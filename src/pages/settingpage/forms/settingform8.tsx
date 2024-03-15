@@ -1,10 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useEffect, useState } from "react";
-
-import axios from "axios";
 import { getsetting } from "../../../store/slice/setting";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 
 const Settingform8 = () => {
   const currentSetting = useSelector((state: RootState) => state.setting?.data);
@@ -44,10 +43,7 @@ const Settingform8 = () => {
           minimum_speed: internet_min_speed_value,
         };
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
-          data
-        );
+        await Axios93Base.post("/settings/", data);
 
         dispatch(
           getsetting({

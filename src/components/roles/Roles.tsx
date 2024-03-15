@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { useState, ChangeEvent, FormEvent, MouseEvent, useEffect } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { getAdminData } from "../../store/slice/adminData";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../../pages/whiteloader";
-import { roleselectid, roletextid } from "./Roleid";
+// import { roleselectid, roletextid } from "./Roleid";
+import { Axios93Base } from "../../api/axios";
 
 export interface roleItemProps {
   level1_item: string;
@@ -168,10 +169,7 @@ const Roles = () => {
       createrole: true,
     });
     try {
-      const response = await axios.post(
-        "https://100093.pythonanywhere.com/api/create_role/",
-        formData
-      );
+      const response = await Axios93Base.post("/create_role/", formData);
       if (response.status === 201) {
         console.log(response);
 
@@ -279,8 +277,8 @@ const Roles = () => {
         role_status: selectedrulestatus,
       };
       try {
-        const response = await axios.post(
-          "https://100093.pythonanywhere.com/api/update_role_status/",
+        const response = await Axios93Base.post(
+          "/update_role_status/",
           rulestatusdata
         );
         console.log(response.data);
@@ -436,75 +434,69 @@ const Roles = () => {
     (state: RootState) => state.setting?.data?.color_scheme
   );
 
-  const defaultlang = useSelector(
-    (state: RootState) => state.setting?.data?.default_language
-  );
+  // const defaultlang = useSelector(
+  //   (state: RootState) => state.setting?.data?.default_language
+  // );
 
-  useEffect(() => {
-    const FetchLanguage = () => {
-      roleselectid.forEach((id: string) => {
-        const select = document.getElementById(id) as HTMLSelectElement | null;
-        // Accessing individual options
-        if (select) {
-          const options = select.options;
-          for (let i = 0; i < options.length; i++) {
-            const translate = async () => {
-              try {
-                const data = {
-                  text: options[i].text,
-                  target_language: defaultlang,
-                };
-                const response = await axios.post(
-                  `https://100093.pythonanywhere.com/api/translate/`,
-                  data
-                );
+  // useEffect(() => {
+  //   const FetchLanguage = () => {
+  //     roleselectid.forEach((id: string) => {
+  //       const select = document.getElementById(id) as HTMLSelectElement | null;
+  //       // Accessing individual options
+  //       if (select) {
+  //         const options = select.options;
+  //         for (let i = 0; i < options.length; i++) {
+  //           const translate = async () => {
+  //             try {
+  //               const data = {
+  //                 text: options[i].text,
+  //                 target_language: defaultlang,
+  //               };
+  //               const response = await Axios93Base.post(`/translate/`, data);
 
-                const translationData = await response.data;
-                if (id === "settingForm2text1") {
-                  console.log(translationData);
-                }
-                options[i].text =
-                  translationData.data.translations[0].translatedText;
-              } catch (error) {
-                console.error("Translation error:", error);
-                return options[i].text;
-              }
-            };
-            translate();
-          }
-        }
-      });
-      roletextid.forEach((id: string) => {
-        const text = document.getElementById(id);
-        if (text) {
-          const translate = async () => {
-            try {
-              const data = {
-                text: text.innerText,
-                target_language: defaultlang,
-              };
-              const response = await axios.post(
-                `https://100093.pythonanywhere.com/api/translate/`,
-                data
-              );
+  //               const translationData = await response.data;
+  //               if (id === "settingForm2text1") {
+  //                 console.log(translationData);
+  //               }
+  //               options[i].text =
+  //                 translationData.data.translations[0].translatedText;
+  //             } catch (error) {
+  //               console.error("Translation error:", error);
+  //               return options[i].text;
+  //             }
+  //           };
+  //           translate();
+  //         }
+  //       }
+  //     });
+  //     roletextid.forEach((id: string) => {
+  //       const text = document.getElementById(id);
+  //       if (text) {
+  //         const translate = async () => {
+  //           try {
+  //             const data = {
+  //               text: text.innerText,
+  //               target_language: defaultlang,
+  //             };
+  //             const response = await Axios93Base.post(`/translate/`, data);
 
-              const translationData = await response.data;
-              text.innerText =
-                translationData.data.translations[0].translatedText;
-            } catch (error) {
-              console.error("Translation error:", error);
-              return text;
-            }
-          };
-          translate();
-        }
-      });
-    };
+  //             const translationData = await response.data;
+  //             text.innerText =
+  //               translationData.data.translations[0].translatedText;
+  //           } catch (error) {
+  //             console.error("Translation error:", error);
+  //             return text;
+  //           }
+  //         };
+  //         translate();
+  //       }
+  //     });
+  //   };
 
-    if (defaultlang) {
-      FetchLanguage();
-    }
-  }, [defaultlang, dispatch]);
+  //   if (defaultlang) {
+  //     FetchLanguage();
+  //   }
+  // }, [defaultlang, dispatch]);
 
   return (
     <>

@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store/Store";
 import { useState } from "react";
-
 import { getsetting } from "../../../store/slice/setting";
-import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { Axios93Base } from "../../../api/axios";
 const Settingform4 = () => {
   const disconn_idle = useSelector(
     (state: RootState) => state.setting?.data?.disconn_idle
@@ -70,8 +69,8 @@ const Settingform4 = () => {
           permitted_attempts: selectedno_of_conn,
         };
 
-        await axios.post(
-          "https://100093.pythonanywhere.com/api/settings/",
+        await Axios93Base.post(
+          "/settings/",
           data
         );
 
