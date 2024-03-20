@@ -237,6 +237,45 @@ def getProduct(request):
             products = l2["data"]
             excluded_products = ["Digital Queue", "My Channel", "Live Stream Dashboard", "Living Lab Scales", "Customer Experience", "Dowell Link Shortener", "Dowell Survey","Wifi QR Code","User Experience Live"]
             filtered_products = [product for product in products if product.get("product_name") not in excluded_products]
+                        # Check if "products" collection exists in Clientadmin_DB0
+            check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
+            check_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_name": "products",
+                "operation": "fetch",
+                "limit": 1,
+                "offset": 0
+            }
+            check_response = requests.post(check_url, json=check_data)
+            check_resp = check_response.json()
+            if check_resp.get("success") is False:
+                # Add "products" collection to Clientadmin_DB0
+                add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
+                add_data = {
+                    "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                    "db_name": "Clientadmin_DB0",
+                    "coll_names": "products",
+                    "num_collections": 1
+                }
+                add_response = requests.post(add_url, json=add_data)
+                if add_response.status_code == 200:
+                    # Insert all products into the "products" collection
+                    insert_url = "https://datacube.uxlivinglab.online/db_api/crud/"
+                    for product in products:
+                        insert_data = {
+                            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                            "db_name": "Clientadmin_DB0",
+                            "coll_name": "products",
+                            "operation": "insert",
+                            "data": product
+                        }
+                        insert_response = requests.post(insert_url, json=insert_data)
+                        if insert_response.status_code != 201:
+                            return Response({'error': 'Failed to insert products'}, status=insert_response.status_code)
+                else:
+                    return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+
             return Response({"products": filtered_products})
     else:
         # No keys are present in the request body
@@ -1249,38 +1288,38 @@ def create_item(request):
         level = request.data.get("level")
         item_code = request.data.get("item_code")
 
-        userorg = UserOrg.objects.filter(username=username).first()
-        if not userorg:
-            return Response("User not found", status=HTTP_404_NOT_FOUND)
+        # userorg = UserOrg.objects.filter(username=username).first()
+        # if not userorg:
+        #     return Response("User not found", status=HTTP_404_NOT_FOUND)
 
-        odata = json.loads(userorg.org)
-        org = odata["organisations"]
-        field = {"document_name": username}
-        for i_name in org[0][level]["items"]:
-            if item_code == i_name['item_code']:
-                return Response("Item code must be unique", status=HTTP_400_BAD_REQUEST)
+        # odata = json.loads(userorg.org)
+        # org = odata["organisations"]
+        # field = {"document_name": username}
+        # for i_name in org[0][level]["items"]:
+        #     if item_code == i_name['item_code']:
+        #         return Response("Item code must be unique", status=HTTP_400_BAD_REQUEST)
 
-        new_item = {
-            "item_name": request.data.get("item_name"),
-            "item_code": item_code,
-            "item_details": request.data.get("item_details"),
-            "item_universal_code": request.data.get("item_unicode"),
-            "item_specification": request.data.get("item_spec"),
-            "item_barcode": "",
-            "item_image1": "",
-            "item_image2": "",
-            "status": "enable"
-        }
+        # new_item = {
+        #     "item_name": request.data.get("item_name"),
+        #     "item_code": item_code,
+        #     "item_details": request.data.get("item_details"),
+        #     "item_universal_code": request.data.get("item_unicode"),
+        #     "item_specification": request.data.get("item_spec"),
+        #     "item_barcode": "",
+        #     "item_image1": "",
+        #     "item_image2": "",
+        #     "status": "enable"
+        # }
 
-        org[0][level]["items"].append(new_item)
+        # org[0][level]["items"].append(new_item)
 
-        # Update the database here. Assuming 'dowellconnection' function does that.
-        # Handle exceptions or errors that might occur during the update.
-        update = {"organisations": org}
-        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                         "update", field, update)
-        userorg.org = json.dumps(odata)
-        userorg.save()
+        # # Update the database here. Assuming 'dowellconnection' function does that.
+        # # Handle exceptions or errors that might occur during the update.
+        # update = {"organisations": org}
+        # dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+        #                  "update", field, update)
+        # userorg.org = json.dumps(odata)
+        # userorg.save()
 
         # username = request.data.get("username")
         # level = request.data.get("level")
@@ -1659,16 +1698,16 @@ def create_role(request):
         # Append new role data
         roles.append(response_data)
 
-        # Update the database
-        odata["roles"] = roles
-        userorg.org = json.dumps(odata)
-        userorg.save()
+        # # Update the database
+        # odata["roles"] = roles
+        # userorg.org = json.dumps(odata)
+        # userorg.save()
 
-        # Assuming 'dowellconnection' function does the required update
-        field = {"document_name": username}
-        update = {"roles": roles}
-        dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
-                         "update", field, update)
+        # # Assuming 'dowellconnection' function does the required update
+        # field = {"document_name": username}
+        # update = {"roles": roles}
+        # dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+        #                  "update", field, update)
 
         if username == "Jazz3655":
             # Check if "userinfo" collection exists in Clientadmin_DB0
