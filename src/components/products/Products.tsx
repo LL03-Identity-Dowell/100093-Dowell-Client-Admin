@@ -5,6 +5,7 @@ import axios from "axios";
 // import Loader from "../../pages/whiteloader";
 import ProductForm from "./ProductForm";
 import { toast } from "react-toastify";
+import DatacubeImg from "../../assets/datacube.svg";
 import { getportfolioNotifications } from "../../store/slice/portfolioNotifications";
 import Select from "react-select";
 // import { ProductSelectIds, ProductTextIds } from "../../Ids";
@@ -430,7 +431,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="h-80 w-80">
         <img
           src={`${
-            product.product_logo?.includes("https://100093.pythonanywhere.com")
+            product.product_name === "Dowell Datacube"
+              ? DatacubeImg
+              : product.product_logo?.includes(
+                  "https://100093.pythonanywhere.com"
+                )
               ? product.product_logo
               : `https://100093.pythonanywhere.com${product.product_logo}`
           } `}
