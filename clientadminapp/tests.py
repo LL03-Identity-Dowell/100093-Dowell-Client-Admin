@@ -7,10 +7,10 @@ import string
 
 field1 = {}
 # update = {"Username":"Ikikelistic"}
-login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
-                            "ABCDE", "fetch", field1, "update")
-r = json.loads(login1)
-print(r["data"][0])
+# login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+#                             "ABCDE", "fetch", field1, "update")
+# r = json.loads(login1)
+# print(r["data"][0])
 
 # dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
 #                             "ABCDE", "update", field1, update)
@@ -77,13 +77,13 @@ def get_other_organisation(document_name, documents,new_org):
             return document.get('other_organisation')
     return None
 
-get_other_organisation("Abdul Samad",r["data"],new_org)
+# get_other_organisation("Abdul Samad",r["data"],new_org)
 
 product =     {
-      "product_name": "Dowell Survey",
+      "product_name": "Dowell MapTracker",
       "product_logo": "https://100093.pythonanywhere.com/media/productlogos/Livinglab.png",
-      "product_link": " https://dowelllabs.github.io/DoWell-Survey/",
-      "product_status": "none",
+      "product_link": " https://ll01-business-dowell.github.io/DowellMapTracker/",
+      "product_status": "enable",
       "team_members_status": "enable",
       "users_status": "disable",
       "public_status": "disable",
@@ -94,8 +94,8 @@ product =     {
 # f = {}
 # l1 = dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001",
 #                             "ABCDE", "fetch", f, "update")
-# dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
-#                             "insert", product, "nil")
+dowellconnection("login", "bangalore", "login", "prod_mem", "prod_mem", "100014001", "ABCDE",
+                            "insert", product, "nil")
 # # print(json.loads(l1))
 # l1= json.loads(l1)
 # l1["data"].append(product)

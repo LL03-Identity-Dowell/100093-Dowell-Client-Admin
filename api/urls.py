@@ -71,5 +71,10 @@ urlpatterns = [
     path('level_reports/', level_reports, name='level_reports'),
     path('external-api-call/', TestDatacube.as_view(), name='external-api-call'),
     path('fetch_members/', FetchMembers.as_view(), name='fetch_members'),
-
+    path('get_userinfo/', get_userinfo, name='get_userinfo'),
+    path('get_level_items/', get_level_items, name='get_level_items'),
+    path('get_roles/', get_roles, name='get_roles'),
+    path('get_team_members/',get_team_members, name='get_team_members'),
+    path('get_guest_members/', get_guest_members, name='get_guest_members'),
+    path('get_products/', get_products, name='get_products'),
 ]

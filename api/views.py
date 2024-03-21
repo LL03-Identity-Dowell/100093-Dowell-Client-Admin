@@ -30,7 +30,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from clientadminapp import qrcodegen
-
+from .datacube_helper  import check_collection_exists,get_collection_data,insert_into_collection,BASE_URL
 def generate_key(password: str, salt: bytes) -> bytes:
     password_bytes = password.encode()
     kdf = PBKDF2HMAC(
@@ -2119,54 +2119,47 @@ def create_team_member(request):
 
 
         # Check if "team_members" collection exists in Clientadmin_DB0
-        check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
-        check_data = {
-            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
-            "db_name": "Clientadmin_DB0",
-            "coll_name": "team_members",
-            "operation": "fetch",
-            "limit": 1,
-            "offset": 0
-        }
-        check_response = requests.post(check_url, json=check_data)
-        check_resp = check_response.json()
-        if check_resp.get("success") is False:
+        if not check_collection_exists("Clientadmin_DB0", "team_members"):
             # Add "team_members" collection to Clientadmin_DB0
-            add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
-            add_data = {
-                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
-                "db_name": "Clientadmin_DB0",
-                "coll_names": "team_members",
-                "num_collections": 1
-            }
-            add_response = requests.post(add_url, json=add_data)
-            if add_response.status_code != 200:
-                return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+            if not insert_into_collection("Clientadmin_DB0", "team_members", [{"pending_members": []}, {"accept_members": []}]):
+                return Response({'error': 'Failed to add team_members collection'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Insert the new team member into the collection
-        insert_url = "https://datacube.uxlivinglab.online/db_api/crud/"
+        # Fetch existing team members data
+        team_members_data = get_collection_data("Clientadmin_DB0", "team_members", limit=1)
+        if not team_members_data:
+            return Response({'error': 'Failed to fetch team members data'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        pending_members = team_members_data[0]["pending_members"]
+        if any(member["member_code"] == member_code for member in pending_members):
+            return Response({"error": "Member code already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Add the new team member to pending members
         new_member = {
             "name": member_name,
             "member_code": member_code,
             "member_spec": member_spec,
             "member_uni_code": member_u_code,
             "member_details": member_det,
-            "link": link,
-            "status": "unused",
-            "link_exp": link_exp.isoformat()
+            "status": "unused"
         }
-        insert_data = {
-            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
-            "db_name": "Clientadmin_DB0",
-            "coll_name": "team_members",
-            "operation": "insert",
-            "data": new_member
-        }
-        insert_response = requests.post(insert_url, json=insert_data)
-        if insert_response.status_code != 201:
-            return Response({'error': 'Failed to insert team member'}, status=insert_response.status_code)
+        pending_members.append(new_member)
 
-        return Response(response_data, status=status.HTTP_201_CREATED)
+        # Update the team_members collection
+        if request.method == 'PUT':
+            update_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_name": "team_members",
+                "operation": "update",
+                "data": team_members_data[0]
+            }
+            update_url = f"{BASE_URL}crud/"
+            update_response = requests.put(update_url, json=update_data)
+            if update_response.status_code != 200:
+                return Response({'error': 'Failed to update team members data'}, status=update_response.status_code)
+
+        return Response({'message': 'Team member added successfully'}, status=status.HTTP_201_CREATED)
+
 
     except Exception as e:
         # Log the exception here
@@ -2305,53 +2298,47 @@ def create_user_member(request):
 
         response_data = {"link": link}
 
-        check_url = "https://datacube.uxlivinglab.online/db_api/get_data/"
-        check_data = {
-            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
-            "db_name": "Clientadmin_DB0",
-            "coll_name": "guest_members",
-            "operation": "fetch",
-            "limit": 1,
-            "offset": 0
-        }
-        check_response = requests.post(check_url, json=check_data)
-        check_resp = check_response.json()
-        if check_resp.get("success") is False:
+        if not check_collection_exists("Clientadmin_DB0", "guest_members"):
             # Add "guest_members" collection to Clientadmin_DB0
-            add_url = "https://datacube.uxlivinglab.online/db_api/add_collection/"
-            add_data = {
-                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
-                "db_name": "Clientadmin_DB0",
-                "coll_names": "guest_members",
-                "num_collections": 1
-            }
-            add_response = requests.post(add_url, json=add_data)
-            if add_response.status_code != 200:
-                return Response({'error': 'Failed to add collection'}, status=add_response.status_code)
+            if not insert_into_collection("Clientadmin_DB0", "guest_members", [{"pending_members": []}, {"accept_members": []}]):
+                return Response({'error': 'Failed to add guest_members collection'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Insert the new guest member into the collection
-        insert_url = "https://datacube.uxlivinglab.online/db_api/crud/"
+        # Fetch existing guest members data
+        guest_members_data = get_collection_data("Clientadmin_DB0", "guest_members", limit=1)
+        if not guest_members_data:
+            return Response({'error': 'Failed to fetch guest members data'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        pending_members = guest_members_data[0]["pending_members"]
+        if any(member["member_code"] == user_code for member in pending_members):
+            return Response({"error": "Guest member code already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Add the new guest member to pending members
         new_member = {
             "name": user_name,
             "member_code": user_code,
             "member_spec": user_spec,
             "member_uni_code": user_u_code,
             "member_details": user_det,
-            "link": link,
             "status": "unused"
         }
-        insert_data = {
-            "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
-            "db_name": "Clientadmin_DB0",
-            "coll_name": "guest_members",
-            "operation": "insert",
-            "data": new_member
-        }
-        insert_response = requests.post(insert_url, json=insert_data)
-        if insert_response.status_code != 201:
-            return Response({'error': 'Failed to insert guest member'}, status=insert_response.status_code)
+        pending_members.append(new_member)
 
-        return Response(response_data, status=status.HTTP_201_CREATED)
+        # Update the guest_members collection
+        if request.method == 'PUT':
+            update_data = {
+                "api_key": "1b834e07-c68b-4bf6-96dd-ab7cdc62f07f",
+                "db_name": "Clientadmin_DB0",
+                "coll_name": "guest_members",
+                "operation": "update",
+                "data": guest_members_data[0]
+            }
+            update_url = f"{BASE_URL}crud/"
+            update_response = requests.put(update_url, json=update_data)
+            if update_response.status_code != 200:
+                return Response({'error': 'Failed to update guest members data'}, status=update_response.status_code)
+
+        return Response({'message': 'Guest member added successfully'}, status=status.HTTP_201_CREATED)
+
 
     except Exception as e:
         # Log the exception here
@@ -4456,3 +4443,54 @@ def manage_user(request):
     # More of your API logic here
 
     return Response({'message': 'User added successfully', 'allotted_db': allotted_db})
+
+
+@api_view(['GET'])
+def get_userinfo(request):
+    if check_collection_exists("Clientadmin_DB0", "userinfo"):
+        data = get_collection_data("Clientadmin_DB0", "userinfo")
+        return Response(data[0])
+    else:
+        return Response({"message": "Userinfo collection not found"}, status=404)
+
+
+@api_view(['POST'])
+def get_level_items(request):
+    level = request.data.get("level")
+    valid_levels = ['level1', 'level2', 'level3', 'level4', 'level5', 'level6']
+
+    if level not in valid_levels:
+        return Response({"message": "Invalid level"}, status=400)
+
+    if check_collection_exists("Clientadmin_DB0", level):
+        data = get_collection_data("Clientadmin_DB0", level)
+        return Response(data)
+    else:
+        return Response({"message": f"{level} collection not found"}, status=404)
+
+
+@api_view(['GET'])
+def get_roles(request):
+    if check_collection_exists("Clientadmin_DB0", "roles"):
+        data = get_collection_data("Clientadmin_DB0", "roles")
+        return Response(data)
+    else:
+        return Response({"message": "Roles collection not found"}, status=404)
+
+
+
+@api_view(['GET'])
+def get_team_members(request):
+    team_members = get_collection_data("Clientadmin_DB0", "team_members")
+    return Response(team_members)
+
+@api_view(['GET'])
+def get_guest_members(request):
+    guest_members = get_collection_data("Clientadmin_DB0", "guest_members")
+    return Response(guest_members)
+
+
+@api_view(['GET'])
+def get_products(request):
+    products = get_collection_data("Clientadmin_DB0", "products")
+    return Response(products)
