@@ -61,7 +61,9 @@ const Products: React.FC<ChildProps> = ({ handleTabSwitch }) => {
   const getallproducts = useSelector(
     (state: RootState) => state.adminData.data[0].products
   );
+  console.log({ getallproducts });
   const portfolioData: Portfolio[] = adminData?.portpolio || [];
+  console.log({ portfolioData });
   const presentOrg = adminData?.organisations[0]?.org_name;
   const [hovertitle, setHovertitle] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<string>("");

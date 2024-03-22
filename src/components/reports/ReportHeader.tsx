@@ -5,7 +5,7 @@ import { FaPowerOff } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import images from "../../components/images";
 import { useDispatch, useSelector } from "react-redux";
-import { getuserinfo } from "../../store/slice/userinfo";
+import { setUserInfo } from "../../store/slice/userinfo";
 import { RootState } from "../../store/Store";
 import { getorgs } from "../../store/slice/organization";
 import { getselectedorgs } from "../../store/slice/selectedorg";
@@ -115,7 +115,7 @@ const ReportHeader = () => {
                 if (response.data.message) {
                   location.href = "https://100014.pythonanywhere.com/";
                 }
-                dispatch(getuserinfo(response.data));
+                dispatch(setUserInfo(response.data));
               } catch (e) {
                 console.log("Failed to parse response");
               } finally {

@@ -1,11 +1,11 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IoSettings } from "react-icons/io5";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import images from "../../components/images";
+import images from "../images";
 import { useDispatch, useSelector } from "react-redux";
-import {  setUserInfo } from "../../store/slice/userinfo";
+import { setUserInfo } from "../../store/slice/userinfo";
 import { RootState } from "../../store/Store";
 import { getorgs } from "../../store/slice/organization";
 import { getselectedorgs } from "../../store/slice/selectedorg";
@@ -14,65 +14,18 @@ import { getloaderstate } from "../../store/slice/loaderstate";
 import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 import { FaBars } from "react-icons/fa";
 import { Axios14Base, Axios93Base } from "../../api/axios";
+import { getAdminData } from "../../store/slice/adminData";
+import { getproducts } from "../../store/slice/products";
 
-const Header = () => {
+const EditHeader = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
   const dispatch = useDispatch();
-  const routeLocation = useLocation();
-
+  const navigate = useNavigate();
   // const defaultlang = useSelector(
   //   (state: RootState) => state.setting?.data?.default_language
   // );
-  // select ownerorg , workspace , all org and selected org from redux state
-  const ownerorg = useSelector(
-    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
-  );
-  const otherorglist = useSelector(
-    (state: RootState) => state?.sidebar?.workspace
-  );
-
-  const organizations = useSelector((state: RootState) => state.org);
-  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
-
-  useEffect(() => {
-    // Function to simulate change of select value on page load
-    const simulateSelectChange = () => {
-      const newValue = routeLocation?.state?.orgname; // Set the desired option
-      setTimeout(() => {
-        handleOrgChange({
-          target: { value: newValue },
-        } as React.ChangeEvent<HTMLSelectElement>);
-      }, 0); // Ensuring this runs after the initial render
-    };
-
-    // Call the function to simulate change of select value on page load
-    simulateSelectChange();
-    if (!routeLocation?.state?.orgname) {
-      interface OrgInfo {
-        orgname: string;
-        type: string;
-      }
-
-      const fetchedOrganizations: OrgInfo[] = otherorglist.map((orgname) => ({
-        orgname,
-        type: "other",
-      }));
-
-      const ownerObj = { orgname: ownerorg, type: "owner" };
-      fetchedOrganizations.push(ownerObj);
-
-      dispatch(getorgs(fetchedOrganizations));
-      // Find the default organization (type 'owner') and set it as the selected organization
-      const defaultOrg = fetchedOrganizations.find(
-        (org) => org.type === "owner"
-      );
-      if (defaultOrg) {
-        dispatch(getselectedorgs(defaultOrg));
-      }
-    }
-  }, [dispatch, otherorglist, ownerorg, routeLocation?.state?.orgname]); // Run only once after initial render
 
   // UNCOMMENT WHEN TRANSLATE API IS ACTIVE
   // useEffect(() => {
@@ -89,7 +42,7 @@ const Header = () => {
   //                 text: options[i].text,
   //                 target_language: defaultlang,
   //               };
-  //               const response = await Axios93Base.post(`/translate/`, data);
+  // const response = await Axios93Base.post(`/translate/`, data);
 
   //               const translationData = await response.data;
   //               if (id === "settingForm2text1") {
@@ -115,7 +68,7 @@ const Header = () => {
   //               text: text.innerText,
   //               target_language: defaultlang,
   //             };
-  //             const response = await Axios93Base.post(`/translate/`, data);
+  // const response = await Axios93Base.post(`/translate/`, data);
 
   //             const translationData = await response.data;
   //             text.innerText =
@@ -133,6 +86,42 @@ const Header = () => {
   //     FetchLanguage();
   //   }
   // }, [defaultlang, dispatch]);
+  const adminusername = useSelector(
+    (state: RootState) => state.userinfo.userinfo.username
+  );
+  const present_org = useSelector(
+    (state: RootState) => state.adminData.data[0]?.organisations[0]?.org_name
+  );
+  useEffect(() => {
+    dispatch(getloaderstate(false));
+    const fetchData = async () => {
+      const productData = {
+        username: "uxliveadmin",
+      };
+
+      try {
+        if (adminusername !== "" && present_org == "") {
+          const response = await Axios93Base.post("/get_data/", {
+            username: adminusername,
+            session_id: sessionId,
+          });
+          const productResponse = await Axios93Base.post(
+            "/getproducts/",
+            productData
+          );
+          dispatch(getAdminData(response.data));
+          dispatch(getproducts(productResponse.data));
+
+          dispatch(getloaderstate(true));
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        dispatch(getloaderstate(true));
+      }
+    };
+    fetchData();
+  }, [adminusername]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -171,8 +160,7 @@ const Header = () => {
                 dispatch(getloaderstate(true));
               }
             })
-            .catch((err) => {
-              console.log("err", err);
+            .catch(() => {
               console.log("Request failed");
             });
         } catch (err) {
@@ -191,13 +179,49 @@ const Header = () => {
     location.href = logout_url;
   };
 
+  // select ownerorg , workspace , all org and selected org from redux state
+  const ownerorg = useSelector(
+    (state: RootState) => state?.adminData?.data[0]?.organisations[0]?.org_name
+  );
+  const otherorglist = useSelector(
+    (state: RootState) => state?.sidebar?.workspace
+  );
+
+  const organizations = useSelector((state: RootState) => state.org);
+  const selectedOrg = useSelector((state: RootState) => state.selectedorg);
+
+  useEffect(() => {
+    // Fetch organizations (e.g., using an API call) and set them in the Redux store
+    interface OrgInfo {
+      orgname: string;
+      type: string;
+    }
+
+    const fetchedOrganizations: OrgInfo[] = otherorglist.map((orgname) => ({
+      orgname,
+      type: "other",
+    }));
+
+    const ownerObj = { orgname: ownerorg, type: "owner" };
+    fetchedOrganizations.push(ownerObj);
+
+    dispatch(getorgs(fetchedOrganizations));
+    // Find the default organization (type 'owner') and set it as the selected organization
+    const defaultOrg = fetchedOrganizations.find((org) => org.type === "owner");
+    if (defaultOrg) {
+      dispatch(getselectedorgs(defaultOrg));
+    }
+  }, [ownerorg, otherorglist]);
+
   const handleOrgChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOrgname = event.target.value;
     const org = organizations.find(
       (org) => `${org.orgname}${org.type}` === selectedOrgname
     );
+    console.log({ org });
     if (org) {
       dispatch(getselectedorgs(org));
+      navigate("/", { state: { orgname: selectedOrgname } });
     }
   };
 
@@ -311,67 +335,24 @@ const Header = () => {
                   >
                     <FaBars className="text-[25px] text-white"></FaBars>
                   </button>
-                  {currentPath == "/setting" ? (
-                    <NavLink
-                      to="/"
-                      className={`${
-                        color_scheme == "Red"
-                          ? "bg-[lightcoral]"
-                          : color_scheme == "Green"
-                          ? "bg-[lightgreen]"
-                          : "bg-[#a1a1a1] "
-                      } lg:w-[180px]  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+                  <NavLink
+                    to="/"
+                    className={`${
+                      color_scheme == "Red"
+                        ? "bg-[lightcoral]"
+                        : color_scheme == "Green"
+                        ? "bg-[lightgreen]"
+                        : "bg-[#a1a1a1] "
+                    } lg:w-[180px]  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+                  >
+                    <IoSettings className="text-white" />
+                    <p
+                      id="headertext3"
+                      className="text-[13px] text-white text-center py-[10px] px-[20px]"
                     >
-                      <IoSettings className="text-white" />
-                      <p
-                        id="headertext3"
-                        className="text-[13px] text-white text-center py-[10px] px-[20px]"
-                      >
-                        Home
-                      </p>
-                    </NavLink>
-                  ) : (
-                    <>
-                      {selectedOrg.type !== "owner" ? (
-                        <div
-                          className={`${
-                            color_scheme == "Red"
-                              ? "bg-[#f3a1a1]"
-                              : color_scheme == "Green"
-                              ? "bg-[#a1e4a1]"
-                              : "bg-[#c9c5c1] "
-                          }   lg:w-auto w-full flex items-center gap-12 px-4 rounded-sm`}
-                        >
-                          <IoSettings className="text-white" />
-                          <p
-                            id="headertext4"
-                            className="text-[13px] text-white text-center py-[10px] px-[20px]"
-                          >
-                            Settings
-                          </p>
-                        </div>
-                      ) : (
-                        <NavLink
-                          to="/setting"
-                          className={`${
-                            color_scheme == "Red"
-                              ? "bg-[lightcoral]"
-                              : color_scheme == "Green"
-                              ? "bg-[lightgreen]"
-                              : "bg-[#a1a1a1] "
-                          }  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
-                        >
-                          <IoSettings className="text-white" />
-                          <p
-                            id="headertext5"
-                            className="text-[13px] text-white text-center py-[10px] px-[20px]"
-                          >
-                            Settings
-                          </p>
-                        </NavLink>
-                      )}
-                    </>
-                  )}
+                      Home
+                    </p>
+                  </NavLink>
 
                   <button
                     className={`${
@@ -468,4 +449,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default EditHeader;

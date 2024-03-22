@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../Store";
 
 const userinfoSlice = createSlice({
   name: "userinfo",
@@ -34,7 +35,7 @@ const userinfoSlice = createSlice({
     },
   },
   reducers: {
-    getuserinfo(_state, action) {
+    setUserInfo(_state, action) {
       return action.payload;
     },
   },
@@ -42,4 +43,5 @@ const userinfoSlice = createSlice({
 
 export default userinfoSlice.reducer;
 
-export const { getuserinfo } = userinfoSlice.actions;
+export const { setUserInfo } = userinfoSlice.actions;
+export const getUserInfo = (state: RootState) => state.userinfo;
