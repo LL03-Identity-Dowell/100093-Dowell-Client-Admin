@@ -209,6 +209,7 @@ const adminDataSlice = createSlice({
             status: "",
           },
         ],
+        selectedPortfolio: {},
         security_layers: {
           layer1: {
             devices: [],
@@ -340,9 +341,17 @@ const adminDataSlice = createSlice({
         state.data[0].organisations[1].level5.items = action.payload.data;
       }
     },
+    setSelectedPortfolio: (state, action) => {
+      state.data[0].selectedPortfolio = action.payload;
+    },
   },
 });
 export default adminDataSlice.reducer;
 
-export const { getAdminData, setAdminData, isNewOwner, setItemData } =
-  adminDataSlice.actions;
+export const {
+  getAdminData,
+  setAdminData,
+  isNewOwner,
+  setItemData,
+  setSelectedPortfolio,
+} = adminDataSlice.actions;

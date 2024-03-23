@@ -1,6 +1,7 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/Store";
 import { ToastContainer } from "react-toastify";
+import { setSelectedPortfolio } from "../../store/slice/adminData";
 
 type Portfolio = {
   username: string[];
@@ -30,9 +31,13 @@ const PortfolioList = () => {
   console.log({ filteredPortfolios });
 
   const sessionId = localStorage.getItem("sessionId");
+  const dispatch = useDispatch();
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+  const handleClick = (portfolio: any) => {
+    dispatch(setSelectedPortfolio(portfolio));
+  };
   return (
     <>
       <ToastContainer position="top-right" />
@@ -54,7 +59,7 @@ const PortfolioList = () => {
           {productData.products?.map((product) => (
             <>
               <div
-                className={`text-lg py-2 px-1 my-2 ${
+                className={`text-lg py-2 px-1 my-2 text-white ${
                   color_scheme == "Red"
                     ? "bg-[#DC4C64]"
                     : color_scheme == "Green"
@@ -73,7 +78,10 @@ const PortfolioList = () => {
                       (portfolio) => portfolio.product === product.product_name
                     )
                     .map((portfolio) => (
-                      <div className="p-2 border-b cursor-pointer">
+                      <div
+                        className="p-2 border-b cursor-pointer hover:bg-slate-100"
+                        onClick={() => handleClick(portfolio)}
+                      >
                         {portfolio.portfolio_name}
                       </div>
                     ))

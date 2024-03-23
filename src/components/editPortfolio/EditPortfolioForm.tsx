@@ -26,7 +26,6 @@ const initialFormInputs: FormInputs = {
 
 const EditForm = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
-
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [rangeInput, setRangeInput] = useState<string>("");
@@ -37,6 +36,14 @@ const EditForm = () => {
   const [imagelink, setimageLink] = useState("");
   const [isCopied, setIsCopied] = useState(false);
 
+  const selectedPortfolio: FormInputs = useSelector(
+    (state: RootState) => state.adminData.data[0].selectedPortfolio
+  );
+
+  useEffect(() => {
+    setFormInputs(selectedPortfolio);
+    setSelectedItems(selectedPortfolio.username);
+  }, [selectedPortfolio]);
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
@@ -237,11 +244,6 @@ const EditForm = () => {
             );
             console.log("usedLInk", usedLink);
           }
-          // if (isnewOwner) {
-          //   return;
-          // } else {
-          //   window.location.reload();
-          // }
         } else {
           toast.error(res.data.resp);
         }
@@ -286,48 +288,10 @@ const EditForm = () => {
     }
   };
 
-  const handleCopyToClipBoard = () => {
-    console.log(link);
-    if (!link) {
-      toast.error("Unable to copy link");
-    } else {
-      const linkRegex = /(https?:\/\/\S+)/;
-      const extractedLink = link.match(linkRegex);
-      if (extractedLink) {
-        navigator.clipboard
-          .writeText(extractedLink[0])
-          .then(() => {
-            setIsCopied(true);
-            toast.success("Copied");
-          })
-          .catch((error) => console.error("Error copying link", error));
-      }
-    }
-  };
-
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-  const handleDownloadClick = async () => {
-    try {
-      const response = await fetch(imagelink);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
 
-      // Create a temporary link element
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "QRCode.png"; // Set the desired filename for the downloaded image
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Release the object URL
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Error downloading image:", error);
-    }
-  };
   return (
     <>
       <ToastContainer position="top-right" />
@@ -342,18 +306,8 @@ const EditForm = () => {
               : "bg-[#7A7A7A]"
           } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
         >
-          <p id="portfolioEditFormText1">PORTFOLIO</p>
-          <p>{`<${portfolioLength}>`}</p>
+          <p id="portfolioEditFormText1">EDIT PORTFOLIO FORM</p>
         </span>
-        <div className="my-20">
-          <p
-            id="portfolioEditFormText2"
-            className="text-[#FF0000] text-lg font-roboto font-semibold"
-          >
-            Assign Portfolio – Products, Data types, Operational Rights and
-            Roles to Members
-          </p>
-        </div>
         <form className="" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
@@ -405,7 +359,10 @@ const EditForm = () => {
             </div>
 
             <div className="mb-4 flex items-center justify-between border border-black rounded-[4px] p-2 gap-2">
-              <span id="portfolioEditFormText6" className="font-roboto text-base">
+              <span
+                id="portfolioEditFormText6"
+                className="font-roboto text-base"
+              >
                 Select with username: (Total members:{" "}
                 {getAllMemberOptions().length})
               </span>
@@ -486,7 +443,10 @@ const EditForm = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              <span id="portfolioEditFormText9"> Select Operational Rights </span>
+              <span id="portfolioEditFormText9">
+                {" "}
+                Select Operational Rights{" "}
+              </span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
@@ -579,7 +539,10 @@ const EditForm = () => {
           </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-              <span id="portfolioEditFormText15"> Portfolio Universal Code </span>
+              <span id="portfolioEditFormText15">
+                {" "}
+                Portfolio Universal Code{" "}
+              </span>
             </label>
             <input
               type="text"
