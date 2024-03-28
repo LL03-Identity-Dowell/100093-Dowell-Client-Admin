@@ -30,7 +30,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from clientadminapp import qrcodegen
-from .datacube_helper  import check_collection_exists,get_collection_data,insert_into_collection,BASE_URL
+from .datacube_helper  import check_collection_exists,get_collection_data,insert_into_collection,BASE_URL,update_collection
 def generate_key(password: str, salt: bytes) -> bytes:
     password_bytes = password.encode()
     kdf = PBKDF2HMAC(
@@ -4447,6 +4447,8 @@ def manage_user(request):
 
 @api_view(['GET'])
 def get_userinfo(request):
+    # username = JAZZ3655
+    # DB_name = WA_JAZZ3655
     if check_collection_exists("Clientadmin_DB0", "userinfo"):
         data = get_collection_data("Clientadmin_DB0", "userinfo")
         return Response(data[0])
@@ -4494,3 +4496,32 @@ def get_guest_members(request):
 def get_products(request):
     products = get_collection_data("Clientadmin_DB0", "products")
     return Response(products)
+
+
+
+@api_view(['POST'])
+def update_layers(request):
+    device = request.data.get("device")
+    layer_data = {
+        "layer1": request.data.get("layer1", False),
+        "layer2": request.data.get("layer2", False),
+        "layer3": request.data.get("layer3", True),
+        "layer4": request.data.get("layer4", True),
+        "layer5": request.data.get("layer5", True),
+        "layer6": request.data.get("layer6", True)
+    }
+
+    if check_collection_exists("Clientadmin_DB0", "layers"):
+        # Update the document in the collection
+        filter_criteria = {"document_name": "devices"}
+        update_data = {"$set": {device: layer_data}}
+        if update_collection("Clientadmin_DB0", "layers", filter_criteria, update_data):
+            return Response({"message": "Layers updated successfully"})
+        else:
+            return Response({"error": "Failed to update layers"}, status=500)
+    else:
+        # Create the collection and insert the document
+        if insert_into_collection("Clientadmin_DB0", "layers", {"document_name": "devices", device: layer_data}):
+            return Response({"message": "Layers created and data inserted successfully"})
+        else:
+            return Response({"error": "Failed to create layers collection"}, status=500)

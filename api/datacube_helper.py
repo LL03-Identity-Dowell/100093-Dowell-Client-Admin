@@ -40,3 +40,17 @@ def insert_into_collection(db_name, coll_name, data_to_insert):
     }
     response = requests.post(url, json=data)
     return response.status_code == 200
+
+
+def update_collection(db_name, coll_name, filter_criteria, update_data):
+    url = f"{BASE_URL}crud/"
+    data = {
+        "api_key": API_KEY,
+        "db_name": db_name,
+        "coll_name": coll_name,
+        "operation": "update",
+        "filter": filter_criteria,
+        "update": update_data
+    }
+    response = requests.post(url, json=data)
+    return response.status_code == 200
