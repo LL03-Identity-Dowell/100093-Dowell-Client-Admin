@@ -147,12 +147,13 @@ const EditHeader = () => {
       dispatch(getloaderstate(false));
       if (sessionId) {
         try {
-          await Axios14Base.post("/logininfo/", { session_id: sessionId })
+          await Axios14Base.post("/get_userinfo/", { session_id: sessionId })
             .then((response) => {
               try {
                 if (response.data.message) {
                   location.href = "https://100014.pythonanywhere.com/";
                 }
+                
                 dispatch(setUserInfo(response.data));
               } catch (e) {
                 console.log("Failed to parse response");

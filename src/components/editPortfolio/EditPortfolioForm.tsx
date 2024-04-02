@@ -34,19 +34,21 @@ const EditForm = () => {
   const [publicData, setPublicData] = useState<PublicResponse[]>([]);
   const [link, setLink] = useState("");
   const [imagelink, setimageLink] = useState("");
-  const [isCopied, setIsCopied] = useState(false);
 
   const selectedPortfolio: FormInputs = useSelector(
     (state: RootState) => state.adminData.data[0].selectedPortfolio
   );
 
   useEffect(() => {
-    setFormInputs(selectedPortfolio);
-    setSelectedItems(selectedPortfolio.username);
+    if (selectedPortfolio) {
+      setFormInputs(selectedPortfolio);
+      setSelectedItems(selectedPortfolio?.username);
+    }
   }, [selectedPortfolio]);
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
+  
   const productData = useSelector((state: RootState) => state.products);
 
   let userName = useSelector(
@@ -157,17 +159,17 @@ const EditForm = () => {
   };
 
   function getAllMemberOptions() {
-    if (formInputs.member_type === "user") {
+    if (formInputs?.member_type === "user") {
       return filterUserMember?.map((member) => member.name) || [];
-    } else if (formInputs.member_type === "team_member") {
+    } else if (formInputs?.member_type === "team_member") {
       return (
         filterTeamMember?.map((member) =>
           member.name === "owner" ? userName : member?.name
         ) || []
       );
-    } else if (formInputs.member_type === "public") {
+    } else if (formInputs?.member_type === "public") {
       return publicData?.map((member) => member?.id) || [];
-    } else if (formInputs.member_type === "owner") {
+    } else if (formInputs?.member_type === "owner") {
       return [userName];
     }
     return [];
@@ -318,7 +320,7 @@ const EditForm = () => {
               onChange={handleSelectStatus}
               id="portfolioEditFormSelect1"
               name="member_type"
-              value={formInputs.member_type}
+              value={formInputs?.member_type}
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
               required
             >
@@ -341,8 +343,8 @@ const EditForm = () => {
                   type="checkbox"
                   onChange={handleSelectAllChange}
                   checked={
-                    selectedItems.length > 0 &&
-                    selectedItems.length === getAllMemberOptions().length
+                    selectedItems?.length > 0 &&
+                    selectedItems?.length === getAllMemberOptions()?.length
                   }
                 />
               </label>
