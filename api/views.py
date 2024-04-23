@@ -1849,7 +1849,7 @@ def get_all_details(request):
 def create_team_member(request):
     if request.method != 'POST':
         return Response("Invalid request method", status=status.HTTP_400_BAD_REQUEST)
-
+    return Response({"msg":"testing"})
     try:
         username = request.data.get("username")
         member_name = request.data.get('member_name')
@@ -1906,7 +1906,7 @@ def create_team_member(request):
         userorg = UserOrg.objects.filter(username=username).first()
         if not userorg:
             return Response("User not found", status=status.HTTP_404_NOT_FOUND)
-        return Response(data)
+        
         odata = json.loads(userorg.org)
         tmembers = {
             "name": member_name,
