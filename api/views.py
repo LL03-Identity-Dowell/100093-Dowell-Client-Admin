@@ -1906,7 +1906,7 @@ def create_team_member(request):
         userorg = UserOrg.objects.filter(username=username).first()
         if not userorg:
             return Response("User not found", status=status.HTTP_404_NOT_FOUND)
-
+        return Response(data)
         odata = json.loads(userorg.org)
         tmembers = {
             "name": member_name,
@@ -1923,7 +1923,7 @@ def create_team_member(request):
         # Update the database
         userorg.org = json.dumps(odata)
         userorg.save()
-        return Response(data)
+        
         # Assuming 'dowellconnection' function does the required update
         field = {"document_name": username}
         mem = odata["members"]
