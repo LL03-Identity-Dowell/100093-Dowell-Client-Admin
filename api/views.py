@@ -1872,7 +1872,7 @@ def create_team_member(request):
                                  "fetch", field_c, "nil")
         resp = json.loads(login)
         data = resp['data']
-        return Response(data)
+        
         # Fetching user settings
         field_user = {"username": username}
         forg_user = dowellconnection("login", "bangalore", "login", "login_settings", "login_settings", "1202001",
@@ -1923,7 +1923,7 @@ def create_team_member(request):
         # Update the database
         userorg.org = json.dumps(odata)
         userorg.save()
-
+        return Response(data)
         # Assuming 'dowellconnection' function does the required update
         field = {"document_name": username}
         mem = odata["members"]
