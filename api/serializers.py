@@ -1,0 +1,22 @@
+from rest_framework import serializers
+
+class SettingsSerializer(serializers.Serializer):
+    selected_workspace = serializers.CharField()
+    status = serializers.CharField()
+    product = serializers.CharField()
+    timelimit_member = serializers.CharField()
+    timelimit_users = serializers.CharField()
+    selected_language = serializers.CharField()
+    minimum_speed = serializers.CharField()
+    speed_test = serializers.CharField()
+    updated_product = serializers.CharField()
+    plans = serializers.CharField()
+    time_limit_disconnect = serializers.CharField()
+    time_limit_connect = serializers.CharField()
+    permitted_attempts = serializers.CharField()
+    notifications = serializers.CharField()
+    methods = serializers.ListField(child=serializers.CharField())
+    colour_patterns = serializers.CharField()
+    operational_rights = serializers.CharField()
+    admin_process = serializers.CharField()
+    portfolio_list = serializers.ListField(child=serializers.CharField())
