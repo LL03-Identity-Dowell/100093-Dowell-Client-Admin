@@ -4052,3 +4052,46 @@ def level_reports(request):
         return Response(
             data
             , status=HTTP_200_OK)
+@api_view(['POST'])
+def Generatelink(request):
+    admin_id = request.data.get("workspace_id")
+    username = request.data.get("username")
+    latti = request.data.get("lati")
+    longti=request.data.get("long")
+    type="public"
+    field_add={"workspace_id":admin_id,"username":username,"latitude":latti,"longitude":longti,"type":type}
+    ro=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","insert",field_add,"nil")
+    data=json.loads(ro)
+    id=data["inserted_id"]
+    link=f"https://100093.pythonanywhere.com/linklanding/workspace_id={admin_id}&latitude={latti}&longitude={longti}&type={type}&id={id}"
+    return Response({"link":link})
+@api_view(['POST'])
+def CheckType(request):
+    id = request.data.get("id")
+    field1={"_id":"662ca9c0701603ba9ca04cf6"}
+    ro=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","fetch",field1,"nil")
+    data=json.loads(ro)
+    if data[0]["type"]=="public":
+        return Response({"type":"public"})
+    else:
+        return Response({"type":"team"})
+@api_view(['POST'])
+def ActivateLink(request):
+    id = request.data.get("id")
+    form=request.data.get("form")
+    if form=="request":
+        type1="team"
+        msg="Successfully Requested"
+    elif form=="collect":
+        type1="public"
+        msg="Successfully Collected"
+    else:
+        return Response({"msg":"Form is required field"})
+    field1={"_id":"662ca9c0701603ba9ca04cf6"}
+    update={"type":type1}
+    resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
+    data=json.loads(resp)
+    if data["isSuccess"]=="True":
+        return Response({"message":msg})
+    else:
+        return Response({"message":data})

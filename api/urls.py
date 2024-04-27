@@ -69,6 +69,9 @@ urlpatterns = [
     path('layer_reports/', layer_reports, name='layer_reports'),
     path('member_reports/', member_reports, name='member_reports'),
     path('level_reports/', level_reports, name='level_reports'),
+    path('generatelink/',Generatelink,name="generatelink"),
+    path('checktype/',CheckType,name='checktype'),
+    path('activatelink',ActivateLink,name='activatelink')
 
 
 ]
