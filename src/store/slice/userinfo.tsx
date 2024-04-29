@@ -31,6 +31,8 @@ const userinfoSlice = createSlice({
       newsletter_subscription: null,
       Privacy_policy: null,
       org_img: "",
+      coordinates:["latitude", "longitude"]
+
     },
   },
   reducers: {

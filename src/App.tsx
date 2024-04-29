@@ -12,7 +12,9 @@ import Exportfolio from "./pages/exportfolio";
 import CountrySelector from "./components/Test";
 import NotFound from "./pages/notfound/NotFound";
 import Reports from "./pages/Reports";
-
+import GenerateLink from './pages/GenerateLink'
+import LinkLanding from "./pages/linkLanding";
+import Solutions from "./pages/Solutions";
 function App() {
   return (
 		<>
@@ -30,7 +32,10 @@ function App() {
 					<Route path="/exportfolio" element={<Exportfolio />} />
 					<Route path="/test" element={<CountrySelector />} />
 					<Route path="/*" element={<NotFound />} />
-
+					<Route path="/generatelink" element={<GenerateLink/>}/>
+					<Route path="/linklanding" element={<LinkLanding/>}/>
+					<Route path="/solutions" element={<Solutions/>}/>
+					
 					{/* <Route path="/loader" element={} /> */}
 					{/* <Routes path="/element" element={<Example />} /> */}
 				</Routes>

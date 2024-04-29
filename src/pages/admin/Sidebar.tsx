@@ -229,6 +229,30 @@ const Sidebar = () => {
                   </ul>
                 </div>
               </Accordion>
+              <Accordion title="Solutions">
+                <div className="bg-[#CEF9D2] p-4 pl-8 box-border">
+                  <ul>
+                    <li
+                      className="text-[#7a7a7a] text-lg font-medium cursor-pointer"
+                      onClick={() => {
+                        navigate("/generatelink");
+                        dispatch(getoverlaysidebar(false));
+                      }}
+                    >
+                      Solutions
+                    </li>
+                    {/* <li
+                      className="text-[#7a7a7a] text-lg font-medium cursor-pointer"
+                      onClick={() => {
+                        navigate("/solutions");
+                        dispatch(getoverlaysidebar(false));
+                      }}
+                    >
+                      Solution 1
+                    </li> */}
+                  </ul>
+                </div>
+              </Accordion>
             </div>
           </div>
 
