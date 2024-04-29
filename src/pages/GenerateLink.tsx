@@ -83,16 +83,10 @@ const Solutions = () => {
 
   const handleCopyText = () => {
     const paragraphText = link;
-    // Original string containing multiple occurrences of the URL
-
-// Replaced string
-const replacedString = paragraphText.replace(/https:\/\/100093\.pythonanywhere\.com/g, 'http://localhost:5173');
-
-console.log(replacedString);
+   
 
 
-    // navigator.clipboard.writeText(paragraphText)
-    navigator.clipboard.writeText(replacedString)
+    navigator.clipboard.writeText(paragraphText)
 
       .then(() => {
         console.log('Text copied to clipboard:', paragraphText);
