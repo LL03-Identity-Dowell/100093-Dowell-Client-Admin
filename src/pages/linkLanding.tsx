@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react';
+import  { useEffect, useState,ChangeEvent } from 'react';
 import {  Axios93Base } from "../api/axios";
 import { toast } from "react-toastify";
 
@@ -61,8 +61,8 @@ const initialPublicFormInputs: LinkLandingInput = {
                 </p>
                 <form>
                   <input type="email" id='email' required onChange={handleOnChange} value={formInputs.email} placeholder='enter email'  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
-                  <input type="text" name="form" id='form' value="request" hidden/>
-                  <input type="text" name="id"   id="id" value={linkid} hidden/>
+                  {/* <input type="text" name="form" id='form' value="request" hidden/>
+                  <input type="text" name="id"   id="id" value={linkid} hidden/> */}
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
                     <button
