@@ -11,16 +11,19 @@ import { getViewAccess } from "../store/slice/viewAccess";
 import { toast } from "react-toastify";
 import Header from "./admin/Header";
 import { Axios93Base } from "../api/axios";
+// import { getLocation } from "../utils/geolocation";
 import {setLinks, setGeneratedLink} from "../store/slice/solutionLinks";
 import { FaCogs } from 'react-icons/fa';
 
 const Solutions = () => {
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
   const [loading, setLoading] = useState(false); // Loading state
+ const [workspaceID, setWorkSpaceID] = useState("")
 
   const overlaysidebarstate = useSelector(
     (state: RootState) => state.overlaysidebar
   );
+ 
 
   const isnewOwner = useSelector(
     (state: RootState) => state.adminData.data[0].isNewOwner
@@ -28,10 +31,9 @@ const Solutions = () => {
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
-  const workspaceID = useSelector(
-    (state: RootState) => state.adminData.data[0]._id
-    
-  );
+
+ 
+  console.log("workspace id",workspaceID)
   const latitude = useSelector(
     (state: RootState) => state.userinfo.userinfo.coordinates[0]
     
@@ -40,7 +42,6 @@ const Solutions = () => {
     (state: RootState) => state.userinfo.userinfo.coordinates[1]
     
   );
-  console.log(latitude)
 
 
   const dispatch = useDispatch();
@@ -66,6 +67,26 @@ const Solutions = () => {
       dispatch(isNewOwner(null));
     }
   };
+  
+  const fetchuserData = async () => {
+    try {
+      const response = await Axios93Base.post("/get_data/", {
+        session_id: sessionId,
+        username: userName,
+      });
+      console.log("user data:", response);
+      setWorkSpaceID(response.data.data[0]._id)
+    } catch (error) {
+      console.error("Error getting user data:", error);
+      // Handle the error
+    } finally {
+      // setLoading(false);
+    }
+  };
+  
+  fetchuserData()
+  fetchIsOwnerData();
+
   const handleGenerateLink = async () => {
     try {
       setLoading(true);
@@ -79,7 +100,6 @@ const Solutions = () => {
       console.log("Generated link:", response.data);
       dispatch(setGeneratedLink(response.data.link));
       toast.success("Link Generated Successfully!")
-      // generatedLink(response.data.link)
       // Handle the response data as needed
     } catch (error) {
       console.error("Error generating link:", error);
@@ -88,34 +108,36 @@ const Solutions = () => {
       setLoading(false);
     }
   };
-
   const fetchLinks = async () => {
     try {
        const response = await Axios93Base.post("getlinks/", {
         admin_id: workspaceID,
       });
       // console.log(response.data)
+
       dispatch(setLinks(response.data));
     } catch (error) {
       console.error("Error fetching links:", error);
       // Handle error if needed
     }
   };
-   
-  fetchIsOwnerData();
+  useEffect(() => {
+    fetchLinks();
+
+  }, [workspaceID]);
+ 
+
+  
+
+  
   const link = useSelector(
     (state: RootState) => state.link.links
   );
   
-  console.log(link)
-  const generatedLink = useSelector((state:RootState) => state.link.generatedLink)
   
-  useEffect(() => {
-    fetchLinks();
-  }, [generatedLink]);
-
-  const handleCopyText = (link:string) => {
-    const paragraphText = link;
+ 
+  const handleCopyText = (links:string) => {
+    const paragraphText = links;
     // const replacedString = paragraphText.replace(/https:\/\/100093\.pythonanywhere\.com/g, 'http://localhost:5173');
 
     // console.log(replacedString);
@@ -131,6 +153,12 @@ const Solutions = () => {
         // Handle error if copying fails
       });
   };
+  const generatedLink = useSelector((state:RootState) => state.link.generatedLink)
+
+  useEffect(() => {
+    fetchLinks();
+
+  }, [generatedLink]);
   return (
     <>
       <div className="relative">
@@ -142,27 +170,27 @@ const Solutions = () => {
               <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
                 {loadingstate === true ? (                  
                   
-                  <div className="flex flex-col items-center justify-center">
+                  <div className="flex flex-col items-center ">
                      <button
                       onClick={handleGenerateLink}
                       className="mb-5 bg-gray-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded"
                     >
-                      {loading ? "Generating" : "Generate Link"} <FaCogs className="inline-block ml-2" />
+                      {loading ? "Generating" : "Generate New Link"} <FaCogs className="inline-block ml-2" />
                     </button>
                   {/* {generatedLink && <p>Generated Link: {generatedLink}<button onClick={handleCopyText} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button></p>} */}
                  {/* Location Popup */}
-                 {link ? <div className="relative overflow-x-auto">
-                          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                 {link ? <div>
+                          <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                               <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
-                                  <th scope="col" className="px-6 py-3">Serial No.</th>
-                                  <th scope="col" className="px-6 py-3 rounded-s-lg">Link</th>
-                                  <th scope="col" className="px-6 py-3 rounded-e-lg">Action</th>
+                                  <th  className="px-6 py-3">Serial No.</th>
+                                  <th  className="px-6 py-3 rounded-s-lg">Link</th>
+                                  <th  className="px-6 py-3 rounded-e-lg">Action</th>
                                 </tr>
                               </thead>
                               <tbody>
                               {link.map((link, index) => (
-                                <tr key={link.id} className="bg-white dark:bg-gray-800">
+                                <tr key={index} className="bg-white dark:bg-gray-800">
                                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index}</td>
                                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{link.link}</td>
                                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200"><button onClick={() => handleCopyText(link.link)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button></td>
@@ -171,6 +199,8 @@ const Solutions = () => {
                               ))}
                               </tbody>
                             </table>
+
+
                           </div>
                     : <p>You have not generated any link yet</p>}
                   {/* {showLocationPopup && (
