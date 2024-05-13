@@ -15,7 +15,7 @@ import { getoverlaysidebar } from "../../store/slice/overlaysidebar";
 import { FaBars } from "react-icons/fa";
 import { Axios14Base, Axios93Base } from "../../api/axios";
 
-const Header = () => {
+const LinkHeader = () => {
   const userData = useSelector((state: RootState) => state.userinfo);
   const currentPath = window.location.pathname;
   const logout_url = "https://100014.pythonanywhere.com/sign-out";
@@ -352,23 +352,23 @@ const Header = () => {
                         </div>
                       ) : (
                         <NavLink
-                          to="/setting"
-                          className={`${
-                            color_scheme == "Red"
-                              ? "bg-[lightcoral]"
-                              : color_scheme == "Green"
-                              ? "bg-[lightgreen]"
-                              : "bg-[#a1a1a1] "
-                          }  lg:w-auto w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+                        to="/"
+                        className={`${
+                          color_scheme == "Red"
+                            ? "bg-[lightcoral]"
+                            : color_scheme == "Green"
+                            ? "bg-[lightgreen]"
+                            : "bg-[#a1a1a1] "
+                        } lg:w-[180px]  w-full flex items-center gap-12 px-4 hover:bg-[#61CE70] rounded-sm`}
+                      >
+                        <IoSettings className="text-white" />
+                        <p
+                          id="headertext3"
+                          className="text-[13px] text-white text-center py-[10px] px-[20px]"
                         >
-                          <IoSettings className="text-white" />
-                          <p
-                            id="headertext5"
-                            className="text-[13px] text-white text-center py-[10px] px-[20px]"
-                          >
-                            Settings
-                          </p>
-                        </NavLink>
+                          Home
+                        </p>
+                      </NavLink>
                        
                       )}
                     </>
@@ -469,4 +469,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default LinkHeader;

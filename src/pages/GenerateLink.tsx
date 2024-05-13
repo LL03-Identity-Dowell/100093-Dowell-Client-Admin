@@ -9,7 +9,7 @@ import { getselectedorgs } from "../store/slice/selectedorg";
 import { getViewAccess } from "../store/slice/viewAccess";
 // import ReportTabs from "../components/ReportTabs";
 import { toast } from "react-toastify";
-import Header from "./admin/Header";
+import LinkHeader from "../components/Generate Link/GenerateLinkHeader"
 import { Axios93Base } from "../api/axios";
 // import { getLocation } from "../utils/geolocation";
 import {setLinks, setGeneratedLink} from "../store/slice/solutionLinks";
@@ -33,7 +33,6 @@ const Solutions = () => {
   );
 
  
-  console.log("workspace id",workspaceID)
   const latitude = useSelector(
     (state: RootState) => state.userinfo.userinfo.coordinates[0]
     
@@ -74,7 +73,6 @@ const Solutions = () => {
         session_id: sessionId,
         username: userName,
       });
-      console.log("user data:", response);
       setWorkSpaceID(response.data.data[0]._id)
     } catch (error) {
       console.error("Error getting user data:", error);
@@ -165,20 +163,18 @@ const Solutions = () => {
         <Layout>
           <main>
             <div className="container mx-auto mb-20 lg:px-0 px-4">
-              <Header />
+              <LinkHeader/>
 
-              <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
+              <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end text-center">
                 {loadingstate === true ? (                  
                   
-                  <div className="flex flex-col items-center ">
+                  <div className="flex flex-col overflow-x-scroll">
                      <button
                       onClick={handleGenerateLink}
-                      className="mb-5 bg-gray-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded"
+                      className="mb-5 bg-gray-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-auto"
                     >
                       {loading ? "Generating" : "Generate New Link"} <FaCogs className="inline-block ml-2" />
                     </button>
-                  {/* {generatedLink && <p>Generated Link: {generatedLink}<button onClick={handleCopyText} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button></p>} */}
-                 {/* Location Popup */}
                  {link ? <div>
                           <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                               <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -189,34 +185,26 @@ const Solutions = () => {
                                 </tr>
                               </thead>
                               <tbody>
-                              {link.map((link, index) => (
-                                <tr key={index} className="bg-white dark:bg-gray-800">
-                                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index}</td>
-                                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{link.link}</td>
-                                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200"><button onClick={() => handleCopyText(link.link)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button></td>
-                                
-                                </tr>
-                              ))}
+                                {link.map((link, index) => (
+                                  // Check if link.link is not empty before rendering the row
+                                  link.link && (
+                                    <tr key={index} className="bg-white dark:bg-gray-800">
+                                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index}</td>
+                                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{link.link}</td>
+                                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <button onClick={() => handleCopyText(link.link)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button>
+                                      </td>
+                                    </tr>
+                                  )
+                                ))}
                               </tbody>
+
                             </table>
 
 
                           </div>
                     : <p>You have not generated any link yet</p>}
-                  {/* {showLocationPopup && (
-                    <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
-                      <div className="bg-white p-8 rounded shadow-lg">
-                        <h2 className="text-xl font-semibold mb-4">Allow Location Access</h2>
-                        <p className="mb-4">This website requires access to your location to generate the link.</p>
-                        <button
-                          onClick={handleAllowLocation}
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                          Allow Location
-                        </button>
-                      </div>
-                    </div>
-                  )} */}
+            
                 </div>
                 ) : (
                   <Loader></Loader>
