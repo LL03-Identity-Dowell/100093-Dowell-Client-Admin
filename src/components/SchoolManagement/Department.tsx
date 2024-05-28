@@ -1,13 +1,15 @@
-import {  useState, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/Store";
 import Loader from "../../pages/whiteloader";
-import { Axios93Base } from "../../api/axios";
+import { Axios93Base} from "../../api/axios";
 import {DepartmentInput} from "../../pages/solutionTypes"
 import { isNewOwner, setAdminData } from "../../store/slice/adminData"
+import { getdepartment } from "../../store/slice/department";
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
-
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const initialFormInputs: DepartmentInput = {
     departmentName:"",
@@ -18,9 +20,8 @@ const initialFormInputs: DepartmentInput = {
 
 const Department = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
-//   const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
-  // const userData = useSelector((state: RootState) => state.userinfo);
-  // const username = userData.userinfo.username;
+  const [loading, setLoading] = useState(false)
+  const userData = useSelector((state: RootState) => state.userinfo);
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   const isnewOwner = useSelector(
@@ -74,8 +75,68 @@ const Department = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+
+  const handleSubmitDepartment = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    setLoading(true)
+    event.preventDefault();
+
+    const postdepartment = async () => {
+      if (!formInputs.departmentName) {
+        toast.error("Department name is required.");
+        return; 
+      }
+      if (!formInputs.departmentId) {
+        toast.error("Department Id is required.");
+        return; 
+      }
+      if (!formInputs.departmentHead) {
+        toast.error("Department Head is required.");
+        return;
+      }
+  const client_admin_id = userData.userinfo.client_admin_id
+      try {
+        setLoading(true)
+        const dataDepartment={
+          "workspace_id":client_admin_id,
+          "dept_name":formInputs.departmentName,
+          "dept_id":formInputs.departmentId,
+          "dept_head":formInputs.departmentHead
+      }
+      console.log(dataDepartment)
+
+        await Axios93Base.post("/departments/", dataDepartment);
+
+        dispatch(
+          getdepartment({
+            "workspace_id":client_admin_id,
+            "dept_name":formInputs.departmentName,
+            "dept_id":formInputs.departmentId,
+            "dept_head":formInputs.departmentHead
+          })
+        );
+        setLoading(false)
+        toast.success("success");
+        // dispatch(getloaderstate(false));
+      } catch (error) {
+        toast.error("Failure")
+        setLoading(false)
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postdepartment();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
+      <ToastContainer position="top-right" />
+
       {Object.prototype.toString.call(getTeammembers) === "[object Array]" ? (
          <form>
 
@@ -136,7 +197,7 @@ const Department = () => {
             >
               <option value="">...select...</option>
               {getTeammembers?.map((team, index) => (
-                <option key={index} value={team.first_name}>
+                <option key={index} value={team.first_name+ " "+ team.last_name}>
                   {" "}
                   {team.first_name+" "+team.last_name}{" "}
                 </option>
@@ -156,8 +217,9 @@ const Department = () => {
               ? "bg-[#14A44D]"
               : "bg-[#7A7A7A]"
           }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+          onClick={handleSubmitDepartment}
         >
-          Create Department
+          {loading ? "Creating":"Create Department"}
         </button>
          </form>
        ) : ( 

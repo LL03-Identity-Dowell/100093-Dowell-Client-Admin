@@ -7,10 +7,13 @@ import {ClassInput} from "../../pages/solutionTypes"
 import { isNewOwner, setAdminData } from "../../store/slice/adminData"
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { getschoolclass } from "../../store/slice/class";
 
 const initialFormInputs: ClassInput = {
   className:"",
-  portfolio:[]
+  portfolio:""
   };
 
   interface portfolioProps {
@@ -32,6 +35,7 @@ const initialFormInputs: ClassInput = {
 const Class = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
   const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
+  const [loading, setLoading] = useState(false)
   const userData = useSelector((state: RootState) => state.userinfo);
   const username = userData.userinfo.username;
   const dispatch = useDispatch();
@@ -60,7 +64,9 @@ const Class = () => {
     }
   };
   fetchIsOwnerData();
+  
 
+ 
   useEffect(() => {
     const fetchPortfolios = async () => {
       try {
@@ -69,13 +75,17 @@ const Class = () => {
         });
 
         setPortfolioReport(response.data);
-        console.log(response.data)
       } catch (error) {
         console.log("error =", error);
       }
     };
     fetchPortfolios();
   }, [username]);
+  
+  
+  
+  
+  
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
@@ -85,34 +95,87 @@ const Class = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+  
+  const livingLabMapPortfolios = portfolioReport?.filter(item => item.product === 'Living Lab Maps')|| [];
+  const handleSubmitClass = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+
+    const postClass = async () => {
+      if (!formInputs.className) {
+        toast.error("Class name is required.");
+        return; 
+      }
+      if (!formInputs.portfolio) {
+        toast.error("Select Portfolio.");
+        return; 
+      }
+  const client_admin_id = userData.userinfo.client_admin_id
+      try {
+        setLoading(true)
+        const dataClass={
+          "workspace_id":client_admin_id,
+          "class_name":formInputs.className,
+          "portfolio":formInputs.portfolio
+      }
+      console.log(dataClass)
+
+        await Axios93Base.post("/class/", dataClass);
+
+        dispatch(
+          getschoolclass({
+            "workspace_id":client_admin_id,
+            "class_name":formInputs.className,
+            "portfolio":formInputs.portfolio
+          })
+        );
+        setLoading(false)
+        toast.success("success");
+        // dispatch(getloaderstate(false));
+      } catch (error) {
+        toast.error("Failure")
+        setLoading(false)
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postClass();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
+      <ToastContainer position="top-right" />
+
       {Object.prototype.toString.call(portfolioReport) === "[object Array]" ? (
-         <form>
+        <form>
+        {/* department name  */}
+        <div className="mb-4">
+          <div className="flex items-center gap-3">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="className">Class Name </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+          
+          </div>
+          <div className="w-full">
+            <input
+              type="text"
+              placeholder="Class Name"
+              className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
+              id="className"
+              onChange={handleOnChange}
+              value={formInputs.className}
+            />
+          </div>
+        </div>
 
-         {/* department name  */}
-         <div className="mb-4">
-           <div className="flex items-center gap-3">
-             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-               <span id="className">Class Name </span>
-               <span className="text-[#ff0000] text-base">*</span>
-             </label>
-           
-           </div>
-           <div className="w-full">
-             <input
-               type="text"
-               placeholder="Class Name"
-               className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-               id="className"
-               onChange={handleOnChange}
-               value={formInputs.className}
-             />
-           </div>
-         </div>
-
-          {/* portfolio  */}
-         <div className="mb-4">
+        {/* portfolio  */}
+        <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
               <span id="portfolio">Select Portfolio </span>
               <span className="text-[#ff0000] text-base">*</span>
@@ -127,32 +190,32 @@ const Class = () => {
               placeholder="Select Portfolio"
             >
               <option value="">...select...</option>
-              {portfolioReport?.map((portfolio, index) => (
+              {livingLabMapPortfolios?.length > 0 ?( 
+              livingLabMapPortfolios?.map((portfolio, index) => (
                 <option key={index} value={portfolio.portfolio_name}>
                   {" "}
                   {portfolio.portfolio_name}{" "}
                 </option>
-              ))}
+              )) ) : (
+                <option>No portfolios exist</option>
+            )}
             </select>
-          </div>
-          
+        </div>        
 
-
-         <button
-                          id="portfoliotext43"
-                          // onClick={handleDownloadClick}
-                          // disabled={teamMemberAccess === "View"}
-                          className={`w-full ${
-                            color_scheme == "Red"
-                              ? "bg-[#DC4C64]"
-                              : color_scheme == "Green"
-                              ? "bg-[#14A44D]"
-                              : "bg-[#7A7A7A]"
-                          }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
-                        >
-                          Create Class
-                        </button>
-         </form>
+        <button
+          id="portfoliotext43"
+          onClick={handleSubmitClass}
+          className={`w-full ${
+            color_scheme == "Red"
+              ? "bg-[#DC4C64]"
+              : color_scheme == "Green"
+              ? "bg-[#14A44D]"
+              : "bg-[#7A7A7A]"
+          }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
+        >
+          {loading ? "Creating":"Create Class"}
+        </button>
+      </form>
        ) : ( 
         <Loader />
       )} 

@@ -26,12 +26,12 @@ export type DepartmentInput = {
 
 export type ClassInput = {
   className:string,
-  portfolio:string[]
+  portfolio:string
 }
 export type BusInput = {
   busNumber:string,
-  portfolio:string[]
-  admin:string[]
+  portfolio:string
+  admin:string
 }
 export type TeacherInput = {
   teacherName:string,

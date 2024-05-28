@@ -7,6 +7,9 @@ import {BusInput} from "../../pages/solutionTypes"
 import { isNewOwner, setAdminData } from "../../store/slice/adminData"
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { getbus } from "../../store/slice/bus";
 
 interface portfolioProps {
   data_type: string;
@@ -24,15 +27,15 @@ interface portfolioProps {
   username: string[];
 }
 
-
 const initialFormInputs: BusInput = {
     busNumber:"",
-    portfolio:[],
-    admin:[]
+    portfolio:"",
+    admin:""
   };
 const Class = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
   const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
+  const [loading, setLoading] = useState(false)
   const userData = useSelector((state: RootState) => state.userinfo);
   const username = userData.userinfo.username;
   const dispatch = useDispatch();
@@ -89,8 +92,68 @@ const Class = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+  const livingLabMapPortfolios = portfolioReport?.filter(item => item.product === 'Living Lab Maps')|| [];
+  
+  const handleSubmitBus = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+
+    const postBus = async () => {
+      if (!formInputs.busNumber) {
+        toast.error("Bus number is required.");
+        return;
+      }
+      if (!formInputs.portfolio) {
+        toast.error("Select Portfolio.");
+        return; 
+      }
+      if (!formInputs.admin) {
+        toast.error("Select Admin.");
+        return; 
+      }
+  const client_admin_id = userData.userinfo.client_admin_id
+      try {
+        setLoading(true)
+        const dataBus={
+          "workspace_id":client_admin_id,
+          "bus_num":formInputs.busNumber,
+          "portfolio":formInputs.portfolio,
+          "bus_admin":formInputs.admin
+      }
+      console.log(dataBus)
+
+        await Axios93Base.post("/bus/", dataBus);
+
+        dispatch(
+          getbus({
+            "workspace_id":client_admin_id,
+            "bus_num":formInputs.busNumber,
+            "portfolio":formInputs.portfolio,
+            "bus_admin":formInputs.admin
+          })
+        );
+        setLoading(false)
+        toast.success("success");
+        // dispatch(getloaderstate(false));
+      } catch (error) {
+        toast.error("Failure")
+        setLoading(false)
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postBus();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
+      <ToastContainer position="top-right" />
+
       {Object.prototype.toString.call(portfolioReport) === "[object Array]" ? (
          <form>
 
@@ -131,12 +194,15 @@ const Class = () => {
               placeholder="Select Portfolio"
             >
               <option value="">...select...</option>
-              {portfolioReport?.map((portfolio, index) => (
+              {livingLabMapPortfolios?.length > 0 ?( 
+              livingLabMapPortfolios?.map((portfolio, index) => (
                 <option key={index} value={portfolio.portfolio_name}>
                   {" "}
                   {portfolio.portfolio_name}{" "}
                 </option>
-              ))}
+              )) ) : (
+                <option>No portfolios exist</option>
+            )}
             </select>
           </div>
           {/* admin  */}
@@ -156,7 +222,7 @@ const Class = () => {
             >
               <option value="">...select...</option>
               {getTeammembers?.map((admin, index) => (
-                <option key={index} value={admin.first_name}>
+                <option key={index} value={admin.first_name + " "+ admin.last_name}>
                   {" "}
                   {admin.first_name+" "+admin.last_name}{" "}
                 </option>
@@ -167,8 +233,7 @@ const Class = () => {
 
          <button
           id="portfoliotext43"
-          // onClick={handleDownloadClick}
-          // disabled={teamMemberAccess === "View"}
+          onClick={handleSubmitBus}
           className={`w-full ${
             color_scheme == "Red"
               ? "bg-[#DC4C64]"
@@ -177,7 +242,7 @@ const Class = () => {
               : "bg-[#7A7A7A]"
           }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
         >
-          Create Bus
+          {loading ? "Creating":"Create Bus"}
         </button>
          </form>
        ) : ( 

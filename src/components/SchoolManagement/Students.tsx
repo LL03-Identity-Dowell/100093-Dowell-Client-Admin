@@ -1,11 +1,38 @@
-import { useState, ChangeEvent } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/Store";
+import Loader from "../../pages/whiteloader";
 import { Axios93Base } from "../../api/axios";
 import {StudentInput} from "../../pages/solutionTypes"
 import { isNewOwner, setAdminData } from "../../store/slice/adminData"
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { getstudent } from "../../store/slice/student";
+
+interface departmentProps {
+  dept_head:string,
+  dept_id:number,
+  dept_name:string,
+  workspace_id:number,
+  _id:number,
+}
+
+interface SchoolClassProps {
+  class_name:string,
+portfolio:string,
+workspace_id:number,
+_id:number
+}
+
+interface BusProps {
+  bus_admin:string
+  bus_num:number
+  portfolio:number,
+  workspace_id:number,
+  _id:number,
+}
 
 const initialFormInputs: StudentInput = {
     studentName:"",
@@ -15,9 +42,11 @@ const initialFormInputs: StudentInput = {
   };
 const Students = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
-  // const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
-  // const userData = useSelector((state: RootState) => state.userinfo);
-  // const username = userData.userinfo.username;
+  const [schoolClass, setSchoolClass] = useState<SchoolClassProps[]>([]);
+  const [departments, setDepartments] = useState<departmentProps[]>([]);
+  const [loading, setLoading] = useState(false)
+  const [bus, setBus] = useState<BusProps[]>([]);
+  const userData = useSelector((state: RootState) => state.userinfo);
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   const isnewOwner = useSelector(
@@ -44,32 +73,133 @@ const Students = () => {
     }
   };
   fetchIsOwnerData();
+  const client_admin_id = userData.userinfo.client_admin_id;
  
-  // useEffect(() => {
-  //   const fetchPortfolios = async () => {
-  //     try {
-  //       const response = await Axios93Base.post("/portfolio_reports/", {
-  //         username: username,
-  //       });
+  // fetch departments 
+  useEffect(() => {
+    const fetchDepartment = async () => {
+      try {
+        const response = await Axios93Base.post("/departments/", {
+          owner_id: client_admin_id,
+        });
+        setDepartments(response.data.data);
+        console.log(response.data)
+      } catch (error) {
+        console.log("error =", error);
+      }
+    };
+    fetchDepartment();
+  }, [client_admin_id]);
 
-  //       setPortfolioReport(response.data);
-  //       console.log(response.data)
-  //     } catch (error) {
-  //       console.log("error =", error);
-  //     }
-  //   };
-  //   fetchPortfolios();
-  // }, [username]);
+  // fetch class names 
+  useEffect(() => {
+    const fetchDepartment = async () => {
+      try {
+        const response = await Axios93Base.post("/class/", {
+          owner_id: client_admin_id,
+        });
+        setSchoolClass(response.data.data);
+        console.log(response.data)
+      } catch (error) {
+        console.log("error =", error);
+      }
+    };
+    fetchDepartment();
+  }, [client_admin_id]);
+
+    // fetch Bus number 
+    useEffect(() => {
+      const fetchBus = async () => {
+        try {
+          const response = await Axios93Base.post("/bus/", {
+            owner_id: client_admin_id,
+          });
+          setBus(response.data.data);
+          console.log(response.data)
+        } catch (error) {
+          console.log("error =", error);
+        }
+      };
+      fetchBus();
+    }, [client_admin_id]);
+
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
-  
+  const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+  };
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+  const handleSubmitBus = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    const postStudent = async () => {
+      if (!formInputs.studentName) {
+        toast.error("Student Name is required.");
+        return; 
+      }
+      if (!formInputs.className) {
+        toast.error("Select Class Name");
+        return; 
+      }
+      if (!formInputs.departmentName) {
+        toast.error("Select Department Name");
+        return; 
+      }
+      if (!formInputs.busNumber) {
+        toast.error("Select Bus Number");
+        return; 
+      }
+     
+  const client_admin_id = userData.userinfo.client_admin_id
+      try {
+        setLoading(true)
+        const dataStudent={
+          "workspace_id":client_admin_id,
+          "student_name":formInputs.studentName,
+          "dept_name":formInputs.departmentName,
+          "class_name":formInputs.className,
+          "bus_num":formInputs.busNumber
+      }
+      console.log(dataStudent)
+
+        await Axios93Base.post("/student/", dataStudent);
+
+        dispatch(
+          getstudent({
+            "workspace_id":client_admin_id,
+            "student_name":formInputs.studentName,
+            "dept_name":formInputs.departmentName,
+            "class_name":formInputs.className,
+            "bus_num":formInputs.busNumber
+          })
+        );
+        setLoading(false)
+        toast.success("success");
+        // dispatch(getloaderstate(false));
+      } catch (error) {
+        toast.error("Failure")
+        setLoading(false)
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postStudent();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
-      {/* {Object.prototype.toString.call(portfolioReport) === "[object Array]" ? ( */}
+      <ToastContainer position="top-right" />
+
+      {/* {Object.prototype.toString.call(schoolClass) === "[object Array]" ? ( */}
+      {schoolClass && departments ?(
          <form>
 
          {/* student name  */}
@@ -94,72 +224,100 @@ const Students = () => {
          </div>
 
          
-         {/* department name  */}
+         {/* Class name  */}
          <div className="mb-4">
-           <div className="flex items-center gap-3">
-             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-               <span id="departmentName">Department Name</span>
-               <span className="text-[#ff0000] text-base">*</span>
-             </label>
-           
-           </div>
-           <div className="w-full">
-             <input
-               type="text"
-               placeholder="Department Name"
-               className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-               id="departmentName"
-               onChange={handleOnChange}
-               value={formInputs.departmentName}
-             />
-           </div>
-         </div>
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+              <span id="class">Select Class </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              required
+              onChange={handleSelectStatus}
+              value={formInputs.className}
+              id="className"
+              name="className"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              placeholder="Select Class"
+            >
+              <option value="">...select...</option>
+              {schoolClass?.length > 0 ?( 
+              schoolClass?.map((schoolclass, index) => (
+                <option key={index} value={schoolclass.class_name}>
+                  {" "}
+                  {schoolclass.class_name}{" "}
+                </option>
+              )) )
+               : (
+                <option>No Class exist</option>
+            )
+            }
+            </select>
+          </div>
 
          {/* class name  */}
          <div className="mb-4">
-           <div className="flex items-center gap-3">
-             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-               <span id="className">Class Name</span>
-               <span className="text-[#ff0000] text-base">*</span>
-             </label>
-           
-           </div>
-           <div className="w-full">
-             <input
-               type="text"
-               placeholder="Class Name"
-               className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-               id="className"
-               onChange={handleOnChange}
-               value={formInputs.className}
-             />
-           </div>
-         </div>
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+              <span id="portfolio">Select Department </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              required
+              onChange={handleSelectStatus}
+              value={formInputs.departmentName}
+              id="departmentName"
+              name="departmentName"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              placeholder="Select Department"
+            >
+              <option value="">...select...</option>
+              {departments?.length > 0 ?( 
+              departments?.map((department, index) => (
+                <option key={index} value={department.dept_name}>
+                  {" "}
+                  {department.dept_name}{" "}
+                </option>
+              )) )
+               : (
+                <option>No Department exist</option>
+            )
+            }
+            </select>
+          </div>
 
-   {/* bus number  */}
-   <div className="mb-4">
-           <div className="flex items-center gap-3">
-             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-               <span id="busNumber">Bus Number</span>
-               <span className="text-[#ff0000] text-base">*</span>
-             </label>
-           
-           </div>
-           <div className="w-full">
-             <input
-               type="text"
-               placeholder="Bus Number"
-               className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-               id="busNumber"
-               onChange={handleOnChange}
-               value={formInputs.busNumber}
-             />
-           </div>
-         </div>
+        {/* Bus Number  */}
+        <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+              <span id="portfolio">Select Bus </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              required
+              onChange={handleSelectStatus}
+              value={formInputs.busNumber}
+              id="busNumber"
+              name="busNumber"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              placeholder="Select Bus"
+            >
+              <option value="">...select...</option>
+              {bus?.length > 0 ?( 
+              bus?.map((bus, index) => (
+                <option key={index} value={bus.bus_num}>
+                  {" "}
+                  {bus.bus_num}{" "}
+                </option>
+              )) )
+               : (
+                <option>No Bus number exist</option>
+            )
+            }
+            </select>
+          </div>
+
+
          <button
           id="portfoliotext43"
-          // onClick={handleDownloadClick}
-          // disabled={teamMemberAccess === "View"}
+          onClick={handleSubmitBus}
           className={`w-full ${
             color_scheme == "Red"
               ? "bg-[#DC4C64]"
@@ -168,12 +326,12 @@ const Students = () => {
               : "bg-[#7A7A7A]"
           }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
         >
-          Create Student
+          {loading ? "Creating":"Create Student"}
         </button>
          </form>
-       {/* ) : (  */}
-        {/* <Loader /> */}
-      {/* )}  */}
+       ) : ( 
+        <Loader /> 
+      )}  
     </div>
   );
 };

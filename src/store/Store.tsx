@@ -18,7 +18,11 @@ import geoSlice from "./slice/geodata";
 import languagedata from "./slice/languagedata";
 import viewAccessSlice from "./slice/viewAccess";
 import linkSlice from "./slice/solutionLinks";
-
+import departmentSlice from "./slice/department";
+import schoolClassSlice from "./slice/class";
+import busSlice from "./slice/bus";
+import teacherSlice from "./slice/teacher";
+import studentSlice from "./slice/student";
 
 const store = configureStore({
   reducer: {
@@ -41,6 +45,11 @@ const store = configureStore({
     langdata: languagedata,
     viewAccess: viewAccessSlice,
     link : linkSlice,
+    department: departmentSlice,
+    schoolClass: schoolClassSlice,
+    bus: busSlice,
+    teacher: teacherSlice,
+    student: studentSlice,
   },
   // devTools: false,
 });

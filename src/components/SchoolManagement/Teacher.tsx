@@ -7,21 +7,17 @@ import {TeacherInput} from "../../pages/solutionTypes"
 import { isNewOwner, setAdminData } from "../../store/slice/adminData"
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { getteacher } from "../../store/slice/teacher";
 
-interface portfolioProps {
-  data_type: string;
-  member_type: string;
-  operations_right: string;
-  portfolio_code: string;
-  portfolio_details: string;
-  portfolio_name: string;
-  portfolio_specification: string;
-  portfolio_uni_code: string;
-  role: string;
-  security_layer: string;
-  product: string;
-  status: string;
-  username: string[];
+interface departmentProps {
+
+  dept_head:string,
+  dept_id:number,
+  dept_name:string,
+  workspace_id:number,
+  _id:number,
 }
 
 
@@ -29,11 +25,12 @@ const initialFormInputs: TeacherInput = {
   teacherName:"",
   departmentName:"",
   };
-const Class = () => {
+const Teacher = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
-  const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
+  const [departmentReport, setDepartment] = useState<departmentProps[]>();
+  const [loading, setLoading] = useState(false)
   const userData = useSelector((state: RootState) => state.userinfo);
-  const username = userData.userinfo.username;
+  const client_admin_id = userData.userinfo.client_admin_id;
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   const isnewOwner = useSelector(
@@ -60,32 +57,86 @@ const Class = () => {
     }
   };
   fetchIsOwnerData();
-
+  
   useEffect(() => {
-    const fetchPortfolios = async () => {
+    const fetchDepartment = async () => {
       try {
-        const response = await Axios93Base.post("/portfolio_reports/", {
-          username: username,
+        const response = await Axios93Base.post("/departments/", {
+          owner_id: client_admin_id,
         });
-
-        setPortfolioReport(response.data);
+        setDepartment(response.data.data);
         console.log(response.data)
       } catch (error) {
         console.log("error =", error);
       }
     };
-    fetchPortfolios();
-  }, [username]);
+    fetchDepartment();
+  }, [client_admin_id]);
+  console.log(departmentReport)
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
-
+  const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
+    setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+  };
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
+  const handleSubmitTeacher = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+    const postTeacher = async () => {
+      if (!formInputs.teacherName) {
+        toast.error("Teacher Name is required.");
+        return;
+      }
+      if (!formInputs.departmentName) {
+        toast.error("Select Department Name.");
+        return;
+      }
+  const client_admin_id = userData.userinfo.client_admin_id
+      try {
+    setLoading(true)
+        // dispatch(getloaderstate(true));
+        const dataTeacher={
+          "workspace_id":client_admin_id,
+          "teacher_name":formInputs.teacherName,
+          "dept_name":formInputs.departmentName
+      }
+      console.log(dataTeacher)
+
+        await Axios93Base.post("/teacher/", dataTeacher);
+
+        dispatch(
+          getteacher({
+            "workspace_id":client_admin_id,
+            "teacher_name":formInputs.teacherName,
+            "dept_name":formInputs.departmentName
+          })
+        );
+        setLoading(false)
+        toast.success("success");
+        // dispatch(getloaderstate(false));
+      } catch (error) {
+        toast.error("Failure")
+        setLoading(false)
+      }
+
+      // fetch product
+    };
+
+    // Call the API when the component mounts
+    postTeacher();
+
+    // Make your API call here using the selectedLanguage value
+    // For example:
+  };
   return (
     <div className="w-full my-10 relative overflow-x-scroll">
-      {Object.prototype.toString.call(portfolioReport) === "[object Array]" ? (
+      <ToastContainer position="top-right" />
+      {/* {Object.prototype.toString.call(departmentReport) === "[object Array]" ? ( */}
+      {departmentReport ? (
          <form>
 
          {/* teacher name  */}
@@ -109,35 +160,40 @@ const Class = () => {
            </div>
          </div>
 
-         
-         {/* department name  */}
-         <div className="mb-4">
-           <div className="flex items-center gap-3">
-             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
-               <span id="departmentName">Department Name</span>
-               <span className="text-[#ff0000] text-base">*</span>
-             </label>
-           
-           </div>
-           <div className="w-full">
-             <input
-               type="text"
-               placeholder="Department Name"
-               className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-               id="departmentName"
-               onChange={handleOnChange}
-               value={formInputs.departmentName}
-             />
-           </div>
-         </div>
-
-       
+        {/* department select  */}
+        <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
+              <span id="portfolio">Select Department </span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <select
+              required
+              onChange={handleSelectStatus}
+              value={formInputs.departmentName}
+              id="departmentName"
+              name="departmentName"
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+              placeholder="Select Department"
+            >
+              <option value="">...select...</option>
+              {departmentReport?.length > 0 ?( 
+              departmentReport?.map((department, index) => (
+                <option key={index} value={department.dept_name}>
+                  {" "}
+                  {department.dept_name}{" "}
+                </option>
+              )) )
+               : (
+                <option>No Department exist</option>
+            )
+            }
+            </select>
+          </div>
 
 
          <button
           id="portfoliotext43"
-          // onClick={handleDownloadClick}
-          // disabled={teamMemberAccess === "View"}
+          onClick={handleSubmitTeacher}
           className={`w-full ${
             color_scheme == "Red"
               ? "bg-[#DC4C64]"
@@ -146,7 +202,7 @@ const Class = () => {
               : "bg-[#7A7A7A]"
           }  hover:bg-[#61CE70] text-white  py-2 px-4 rounded-md`}
         >
-          Create Teacher
+          {loading ? "Creating":"Create Teacher"}
         </button>
          </form>
        ) : ( 
@@ -156,4 +212,4 @@ const Class = () => {
   );
 };
 
-export default Class;
+export default Teacher;
