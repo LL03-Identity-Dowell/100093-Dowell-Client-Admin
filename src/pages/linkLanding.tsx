@@ -2,8 +2,8 @@ import { useEffect, useState ,ChangeEvent} from 'react';
 import {  Axios93Base } from "../api/axios";
 import { LinkLandingInput } from "./solutionTypes";
 import { toast } from "react-toastify";
-import Head from "next/head";
 import admin_logo from "../assets/Living-Lab-Admin-1.png";
+import {Helmet} from "react-helmet";
 
 const initialPublicFormInputs: LinkLandingInput = {
   id: "",
@@ -76,14 +76,15 @@ const PublicForm = () => {
       return emailRegex.test(email);
     };
     return(
-        <>
-          <Head>
-        <title>Request Form</title>
-        <meta name="description" content="Submit a request for collection" />
-        <meta property="og:title" content="Request Form" />
-        <meta property="og:description" content="Submit a request for collection" />
-        <meta property="og:image" content={admin_logo} />
-      </Head>
+        <div>
+           <Helmet>
+                <meta charSet="utf-8" />
+                <title>Submit a request for collection</title>
+                <meta name="description" content="Submit a request for collection" />
+                <meta property="og:title" content="Request Form" />
+                <meta property="og:description" content="Submit a request for collection" />
+                <meta property="og:image" content={admin_logo} />
+            </Helmet>
           <div className="flex items-center justify-center h-screen">  
             <div className="relative flex flex-col text-gray-700 p-5 bg-white shadow-lg bg-clip-border rounded-xl lg:w-[30rem] md:w-[30rem] w-full mx-auto">
               <p className="block mb-5 font-sans text-sm antialiased mx-auto font-normal leading-normal text-gray-900 opacity-75">
@@ -120,7 +121,7 @@ const PublicForm = () => {
               </form>
             </div>
           </div>
-       </>
+       </div>
     )
 }
 const TeamMemberForm = () => {
@@ -164,13 +165,14 @@ const TeamMemberForm = () => {
   };
     return(
       <>
-       <Head>
-        <title>Collection Form</title>
-        <meta name="description" content="Mark the bins as collected" />
-        <meta property="og:title" content="Collection Form" />
-        <meta property="og:description" content="Mark the bins as collected" />
-        <meta property="og:image" content={admin_logo} />
-      </Head>
+         <Helmet>
+                <meta charSet="utf-8" />
+                <title>Mark the bins as collected</title>
+                <meta name="description" content="Mark the bins as collected" />
+                <meta property="og:title" content="Collection Form" />
+                <meta property="og:description" content="Mark the bins as" />
+                <meta property="og:image" content={admin_logo} />
+        </Helmet>
       <div className="flex items-center justify-center h-screen bor">  
         <div className="rounded-lg relative flex flex-col text-gray-700 bg-white shadow-lg bg-clip-border rounded-xl lg:w-[30rem] md:w-[30rem] w-full mx-auto">
           <p className="block mb-5 font-sans text-sm antialiased mx-auto font-normal leading-normal text-gray-900 opacity-75">

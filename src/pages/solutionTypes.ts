@@ -17,3 +17,29 @@ export type LinkLandingInput = {
   email: string,
   username : string
 }
+
+export type DepartmentInput = {
+  departmentName:string,
+  departmentId:number ,
+  departmentHead:string[],
+}
+
+export type ClassInput = {
+  className:string,
+  portfolio:string[]
+}
+export type BusInput = {
+  busNumber:string,
+  portfolio:string[]
+  admin:string[]
+}
+export type TeacherInput = {
+  teacherName:string,
+  departmentName:string,
+}
+export type StudentInput = {
+  studentName:string,
+  departmentName:string,
+  className:string,
+  busNumber:number
+}

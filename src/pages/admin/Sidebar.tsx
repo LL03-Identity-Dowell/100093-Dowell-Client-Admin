@@ -239,7 +239,16 @@ const Sidebar = () => {
                         dispatch(getoverlaysidebar(false));
                       }}
                     >
-                      Solutions
+                      Generate Link
+                    </li>
+                    <li
+                      className="text-[#7a7a7a] text-lg font-medium cursor-pointer"
+                      onClick={() => {
+                        navigate("/schoolManagement");
+                        dispatch(getoverlaysidebar(false));
+                      }}
+                    >
+                      Shool Management System
                     </li>
                     {/* <li
                       className="text-[#7a7a7a] text-lg font-medium cursor-pointer"
