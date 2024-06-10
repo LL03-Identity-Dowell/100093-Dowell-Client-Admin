@@ -16,6 +16,7 @@ import GenerateLink from './pages/GenerateLink'
 import LinkLanding from "./pages/linkLanding";
 import Solutions from "./pages/Solutions";
 import SchoolManagement from "./pages/SchoolManagement";
+import UserDetails from "./pages/UserDetails";
 
 
 function App() {
@@ -36,10 +37,10 @@ function App() {
 					<Route path="/test" element={<CountrySelector />} />
 					<Route path="/*" element={<NotFound />} />
 					<Route path="/generatelink" element={<GenerateLink/>}/>
-					<Route path="/linklanding1" element={<LinkLanding/>}/>
+					<Route path="/linklanding" element={<LinkLanding/>}/>
 					<Route path="/solutions" element={<Solutions/>}/>
 					<Route path="/schoolManagement" element={<SchoolManagement/>}/>
-
+					<Route path="/userdetails" element={<UserDetails/>}/>
 					{/* <Route path="/loader" element={} /> */}
 					{/* <Routes path="/element" element={<Example />} /> */}
 				</Routes>

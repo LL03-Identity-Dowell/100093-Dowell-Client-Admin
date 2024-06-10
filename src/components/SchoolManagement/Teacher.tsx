@@ -133,10 +133,22 @@ const Teacher = () => {
     // For example:
   };
   return (
-    <div className="w-full my-10 relative overflow-x-scroll">
+    <div className="w-full my-10 relative lg:justify-center lg:flex">
       <ToastContainer position="top-right" />
       {/* {Object.prototype.toString.call(departmentReport) === "[object Array]" ? ( */}
       {departmentReport ? (
+            <div className="lg:w-1/2  h-full border border-[#54595F] card-shadow px-[30px] pb-4">
+            <span
+              className={`${
+                color_scheme == "Red"
+                  ? "bg-[#DC4C64]"
+                  : color_scheme == "Green"
+                  ? "bg-[#14A44D]"
+                  : "bg-[#7A7A7A]"
+              } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col`}
+            >
+              <p id="portfolioForm1Text1" className="text-center">Teacher</p>
+            </span>
          <form>
 
          {/* teacher name  */}
@@ -205,6 +217,7 @@ const Teacher = () => {
           {loading ? "Creating":"Create Teacher"}
         </button>
          </form>
+         </div>
        ) : ( 
         <Loader />
       )} 

@@ -42,10 +42,10 @@ const initialFormInputs: StudentInput = {
   };
 const Students = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
-  const [schoolClass, setSchoolClass] = useState<SchoolClassProps[]>([]);
-  const [departments, setDepartments] = useState<departmentProps[]>([]);
+  const [schoolclass, setSchoolClass] = useState<SchoolClassProps[]>();
+  const [departments, setDepartments] = useState<departmentProps[]>();
+  const [bus, setBus] = useState<BusProps[]>();
   const [loading, setLoading] = useState(false)
-  const [bus, setBus] = useState<BusProps[]>([]);
   const userData = useSelector((state: RootState) => state.userinfo);
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
@@ -93,7 +93,7 @@ const Students = () => {
 
   // fetch class names 
   useEffect(() => {
-    const fetchDepartment = async () => {
+    const fetchClass = async () => {
       try {
         const response = await Axios93Base.post("/class/", {
           owner_id: client_admin_id,
@@ -104,7 +104,7 @@ const Students = () => {
         console.log("error =", error);
       }
     };
-    fetchDepartment();
+    fetchClass();
   }, [client_admin_id]);
 
     // fetch Bus number 
@@ -136,7 +136,7 @@ const Students = () => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.preventDefault();
-    const postStudent = async () => {
+    const postTeacher = async () => {
       if (!formInputs.studentName) {
         toast.error("Student Name is required.");
         return; 
@@ -189,17 +189,29 @@ const Students = () => {
     };
 
     // Call the API when the component mounts
-    postStudent();
+    postTeacher();
 
     // Make your API call here using the selectedLanguage value
     // For example:
   };
   return (
-    <div className="w-full my-10 relative overflow-x-scroll">
+    <div className="w-full my-10 relative  lg:justify-center lg:flex">
       <ToastContainer position="top-right" />
 
-      {/* {Object.prototype.toString.call(schoolClass) === "[object Array]" ? ( */}
-      {schoolClass && departments ?(
+      {/* {Object.prototype.toString.call(schoolclass)=== "[object Array]" && Object.prototype.toString.call(departments)=== "[object Array]" && Object.prototype.toString.call(bus)=== "[object Array]" ? ( */}
+      {schoolclass && departments && bus ?(
+          <div className="lg:w-1/2  h-full border border-[#54595F] card-shadow px-[30px] pb-4">
+          <span
+            className={`${
+              color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col`}
+          >
+            <p id="portfolioForm1Text1" className="text-center">Students</p>
+          </span>
          <form>
 
          {/* student name  */}
@@ -240,8 +252,8 @@ const Students = () => {
               placeholder="Select Class"
             >
               <option value="">...select...</option>
-              {schoolClass?.length > 0 ?( 
-              schoolClass?.map((schoolclass, index) => (
+              {schoolclass?.length > 0 ?( 
+              schoolclass?.map((schoolclass, index) => (
                 <option key={index} value={schoolclass.class_name}>
                   {" "}
                   {schoolclass.class_name}{" "}
@@ -254,7 +266,7 @@ const Students = () => {
             </select>
           </div>
 
-         {/* class name  */}
+         {/* department name  */}
          <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold">
               <span id="portfolio">Select Department </span>
@@ -329,6 +341,7 @@ const Students = () => {
           {loading ? "Creating":"Create Student"}
         </button>
          </form>
+         </div>
        ) : ( 
         <Loader /> 
       )}  
