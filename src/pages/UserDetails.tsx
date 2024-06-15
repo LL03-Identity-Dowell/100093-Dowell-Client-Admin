@@ -176,7 +176,48 @@ getLocation();
       setClassYesLoader(false);
     }
   }
+  const handleBusYesButton = async () => {
+    setBusSubmissionMessage("")
+   const current_time = getCurrentTimeISO()
+   console.log(current_time)
+    try {
+      setBusYesLoader(true);
+      const response = await axios.post("https://100086.pythonanywhere.com/attendance/buses?api_key=0699dbbb-2786-4dfa-a1db-fc12f2210228", {
+        bus_name: bus_portfolio?.bus_num,
+        lat: latitude,
+        lon: longitude,
+        datetime:  current_time,
+        workspace_id: bus_portfolio?.workspace_id,
+        student_name: userDetail?.Username
+      });
+      // console.log( linkid,formInputs.email)
+      // console.log("Requestes link:", response.data);
+      console.log(response)
+      if(response.data.success){
+        setBusSubmissionMessage("Attendance Marked")
+        toast.success("Attendance Marked");
+        setBusSubmissionSuccess(true); // Set submission success state
+        // window.location.reload(); // Reload the page
 
+      }
+      else{
+        setBusSubmissionMessage(response.data.text);
+        toast.error(response.data.text);
+        setBusSubmissionSuccess(false); // Set submission success state
+
+      }
+
+      // Handle the response data as needed
+    } catch (error) {
+      console.error("Error generating link:", error);
+      setBusSubmissionMessage("Something went wrong, contact sys admin!");
+      toast.error("Something went wrong, contact sys admin!");
+      setBusSubmissionSuccess(false); // Set submission success state
+      // Handle the error
+    } finally {
+      setBusYesLoader(false);
+    }
+  }
   return (
     <div>
       <ToastContainer position="top-right" />
