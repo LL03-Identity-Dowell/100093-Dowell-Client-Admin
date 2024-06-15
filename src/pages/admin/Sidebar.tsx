@@ -239,7 +239,7 @@ const Sidebar = () => {
                         dispatch(getoverlaysidebar(false));
                       }}
                     >
-                      Generate Link
+                      Waste Management
                     </li>
                     <li
                       className="text-[#7a7a7a] text-lg font-medium cursor-pointer"

@@ -10,6 +10,7 @@ const initialPublicFormInputs: LinkLandingInput = {
   form: "",
   email :"",
   username:"",
+  weight:0,
 };
 const PublicForm = () => {
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,10 @@ const PublicForm = () => {
       toast.error('Please enter username.');
       return;
     }
+    if (!formInputs.weight) { 
+      toast.error('Please enter Weight.');
+      return;
+    }
     if (!formInputs.email || !validateEmail(formInputs.email)) { // Check if email is empty or invalid
       toast.error('Please enter a valid email address.');
       return;
@@ -36,7 +41,8 @@ const PublicForm = () => {
         id: linkid,
         form:"request",
         email:formInputs.email,
-        name: formInputs.username
+        name: formInputs.username,
+        weight:formInputs.weight
       });
       // console.log( linkid,formInputs.email)
       // console.log("Requestes link:", response.data);
@@ -91,6 +97,7 @@ const PublicForm = () => {
                 Do You want to request collection?
               </p>
               <form>
+                <input type='number' onChange={handleOnChange} id='weight' required value={formInputs.weight} placeholder='waight of waste' className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                 <input type="text" onChange={handleOnChange} id='username' required value={formInputs.username} placeholder='Enter name'  className="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                 <input type="email" id='email' required onChange={handleOnChange} value={formInputs.email} placeholder='enter email'  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                 {/* <input type="text" name="form" id='form' value="request" hidden/>

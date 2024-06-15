@@ -25,6 +25,7 @@ import about_us_1 from "../assets/about-us-1.png";
 import about_us_2 from "../assets/about-us-2.png";
 import about_us_3 from "../assets/about-us-3.png";
 import placeholder from '../assets/placeholder.webp'
+import user from "../assets/user.png";
 
 const images = {
   logo,
@@ -53,6 +54,7 @@ about_us_1,
 about_us_2,
 about_us_3,
 placeholder,
+user
 };
 
 export default images;
