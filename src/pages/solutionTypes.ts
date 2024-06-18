@@ -16,7 +16,7 @@ export type LinkLandingInput = {
   form: string,
   email: string,
   username : string,
-  weight:number,
+  // weight:number,
 }
 
 export type DepartmentInput = {
