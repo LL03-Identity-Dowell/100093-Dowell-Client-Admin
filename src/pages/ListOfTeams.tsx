@@ -87,6 +87,7 @@ const ListOfTeams = () => {
                 {loadingstate === true ? (
                   <div className="lg:w-full">
                     {/* <ReportTabs /> */}
+                    <p>Lsit of teams</p>
                   </div>
                 ) : (
                   <Loader></Loader>
