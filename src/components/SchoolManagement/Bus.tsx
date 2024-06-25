@@ -32,11 +32,27 @@ const initialFormInputs: BusInput = {
     portfolio:"",
     admin:""
   };
+  interface SchoolClassProps {
+    class_name:string,
+  portfolio:string,
+  workspace_id:number,
+  _id:number
+  }
+  
+  interface BusProps {
+    bus_admin:string
+    bus_num:number
+    portfolio:number,
+    workspace_id:number,
+    _id:number,
+  }
 const Class = () => {
   const [formInputs, setFormInputs] = useState(initialFormInputs);
   const [portfolioReport, setPortfolioReport] = useState<portfolioProps[]>();
   const [loading, setLoading] = useState(false)
   const userData = useSelector((state: RootState) => state.userinfo);
+  const [schoolclass, setSchoolClass] = useState<SchoolClassProps[]>();
+  const [bus, setBus] = useState<BusProps[]>();
   const username = userData.userinfo.username;
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
@@ -83,6 +99,39 @@ const Class = () => {
     };
     fetchPortfolios();
   }, [username]);
+  const client_admin_id = userData.userinfo.client_admin_id;
+
+   // fetch class names 
+   useEffect(() => {
+    const fetchClass = async () => {
+      try {
+        const response = await Axios93Base.post("/class/", {
+          owner_id: client_admin_id,
+        });
+        setSchoolClass(response.data.data);
+        console.log(response.data)
+      } catch (error) {
+        console.log("error =", error);
+      }
+    };
+    fetchClass();
+  }, [client_admin_id]);
+
+    // fetch Bus number 
+    useEffect(() => {
+      const fetchBus = async () => {
+        try {
+          const response = await Axios93Base.post("/bus/", {
+            owner_id: client_admin_id,
+          });
+          setBus(response.data.data);
+          console.log(response.data)
+        } catch (error) {
+          console.log("error =", error);
+        }
+      };
+      fetchBus();
+    }, [client_admin_id]);
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
   };
@@ -92,8 +141,19 @@ const Class = () => {
   const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
   );
-  const livingLabMapPortfolios = portfolioReport?.filter(item => item.product === 'Living Lab Maps')|| [];
   
+  const livingLabMap_Portfolios = portfolioReport?.filter(item => item.product === 'Living Lab Maps')|| [];
+  console.log(livingLabMap_Portfolios)
+  const portfolioNames = livingLabMap_Portfolios.map(item => item.portfolio_name);
+  const class_portfolio :string[] | undefined = schoolclass?.map(item => item.portfolio);
+  const bus_portfolio : string[] | undefined | any = bus?.map(item => item.portfolio);
+  console.log(portfolioNames);
+  console.log(class_portfolio);
+  console.log(bus_portfolio); 
+
+  const livingLabMapPortfolios = portfolioNames.filter(item => !class_portfolio?.includes(item) && !bus_portfolio?.includes(item));
+
+console.log(livingLabMapPortfolios);  
   const handleSubmitBus = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -208,9 +268,9 @@ const Class = () => {
               <option value="">...select...</option>
               {livingLabMapPortfolios?.length > 0 ?( 
               livingLabMapPortfolios?.map((portfolio, index) => (
-                <option key={index} value={portfolio.portfolio_name}>
+                <option key={index} value={portfolio}>
                   {" "}
-                  {portfolio.portfolio_name}{" "}
+                  {portfolio}{" "}
                 </option>
               )) ) : (
                 <option>No portfolios exist</option>

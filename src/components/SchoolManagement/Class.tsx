@@ -99,7 +99,6 @@ const Class = () => {
     fetchPortfolios();
   }, [username]);
   const client_admin_id = userData.userinfo.client_admin_id;
-  console.log(client_admin_id)
     // fetch class names 
     useEffect(() => {
       const fetchClass = async () => {
@@ -146,17 +145,13 @@ const Class = () => {
   );
   
   const livingLabMap_Portfolios = portfolioReport?.filter(item => item.product === 'Living Lab Maps')|| [];
-  console.log(livingLabMap_Portfolios)
   const portfolioNames = livingLabMap_Portfolios.map(item => item.portfolio_name);
   const class_portfolio :string[] | undefined = schoolclass?.map(item => item.portfolio);
   const bus_portfolio : string[] | undefined | any = bus?.map(item => item.portfolio);
-  console.log(portfolioNames);
-  console.log(class_portfolio);
-  console.log(bus_portfolio); 
+ 
 
   const livingLabMapPortfolios = portfolioNames.filter(item => !class_portfolio?.includes(item) && !bus_portfolio?.includes(item));
 
-console.log(livingLabMapPortfolios); 
   const handleSubmitClass = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {

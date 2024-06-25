@@ -74,10 +74,10 @@ console.log(loading)
           owner_id: urlParamsworkspaceid
       });
       if (response_portfolio_test.data.hasOwnProperty('class')) {
-        set_PortFolio_Test(response_portfolio_test.data.class)
+        set_PortFolio_Test(response_portfolio_test.data.class[0])
         
       } else if(response_portfolio_test.data.hasOwnProperty('bus')) {
-        set_bus_portfolio(response_portfolio_test.data.bus)
+        set_bus_portfolio(response_portfolio_test.data.bus[0])
       }
       else {
         set_no_portfolio(true)
@@ -94,11 +94,7 @@ console.log(loading)
     fetchData();
   }, []); // Empty dependency array to run the effect only once on component mount
 
-// get user current time 
-  function getCurrentTimeISO() {
-    const currentDate = new Date();
-    return currentDate.toISOString();
-  }
+
   function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -134,20 +130,34 @@ function showError(error:any) {
 
 // Call the function to get location
 getLocation();
+function getCurrentDateFormatted() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+console.log(portfolio_test)
   // handle clas yes button 
   const handleClassYesButton = async () => {
     setSubmissionMessage("")
-   const current_time = getCurrentTimeISO()
+   const current_time = getCurrentDateFormatted()
+   const class_name = portfolio_test?.class_name
+   const work_space_id = portfolio_test?.workspace_id
+   console.log(class_name ,work_space_id)
+   const pay ={
+    class_name: class_name,
+    lat: latitude,
+    lon: longitude,
+    datetime:  current_time,
+    workspace_id: work_space_id,
+    student_name: userDetail?.Username,
+  }
     try {
       setClassYesLoader(true);
-      const response = await axios.post("https://100086.pythonanywhere.com/attendance/classes?api_key=0699dbbb-2786-4dfa-a1db-fc12f2210228", {
-        class_name: portfolio_test?.class_name,
-        lat: latitude,
-        lon: longitude,
-        datetime:  current_time,
-        workspace_id: portfolio_test?.workspace_id,
-        student_name: userDetail?.Username
-      });
+
+      const response = await axios.post("https://100086.pythonanywhere.com/attendance/classes?api_key=0699dbbb-2786-4dfa-a1db-fc12f2210228", pay);
       // console.log( linkid,formInputs.email)
       // console.log("Requestes link:", response.data);
       console.log(response)
@@ -178,18 +188,18 @@ getLocation();
   }
   const handleBusYesButton = async () => {
     setBusSubmissionMessage("")
-   const current_time = getCurrentTimeISO()
-   console.log(current_time)
+   const current_time = getCurrentDateFormatted()
+   const busPayload = {
+    bus_name: bus_portfolio?.bus_num,
+    lat: latitude,
+    lon: longitude,
+    datetime:  current_time,
+    workspace_id: bus_portfolio?.workspace_id,
+    student_name: userDetail?.Username
+  }
     try {
       setBusYesLoader(true);
-      const response = await axios.post("https://100086.pythonanywhere.com/attendance/buses?api_key=0699dbbb-2786-4dfa-a1db-fc12f2210228", {
-        bus_name: bus_portfolio?.bus_num,
-        lat: latitude,
-        lon: longitude,
-        datetime:  current_time,
-        workspace_id: bus_portfolio?.workspace_id,
-        student_name: userDetail?.Username
-      });
+      const response = await axios.post("https://100086.pythonanywhere.com/attendance/buses?api_key=0699dbbb-2786-4dfa-a1db-fc12f2210228", busPayload);
       // console.log( linkid,formInputs.email)
       // console.log("Requestes link:", response.data);
       console.log(response)

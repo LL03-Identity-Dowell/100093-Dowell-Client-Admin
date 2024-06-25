@@ -17,6 +17,7 @@ import LinkLanding from "./pages/linkLanding";
 import Solutions from "./pages/Solutions";
 import SchoolManagement from "./pages/SchoolManagement";
 import UserDetails from "./pages/UserDetails";
+import ListOfTeams from "./pages/ListOfTeams"
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
 					<Route path="/solutions" element={<Solutions/>}/>
 					<Route path="/schoolManagement" element={<SchoolManagement/>}/>
 					<Route path="/userdetails" element={<UserDetails/>}/>
+					<Route path="listOfTeams" element={<ListOfTeams/>}/>
 					{/* <Route path="/loader" element={} /> */}
 					{/* <Routes path="/element" element={<Example />} /> */}
 				</Routes>
