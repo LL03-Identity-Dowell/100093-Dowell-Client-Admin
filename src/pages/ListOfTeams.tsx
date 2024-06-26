@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 const ListOfTeams = () => {
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
   const [loading, setLoading] = useState(false)
-  const [teamList, setTeamList] = useState(false)
+  const [teamList, setTeamList] = useState([])
   const overlaysidebarstate = useSelector(
     (state: RootState) => state.overlaysidebar
   );
@@ -56,14 +56,11 @@ const ListOfTeams = () => {
       try {
         setLoading(true);
         const response_team_names = await Axios93Base.post("/get_team_names_by_username/",{
-            "username": "Nagarajuvuliki"
+            "username": userName
           });
-      if (response_team_names.data.hasOwnProperty('class')) {
-        setTeamList(response_team_names.data.class)
-      }
-      else {
-        console.log("no found")
-      }
+          console.log(response_team_names.data.teams)
+          setTeamList(response_team_names.data.teams)
+          setLoading(false)
       } catch (error) {
         // console.error("Error generating link:", error);
         // Handle the error
@@ -74,6 +71,9 @@ const ListOfTeams = () => {
 
     fetchListOfTeams();
   }, []);
+  const color_scheme = useSelector(
+    (state: RootState) => state.setting?.data?.color_scheme
+  );
 
   return (
     <>
@@ -86,8 +86,43 @@ const ListOfTeams = () => {
               <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
                 {loadingstate === true ? (
                   <div className="lg:w-full">
-                    {/* <ReportTabs /> */}
-                    <p>Lsit of teams</p>
+                     <div className="lg:w-full h-full border border-[#54595F] card-shadow px-[30px] pb-4">
+                      <span
+                        className={`${
+                          color_scheme == "Red"
+                            ? "bg-[#DC4C64]"
+                            : color_scheme == "Green"
+                            ? "bg-[#14A44D]"
+                            : "bg-[#7A7A7A]"
+                        } font-roboto text-lg text-white p-[30px] m-5 font-semibold flex flex-col items-center`}
+                        >
+                        <p id="portfolioForm1Text1">My Teams</p>
+                      </span>
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                ID
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Team Name
+                              </th>
+                            
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            {teamList.map((item, index) => (
+                              <tr key={item}>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index+1}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      </div>
+              
                   </div>
                 ) : (
                   <Loader></Loader>

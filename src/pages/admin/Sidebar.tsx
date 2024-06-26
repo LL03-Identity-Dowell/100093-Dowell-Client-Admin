@@ -257,7 +257,7 @@ const Sidebar = () => {
                         dispatch(getoverlaysidebar(false));
                       }}
                     >
-                      List Of Teams
+                      My Teams
                     </li>
                     {/* <li
                       className="text-[#7a7a7a] text-lg font-medium cursor-pointer"
