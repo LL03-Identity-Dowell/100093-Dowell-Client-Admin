@@ -221,9 +221,10 @@ const TeamMemberForm = () => {
 const LinkLanding = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("")
-  const [location, setLocation] = useState("")
+  const [location, setLocation] = useState()
   const [latitude, setLatitude] = useState()
   const [longitude, setLongitude] = useState()
+  const [userLocaition, setUserLocation] = useState({})
   
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get("id");
@@ -271,7 +272,10 @@ getLocation();
         });
         // console.log("type:", response.data);
         setType(response.data.type)
+
+        // setType("guhgu")
         if(response.data.type=="team"){
+          generateRandomLocations(10, latitude,longitude)
           locationVerification()
         }
         // Handle the response data as needed
@@ -292,17 +296,17 @@ getLocation();
     for (let i = 0; i < numLocations; i++) {
       const randomLat = refLat + (Math.random() - 0.5) * 0.001; // Adjust the range as needed
       const randomLng = refLng + (Math.random() - 0.5) * 0.001; // Adjust the range as needed
-      randomLocations.push({ randomLat,  randomLng });
+      randomLocations.push([ randomLat,  randomLng ]);
     }
     console.log(randomLocations);
+    setUserLocation(randomLocations)
   };
-generateRandomLocations(10, latitude,longitude)
 
   const  locationVerification = async ()=>{
     const location_payload ={
       radius:2,
       reference_point:[latitude,longitude],
-      locations:[[],[]],
+      locations: userLocaition,
       unit:"meters"
     }
     try {
