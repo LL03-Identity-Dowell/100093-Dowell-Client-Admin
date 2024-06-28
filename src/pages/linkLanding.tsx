@@ -4,6 +4,8 @@ import { LinkLandingInput } from "./solutionTypes";
 import { toast } from "react-toastify";
 import admin_logo from "../assets/Living-Lab-Admin-1.png";
 import {Helmet} from "react-helmet";
+import Loader from './whiteloader';
+import axios from 'axios';
 
 const initialPublicFormInputs: LinkLandingInput = {
   id: "",
@@ -219,9 +221,47 @@ const TeamMemberForm = () => {
 const LinkLanding = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("")
+  const [location, setLocation] = useState("")
+  const [latitude, setLatitude] = useState()
+  const [longitude, setLongitude] = useState()
+  
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get("id");
 console.log(loading)
+  // function to get location 
+  function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position:any) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    console.log("Latitude: " + latitude + " Longitude: " + longitude);
+    setLatitude(latitude)
+    setLongitude(longitude)
+}
+
+function showError(error:any) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            console.log("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            console.log("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            console.log("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            console.log("An unknown error occurred.");
+            break;
+    }
+}
+getLocation();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -231,6 +271,9 @@ console.log(loading)
         });
         // console.log("type:", response.data);
         setType(response.data.type)
+        if(response.data.type=="team"){
+          locationVerification()
+        }
         // Handle the response data as needed
       } catch (error) {
         // console.error("Error generating link:", error);
@@ -241,11 +284,63 @@ console.log(loading)
     };
 
     fetchData();
-  }, []); // Empty dependency array to run the effect only once on component mount
+  }, [latitude, longitude]); // Empty dependency array to run the effect only once on component mount
 
+  // function to get random locations 
+  const generateRandomLocations = (numLocations:number, refLat:number, refLng:number) => {
+    const randomLocations = [];
+    for (let i = 0; i < numLocations; i++) {
+      const randomLat = refLat + (Math.random() - 0.5) * 0.001; // Adjust the range as needed
+      const randomLng = refLng + (Math.random() - 0.5) * 0.001; // Adjust the range as needed
+      randomLocations.push({ randomLat,  randomLng });
+    }
+    console.log(randomLocations);
+  };
+generateRandomLocations(10, latitude,longitude)
+
+  const  locationVerification = async ()=>{
+    const location_payload ={
+      radius:2,
+      reference_point:[latitude,longitude],
+      locations:[[],[]],
+      unit:"meters"
+    }
+    try {
+      const response = await axios.post("https://100070.pythonanywhere.com/check-distance/", location_payload);
+      // console.log("type:", response.data);
+      setLocation(response.data)
+      console.log("location rfesponse",response.data)
+      // Handle the response data as needed
+    } catch (error) {
+      // console.error("Error generating link:", error);
+      // Handle the error
+    } finally {
+    }
+  }
   return (
     <div>
-      {type == "public" ? <PublicForm/> : <TeamMemberForm/>}
+      {type ? <div>{type == "public" ? <PublicForm/> :type=="team"? <TeamMemberForm/>: <div className="flex items-center justify-center h-screen">  
+            <div className="relative flex flex-col text-gray-700 p-5 bg-white shadow-lg bg-clip-border rounded-xl lg:w-[30rem] md:w-[30rem] w-full mx-auto">
+              <h1 className="text-center mb-3 font-dark">You are not authorized for this action</h1>
+              {/* <p className="block mb-5 font-sans text-sm antialiased mx-auto font-normal leading-normal text-gray-900 opacity-75">
+              No Portfolio Found in database
+              </p> */}
+              <div className="p-6 text-center mx-auto">
+                
+                  <button
+                    className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg shadow-gray-900/10 hover:shadow-gray-900/20 focus:opacity-[0.85] active:opacity-[0.85] active:shadow-none block w-75 bg-gray-900 text-gray-100 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
+                    type="button">
+                    Cancel
+                  </button>
+
+               
+                 
+              </div>
+            
+                
+            </div>
+          </div>} </div>: <Loader/> }
+      {/* {type == "public" ? <PublicForm/> : <TeamMemberForm/>} */}
     </div>
   );
 };
