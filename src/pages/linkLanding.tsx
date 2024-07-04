@@ -222,13 +222,12 @@ const LinkLanding = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState("")
   const [location, setLocation] = useState()
-  const [latitude, setLatitude] = useState()
-  const [longitude, setLongitude] = useState()
+  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0)
   const [userLocaition, setUserLocation] = useState({})
   
-  const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get("id");
-console.log(loading)
+  // const urlParams = new URLSearchParams(window.location.search);
+  // const id = urlParams.get("id");
   // function to get location 
   function getLocation() {
     if (navigator.geolocation) {
@@ -241,7 +240,6 @@ console.log(loading)
 function showPosition(position:any) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    console.log("Latitude: " + latitude + " Longitude: " + longitude);
     setLatitude(latitude)
     setLongitude(longitude)
 }
@@ -265,30 +263,42 @@ function showError(error:any) {
 getLocation();
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await Axios93Base.post("checktype/", {
-          id: id, 
-        });
-        // console.log("type:", response.data);
-        setType(response.data.type)
-
-        // setType("guhgu")
-        if(response.data.type=="team"){
-          generateRandomLocations(10, latitude,longitude)
-          locationVerification()
+      const urlParams = new URLSearchParams(window.location.search);
+      const workspaceid = urlParams.get("workspace_id");
+      const team_name = urlParams.get("team_name");
+        if(team_name){
+          // calling api if team name found 
+          try {
+            setLoading(true);
+            const response = await Axios93Base.post("teamcheckq", {
+              admin_id: workspaceid,
+              team_name:team_name 
+            });
+            console.log("team:", response);
+            // setType("guhgu")
+            if(response.data.message=="sucess"){
+              setType("team")
+              generateRandomLocations(10, latitude,longitude)
+              locationVerification()
+            }
+            else{
+              setType("xyz")
+            }
+            // Handle the response data as needed
+          } catch (error) {
+            // console.error("Error generating link:", error);
+            // Handle the error
+          } finally {
+            setLoading(false);
+          }
         }
-        // Handle the response data as needed
-      } catch (error) {
-        // console.error("Error generating link:", error);
-        // Handle the error
-      } finally {
-        setLoading(false);
-      }
+        else{
+          setType("public")
+        }
     };
 
     fetchData();
-  }, [latitude, longitude]); // Empty dependency array to run the effect only once on component mount
+  }, [latitude, longitude,userLocaition]); // Empty dependency array to run the effect only once on component mount
 
   // function to get random locations 
   const generateRandomLocations = (numLocations:number, refLat:number, refLng:number) => {
@@ -296,9 +306,10 @@ getLocation();
     for (let i = 0; i < numLocations; i++) {
       const randomLat = refLat + (Math.random() - 0.5) * 0.001; // Adjust the range as needed
       const randomLng = refLng + (Math.random() - 0.5) * 0.001; // Adjust the range as needed
+      randomLat.toFixed(7)
+      randomLng.toFixed(7)
       randomLocations.push([ randomLat,  randomLng ]);
     }
-    console.log(randomLocations);
     setUserLocation(randomLocations)
   };
 
