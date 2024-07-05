@@ -71,7 +71,15 @@ urlpatterns = [
     path('level_reports/', level_reports, name='level_reports'),
     path('generatelink/',Generatelink,name="generatelink"),
     path('checktype/',CheckType,name='checktype'),
-    path('activatelink',ActivateLink,name='activatelink')
-
-
+    path('activatelink',ActivateLink,name='activatelink'),
+    path('getlinks/',GetLinks,name='getlinks'),
+    path('departments/',Department_School,name='departments'),
+    path('class/',Class_Details,name='class'),
+    path('bus/',Bus_Details,name='bus'),
+    path('student/',Student_Details,name='student'),
+    path('teacher/',Teacher_Details,name='teacher'),
+    path('getqrdetails',get_user_Details,name='getqrdetails'),
+    path('createqrcode',create_qrcode,name='createqrcode'),
+    path('portfoliotest',portfolio_checkq,name='portfoliotest'),
+    path('teamcheckq',teamNameCheck,name='teamcheckq'),
 ]

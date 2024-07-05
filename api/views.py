@@ -4055,23 +4055,32 @@ def level_reports(request):
 @api_view(['POST'])
 def Generatelink(request):
     admin_id = request.data.get("workspace_id")
-    username = request.data.get("username")
-    latti = request.data.get("lati")
-    longti=request.data.get("long")
+    username = request.data.get("usr")
+    print(username)
+    latti = request.data.get("latitude")
+    longti=request.data.get("longitude")
     type="public"
     field_add={"workspace_id":admin_id,"username":username,"latitude":latti,"longitude":longti,"type":type}
     ro=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","insert",field_add,"nil")
     data=json.loads(ro)
     id=data["inserted_id"]
-    link=f"https://100093.pythonanywhere.com/linklanding/workspace_id={admin_id}&latitude={latti}&longitude={longti}&type={type}&id={id}"
-    return Response({"link":link})
+    link=f"https://100093.pythonanywhere.com/linklanding?workspace_id={admin_id}&latitude={latti}&longitude={longti}&type={type}&id={id}"
+    field1={"_id":id}
+    update={"link":link}
+    resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
+    redata=json.loads(resp)
+    if redata["isSuccess"]:
+        return Response({"link":link})
+    else:
+        return Response({"link":"Link not generated try again or contact system admin"})
 @api_view(['POST'])
 def CheckType(request):
     id = request.data.get("id")
-    field1={"_id":"662ca9c0701603ba9ca04cf6"}
+    field1={"_id":id}
     ro=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","fetch",field1,"nil")
     data=json.loads(ro)
-    if data[0]["type"]=="public":
+    print(data)
+    if data["data"][0]["type"]=="public":
         return Response({"type":"public"})
     else:
         return Response({"type":"team"})
@@ -4079,19 +4088,370 @@ def CheckType(request):
 def ActivateLink(request):
     id = request.data.get("id")
     form=request.data.get("form")
+    email=request.data.get("email")
+    usrname=request.data.get("name")
     if form=="request":
+        fetchf={"_id":id}
+        respda=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","fetch",fetchf,"update")
+        da=json.loads(respda)
+        dar=da["data"][0]
+        url="https://100086.pythonanywhere.com/subs-operation/?api_key=bc4ecc24-7300-421d-8175-badd8d522fea"
+        payload={"workspace_id":dar["workspace_id"],"lat": dar["latitude"],"long": dar["longitude"],"qr_code": id,"name":usrname}
+
+        subs=requests.post(url,data=payload)
+        tdata=subs.text
+        print(tdata)
+        print(json.loads(tdata))
         type1="team"
         msg="Successfully Requested"
+        field1={"_id":id}
+        update={"type":type1,"email":email,"name":usrname}
+        resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
+        data=json.loads(resp)
+        if data["isSuccess"]=="true":
+            return Response({"message":msg})
+        else:
+            return Response({"message":data})
     elif form=="collect":
+        fetchf={"_id":id}
+        respda=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","fetch",fetchf,"update")
+        da=json.loads(respda)
+        dar=da["data"][0]
         type1="public"
         msg="Successfully Collected"
+        url="https://100086.pythonanywhere.com/subs-delete-operation/?api_key=bc4ecc24-7300-421d-8175-badd8d522fea"
+        payload={"qr_code": id,"workspace_id":dar["workspace_id"]}
+        subs=requests.post(url,data=payload)
+        url_email = "https://100085.pythonanywhere.com/api/email/"
+        payload ={
+            "toname": dar["name"],
+            "toemail": dar["email"],
+            "subject": "Bin collected",
+            "email_content":f"Hi {dar['name']}, Your bin has been collected. Thank you for using our service."
+        }
+        response = requests.post(url_email, json=payload)
+        # subject = f'Bin collected'
+        # from_email = dsetting.EMAIL_HOST_USER
+        # to_email =
+        # email_body=f'<h1>Hi {dar["name"]}</h1> <br> <p>Your bin has been collected. Thank you for using our service.</p>'
+        # send_mail(subject, "", from_email, [to_email], fail_silently=False, html_message=email_body)
+        field1={"_id":id}
+        update={"type":type1}
+        resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
+        data=json.loads(resp)
+        if data["isSuccess"]=="true":
+            return Response({"message":msg})
+        else:
+            return Response({"message":data})
+
+
     else:
         return Response({"msg":"Form is required field"})
-    field1={"_id":"662ca9c0701603ba9ca04cf6"}
-    update={"type":type1}
-    resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
-    data=json.loads(resp)
-    if data["isSuccess"]=="True":
-        return Response({"message":msg})
+
+
+@api_view(['POST'])
+def GetLinks(request):
+    id = request.data.get("admin_id",None)
+    if id is None:
+        return Response({"msg":"Admin id not provided"})
+    field1={"workspace_id":id}
+    ro=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","fetch",field1,"nil")
+    datalink=json.loads(ro)
+    return Response(datalink["data"])
+url_api="https://datacube.uxlivinglab.online/db_api/crud/"
+key_api="0699dbbb-2786-4dfa-a1db-fc12f2210228"
+@api_view(['POST'])
+def Department_School(request):
+    admin_id = request.data.get("workspace_id")
+    dept=request.data.get("dept_name")
+    dept_id=request.data.get("dept_id")
+    dept_head=request.data.get("dept_head")
+    url = url_api
+    if "owner_id" in request.data:
+        owner_id=request.data.get("owner_id")
+        data = {
+            "api_key": key_api,
+            "db_name": "living_lab_admin",
+            "coll_name": "department",
+            "operation": "fetch",
+            "filters": {"workspace_id":owner_id},
+            "limit": 100,
+            "offset": 0
+        }
+
+        response = requests.get(url, json=data)
+        dataresp=response.text
+        return Response(json.loads(dataresp))
+    info={"workspace_id":admin_id,"dept_name":dept,"dept_id":dept_id,"dept_head":dept_head}
+
+    data = {
+        "api_key":key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "department",
+        "operation": "insert",
+        "data": info
+    }
+    response = requests.post(url, json=data)
+    res=response.text
+    return Response(json.loads(res))
+
+@api_view(['POST'])
+def Class_Details(request):
+    admin_id = request.data.get("workspace_id")
+    cl_name=request.data.get("class_name")
+    portfolio=request.data.get("portfolio")
+    url = url_api
+    if "owner_id" in request.data:
+        owner_id=request.data.get("owner_id")
+        data = {
+            "api_key": key_api,
+            "db_name": "living_lab_admin",
+            "coll_name": "class",
+            "operation": "fetch",
+            "filters": {"workspace_id":owner_id},
+            "limit": 100,
+            "offset": 0
+        }
+
+        response = requests.get(url, json=data)
+        dataresp=response.text
+        return Response(json.loads(dataresp))
+    info={"workspace_id":admin_id,"class_name":cl_name,"portfolio":portfolio}
+    data = {
+        "api_key":key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "class",
+        "operation": "insert",
+        "data": info
+    }
+    response = requests.post(url, json=data)
+    res=response.text
+    return Response(json.loads(res))
+@api_view(['POST'])
+def Bus_Details(request):
+    admin_id = request.data.get("workspace_id")
+    bus_num=request.data.get("bus_num")
+    portfolio=request.data.get("portfolio")
+    bus_admin=request.data.get("bus_admin")
+
+
+    url = url_api
+    if "owner_id" in request.data:
+        owner_id=request.data.get("owner_id")
+        data = {
+            "api_key": key_api,
+            "db_name": "living_lab_admin",
+            "coll_name": "bus",
+            "operation": "fetch",
+            "filters": {"workspace_id":owner_id},
+            "limit": 100,
+            "offset": 0
+        }
+
+        response = requests.get(url, json=data)
+        dataresp=response.text
+        return Response(json.loads(dataresp))
+    info={"workspace_id":admin_id,"bus_num":bus_num,"portfolio":portfolio,"bus_admin":bus_admin}
+    data = {
+        "api_key":key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "bus",
+        "operation": "insert",
+        "data": info
+    }
+    response = requests.post(url, json=data)
+    res=response.text
+    return Response(json.loads(res))
+@api_view(['POST'])
+def Teacher_Details(request):
+    admin_id = request.data.get("workspace_id")
+    t_name=request.data.get("teacher_name")
+    dept_name=request.data.get("dept_name")
+    url = url_api
+    if "owner_id" in request.data:
+        owner_id=request.data.get("owner_id")
+        data = {
+            "api_key": key_api,
+            "db_name": "living_lab_admin",
+            "coll_name": "teacher",
+            "operation": "fetch",
+            "filters": {"workspace_id":owner_id},
+            "limit": 100,
+            "offset": 0
+        }
+
+        response = requests.get(url, json=data)
+        dataresp=response.text
+        return Response(json.loads(dataresp))
+    info={"workspace_id":admin_id,"teacher_name":t_name,"dept_name":dept_name}
+    data = {
+        "api_key":key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "teacher",
+        "operation": "insert",
+        "data": info
+    }
+    response = requests.post(url, json=data)
+    res=response.text
+    return Response(json.loads(res))
+@api_view(['POST'])
+def Student_Details(request):
+    admin_id = request.data.get("workspace_id")
+    student_name=request.data.get("student_name")
+    dept_name=request.data.get("dept_name")
+    class_name=request.data.get("class_name")
+    bus_num=request.data.get("bus_num")
+
+
+    url = url_api
+    if "owner_id" in request.data:
+        owner_id=request.data.get("owner_id")
+        data = {
+            "api_key": key_api,
+            "db_name": "living_lab_admin",
+            "coll_name": "student",
+            "operation": "fetch",
+            "filters": {"workspace_id":owner_id},
+            "limit": 100,
+            "offset": 0
+        }
+
+        response = requests.get(url, json=data)
+        dataresp=response.text
+        return Response(json.loads(dataresp))
+    info={"workspace_id":admin_id,"name":student_name,"dept_name":dept_name,"class_name":class_name,"bus_num":bus_num}
+    data = {
+        "api_key":key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "student",
+        "operation": "insert",
+        "data": info
+    }
+    response = requests.post(url, json=data)
+    res=response.text
+    return Response(json.loads(res))
+@api_view(['POST'])
+def get_user_Details(request):
+    qrid = request.data.get("qrid")
+    field={"qrid":qrid}
+    userresp = dowellconnection("login","bangalore","login","registration","registration","10004545","ABCDE","fetch",field,"nil")
+    idd = json.loads(userresp)
+    try:
+        del idd["data"][0]["Password"]
+        del idd["data"][0]["profile_id"]
+        del idd["data"][0]["org_id"]
+        del idd["data"][0]["client_admin_id"]
+        del idd["data"][0]["project_id"]
+        del idd["data"][0]["subproject_id"]
+        del idd["data"][0]["dept_id"]
+        del idd["data"][0]["Memberof"]
+        del idd["data"][0]["User_type"]
+        del idd["data"][0]["payment_status"]
+    except:
+        pass
+
+    return Response(idd["data"][0])
+@api_view(['POST'])
+def create_qrcode(request):
+    userid = request.data.get("user_id")
+    print(f"seeta {userid}")
+    email=request.data.get("email")
+    adminid = request.data.get("admin_id")
+    username=request.data.get("username")
+    lat=request.data.get("lattitude")
+    country=request.data.get("country")
+    longi=request.data.get("longtitude")
+    qrposturl="https://www.qrcodereviews.uxlivinglab.online/api/v6/qrcodes/"
+    qrpost={
+      "num_qrcodes": 1,
+      "company_id":adminid,
+      "qrcode_type": "Link",
+      "product_name": "Login",
+      "qrcode_color": "#FF0000",
+      "created_by": username,
+      "lat": "None",
+      "long":"None",
+      "is_active": False,
+      "redirect_link": "None"
+    }
+    res=requests.post(qrposturl,data=qrpost)
+    red=json.loads(res.text)
+    print(f"nagaraj check {red}")
+    msqrid=red["generate_master_QR_code_id"]
+    qrid=red["qrcodes_data"][0]["qrcode_id"]
+    qrurl=red["qrcodes_data"][0]["qrcode_image_url"]
+    murl="https://www.qrcodereviews.uxlivinglab.online/api/v6/master-qrcodes/"
+    masterdata={
+        "generate_master_QR_code_id":msqrid,
+        "email":email,
+        "name":username,
+        "location":country,
+        "description":"user details"
+    }
+    msresp=requests.post(murl,data=masterdata)
+    msrespdata=json.loads(msresp.text)
+    print(f"nagaraj check {msrespdata}")
+    msqrid1=msrespdata["master_qrcode"]["master_qr_code_id"]
+    qracturl=f"https://www.qrcodereviews.uxlivinglab.online/api/v6/activate-qr-code/{msqrid1}/"
+    qractda={
+        "redirect_link":f"https://100093.pythonanywhere.com/userdetails?qrid={qrid}",
+        "name":username,
+        "location":country,
+        "lat":lat,
+        "long":longi,
+        "description":"user details"
+    }
+    msresp1=requests.put(qracturl,data=qractda)
+    print(f"nagaraj check {msresp1.text}")
+    print(f"nag {qrid}")
+    field={"Username":username}
+    update={"qrid":qrid,"qrurl":qrurl}
+    idr=dowellconnection("login","bangalore","login","registration","registration","10004545","ABCDE","update",field,update)
+    id_res=json.loads(idr)
+    print(id_res)
+    return Response({"message":"QR code created successfully"})
+@api_view(['POST'])
+def portfolio_checkq(request):
+    portfolio=request.data.get("portfolio")
+    url = url_api
+    owner_id=request.data.get("owner_id")
+    data = {
+        "api_key": key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "class",
+        "operation": "fetch",
+        "filters": {"portfolio":portfolio},
+        "limit": 1,
+        "offset": 0
+    }
+    response = requests.get(url, json=data)
+    dataresp=response.text
+    datacollect=json.loads(dataresp)
+    if len(datacollect["data"])>0:
+        return Response({"class":datacollect["data"]})
     else:
-        return Response({"message":data})
+        data = {
+        "api_key": key_api,
+        "db_name": "living_lab_admin",
+        "coll_name": "bus",
+        "operation": "fetch",
+        "filters": {"portfolio":portfolio},
+        "limit": 1,
+        "offset": 0
+        }
+        response1 = requests.get(url, json=data)
+        dataresp1=response1.text
+        datcol=json.loads(dataresp1)
+        if len(datcol["data"])>0:
+            return Response({"bus":datcol["data"]})
+        else:
+            return Response({"message":"data not found"})
+
+@api_view(['POST'])
+def teamNameCheck(request):
+    teamname=request.data.get("team_name")
+    owner_id=request.data.get("admin_id")
+    if teamname=="testing":
+        return Response({"message":"sucess"})
+    else:
+        return Response({"message":"team name not available"})
