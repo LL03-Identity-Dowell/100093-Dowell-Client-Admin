@@ -4361,39 +4361,28 @@ def create_qrcode(request):
     lat=request.data.get("lattitude")
     country=request.data.get("country")
     longi=request.data.get("longtitude")
-    qrposturl="https://www.qrcodereviews.uxlivinglab.online/api/v6/qrcodes/"
-    qrpost={
-      "num_qrcodes": 1,
-      "company_id":adminid,
-      "qrcode_type": "Link",
-      "product_name": "Login",
-      "qrcode_color": "#FF0000",
-      "created_by": username,
-      "lat": "None",
-      "long":"None",
-      "is_active": False,
-      "redirect_link": "None"
+    url="https://www.qrcodereviews.uxlivinglab.online/api/v6/create-mastercode/"
+    data={
+        "num_qrcodes": 1,
+        "company_id": adminid,
+        "qrcode_type": "Link",
+        "product_name": "login",
+        "qrcode_color": "#FF0000",
+        "created_by": username,
+        "lat": lat,
+        "long":longi,
+        "redirect_link": "https://100093.pythonanywhere.com/userdetails",
+        "name": username,
+        "email": email
     }
-    res=requests.post(qrposturl,data=qrpost)
-    red=json.loads(res.text)
-    print(f"nagaraj check {red}")
-    msqrid=red["generate_master_QR_code_id"]
-    qrid=red["qrcodes_data"][0]["qrcode_id"]
-    qrurl=red["qrcodes_data"][0]["qrcode_image_url"]
-    murl="https://www.qrcodereviews.uxlivinglab.online/api/v6/master-qrcodes/"
-    masterdata={
-        "generate_master_QR_code_id":msqrid,
-        "email":email,
-        "name":username,
-        "location":country,
-        "description":"user details"
-    }
-    msresp=requests.post(murl,data=masterdata)
-    msrespdata=json.loads(msresp.text)
-    print(f"nagaraj check {msrespdata}")
-    msqrid1=msrespdata["master_qrcode"]["master_qr_code_id"]
-    qracturl=f"https://www.qrcodereviews.uxlivinglab.online/api/v6/activate-qr-code/{msqrid1}/"
-    qractda={
+    msresp=requests.post(url,data=data)
+    rdata=json.loads(msresp.text)
+    msqrid=rdata["master_qrcode"]["master_qr_code_id"]
+    qridurl=rdata["master_qrcode"]["qr_code_details"][0]["qrcode_image_url"]
+    qrid=rdata["master_qrcode"]["qr_code_details"][0]["qrcode_id"]
+    mcodeurl=rdata["master_qrcode"]["master_qrcode_image_url"]
+    murl=f"https://www.qrcodereviews.uxlivinglab.online/api/v6/activate-qr-code/{msqrid}/"
+    mdata={
         "redirect_link":f"https://100093.pythonanywhere.com/userdetails?qrid={qrid}",
         "name":username,
         "location":country,
@@ -4401,11 +4390,9 @@ def create_qrcode(request):
         "long":longi,
         "description":"user details"
     }
-    msresp1=requests.put(qracturl,data=qractda)
-    print(f"nagaraj check {msresp1.text}")
-    print(f"nag {qrid}")
+    msresp1=requests.put(murl,data=mdata)
     field={"Username":username}
-    update={"qrid":qrid,"qrurl":qrurl}
+    update={"qrid":qrid,"qrurl":qridurl}
     idr=dowellconnection("login","bangalore","login","registration","registration","10004545","ABCDE","update",field,update)
     id_res=json.loads(idr)
     print(id_res)
