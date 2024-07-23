@@ -324,7 +324,7 @@ getLocation();
       const response = await axios.post("https://100070.pythonanywhere.com/check-distance/", location_payload);
       // console.log("type:", response.data);
       setLocation(response.data)
-      console.log("location rfesponse",response.data)
+      console.log("location response",response.data)
       // Handle the response data as needed
     } catch (error) {
       // console.error("Error generating link:", error);
