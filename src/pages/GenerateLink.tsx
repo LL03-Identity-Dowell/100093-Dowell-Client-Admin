@@ -48,7 +48,7 @@ const Solutions = () => {
   );
 
   const [ismobile, setismobile] = useState(window.innerWidth <= 1000);
-
+  console.log(setismobile)
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   const fetchIsOwnerData = async () => {

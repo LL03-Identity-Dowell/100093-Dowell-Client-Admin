@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import  {useState} from 'react'
 import { useSelector } from "react-redux";
 import { RootState } from "../store/Store";
 
@@ -9,6 +9,7 @@ const [loading, setLoading] = useState(false)
 const color_scheme = useSelector(
   (state: RootState) => state.setting?.data?.color_scheme
 );
+console.log(setCategory, setLoading)
   return (
     <>
         

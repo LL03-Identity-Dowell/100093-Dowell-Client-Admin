@@ -44,3 +44,7 @@ export type StudentInput = {
   className:string,
   busNumber:number
 }
+
+export type InstituteName = {
+  instituteName: string
+}

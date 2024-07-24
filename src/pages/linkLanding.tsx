@@ -225,6 +225,7 @@ const LinkLanding = () => {
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
   const [userLocaition, setUserLocation] = useState({})
+  console.log(loading, location)
   
   // const urlParams = new URLSearchParams(window.location.search);
   // const id = urlParams.get("id");

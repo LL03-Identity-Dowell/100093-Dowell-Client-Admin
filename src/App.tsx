@@ -18,7 +18,7 @@ import Solutions from "./pages/Solutions";
 import SchoolManagement from "./pages/SchoolManagement";
 import UserDetails from "./pages/UserDetails";
 import ListOfTeams from "./pages/ListOfTeams"
-
+import DowellEducation from "./pages/DowellEducation";
 
 function App() {
   return (
@@ -43,6 +43,7 @@ function App() {
 					<Route path="/schoolManagement" element={<SchoolManagement/>}/>
 					<Route path="/userdetails" element={<UserDetails/>}/>
 					<Route path="listOfTeams" element={<ListOfTeams/>}/>
+					<Route path="/dowellEducation" element={<DowellEducation/>}/>
 					{/* <Route path="/loader" element={} /> */}
 					{/* <Routes path="/element" element={<Example />} /> */}
 				</Routes>
