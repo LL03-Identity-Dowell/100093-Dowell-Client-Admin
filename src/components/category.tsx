@@ -49,12 +49,45 @@ useEffect(() => {
   fetchuserData()
 }, []);
 
-useEffect(() => {
-  if (workspaceID) {
-    handleGetCategory();
+// function to add category 
+const handleAddCategory = async (event:any) => {
+  event.preventDefault(); // Prevent default form submission
+
+  if (!formInputs.category) { 
+    toast.error('Please enter category name.');
+    return;
   }
-}, [workspaceID]);
-console.log(category)
+  const add_category_payload ={
+    workspace_id:workspaceID,
+    username:userName,
+    category:formInputs.category
+  }
+  setLoading(true)
+  try {
+    const response = await Axios93Base.put("addlinkcat", add_category_payload);
+    console.log("categroy re:", response);
+    if(response.data.isSuccess){
+      toast.success("Category added Successfully!")
+    }
+    // Handle the response data as needed
+    setFormInputs({ ...initialPublicFormInputs }); // Clear form inputs
+    console.log("create qr code response",response)
+    setLoading(false)
+  } catch (error) {
+    console.error("Error generating Qr code:", error);
+    setLoading(false)
+toast.error("Error Creating Category")
+    // Handle the error
+  } finally {
+    setLoading(false)
+toast.error("Error Creating Category")
+
+  }
+}
+
+
+
+
   return (
     <>
         
