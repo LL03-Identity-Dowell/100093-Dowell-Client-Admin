@@ -1,20 +1,65 @@
-import  {useState} from 'react'
+import  {useState, useEffect, ChangeEvent} from 'react'
 import { useSelector } from "react-redux";
 import { RootState } from "../store/Store";
+import { Axios93Base } from '../api/axios';
+import { CategoryName } from '../pages/solutionTypes';
+import { toast } from "react-toastify";
+import Loader from '../pages/whiteloader';
+
+const initialPublicFormInputs: CategoryName = {
+  category: "",
+};
 
 const category = () => {
-const [category, setCategory] = useState("")
+const [category, setCategory] = useState([])
 const [loading, setLoading] = useState(false)
-
+const [workspaceID, setWorkSpaceID] = useState("")
+const [formInputs, setFormInputs] = useState(initialPublicFormInputs);
+const [categoryLoader, setCategoryLoader] = useState(false)
 const color_scheme = useSelector(
   (state: RootState) => state.setting?.data?.color_scheme
 );
-console.log(setCategory, setLoading)
+const sessionId = localStorage.getItem("sessionId");
+const userName = useSelector(
+  (state: RootState) => state.userinfo.userinfo.username
+);
+
+// function for onchnage input event 
+const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+  setFormInputs({ ...formInputs, [e.target.id]: e.target.value });
+};
+
+// function to get workspace id 
+useEffect(() => {
+  const fetchuserData = async () => {
+    try {
+      const response = await Axios93Base.post("/get_data/", {
+        session_id: sessionId,
+        username: userName,
+      });
+      setWorkSpaceID(response.data.data[0]._id)
+    } catch (error) {
+      console.error("Error getting user data:", error);
+      // Handle the error
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  fetchuserData()
+}, []);
+
+useEffect(() => {
+  if (workspaceID) {
+    handleGetCategory();
+  }
+}, [workspaceID]);
+console.log(category)
   return (
     <>
         
        <div className="flex flex-col mb-[2rem]">
-       {category? 
+       {categoryLoader?<div>{category?(
              <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full mt-[2rem] mb-[2rem] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                  <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                    <tr>
@@ -24,23 +69,22 @@ console.log(setCategory, setLoading)
                    </tr>
                  </thead>
                  <tbody>
+                 {category.map((cat, index) => (
                      
                        <tr key={1} className="bg-white dark:bg-gray-800">
-                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{1}</td>
-                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">hellos</td>
-                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                           <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button>
-                         </td>
+                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index}</td>
+                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{cat}</td>
+                         
                        </tr>
-                     
+                 ))}
                  </tbody>
 
                </table>
-
+       )
 
        : <div className="p-4 mb-4 mt-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
             <span className="font-medium">Alert!</span> You have not generated any category yet
-          </div>}
+          </div>}</div>:<Loader/>}
       {/* form */}
       
             <div className="lg:w-1/2 mt-5 h-full border border-[#54595F] ms-auto me-auto card-shadow px-[30px] pb-4">
@@ -55,7 +99,7 @@ console.log(setCategory, setLoading)
             >
               <p id="portfolioForm1Text1" className="text-center">Create Category</p>
             </span>
-      <form>
+      <form onSubmit={handleAddCategory}>
         {/* category name  */}
         <div className="mb-4">
           <div className="flex items-center gap-3">
@@ -70,16 +114,16 @@ console.log(setCategory, setLoading)
               type="text"
               placeholder="Category name"
               className="w-full outline-none border border-black mb-[10px] p-2 rounded-[4px]"
-              id="busNumber"
-              // onChange={handleOnChange}
-              // value={formInputs.busNumber}
+              id="category"
+              onChange={handleOnChange}
+              value={formInputs.category}
             />
           </div>
         </div>
 
         <button
+        type='submit'
         id="portfoliotext43"
-        // onClick={handleSubmitBus}
         className={`w-full ${
           color_scheme == "Red"
             ? "bg-[#DC4C64]"

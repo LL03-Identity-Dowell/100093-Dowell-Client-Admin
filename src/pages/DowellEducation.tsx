@@ -22,6 +22,8 @@ const DowellEducation = () => {
   const [loading, setLoading] = useState(false)
   const [noLink, setNoLink] = useState(false)
   const [formInputs, setFormInputs] = useState(initialPublicFormInputs);
+ const [workspaceID, setWorkSpaceID] = useState("")
+
 console.log(noLink)
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
   const overlaysidebarstate = useSelector(
@@ -34,10 +36,8 @@ console.log(noLink)
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
-  const workspaceId = useSelector(
-    (state: RootState) => state.userinfo.userinfo.client_admin_id
-  );
-  console.log(workspaceId)
+
+  console.log(workspaceID)
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   const fetchIsOwnerData = async () => {
@@ -61,29 +61,52 @@ console.log(noLink)
     }
   };
   fetchIsOwnerData();
-
-//   get request for link 
+  //   get request for link 
   useEffect(() => {
-    const fetchLink = async () => {
-        try {
-            const response = await axios.get(`https://www.samantaedu.uxlivinglab.online/api/v1/link/${workspaceId}`);
-            if (response.data.success && response.data.response.length > 0) {
-                setLink(response.data.response[0].link);
-                console.log(response.data.response[0])
-                console.log("link found")
-            } else {
-                console.log("link not found")
-                setNoLink(true)
-            }
-        } catch (error) {
-            console.error(error);
-            // setSnackbar({ open: true, message: 'Failed to fetch link.', severity: 'error' });
-        } finally {
-            // setLoading(false);
-        }
+    const fetchuserData = async () => {
+      try {
+        const response = await Axios93Base.post("/get_data/", {
+          session_id: sessionId,
+          username: userName,
+        });
+        setWorkSpaceID(response.data.data[0]._id)
+      } catch (error) {
+        console.error("Error getting user data:", error);
+        // Handle the error
+      } finally {
+        // setLoading(false);
+      }
     };
-    fetchLink();
-}, [workspaceId]);
+  
+    fetchuserData()
+    console.log(workspaceID)
+    
+}, []);
+    const fetchLink = async (workspace_ID:string) => {
+      try {
+          const response = await axios.get(`https://www.samantaedu.uxlivinglab.online/api/v1/link/${workspace_ID}`);
+          if (response.data.success && response.data.response.length > 0) {
+              setLink(response.data.response[0].links);
+              console.log(response.data.response[0])
+              console.log("link found")
+          } else {
+              console.log("link not found")
+              setNoLink(true)
+          }
+      } catch (error) {
+          console.error(error);
+          // setSnackbar({ open: true, message: 'Failed to fetch link.', severity: 'error' });
+      } finally {
+          // setLoading(false);
+      }
+  };
+  useEffect(() => {
+    if (workspaceID) {
+      fetchLink(workspaceID);
+    }
+  }, [workspaceID]);
+
+
 
 const color_scheme = useSelector(
     (state: RootState) => state.setting?.data?.color_scheme
@@ -106,7 +129,7 @@ const color_scheme = useSelector(
       try {
         setLoading(true)
         const payload={
-          "workspaceId":workspaceId,
+          "workspaceId":workspaceID,
           "institutionName":formInputs.instituteName,
           "username":userName,
       }
@@ -159,7 +182,7 @@ const color_scheme = useSelector(
               <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
                 {loadingstate === true ? (
                   <div className="lg:w-full">
-                    {link?<table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    {workspaceID?<div>{link?<table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                   <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
                                       <th  className="px-6 py-3 rounded-s-lg">Link</th>
@@ -225,7 +248,7 @@ const color_scheme = useSelector(
                 </form>
                 </div>
                     // form end 
-                    }
+                    }</div>:<Loader></Loader>}
                   </div>
                 ) : (
                   <Loader></Loader>

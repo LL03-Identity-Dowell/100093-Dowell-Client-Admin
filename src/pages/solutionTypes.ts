@@ -48,3 +48,7 @@ export type StudentInput = {
 export type InstituteName = {
   instituteName: string
 }
+
+export type CategoryName = {
+  category : string
+}

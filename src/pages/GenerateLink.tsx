@@ -16,11 +16,13 @@ import { Axios93Base } from "../api/axios";
 import {setLinks, setGeneratedLink} from "../store/slice/solutionLinks";
 import { FaCogs } from 'react-icons/fa';
 import Category from "../components/category";
+import axios from "axios";
 
 const Solutions = () => {
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
   const [loading, setLoading] = useState(false); // Loading state
  const [workspaceID, setWorkSpaceID] = useState("")
+  const [loadingQR, setLoadingQR] = useState(false);
 
   const overlaysidebarstate = useSelector(
     (state: RootState) => state.overlaysidebar
@@ -36,6 +38,9 @@ const Solutions = () => {
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
+  const email = useSelector(
+    (state: RootState) => state.userinfo.userinfo.email
+  );
 
  
   const latitude = useSelector(
@@ -48,7 +53,6 @@ const Solutions = () => {
   );
 
   const [ismobile, setismobile] = useState(window.innerWidth <= 1000);
-  console.log(setismobile)
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
   const fetchIsOwnerData = async () => {
@@ -139,7 +143,7 @@ const Solutions = () => {
   );
   
   
- 
+//  copy link function 
   const handleCopyText = (links:string) => {
     const paragraphText = links;
     // const replacedString = paragraphText.replace(/https:\/\/100093\.pythonanywhere\.com/g, 'http://localhost:5173');
@@ -157,6 +161,39 @@ const Solutions = () => {
         // Handle error if copying fails
       });
   };
+
+  // create qr code function 
+const handleCreateQRCode = async () => {
+  const master_code_payload ={
+    num_qrcodes: 1,
+    company_id: workspaceID,
+    qrcode_type: "Link",
+    product_name: "Living Lab Admin",
+    qrcode_color: "#FF0000",
+    created_by: userName,
+    lat: latitude,
+    long: longitude,
+    redirect_link: "http://example.com/",
+    name: userName,
+    email: email
+  }
+  setLoadingQR(true)
+  try {
+    const response = await axios.post("https://www.qrcodereviews.uxlivinglab.online/api/v6/create-mastercode/", master_code_payload);
+    // console.log("type:", response.data);
+    toast.success(response.data.response)
+    // Handle the response data as needed
+    setLoadingQR(false)
+    console.log("create qr code response",response)
+  } catch (error) {
+    console.error("Error generating Qr code:", error);
+    setLoadingQR(false)
+
+    // Handle the error
+  } finally {
+    setLoadingQR(false)
+  }
+}
   const generatedLink = useSelector((state:RootState) => state.link.generatedLink)
 
   useEffect(() => {
@@ -245,7 +282,7 @@ const Solutions = () => {
                       <div className="flex flex-col overflow-x-scroll"> 
                         <button
                           onClick={handleGenerateLink}
-                          className="mb-5 bg-gray-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-auto"
+                          className="mb-5 bg-gray-500 mt-5 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-auto"
                         >
                           {loading ? "Generating" : "Generate New Link"} <FaCogs className="inline-block ml-2" />
                         </button>
@@ -273,7 +310,7 @@ const Solutions = () => {
                                             <button  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Mark In Map</button>
                                           </td>
                                           <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                            <button  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Create QR code</button>
+                                            <button onClick={() => handleCreateQRCode()} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">{loadingQR?"Generating QR":"Create QR code"}</button>
                                           </td>
                                         </tr>
                                       )
@@ -340,13 +377,13 @@ const Solutions = () => {
                         >
                           {loading ? "Generating" : "Generate New Link"} <FaCogs className="inline-block ml-2" />
                         </button>
-                        {link ? <div>
+                        {link ? <div className="w-full overflow-x-auto shadow rounded-lg">
                               <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                   <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                      <th  className="px-6 py-3  rounded-s-lg">Serial No.</th>
-                                      <th  className="px-6 py-3">Link</th>
-                                      <th  className="px-6 py-3 rounded-e-lg">Action</th>
+                                      <th  scope="col" className="px-6 py-3 rounded-s-lg">Serial No.</th>
+                                      <th  scope="col" className="px-6 py-3">Link</th>
+                                      <th  scope="col" className="px-6 py-3 rounded-e-lg">Action</th>
                                     </tr>
                                   </thead>
                                   <tbody>
@@ -363,7 +400,7 @@ const Solutions = () => {
                                             <button  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Mark In Map</button>
                                           </td>
                                           <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                            <button  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Create QR code</button>
+                                            <button onClick={() => handleCreateQRCode()} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Create QR code</button>
                                           </td>
                                         </tr>
                                       )
@@ -371,7 +408,7 @@ const Solutions = () => {
                                   </tbody>
 
                                 </table>
-
+  
 
                               </div>
                         : <p>You have not generated any link yet</p>}
