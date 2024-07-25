@@ -87,7 +87,33 @@ toast.error("Error Creating Category")
 
 
 
+// function to fetch categories 
+const handleGetCategory = async () => {
+  const add_category_payload ={
+    workspace_id:workspaceID,
+    username:userName,
+  }
+  // setLoading(true)
+  try {
+    const response = await Axios93Base.post("addlinkcat", add_category_payload);
+    console.log("categroy post:", response);
+    setCategory(response.data.categories)
+    setCategoryLoader(true)
+  } catch (error) {
+    console.error("Error generating Qr code:", error);
+    setCategoryLoader(true)
 
+    // Handle the error
+  } finally {
+    setCategoryLoader(true)
+  }
+}
+useEffect(() => {
+  if (workspaceID) {
+    handleGetCategory();
+  }
+}, [workspaceID]);
+console.log(category)
   return (
     <>
         
