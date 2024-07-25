@@ -1,11 +1,11 @@
 import  {useState, useEffect, ChangeEvent} from 'react'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store/Store";
 import { Axios93Base } from '../api/axios';
 import { CategoryName } from '../pages/solutionTypes';
 import { toast } from "react-toastify";
 import Loader from '../pages/whiteloader';
-
+import { getCategory } from '../store/slice/CategorySlice';
 const initialPublicFormInputs: CategoryName = {
   category: "",
 };
@@ -23,6 +23,7 @@ const sessionId = localStorage.getItem("sessionId");
 const userName = useSelector(
   (state: RootState) => state.userinfo.userinfo.username
 );
+const dispatch = useDispatch();
 
 // function for onchnage input event 
 const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,6 +69,7 @@ const handleAddCategory = async (event:any) => {
     console.log("categroy re:", response);
     if(response.data.isSuccess){
       toast.success("Category added Successfully!")
+      handleGetCategory()
     }
     // Handle the response data as needed
     setFormInputs({ ...initialPublicFormInputs }); // Clear form inputs
@@ -98,9 +100,10 @@ const handleGetCategory = async () => {
     const response = await Axios93Base.post("addlinkcat", add_category_payload);
     console.log("categroy post:", response);
     setCategory(response.data.categories)
+    dispatch(getCategory(response.data.categories));
     setCategoryLoader(true)
   } catch (error) {
-    console.error("Error generating Qr code:", error);
+    console.error("Error creating category:", error);
     setCategoryLoader(true)
 
     // Handle the error
@@ -119,20 +122,17 @@ console.log(category)
         
        <div className="flex flex-col mb-[2rem]">
        {categoryLoader?<div>{category?(
-             <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full mt-[2rem] mb-[2rem] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+             <table className="w-full sm:w-full md:w-full lg:w-full xl:w-full mt-[2rem] mb-[2rem] text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                  <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                    <tr>
-                     <th  className="px-6 py-3">Serial No.</th>
-                     <th  className="px-6 py-3 rounded-s-lg">Link</th>
-                     <th  className="px-6 py-3 rounded-e-lg">Action</th>
+                       <th  className="px-6 py-3 rounded-s-lg">Caetgories</th>
                    </tr>
                  </thead>
                  <tbody>
                  {category.map((cat, index) => (
                      
-                       <tr key={1} className="bg-white dark:bg-gray-800">
-                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index}</td>
-                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{cat}</td>
+                       <tr key={index} className="bg-white dark:bg-gray-800">
+                         <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{cat.category_name}</td>
                          
                        </tr>
                  ))}

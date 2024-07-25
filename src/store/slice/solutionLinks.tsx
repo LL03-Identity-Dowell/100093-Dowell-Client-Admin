@@ -11,6 +11,7 @@ interface SolutionLinksState {
   generatedLink: string;
   // Other properties if needed
 }
+
 const initialState:SolutionLinksState = {
   links: [],
   generatedLink: "",
@@ -25,7 +26,7 @@ const linkSlice = createSlice({
     },
     setGeneratedLink(state, action:PayloadAction<string>) {
       state.generatedLink = action.payload;
-    },
+    }
   },
 });
 
