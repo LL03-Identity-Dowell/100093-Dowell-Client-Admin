@@ -23,6 +23,8 @@ import schoolClassSlice from "./slice/class";
 import busSlice from "./slice/bus";
 import teacherSlice from "./slice/teacher";
 import studentSlice from "./slice/student";
+import CategorySlice from "./slice/CategorySlice";
+import selectedcat from "./slice/selectedcat";
 
 const store = configureStore({
   reducer: {
@@ -50,6 +52,8 @@ const store = configureStore({
     bus: busSlice,
     teacher: teacherSlice,
     student: studentSlice,
+    category : CategorySlice,
+    selectedcat:selectedcat
   },
   // devTools: false,
 });

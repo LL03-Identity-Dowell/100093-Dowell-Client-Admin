@@ -49,7 +49,8 @@ const UserDetails = () => {
   const [busYesLoader, setBusYesLoader] = useState(false)
   const [busSubmissionMessage, setBusSubmissionMessage] = useState(""); // State to hold submission message
   const [busSubmissionSuccess, setBusSubmissionSuccess] = useState(false); // New state to track submission success
-  
+  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
+
 console.log(loading)
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -98,11 +99,19 @@ console.log(loading)
   function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
+
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
 }
 
+useEffect(() => {
+  navigator.geolocation.getCurrentPosition(() => {
+    setLocationPermissionGranted(true);
+  }, () => {
+    setLocationPermissionGranted(false);
+  });
+}, []);
 function showPosition(position:any) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
@@ -110,6 +119,8 @@ function showPosition(position:any) {
     setLatitude(latitude)
     setLongitude(longitude)
 }
+
+
 
 function showError(error:any) {
     switch(error.code) {
@@ -230,6 +241,9 @@ console.log(portfolio_test)
   }
   return (
     <div>
+    {locationPermissionGranted ? (
+      <div>
+         <div>
       <ToastContainer position="top-right" />
 
       {portfolio ? 
@@ -369,6 +383,14 @@ console.log(portfolio_test)
 </div>:<Loader/>}
     </div>}
     </div>
+      </div>
+    ) : (
+      <div className="p-4  mb-auto mt-auto text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+            <span className="font-medium">Alert!</span> Please enable location services to use this feature.
+          </div>
+    )}
+  </div>
+   
    
   );
 };

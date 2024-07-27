@@ -10,12 +10,16 @@ const initialPublicFormInputs: CategoryName = {
   category: "",
 };
 
+type Category= {
+  category_name: string;
+  // Add other properties if needed
+}
 const category = () => {
-const [category, setCategory] = useState([])
-const [loading, setLoading] = useState(false)
-const [workspaceID, setWorkSpaceID] = useState("")
-const [formInputs, setFormInputs] = useState(initialPublicFormInputs);
-const [categoryLoader, setCategoryLoader] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [workspaceID, setWorkSpaceID] = useState("")
+  const [formInputs, setFormInputs] = useState(initialPublicFormInputs);
+  const [category, setCategory] = useState<Category[]>([])
+  const [categoryLoader, setCategoryLoader] = useState(false)
 const color_scheme = useSelector(
   (state: RootState) => state.setting?.data?.color_scheme
 );
@@ -23,6 +27,7 @@ const sessionId = localStorage.getItem("sessionId");
 const userName = useSelector(
   (state: RootState) => state.userinfo.userinfo.username
 );
+
 const dispatch = useDispatch();
 
 // function for onchnage input event 
@@ -66,23 +71,21 @@ const handleAddCategory = async (event:any) => {
   setLoading(true)
   try {
     const response = await Axios93Base.put("addlinkcat", add_category_payload);
-    console.log("categroy re:", response);
     if(response.data.isSuccess){
       toast.success("Category added Successfully!")
       handleGetCategory()
     }
+    if(response.data.message){
+      toast.error(response.data.message)
+    }
     // Handle the response data as needed
     setFormInputs({ ...initialPublicFormInputs }); // Clear form inputs
-    console.log("create qr code response",response)
     setLoading(false)
   } catch (error) {
-    console.error("Error generating Qr code:", error);
     setLoading(false)
-toast.error("Error Creating Category")
     // Handle the error
   } finally {
     setLoading(false)
-toast.error("Error Creating Category")
 
   }
 }
@@ -95,10 +98,8 @@ const handleGetCategory = async () => {
     workspace_id:workspaceID,
     username:userName,
   }
-  // setLoading(true)
   try {
     const response = await Axios93Base.post("addlinkcat", add_category_payload);
-    console.log("categroy post:", response);
     setCategory(response.data.categories)
     dispatch(getCategory(response.data.categories));
     setCategoryLoader(true)
@@ -116,7 +117,6 @@ useEffect(() => {
     handleGetCategory();
   }
 }, [workspaceID]);
-console.log(category)
   return (
     <>
         
