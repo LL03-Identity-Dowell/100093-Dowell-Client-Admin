@@ -27,7 +27,10 @@ const sessionId = localStorage.getItem("sessionId");
 const userName = useSelector(
   (state: RootState) => state.userinfo.userinfo.username
 );
-
+const categName = useSelector(
+  (state: RootState) => state.category.category
+);
+console.log(categName)
 const dispatch = useDispatch();
 
 // function for onchnage input event 

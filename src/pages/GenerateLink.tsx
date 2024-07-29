@@ -322,8 +322,10 @@ const handleGetCategory = async (wrok_id:string, user_name:string) => {
 //   { category_name: 'cat2', links: [] },
 //   { category_name: 'cat1', links: ['https://cat1-link1.com', 'https://cat1-link2.com'] }
 // ])
-    dispatch(getCategory(response.data.categories));
-    setCategoryLoader(true)
+console.log(response.data.categories)
+setCategoryLoader(true)
+dispatch(getCategory(response.data.categories));
+console.log("dispatched")
   } catch (error) {
     console.error("Error creating category:", error);
     setCategoryLoader(true)
@@ -339,6 +341,15 @@ const handleGetCategory = async (wrok_id:string, user_name:string) => {
     fetchLinks();
 
   }, [generatedLink]);
+
+  useEffect(() => {
+    dispatch(getCategory(categories))
+
+  }, [categories]);
+const get_categories_from_store =  useSelector(
+  (state: RootState) => state.category.category
+);
+console.log(get_categories_from_store)
   useEffect(() => {
     handleGetCategory(workspaceID, userName)
   }, [workspaceID,userName]);
@@ -430,7 +441,7 @@ console.log(link)
                                       onChange={handleCategoryChange}
                                     >
                                       <option value="">Select Category</option>
-                                      {categories.map((cat, index) => (
+                                      {get_categories_from_store.map((cat, index) => (
                                         
                                           <option value={cat.category_name} key={index}>
                                             {cat.category_name}
