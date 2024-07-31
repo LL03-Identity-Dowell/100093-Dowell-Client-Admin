@@ -4056,7 +4056,10 @@ def level_reports(request):
 def Generatelink(request):
     admin_id = request.data.get("workspace_id")
     username = request.data.get("usr")
-    print(username)
+    try:
+        category=request.data.get("category")
+    except:
+        pass
     latti = request.data.get("latitude")
     longti=request.data.get("longitude")
     type="public"
@@ -4065,12 +4068,26 @@ def Generatelink(request):
     data=json.loads(ro)
     id=data["inserted_id"]
     link=f"https://100093.pythonanywhere.com/linklanding?workspace_id={admin_id}&latitude={latti}&longitude={longti}&type={type}&id={id}"
-    field1={"_id":id}
-    update={"link":link}
-    resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
-    redata=json.loads(resp)
-    if redata["isSuccess"]:
-        return Response({"link":link})
+    if category:
+        field1={"_id":id}
+        update={"link":link}
+        resp=dowellconnection("login","bangalore","login","processes","processes","1111","ABCDE","update",field1,update)
+        redata=json.loads(resp)
+        field={"workspace_id":admin_id}
+        getda=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","fetch",field,"nil")
+        respda=json.loads(getda)
+        da=respda["data"][0]["category"]
+        for i in da:
+            if i["category_name"]==category:
+                i["links"].append(link)
+        field={"workspace_id":admin_id}
+        update={"category":da}
+        dwe=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","update",field,update)
+        resd=json.loads(dwe)
+        if resd["isSuccess"]:
+            return Response({"link":link})
+        else:
+            return Response({"link":"Link not generated try again or contact system admin"})
     else:
         return Response({"link":"Link not generated try again or contact system admin"})
 @api_view(['POST'])
@@ -4395,7 +4412,6 @@ def create_qrcode(request):
     update={"qrid":qrid,"qrurl":qridurl}
     idr=dowellconnection("login","bangalore","login","registration","registration","10004545","ABCDE","update",field,update)
     id_res=json.loads(idr)
-    print(id_res)
     return Response({"message":"QR code created successfully"})
 @api_view(['POST'])
 def portfolio_checkq(request):
@@ -4442,3 +4458,43 @@ def teamNameCheck(request):
         return Response({"message":"sucess"})
     else:
         return Response({"message":"team name not available"})
+
+@api_view(['POST','PUT','GET'])
+def AddLinkCategory(request):
+    if request.method == 'GET':
+        field={}
+        getd=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","fetch",field,"nil")
+        respd=json.loads(getd)
+        return Response({"msg":respd})
+    if request.method == 'POST':
+        username=request.data.get("username")
+        adminid=request.data.get("workspace_id")
+        field={"workspace_id":adminid}
+        getda=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","fetch",field,"nil")
+        respda=json.loads(getda)
+        return Response({"categories":respda["data"][0]["category"]})
+    if request.method == 'PUT':
+        username=request.data.get("username")
+        adminid=request.data.get("workspace_id")
+        category=request.data.get("category")
+        field={"workspace_id":adminid}
+        getda=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","fetch",field,"nil")
+        respda=json.loads(getda)
+        if len(respda["data"])>0:
+            datae=respda["data"][0]["category"]
+            for i in datae:
+                if i["category_name"]==category:
+                    return Response({"message":f"Category name {category} already exist"})
+                else:
+                    pass
+            datae.append({"category_name":category,"links":[]})
+            field={"workspace_id":adminid}
+            update={"category":datae}
+            dwe=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","update",field,update)
+            resd=json.loads(dwe)
+            return Response(resd)
+        else:
+            field={"workspace_id":adminid,"username":username,"category":[{"category_name":category,"links":[]}]}
+            insertd=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","insert",field,"nil")
+            inresp=json.loads(insertd)
+            return Response(inresp)

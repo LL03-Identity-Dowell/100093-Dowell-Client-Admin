@@ -82,4 +82,5 @@ urlpatterns = [
     path('createqrcode',create_qrcode,name='createqrcode'),
     path('portfoliotest',portfolio_checkq,name='portfoliotest'),
     path('teamcheckq',teamNameCheck,name='teamcheckq'),
+    path('addlinkcat',AddLinkCategory,name='addlinkcat'),
 ]
