@@ -126,6 +126,14 @@ const Solutions = () => {
   fetchuserData()
   fetchIsOwnerData();
 
+
+
+  const get_categories_from_store =  useSelector(
+    (state: RootState) => state.category.category
+  );
+  console.log(get_categories_from_store)
+
+
   const handleGenerateLink = async (cat:string) => {
     if (cat === undefined || cat === null || cat === '') {
       cat = "default";
@@ -142,7 +150,9 @@ const Solutions = () => {
       });
       console.log("Generated link:", response.data);
       dispatch(setGeneratedLink(response.data.link));
+      handleGetCategory(workspaceID, userName)
       toast.success("Link Generated Successfully!")
+
       // Handle the response data as needed
     } catch (error) {
       console.error("Error generating link:", error);
@@ -172,7 +182,11 @@ const Solutions = () => {
   const categ = useSelector(
     (state: RootState) => state.selectedcat.category_name
   );
-  console.log(categ)
+    
+  const links_categ = useSelector(
+    (state: RootState) => state.category.category
+  );
+  // console.log(links_categ)
   const link = useSelector(
     (state: RootState) => state.link.links
   );
@@ -186,7 +200,7 @@ const Solutions = () => {
     setSelectedCategory(selectedOrgname)
     console.log(selectedOrgname)
     // dispatch(getselectedcat(selectedOrgname))
-    const cate = categories.find(
+    const cate = links_categ.find(
       (org) => `${org.category_name}` === selectedOrgname
     );
     console.log(cate)
@@ -196,11 +210,11 @@ const Solutions = () => {
         console.log(cate.links)
     } else {
         set_cat_link([]);
-        console.log(cat_link)
+        // console.log(cat_link)
 
     }
   }; 
- console.log(cat_link)
+ 
   // handle default selection
   useEffect(() => {
     
@@ -215,12 +229,11 @@ const Solutions = () => {
     const paragraphText = links;
     // const replacedString = paragraphText.replace(/https:\/\/100093\.pythonanywhere\.com/g, 'http://localhost:5173');
 
-    // console.log(replacedString);
      navigator.clipboard.writeText(paragraphText)
       // navigator.clipboard.writeText(paragraphText)
 
       .then(() => {
-        console.log('Text copied to clipboard:', paragraphText);
+        // console.log('Text copied to clipboard:', paragraphText);
         toast.success("Text copied to clipboard");
     })
       .catch((error) => {
@@ -251,7 +264,6 @@ const handleCreateQRCode = async () => {
     toast.success(response.data.response)
     // Handle the response data as needed
     setLoadingQR(false)
-    console.log("create qr code response",response)
   } catch (error) {
     console.error("Error generating Qr code:", error);
     setLoadingQR(false)
@@ -262,22 +274,25 @@ const handleCreateQRCode = async () => {
   }
 }
   // mark in map button  function 
-  const handleMarkInMap= async (cat:string) => {
+  const handleMarkInMap= async (cat:string, url:string) => {
     if (cat === undefined || cat === null || cat === '') {
       cat = "default";
   }
+  const urlObj = new URL(url);
+    const id = urlObj.searchParams.get('id');
+
     const markInMap_payload ={
       workspace_id:workspaceID,
       lat: latitude,
       long: longitude,
-      qr_code: "34345",
+      qr_code: id,
       name:userName,
       category:cat
     }
     setLoadingMarkInMap(true)
     try {
       const response = await axios.post("https://100086.pythonanywhere.com/subs-operation/?api_key=bc4ecc24-7300-421d-8175-badd8d522fea", markInMap_payload);
-      console.log(response)
+      // console.log(response)
       if(response.data[0].success){
         toast.success("Marked Successfully")
         setLoadingMarkInMap(false)
@@ -311,8 +326,27 @@ const handleGetCategory = async (wrok_id:string, user_name:string) => {
   try {
     const response = await Axios93Base.post("addlinkcat", add_category_payload);
     const data =await response
-    console.log(data)
+    // console.log(data)
     setCategories(data.data.categories)
+dispatch(getCategory(response.data.categories));
+// const links_categ_ = useSelector(
+//   (state: RootState) => state.category.category
+// );
+const filter_categ = response.data.categories
+
+const cate = filter_categ.find(
+      (org:any) => `${org.category_name}` === selectedCategory
+    );
+    // console.log(cate)
+    if (cate) {
+      dispatch(getselectedcat(cate));
+        set_cat_link(cate.links);
+        // console.log(cate.links)
+    } else {
+        set_cat_link([]);
+        // console.log(cat_link)
+
+    }
 // setCategories( [
 //   { category_name: 'school', links: ['https://school-link1.com', 'https://school-link2.com'] },
 //   { category_name: 'bus', links: ['https://bus-link1.com', 'https://bus-link2.com'] },
@@ -322,10 +356,9 @@ const handleGetCategory = async (wrok_id:string, user_name:string) => {
 //   { category_name: 'cat2', links: [] },
 //   { category_name: 'cat1', links: ['https://cat1-link1.com', 'https://cat1-link2.com'] }
 // ])
-console.log(response.data.categories)
+// console.log(response.data.categories)
 setCategoryLoader(true)
-dispatch(getCategory(response.data.categories));
-console.log("dispatched")
+// console.log("dispatched")
   } catch (error) {
     console.error("Error creating category:", error);
     setCategoryLoader(true)
@@ -346,10 +379,7 @@ console.log("dispatched")
     dispatch(getCategory(categories))
 
   }, [categories]);
-const get_categories_from_store =  useSelector(
-  (state: RootState) => state.category.category
-);
-console.log(get_categories_from_store)
+
   useEffect(() => {
     handleGetCategory(workspaceID, userName)
   }, [workspaceID,userName]);
@@ -379,7 +409,7 @@ console.log(get_categories_from_store)
 
     
   ];
-console.log(link)
+// console.log(link)
 
   return (
     <>
@@ -390,7 +420,7 @@ console.log(link)
             <div className="container mx-auto mb-20 lg:px-0 px-4">
               <LinkHeader/>
 
-              <section className="mt-4 flex flex-col-reverse gap-8 justify-center text-center">
+              <section className="mt-4 flex flex-col-reverse gap-8 justify-center text-center overflow-x-scroll">
                 
                 {loadingstate === true ? (    
                   // tabs 
@@ -462,18 +492,17 @@ console.log(link)
                         })}
                       </TabList>
                       <TabPanel>
-                      <div > 
-                        <button
+                      <div >
+                        {selectedCategory?    <button
                           onClick={() =>handleGenerateLink(categ)}
                           className="mb-5 bg-gray-500 mt-5 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-auto"
                         >
                           {loading ? "Generating" : "Generate New Link"} <FaCogs className="inline-block ml-2" />
-                        </button>
-
-                       
-                           
-                               <br/>
-                               <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        </button>:<></>} 
+                  
+                        <br/>
+                      
+                               {/* <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                       <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                                         <tr>
                                           <th  className="px-6 py-3 col-span-1 rounded-s-lg">Serial No.</th>
@@ -481,10 +510,13 @@ console.log(link)
                                           <th  className="px-6 py-3 rounded-e-lg col-span-3">Action</th>
                                         </tr>
                                       </thead>
-                                      <tbody>
+                                      <tbody> */}
                                         {defaultCatLinks &&  selectedCategory === "" ? (
                                           <>
-                                           {link.map((link, index) => (
+                                           <div className="p-4  mb-auto mt-[2rem] text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                                              <span className="font-medium">Select Category to display links</span>
+                                            </div>
+                                           {/* {link.map((link, index) => (
                                       // Check if link.link is not empty before rendering the row
                                       link.link && (
                                         <tr key={index} className="bg-white dark:bg-gray-800">
@@ -501,27 +533,50 @@ console.log(link)
                                           </td>
                                         </tr>
                                       )
-                                    ))}</>
-                                        ) : cat_link.length  ? (
-                                          cat_link.map((link, index) => (
+                                    ))} */}
+                                    </>
+                                        ) :
+                                        
+                                         cat_link.length ? (
+                                          <>
+                          
+                                             <table className="w-full sm:w-auto md:w-full lg:w-auto xl:w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                      <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                                        <tr>
+                                          <th scope="col" className="px-6 py-3 rounded-s-lg">Serial No.</th>
+                                          <th scope="col" className="px-6 py-3">Link</th>
+                                          <th scope="col" colSpan={3} className="px-6 py-3 rounded-e-lg">Actions</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      {cat_link.map((link, index) => (
                                             <tr key={index} className="bg-white dark:bg-gray-800">
-                                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index}</td>
+                                             <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{index+1}</td>
                                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">{link}</td>
                                                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 ">
                                                   <button onClick={() => handleCopyText(link)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Copy link</button>
-                                                  <button onClick={() => handleMarkInMap(categ)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">{loadingMarkInMap?"Marking":"Mark In Map"}</button>
-                                                  <button onClick={() => handleCreateQRCode()} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">{loadingQR?"Generating QR":"Create QR code"}</button>
+                                                </td>
+                                                <td> 
+                                                  <button onClick={() => handleMarkInMap(categ, link)} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">{loadingMarkInMap?"Marking":"Mark In Map"}</button>
+                                                </td>
+                                                <td>
+                                                    <button onClick={() => handleCreateQRCode()} className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">{loadingQR?"Generating QR":"Create QR code"}</button>
                                                 </td>
                                             </tr>
-                                          ))
-                                        ) : (
-                                          <tr>
-                                            <div className="p-4 mb-auto mt-auto text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+                                          ))}
+                                    
+                                      </tbody>
+                                      </table>
+                                          </>
+                                         )
+                                       : (
+                                          
+                                            <div className="p-4 mb-auto mt-[2rem] text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
                                               <span className="font-medium">Alert!</span> you have not generated any link under {categ} category
                                             </div>
-                                          </tr>
+                                          
                                         )}
-                                      </tbody>
+                                      {/* </tbody> */}
                                       {/* <tbody>
                                         <div>{defaultCatLinks?<div>hjj</div> :
                                           <div>     
@@ -552,7 +607,7 @@ console.log(link)
                                         </div>                             
                                       </tbody> */}
 
-                                </table>
+                                {/* </table> */}
                               
 
                         </div>
