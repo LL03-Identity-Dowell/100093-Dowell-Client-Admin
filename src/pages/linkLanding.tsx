@@ -19,10 +19,46 @@ const PublicForm = () => {
   const [formInputs, setFormInputs] = useState(initialPublicFormInputs);
   const [submissionMessage, setSubmissionMessage] = useState(""); // State to hold submission message
   const [submissionSuccess, setSubmissionSuccess] = useState(false); // New state to track submission success
+  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0)
 
   // console.log(formInputs)
   const urlParams = new URLSearchParams(window.location.search);
   const linkid = urlParams.get("id");
+  const workspaceid = urlParams.get("workspace_id");
+
+  function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position:any) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    setLatitude(latitude)
+    setLongitude(longitude)
+}
+
+function showError(error:any) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            console.log("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            console.log("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            console.log("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            console.log("An unknown error occurred.");
+            break;
+    }
+}
+getLocation();
   const handleRequestButton = async () => {
     if (!formInputs.username) { 
       toast.error('Please enter username.');
@@ -39,16 +75,24 @@ const PublicForm = () => {
    
     try {
       setLoading(true);
-      const response = await Axios93Base.post("activatelink/", {
-        id: linkid,
-        form:"request",
-        email:formInputs.email,
-        name: formInputs.username,
-        // weight:formInputs.weight
-      });
+      const request_operation = await axios.post("https://100086.pythonanywhere.com/subs-operation/?api_key=bc4ecc24-7300-421d-8175-badd8d522fea",{
+        workspace_id: workspaceid,
+        lat: latitude,
+        long: longitude,
+        qr_code: linkid,
+        name:formInputs.username,
+      })
+      // const response = await Axios93Base.post("activatelink/", {
+      //   id: linkid,
+      //   form:"request",
+      //   email:formInputs.email,
+      //   name: formInputs.username,
+      //   // weight:formInputs.weight
+      // });
+
       // console.log( linkid,formInputs.email)
-      // console.log("Requestes link:", response.data);
-      if(response.data.message.isSuccess){
+      console.log("Requestes link:", request_operation);
+      if(request_operation.data.message.isSuccess){
         setSubmissionMessage("We have received your request")
         toast.success("We have recieved your request");
         setSubmissionSuccess(true); // Set submission success state
@@ -225,11 +269,22 @@ const LinkLanding = () => {
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
   const [userLocaition, setUserLocation] = useState({})
+  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
+
   console.log(loading, location)
   
   // const urlParams = new URLSearchParams(window.location.search);
   // const id = urlParams.get("id");
   // function to get location 
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(() => {
+      setLocationPermissionGranted(true);
+    }, () => {
+      setLocationPermissionGranted(false);
+    });
+  }, []);
+
   function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -335,6 +390,8 @@ getLocation();
   }
   return (
     <div>
+    {locationPermissionGranted ? (
+    <div>
       {type ? <div>{type == "public" ? <PublicForm/> :type=="team"? <TeamMemberForm/>: <div className="flex items-center justify-center h-screen">  
             <div className="relative flex flex-col text-gray-700 p-5 bg-white shadow-lg bg-clip-border rounded-xl lg:w-[30rem] md:w-[30rem] w-full mx-auto">
               <h1 className="text-center mb-3 font-dark">You are not authorized for this action</h1>
@@ -358,6 +415,12 @@ getLocation();
           </div>} </div>: <Loader/> }
       {/* {type == "public" ? <PublicForm/> : <TeamMemberForm/>} */}
     </div>
+     ) : (
+      <div className="p-4  mb-auto mt-auto text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+            <span className="font-medium">Alert!</span> Please enable location services to use this feature.
+          </div>
+    )}
+  </div>
   );
 };
 

@@ -31,6 +31,9 @@ type Link ={
   link: string;
   // Other properties of a link
 }
+type QRCode = {
+  master_qrcode_image_url:string
+}
 
 const Solutions = () => {
   const loadingstate = useSelector((state: RootState) => state.loaderslice);
@@ -40,6 +43,9 @@ const Solutions = () => {
   const [loadingMarkInMap, setLoadingMarkInMap] = useState(false)
   const [categories, setCategories] = useState<Category[]>([])
   const [categoryLoader, setCategoryLoader] = useState(false)
+  const [showPopup, setShowPopup] = useState(false);
+  const [qrcode, setQRCode] = useState<QRCode>()
+
   const overlaysidebarstate = useSelector(
     (state: RootState) => state.overlaysidebar
   );
@@ -260,8 +266,10 @@ const handleCreateQRCode = async () => {
   setLoadingQR(true)
   try {
     const response = await axios.post("https://www.qrcodereviews.uxlivinglab.online/api/v6/create-mastercode/", master_code_payload);
-    // console.log("type:", response.data);
+    console.log("type:", response);
     toast.success(response.data.response)
+    setShowPopup(true);
+    setQRCode(response.data.master_qrcode)
     // Handle the response data as needed
     setLoadingQR(false)
   } catch (error) {
@@ -410,10 +418,21 @@ setCategoryLoader(true)
     
   ];
 // console.log(link)
+const handleImageDownload = (imageUrl:any) => {
+  window.open(imageUrl, '_blank','noopener,noreferrer');
+  // const link = document.createElement('a');
+  // link.href = imageUrl;
+  // link.setAttribute('download', 'image.jpg'); // Or any desired filename
+
+  // document.body.appendChild(link);
+  // link.click();
+
+  // document.body.removeChild(link);
+};
 
   return (
     <>
-  
+
       <div className="relative">
         <Layout>
           <main>
@@ -438,6 +457,19 @@ setCategoryLoader(true)
                       selectedIndex={tabIndex}
                       onSelect={(index) => setTabIndex(index)}
                     >
+                        {showPopup && qrcode? (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded-lg"> 
+              <p>Download QR Image</p>
+          
+                <img className="h-[18rem] max-w-full" src={qrcode.master_qrcode_image_url} alt="image description"/>
+                
+                <button className="mb-5 mr-[1rem] bg-gray-500 mt-5 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-auto" onClick={() => handleImageDownload(qrcode?.master_qrcode_image_url)}>Download</button>
+
+          <button className="mb-5 bg-gray-500 mt-5 hover:bg-green-400 text-white font-bold py-2 px-4 rounded mx-auto" onClick={() => setShowPopup(false)}>Close</button>
+          </div>
+          </div>
+      ):<></>}
                       <TabList className="w-full grid lg:grid-cols-2 grid-cols-1 gap-y-4 gap-x-6 xl:gap-x-0">
                         {mobiletab.map((tabs, index) => {
                           return (
