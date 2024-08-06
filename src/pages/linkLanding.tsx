@@ -92,7 +92,7 @@ getLocation();
 
       // console.log( linkid,formInputs.email)
       console.log("Requestes link:", request_operation);
-      if(request_operation.data.message.isSuccess){
+      if(request_operation.data[0].success){
         setSubmissionMessage("We have received your request")
         toast.success("We have recieved your request");
         setSubmissionSuccess(true); // Set submission success state
