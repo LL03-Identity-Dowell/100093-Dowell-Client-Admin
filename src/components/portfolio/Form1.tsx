@@ -7,7 +7,7 @@ import Select from "react-select";
 import { FormInputs, Option, PublicResponse } from "./types";
 import { setAdminData } from "../../store/slice/adminData";
 import { Axios93Base } from "../../api/axios";
-
+import { FaEye, FaEyeSlash} from 'react-icons/fa'
 const initialFormInputs: FormInputs = {
   username: "",
   member_type: "",
@@ -22,6 +22,7 @@ const initialFormInputs: FormInputs = {
   portfolio_spec: "",
   portfolio_u_code: "",
   portfolio_det: "",
+  password:""
 };
 
 const Form1 = () => {
@@ -36,7 +37,9 @@ const Form1 = () => {
   const [link, setLink] = useState("");
   const [imagelink, setimageLink] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+console.log(showPassword, showPasswordInput)
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
@@ -185,6 +188,7 @@ const Form1 = () => {
   const dispatch = useDispatch();
   const handleSelectStatus = (e: ChangeEvent<HTMLSelectElement>) => {
     setFormInputs({ ...formInputs, [e.target.name]: e.target.value });
+    setShowPasswordInput(e.target.value === 'public');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -260,6 +264,7 @@ const Form1 = () => {
           portfolio_spec: "",
           portfolio_u_code: "",
           portfolio_det: "",
+          password:""
         });
         console.log(formInputs);
       });
@@ -328,6 +333,10 @@ const Form1 = () => {
       console.error("Error downloading image:", error);
     }
   };
+
+    const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <>
       <ToastContainer position="top-right" />
@@ -357,7 +366,7 @@ const Form1 = () => {
         <form className="" onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
-              <span id="portfolioForm1Text3">Select Member Type </span>
+              <span id="portfolioForm1Text3">Select Member Type</span>
               <span className="text-[#ff0000] text-base">*</span>
             </label>
             <select
@@ -564,6 +573,47 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
+          {/* {showPasswordInput && (
+            <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text13">Password</span>
+              <span className="text-[#ff0000] text-base">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Password"
+              required
+              onChange={handleOnChange}
+              id="portfolio_password"
+              value={formInputs.password}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />
+            </div>
+          )} */}
+            <div className="mb-4">
+            <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
+              <span id="portfolioForm1Text17">Password (Optional)</span>
+              {/* <span className="text-[#ff0000] text-base">*</span> */}
+            </label>             
+          <div className="relative w-full">
+          <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              required
+              onChange={handleOnChange}
+              id="password"
+              value={formInputs.password}
+              className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
+            />            
+            <button type="button" className="absolute right-3 top-2" onClick={handleShowPassword}>
+            {showPassword ? (
+             <FaEyeSlash/>
+            ) : (
+              <FaEye/>
+            )}
+          </button>
+        </div>
+            </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               <span id="portfolioForm1Text14">Portfolio Specification </span>
@@ -590,6 +640,7 @@ const Form1 = () => {
               className="outline-none w-full h-12 px-4 rounded-sm border border-[#7A7A7A] bg-[#f5f5f5] text-[#7a7a7a] font-roboto"
             />
           </div>
+          
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold ">
               <span id="portfolioForm1Text16"> Portfolio Details </span>

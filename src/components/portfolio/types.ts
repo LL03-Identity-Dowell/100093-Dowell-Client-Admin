@@ -12,6 +12,7 @@ export type FormInputs = {
   portfolio_spec: string;
   portfolio_u_code: string;
   portfolio_det: string;
+  password: string;
 };
 export type Form2Inputs = {
   username: string;
