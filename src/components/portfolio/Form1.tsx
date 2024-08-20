@@ -22,7 +22,8 @@ const initialFormInputs: FormInputs = {
   portfolio_spec: "",
   portfolio_u_code: "",
   portfolio_det: "",
-  password:""
+  password:"",
+  csvFile:null
 };
 
 const Form1 = () => {
@@ -39,6 +40,33 @@ const Form1 = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showInput, setShowInput] = useState(false);
+  const [csvFile, setCsvFile] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+
+
+  const handleYesClick = () => {
+    setShowInput(true);
+  };
+  const handleNoClick = () => {
+    setShowInput(false);
+    setCsvFile(null); // Reset the file if the user changes their mind
+  };
+  // const handleFileChange = (e:any) => {
+  //   const file = e.target.files[0];
+  //   setCsvFile(file);
+  //   setFormInputs({ ...formInputs, [e.target.id]: file });
+
+  // };
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (event:any) => {
+		const file = event.target.files[0];
+		if (file) {
+				setSelectedFile(file);
+		}
+    console.log(file)
+	};
 console.log(showPassword, showPasswordInput)
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
@@ -219,10 +247,28 @@ console.log(showPassword, showPasswordInput)
       portfolio_spec: formInputs.portfolio_spec,
       portfolio_u_code: formInputs.portfolio_u_code,
       portfolio_det: formInputs.portfolio_det,
+      password:formInputs.password,
+      csvFile: formInputs.csvFile,
     };
+    const formData = new FormData();
+    formData.append("username", userName);
+    formData.append("member_type", formInputs.member_type);
+    formData.append("member",JSON.stringify(selectedOptions));
+    formData.append("product",formInputs.product);
+    formData.append("data_type",formInputs.data_type);
+    formData.append("op_rights",formInputs.op_rights);
+    formData.append("role", formInputs.role,);
+    formData.append("portfolio_name", formInputs.portfolio_name);
+    formData.append("portfolio_code", formInputs.portfolio_code);
+    formData.append("portfolio_spec", formInputs.portfolio_spec);
+    formData.append("portfolio_u_code", formInputs.portfolio_u_code);
+    formData.append("portfolio_det", formInputs.portfolio_det);
+    formData.append("password", formInputs.password);
+    formData.append("csvfile", selectedFile);
+
     try {
       setIsLoading(true);
-      await Axios93Base.post("/create_portfolio/", data).then(async (res) => {
+      await Axios93Base.post("/create_portfolio/", formData).then(async (res) => {
         if (data.member_type === "public") {
           setLink(res.data.masterlink);
         }
@@ -264,7 +310,8 @@ console.log(showPassword, showPasswordInput)
           portfolio_spec: "",
           portfolio_u_code: "",
           portfolio_det: "",
-          password:""
+          password:"",
+          csvFile:null,
         });
         console.log(formInputs);
       });
@@ -364,6 +411,50 @@ console.log(showPassword, showPasswordInput)
           </p>
         </div>
         <form className="" onSubmit={handleSubmit}>
+        <div>
+      <p>Do you want to add a CSV file?</p>
+      <button
+            id="yes"
+            onClick={handleYesClick}
+            className={`w-full h-12  ${
+              isLoading == true
+                ? "bg-[#b8b8b8]"
+                : color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+          >
+            Yes
+          </button>
+          <button
+            id="yes"
+            onClick={handleNoClick}
+            className={`w-full h-12  ${
+              isLoading == true
+                ? "bg-[#b8b8b8]"
+                : color_scheme == "Red"
+                ? "bg-[#DC4C64]"
+                : color_scheme == "Green"
+                ? "bg-[#14A44D]"
+                : "bg-[#7A7A7A]"
+            } mb-8 hover:bg-[#61CE70] rounded-[4px] text-white font-roboto`}
+          >
+            No
+          </button>
+
+      {showInput && (
+        <div>
+          <input type="file" accept=".csv" onChange={handleFileChange} id="csvFile" value={formInputs.csvFile}/>
+          {csvFile && <p>Selected file: {csvFile}</p>}
+          {/* <button onClick={handleUpload}>Upload</button> */}
+
+        </div>
+      )}
+            {/* {uploadStatus && <p>{uploadStatus}</p>} */}
+
+    </div>
           <div className="mb-4">
             <label className="text-[#7A7A7A] text-lg font-roboto font-bold flex items-end gap-1">
               <span id="portfolioForm1Text3">Select Member Type</span>
