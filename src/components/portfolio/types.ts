@@ -13,7 +13,7 @@ export type FormInputs = {
   portfolio_u_code: string;
   portfolio_det: string;
   password: string;
-  csvFile:File
+  csvFile:File | null
 };
 export type Form2Inputs = {
   username: string;

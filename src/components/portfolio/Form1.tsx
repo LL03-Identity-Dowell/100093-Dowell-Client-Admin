@@ -58,16 +58,16 @@ const Form1 = () => {
   //   setFormInputs({ ...formInputs, [e.target.id]: file });
 
   // };
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (event:any) => {
-		const file = event.target.files[0];
+		const file = event.target.files?.[0] || null;
 		if (file) {
 				setSelectedFile(file);
 		}
     console.log(file)
 	};
-console.log(showPassword, showPasswordInput)
+console.log(showPassword, showPasswordInput, setUploadStatus)
   const portfolioLength = useSelector(
     (state: RootState) => state.adminData.data[0]?.portpolio?.length
   );
@@ -264,8 +264,9 @@ console.log(showPassword, showPasswordInput)
     formData.append("portfolio_u_code", formInputs.portfolio_u_code);
     formData.append("portfolio_det", formInputs.portfolio_det);
     formData.append("password", formInputs.password);
-    formData.append("csvfile", selectedFile);
-
+    if(selectedFile){
+      formData.append("csvfile", selectedFile);
+    }
     try {
       setIsLoading(true);
       await Axios93Base.post("/create_portfolio/", formData).then(async (res) => {
@@ -446,13 +447,13 @@ console.log(showPassword, showPasswordInput)
 
       {showInput && (
         <div>
-          <input type="file" accept=".csv" onChange={handleFileChange} id="csvFile" value={formInputs.csvFile}/>
+          <input type="file" accept=".csv" onChange={handleFileChange} id="csvFile" />
           {csvFile && <p>Selected file: {csvFile}</p>}
           {/* <button onClick={handleUpload}>Upload</button> */}
 
         </div>
       )}
-            {/* {uploadStatus && <p>{uploadStatus}</p>} */}
+            {uploadStatus && <p>{uploadStatus}</p>}
 
     </div>
           <div className="mb-4">
