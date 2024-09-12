@@ -1,5 +1,5 @@
 import Layout from "../../components/layout";
-
+import { useState, useEffect } from "react";
 import AdminTabs from "../../components/tabs";
 
 import Sidebar from "./Sidebar";
@@ -12,6 +12,7 @@ import { isNewOwner, setAdminData } from "../../store/slice/adminData";
 import { getselectedorgs } from "../../store/slice/selectedorg";
 import { getViewAccess } from "../../store/slice/viewAccess";
 import { Axios93Base } from "../../api/axios";
+import WorkspaceHeader from "./WorkspaceHeader"
 
 const ClientAdmin = () => {
   const selectedOrg = useSelector((state: RootState) => state.selectedorg);
@@ -23,11 +24,13 @@ const ClientAdmin = () => {
   const isnewOwner = useSelector(
     (state: RootState) => state.adminData.data[0].isNewOwner
   );
+
   const userName = useSelector(
     (state: RootState) => state.userinfo.userinfo.username
   );
   const dispatch = useDispatch();
   const sessionId = localStorage.getItem("sessionId");
+
   const fetchIsOwnerData = async () => {
     if (localStorage.getItem("username")) {
       if (!isnewOwner) {
@@ -36,6 +39,7 @@ const ClientAdmin = () => {
           username: username,
           session_id: sessionId,
         });
+        console.log(responseAdmin.data.data[0].other_organisation)
         const response = await Axios93Base.post("/settings/", {
           username: username,
         });
@@ -49,15 +53,21 @@ const ClientAdmin = () => {
     }
   };
   fetchIsOwnerData();
-
+ 
   return (
     <>
       <div className="relative">
         <Layout>
           <main>
             <div className="container mx-auto mb-20 lg:px-0 px-4">
-              <Header />
+              {/* <Header/> */}
 
+
+{isnewOwner ? (
+    <WorkspaceHeader />
+  ) : (
+    <Header />
+  )}
               <section className="mt-4 flex lg:flex-row flex-col-reverse gap-8 justify-end">
                 {loadingstate === true ? (
                   <div className="lg:w-[90%] ">

@@ -12,6 +12,9 @@ import { FormInputs, Option, PublicResponse } from "./types";
 import { setAdminData } from "../../store/slice/adminData";
 import { Axios93Base } from "../../api/axios";
 import { FaEye, FaEyeSlash} from 'react-icons/fa'
+import Papa from "papaparse";
+
+
 const initialFormInputs: FormInputs = {
   username: "",
   member_type: "",
@@ -385,14 +388,19 @@ const handleSubmitcsv = async (e: React.FormEvent<HTMLFormElement>) => {
   try {
     setIsLoading(true);
     await Axios93Base.post("/bportcreation", formData).then(async (res) => {
-   console.log(res.data)
+   console.log(res)
       if (res.data.message.success) {
         toast.success(res.data.message.success);
         toast.error(res.data.message.error)
         setcsvresp(res.data)
-      } else {
+      } 
+      else if(res.data.message){
+        toast.success(res.data.message)
+      }
+      else {
         toast.error(res.data.resp);
       }
+      
 
     });
     const responseAdmin = await Axios93Base.post("/get_data/", {
@@ -530,7 +538,7 @@ const handleSubmitcsv = async (e: React.FormEvent<HTMLFormElement>) => {
 
         <div>
         <div>
-      <h2>Download Sample CSV File</h2>
+      <h2>Download Sample CSV File     <p style={{color: "red"}}>"Do not change the column name or index of the column while editing the CSV file." </p></h2>
       <a 
         href="https://100093.pythonanywhere.com/media/productlogos/test.csv" 
         download="sample.csv" 

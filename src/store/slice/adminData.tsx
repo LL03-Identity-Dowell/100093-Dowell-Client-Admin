@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 
 const adminDataSlice = createSlice({
   name: "adminData",
@@ -274,7 +275,7 @@ const adminDataSlice = createSlice({
         other_organisation: [
           {
             org_name: "",
-            portfolio: [],
+            // portfolio: [],
           },
         ],
         roles: [
@@ -309,8 +310,7 @@ const adminDataSlice = createSlice({
   reducers: {
     getAdminData(_state, action) {
       action.payload.data[0].Username = action.payload.data[0].document_name;
-      action.payload.data[0].organisations[0].org_name =
-        action.payload.data[0].document_name;
+      action.payload.data[0].organisations[0].org_name =  action.payload.data[0].document_name;
       return action.payload;
     },
     setAdminData: (state, action) => {
@@ -323,6 +323,7 @@ const adminDataSlice = createSlice({
       state.data[0].profile_info = action.payload.profile_info;
       state.data[0].organisations[1] = action.payload.organisations[0];
       state.data[0].members = action.payload.members;
+      state.data[0].other_organisation = action.payload.other_organisation;
     },
     isNewOwner: (state, action) => {
       state.data[0].isNewOwner = action.payload;
