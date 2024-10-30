@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>portfolio</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+*{
+  /*margin: 0;*/
+  /*padding: 0;*/
+  /*outline: none;*/
+  /*box-sizing: border-box;*/
+  font-family: 'Poppins', sans-serif;
+}
+body{
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*justify-content: center;*/
+
+  /*min-height: 100vh;*/
+  /*padding: 10px;*/
+  /*background-color: #fff;*/
+  /*font-family: 'Poppins', sans-serif;*/
+  /*background: linear-gradient(115deg, #56d8e4 10%, #9f01ea 90%);*/
+}
+/*body {*/
+/*  align-items: center;*/
+  /*background-color: #000;*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  height: 100vh;*/
+/*}*/
+
+.form {
+    position: relative;
+    left: 40%;
+    margin-top: 10px;
+    margin-left:- Y/2 px;
+    /*margin-left: -200px;*/
+  /*margin:0px 0px 0px;*/
+  background-color: #15172b;
+  border-radius: 20px;
+  box-sizing: border-box;
+  height: 500px;
+  padding: 20px;
+  width: 320px;
+}
+
+.title {
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin-top: 30px;
+}
+
+.subtitle {
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.input-container {
+  height: 50px;
+  position: relative;
+  width: 100%;
+}
+
+.ic1 {
+  margin-top: 40px;
+}
+
+.ic2 {
+  margin-top: 30px;
+}
+
+.input {
+  background-color: #303245;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 18px;
+  height: 100%;
+  outline: 0;
+  padding: 4px 20px 0;
+  width: 100%;
+}
+
+.cut {
+  background-color: #15172b;
+  border-radius: 10px;
+  height: 20px;
+  left: 20px;
+  position: absolute;
+  top: -20px;
+  transform: translateY(0);
+  transition: transform 200ms;
+  width: 120px;
+}
+
+.cut-short {
+  width: 50px;
+}
+
+.input:focus ~ .cut,
+.input:not(:placeholder-shown) ~ .cut {
+  transform: translateY(8px);
+}
+
+.placeholder {
+  color: #fff;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 14px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 20px;
+}
+
+.input:focus ~ .placeholder,
+.input:not(:placeholder-shown) ~ .placeholder {
+  transform: translateY(-30px) translateX(10px) scale(0.75);
+}
+
+.input:not(:placeholder-shown) ~ .placeholder {
+  color: #808097;
+}
+
+.input:focus ~ .placeholder {
+  color: #fff;
+}
+
+.submit {
+  background-color: #08d;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  height: 50px;
+  margin-top: 38px;
+  // outline: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.submit:active {
+  background-color: #06b;
+}
+select {
+  width: 100%;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 18px;
+  height: 100%;
+  outline: 0;
+  padding: 4px 20px 0;
+  background-color: #303245;
+  color: #fff;
+}
+table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+
+        }
+
+        th,
+        td {
+            padding: 5px;
+            text-align: left;
+        }
+        th{
+            background-color: #f2f2d1;
+        }
+
+        table#t01 {
+            width: 100%;
+            background-color: #f2f2d1;
+        }
+</style>
+</head>
+<body>
+<!-- partial:index.partial.html -->
+    <div class="form">
+	<form method="POST" action="">
+	    {% csrf_token %}
+      <div class="title">Portfolio Details</div>
+      <!-- <div class="subtitle">Let's create your account!</div> -->
+      <div class="input-container ic1">
+        <input id="firstname" class="input" type="text" placeholder="" name="workspace_name" required/>
+        <div class="cut"></div>
+        <label for="firstname" class="placeholder">Workspace Name</label>
+      </div>
+      <div class="input-container ic2">
+        <label for="member" style="color:#fff">Member Type : </label>
+		<div class="cut"></div>
+		  <select name="membertype" id="member" required>
+			<option value="team_members">Team members</option>
+			<option value="guest">Users</option>
+			<option value="public" selected>Public</option>
+					  </select>
+      </div>
+      <div class="input-container ic2" style="margin-top:50px;">
+        <input id="email" class="input" type="number" name="num_portfolios" placeholder="" required/>
+        <div class="cut"></div>
+        <label for="email" class="placeholder">Number of portfolios</>
+      </div>
+      <button type="text" class="submit">submit</button>
+      <div style="margin-top:20px;color:#fff">{{msg}}</div>
+	  </form>
+    </div>
+    <div style="positon:relative;margin-left:35%;display:{{style}};margin-top:30px">
+        <table>
+            <tr>
+            <th>Username</th><th>Portfolio Name</th><th>Portfolio Code</th><th>Password</th>
+
+            </tr>
+            {% for i in data %}
+            <tr>
+            <td>{{i.userid}}</td>
+            <td>{{i.portfolio_name}}</td>
+            <td>{{i.portfolio_code}}</td>
+            <td>{{i.password}}</td>
+
+            </tr>
+            {%endfor%}
+        <tr>
+            <td colspan=2></td>
+        </tr>
+        </table>
+    </div>
+<!-- partial -->
+
+</body>
+</html>

@@ -4498,3 +4498,354 @@ def AddLinkCategory(request):
             insertd=dowellconnection("login","bangalore","login","project","project","1086","ABCDE","insert",field,"nil")
             inresp=json.loads(insertd)
             return Response(inresp)
+@api_view(["POST"])
+def Get_user_Sections(request):
+
+    username = request.data.get("username", None)
+    session_id = request.data.get("session_id", None)
+
+    if not username or not session_id:
+        return Response(
+            {"success": False, "error": "username or session_id field is required"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    session_json = ({"session_id" : session_id})
+    response_validate_session_id = requests.post("https://100014.pythonanywhere.com/api/userinfo/", json=session_json)
+    session_data = response_validate_session_id.json()
+
+    #The session_id response contains error message which will make the response length 1 so,check if the response is valid by comparing it to length more than 1.
+    if len(session_data) > 1:
+        userdetails = {"username": username}
+        try:
+            response_validate_user = json.loads(
+                dowellconnection(
+                    "login",
+                    "bangalore",
+                    "login",
+                    "user_profile",
+                    "user_profile",
+                    "1168",
+                    "ABCDE",
+                    "fetch",
+                    userdetails,
+                    "null",
+                )
+            )
+            response_data = response_validate_user["data"]
+
+            # username is Valid
+            if len(response_data) > 0:
+                response = json.loads(
+                    dowellconnection(
+                        "login",
+                        "bangalore",
+                        "login",
+                        "idverfication",
+                        "idverfication",
+                        "1253001",
+                        "ABCDE",
+                        "fetch",
+                        userdetails,
+                        "null",
+                    )
+                )
+
+                # user doesnt have a profile yet
+                if not response["data"]:
+                    return Response({"success":True,"data":{},"message":"User doesn't have a profile yet"},status=status.HTTP_200_OK)
+                else :
+                    response_user_data = response["data"][0]
+                    all_section_data = {}
+                    count = 0
+                    for i in response_user_data:
+                        if "section" in i:
+                            count += 1
+                            all_section_data[f"section{count}"] = response_user_data[i]
+                    data = {"success":True,"data":all_section_data}
+                    return Response(data, status=status.HTTP_200_OK)
+
+            else:
+                return Response(
+                    {"success": False, "error": "Invalid username"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        except Exception as e:
+            return Response(
+                {"success": False, "error": str(e)}, status=status.HTTP_400_BAD_REQUEST
+            )
+    else:
+        return Response(
+            {"success": False, "error": "Invalid session_id"}, status=status.HTTP_400_BAD_REQUEST
+        )
+@api_view(['POST'])
+def PortfolioLogin(request):
+    portfolio=request.data.get("portfolio")
+    username=request.data.get("username")
+    work_name=request.data.get("workspace_name")
+    passwd=request.data.get("password")
+    if "Voc" in passwd:
+        passr=passwd
+        passr1=base64.b64encode(bytes(passwd, 'utf-8')).decode()
+    else:
+        passr=base64.b64encode(bytes(passwd, 'utf-8')).decode()
+    # return Response({"msg":passr1})
+    field1 = {"document_name": work_name}
+    login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE","fetch", field1, "update")
+    respdata=json.loads(login1)
+    if "VOC" in work_name:
+        if username=="false":
+            if len(respdata["data"])>0:
+                portfolios=respdata["data"][0]["portpolio"]
+                for i in portfolios:
+                    if i["portfolio_name"]==portfolio:
+                        if i["password"]==passr or i["password"]==passr1:
+                            return Response({"userinfo":{"owner_id":respdata["data"][0]["_id"],"workspace_name":respdata["data"][0]["document_name"],"owner_name":respdata["data"][0]["document_name"]},"portfolio_info":i})
+                        else:
+                          pass
+                            # return Response({"msg":passr1})pass
+                    else:
+                        pass
+                return Response({"message":"username or password wrong1"})
+            else:
+                return Response({"message":"No user found"})
+        elif username=="true":
+            if len(respdata["data"])>0:
+                portfolios=respdata["data"][0]["portpolio"]
+                for i in portfolios:
+                    if i["member_type"]=="public" and portfolio in i["username"]:
+                        try:
+                            if i["password"]==passr or i["password"]==passr1:
+                                return Response({"userinfo":{"owner_id":respdata["data"][0]["_id"],"workspace_name":respdata["data"][0]["document_name"],"owner_name":respdata["data"][0]["document_name"]},"portfolio_info":i})
+                            else:
+                                pass
+                        except:
+                            pass
+                    else:
+                        pass
+                return Response({"message":"username or password wrong"})
+        else:
+            return Response({"message":f"you provide {username}, accepted only true or false in lowercase"})
+    if username=="false":
+        if len(respdata["data"])>0:
+            portfolios=respdata["data"][0]["portpolio"]
+            for i in portfolios:
+                if i["portfolio_name"]==portfolio:
+                    # return Response({"msg":passr})
+                    if i["password"]==passr:
+                        return Response({"userinfo":{"owner_id":respdata["data"][0]["_id"],"workspace_name":respdata["data"][0]["document_name"],"owner_name":respdata["data"][0]["document_name"]},"portfolio_info":i})
+                    else:
+                        pass
+                else:
+                    pass
+            return Response({"message":"username or password wrong"})
+        else:
+            return Response({"message":"No user found"})
+    elif username=="true":
+        if len(respdata["data"])>0:
+            portfolios=respdata["data"][0]["portpolio"]
+            for i in portfolios:
+                if i["member_type"]=="public" and portfolio in i["username"]:
+                    try:
+                        if i["password"]==passr:
+                            return Response({"userinfo":{"owner_id":respdata["data"][0]["_id"],"workspace_name":respdata["data"][0]["document_name"],"owner_name":respdata["data"][0]["document_name"]},"portfolio_info":i})
+                        else:
+                            pass
+                    except:
+                        pass
+                else:
+                    pass
+            return Response({"message":"username or password wrong"})
+    else:
+        return Response({"message":f"you provide {username}, accepted only true or false in lowercase"})
+@api_view(['POST'])
+def PortfolioDetails3(request):
+    portfolio=request.data.get("portfolio_id")
+    work_name=request.data.get("workspace_name")
+    #passr=base64.b64encode(bytes(passwd, 'utf-8')).decode()
+    field1 = {"document_name": work_name}
+    login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE","fetch", field1, "update")
+    respdata=json.loads(login1)
+    if len(respdata["data"])>0:
+        portfolios=respdata["data"][0]["portpolio"]
+        for i in portfolios:
+            if i["member_type"]=="public" and portfolio in i["username"]:
+                try:
+                    if i["password"]:
+                        r=i
+                        ro=base64.b64decode(bytes(r["password"], 'utf-8')).decode()
+                        r["password"]=ro
+                        return Response({"success": True,"message": "User details","response": [{"userinfo":{"owner_id":respdata["data"][0]["_id"],"workspace_name":respdata["data"][0]["document_name"],"owner_name":respdata["data"][0]["document_name"]},"portfolio_info":r}]})
+                    else:
+                        pass
+                except:
+                    pass
+            else:
+                pass
+        return Response({"success": False,"message": "User details not found"})
+def randomdigit(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+@api_view(['POST'])
+def BulkPortCreate(request):
+    file1 = request.FILES.get("filename")
+    work_name=request.data.get("workspace_name")
+    f = file1.name
+    if ".csv" in file1.name or ".CSV" in file1.name:
+        num=randomdigit(4)
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            temp_file.write(file1.read())
+            temp_file.close()
+        with open(temp_file.name, mode ='r')as file:
+          csvFile = csv.reader(file)
+          ls=[]
+          next(csvFile)
+          for lines in csvFile:
+            ls.append({"username": lines[1], "member_type": lines[0].lower(), "product": lines[2], "data_type": lines[3],"operations_right": lines[4], "role": lines[5], "security_layer": "None","portfolio_name": lines[6], "portfolio_code":num ,"portfolio_specification": "", "portfolio_uni_code": "","portfolio_details": "", "status": "enable","password":base64.b64encode(bytes(lines[8], 'utf-8')).decode()})
+            num=num+1
+        public=[]
+        team_member=[]
+        user=[]
+        qrid=[]
+        eruser=[]
+        team_mem=[]
+        guest=[]
+        orl = publiclink.objects.all().filter(username=work_name)
+        for l in orl:
+            link_o1 = l.link
+
+        link_o = json.loads(link_o1)
+        for ir in link_o:
+            try:
+                if ir["password"]:
+                    pass
+            except:
+                qrid.append(ir["qrcodeid"])
+        # return Response({"first":rty,"modified":link_o,"qrid":qrid})
+        # i["portfolio_name"] = portfolio_name
+        # orl.update(link=json.dumps(link_o))
+        for i in ls:
+            if i["member_type"].lower()=="public":
+                public.append(i)
+            elif i["member_type"].lower()=="user":
+                user.append(i)
+                guest.append(i["username"])
+            elif i["member_type"].lower()=="team_member":
+                team_member.append(i)
+                team_mem.append(i["username"])
+            else:
+                return Response({"message":"member type only accept public,user,team_member check your csv file"})
+        field1 = {"document_name": work_name}
+        login1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE","fetch", field1, "update")
+        respdata=json.loads(login1)
+        rsl=respdata["data"][0]["portpolio"]
+        memberall=respdata["data"][0]["members"]
+        createdpublic=[]
+        if len(public)>=1:
+            if len(qrid)>len(public):
+                for ind, mem in enumerate(public, start=0):
+                    public[ind]["username"]=[qrid[ind]]
+                    createdpublic.append(qrid[ind])
+                for pot in public:
+                    rsl.append(pot)
+
+            else:
+                cou=len(public)-len(qrid)
+                return Response({"message":f"You have {cou} less unused public links. go members tab and create {cou} public links"})
+        if len(createdpublic)>0:
+            for r,ipod in enumerate(link_o):
+                if ipod["qrcodeid"] in createdpublic:
+                    ipod["password"]="created"
+            orl.update(link=json.dumps(link_o))
+        #return Response({"rlinks":len(link_o),"tlink":olen,"qrlen":len(qrid),"plink":len(public),"clen":len(createdpublic),"ip":lol,"p":public})
+        if len(team_member)>=1:
+            for imem in memberall["team_members"]["accept_members"]:
+                if imem["name"] in team_mem:
+                    imem["portfolio_name"] = "created"
+            for tem in team_member:
+                f = {"document_name": tem["username"]}
+                log = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE","fetch", f, "update")
+                resp=json.loads(log)
+
+                if len(resp["data"])>0:
+                    lo = resp["data"][0]["other_organisation"]
+                    lo.append(tem)
+                    field2 = {"document_name": tem["username"]}
+                    update = {"other_organisation": lo}
+                    login2 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                          "ABCDE", "update", field2, update)
+                    rsl.append(tem)
+                else:
+                    eruser.append(tem["username"])
+        if len(user)>=1:
+            for imem1 in memberall["team_members"]["accept_members"]:
+                if imem1["name"] in user:
+                    imem1["portfolio_name"] = "created"
+            for usr in user:
+                fw = {"document_name": usr["username"]}
+                log1 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE","fetch", fw, "update")
+                resp1=json.loads(log1)
+
+                if len(resp1["data"])>0:
+                    lo1 = resp1["data"][0]["other_organisation"]
+                    lo1.append(tem)
+                    field1 = {"document_name": usr["username"]}
+                    update = {"other_organisation": lo1}
+                    login3 = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159",
+                                          "ABCDE", "update", field1, update)
+                    rsl.append(usr)
+                else:
+                    eruser.append(usr["username"])
+        total=len(team_member)+len(user)
+        field = {"document_name": work_name}
+        #return Response({"message":{"success":f"{len(public)} public and team/user {total-len(eruser)} portfolios created","error":f"{len(eruser)} members not found"},"unfound users":eruser})
+        update = {"portpolio": rsl, "members": memberall}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "update", field, update)
+        rlo=json.loads(login)
+        return Response({"message":{"success":f"{len(public)} public and {total-len(eruser)} team/user portfolios created","error":f"{len(eruser)} members not found"},"unfound users":eruser,"l":len(qrid)})
+    else:
+        return Response({"message":"file format not supported"})
+    # column_data = column_data.dropna()
+    # obj = ExcelData.objects.create(username=username, data=data, datalink=datalink, filename=f)
+    # return Response({"table_html": table_html, "datalink": datalink})
+
+@api_view(['POST'])
+def OrgDetailsFetch(request):
+    username=request.data.get("username")
+    c=request.data.get("col_name")
+    cid="1159"
+    field={"document_name":username}
+    if c=="registration":
+        cid="10004545"
+        field={"Username":username}
+
+    login = dowellconnection("login", "bangalore", "login", c, c, cid, "ABCDE",
+                                 "fetch", field, "nil")
+    rl=json.loads(login)
+    return Response(rl["data"][0])
+@api_view(['POST'])
+def PublicPortFetch(request):
+    username=request.data.get("workspace_name")
+    c=request.data.get("membertype")
+    num=request.data.get("num_portfolios")
+    field={"document_name":username}
+    login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                 "fetch", field, "update")
+    rl=json.loads(login)
+    ls=[]
+    data=rl["data"][0]["portpolio"]
+    for i in data:
+        if i["member_type"]==c:
+            ls.append(i)
+    datals=[]
+    for dat in ls:
+        try:
+            if dat["password"]:
+                datals.append({"portfolio_name":dat["portfolio_name"],"portfolio_code":dat["portfolio_code"],"userid":dat["username"],"password":base64.b64decode(bytes(dat["password"], 'utf-8')).decode()})
+        except:
+            pass
+    ro=f"-{num}"
+    return Response({"message":"success","data":{"workspace_name":rl["data"][0]["document_name"],"workspace_id":rl["data"][0]["_id"],"portfolios":datals[int(ro):]}})

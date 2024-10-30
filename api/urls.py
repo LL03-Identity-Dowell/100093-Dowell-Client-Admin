@@ -83,4 +83,10 @@ urlpatterns = [
     path('portfoliotest',portfolio_checkq,name='portfoliotest'),
     path('teamcheckq',teamNameCheck,name='teamcheckq'),
     path('addlinkcat',AddLinkCategory,name='addlinkcat'),
+    path('get_user_sections',Get_user_Sections,name='get_user_sections'),
+    path('portfoliologin',PortfolioLogin,name='portfoliologin'),
+    path('portfoliodetails',PortfolioDetails3,name='portfoliodetails'),
+    path('bportcreation',BulkPortCreate,name='bportcreation'),
+    path('getdocument',OrgDetailsFetch,name='getdocument'),
+    path('fetchportfolios/',PublicPortFetch,name='fetchportfolios'),
 ]

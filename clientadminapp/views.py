@@ -2622,3 +2622,42 @@ def dismiss_notification(request, notification_id):
         notification.status = "disable"
         notification.save()
     return redirect("/")
+def PublicPortFetch(request):
+    context={}
+    if request.method == "POST":
+        context={}
+        username=request.POST.get("workspace_name")
+        c=request.POST.get("membertype")
+        num=request.POST.get("num_portfolios")
+        if username is None or c is None or num is None:
+            context["msg"]="all fields are required"
+            return render(request, "new/downloadcsv.html",context)
+        field={"document_name":username}
+        login = dowellconnection("login", "bangalore", "login", "client_admin", "client_admin", "1159", "ABCDE",
+                                     "fetch", field, "update")
+        rl=json.loads(login)
+
+        ls=[]
+        try:
+            data=rl["data"][0]["portpolio"]
+        except:
+            context["msg"]="Workspace details not found"
+            context["style"]="none"
+            return render(request, "new/downloadcsv.html",context)
+        for i in data:
+            if i["member_type"]==c:
+                ls.append(i)
+        datals=[]
+        for dat in ls:
+            try:
+                if dat["password"]:
+                    datals.append({"portfolio_name":dat["portfolio_name"],"portfolio_code":dat["portfolio_code"],"userid":dat["username"],"password":base64.b64decode(bytes(dat["password"], 'utf-8')).decode()})
+            except:
+                pass
+        ro=f"-{num}"
+        context["data"]=datals[int(ro):]
+        context["style"]="show"
+        return render(request, "new/downloadcsv.html",context)
+        # return Response({"message":"success","data":{"workspace_name":rl["data"][0]["document_name"],"workspace_id":rl["data"][0]["_id"],"portfolios":datals[int(ro):]}})
+    context["style"]="none"
+    return render(request, "new/downloadcsv.html",context)
